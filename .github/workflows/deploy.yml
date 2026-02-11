@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: "main"
+    branches: "main" # This triggers the fix every time you push from Figma
 
 permissions:
   contents: read
@@ -20,12 +20,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
       - name: Install dependencies
+        # Using npm install creates the missing environment on the fly
         run: npm install
 
       - name: Build
+        # This converts your .tsx files into the .js files browsers need
         run: npm run build
 
       - name: Upload Artifacts
