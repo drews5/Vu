@@ -26,7 +26,8 @@ export function EventDetail() {
         'This special winter showcase features our complete repertoire from the semester, including holiday favorites and contemporary hits.',
         'Doors open at 7:00 PM. General admission seating.'
       ],
-      ticketLink: 'https://example.com/tickets'
+      ticketLink: 'https://example.com/tickets',
+      imageUrl: 'https://images.unsplash.com/photo-1689018161278-4e363b0c4a81'
     },
     'chriskindl-market-2025': {
       title: 'Minneapolis Chriskindl Market',
@@ -38,7 +39,8 @@ export function EventDetail() {
         'Enjoy the festive environment of the Chriskindl market and hear us perform live on stage, singing many of your favorites.',
         'Experience the magic of the holiday season as we perform classic carols and contemporary holiday songs in the heart of the Minneapolis Chriskindl Market.',
         'Free event - no tickets required. Bundle up and join us for an evening of music and merriment!'
-      ]
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1699802703996-d19cc0b185b9'
     },
     'icca-quarterfinal-2026': {
       title: 'ICCA Quarterfinal Competition',
@@ -51,7 +53,8 @@ export function EventDetail() {
         'Watch Vocal U compete against other collegiate a cappella groups from across the region in this exciting quarterfinal competition.',
         'This is your chance to see some of the best collegiate a cappella groups perform their competition sets live on stage.'
       ],
-      ticketLink: 'https://artsticketing.wisc.edu/Online/default.asp?doWork::WScontent::loadArticle=Load&BOparam::WScontent::loadArticle::article_id=0BEF4201-2FB0-4E36-BC46-FB2625F51E03#buynow'
+      ticketLink: 'https://artsticketing.wisc.edu/Online/default.asp?doWork::WScontent::loadArticle=Load&BOparam::WScontent::loadArticle::article_id=0BEF4201-2FB0-4E36-BC46-FB2625F51E03#buynow',
+      imageUrl: 'https://images.unsplash.com/photo-1760539619770-f58d0588db9e'
     }
   };
 

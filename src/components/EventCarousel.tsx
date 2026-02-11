@@ -10,7 +10,8 @@ const events = [
     time: '7:30 PM',
     location: 'Cowles Auditorium',
     description: 'Join us as we perform all of our repertoire at the Rarig Center in a night of winter fun. Featuring Minnesota Fitoor as the opener!',
-    link: '/event/winter-showcase-2025'
+    link: '/event/winter-showcase-2025',
+    image: 'https://images.unsplash.com/photo-1689018161278-4e363b0c4a81'
   },
   {
     date: 'DEC 7, 2025',
@@ -18,7 +19,8 @@ const events = [
     time: '7:00 PM',
     location: 'North Loop',
     description: 'Enjoy the festive environment of the Chriskindl market and hear us perform live on stage, singing many of your favorites.',
-    link: '/event/chriskindl-market-2025'
+    link: '/event/chriskindl-market-2025',
+    image: 'https://images.unsplash.com/photo-1699802703996-d19cc0b185b9'
   },
   {
     date: 'FEB 15, 2026',
@@ -26,7 +28,8 @@ const events = [
     time: '7:00 PM',
     location: 'Ted Mann Concert Hall',
     description: 'Join us as we compete in the International Championship of Collegiate A Cappella!',
-    link: '/event/icca-quarterfinal-2026'
+    link: '/event/icca-quarterfinal-2026',
+    image: 'https://images.unsplash.com/photo-1760539619770-f58d0588db9e'
   }
 ];
 
@@ -171,10 +174,12 @@ function EventCard({ event }: { event: typeof events[0] }) {
         className="bg-white/95 backdrop-blur-sm p-6 md:p-8 cursor-pointer h-full flex flex-col"
         style={{ borderRadius: '20px' }}
       >
-        <div className="w-full h-48 bg-gradient-to-br from-[#8FA8C8] to-[#A3B8D3] mb-4 flex items-center justify-center flex-shrink-0" style={{ borderRadius: '15px' }}>
-          <span className="text-white/40 text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
-            EVENT PHOTO
-          </span>
+        <div className="w-full h-48 bg-gradient-to-br from-[#8FA8C8] to-[#A3B8D3] mb-4 overflow-hidden flex-shrink-0" style={{ borderRadius: '15px' }}>
+          <img 
+            src={event.image} 
+            alt={event.title} 
+            className="w-full h-full object-cover" 
+          />
         </div>
         <div className="text-[#2B4C6F]/70 mb-2" style={{
           fontFamily: 'Inter, sans-serif',

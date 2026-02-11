@@ -11,7 +11,8 @@ export function Events() {
       title: 'Vocal U Winter Showcase',
       time: '7:30 PM',
       location: 'Cowles Auditorium',
-      description: 'Join us as we perform all of our repertoire at the Rarig Center in a night of winter fun. Featuring Minnesota Fitoor as the opener!'
+      description: 'Join us as we perform all of our repertoire at the Rarig Center in a night of winter fun. Featuring Minnesota Fitoor as the opener!',
+      image: 'https://images.unsplash.com/photo-1689018161278-4e363b0c4a81'
     },
     {
       id: 'chriskindl-market-2025',
@@ -20,7 +21,8 @@ export function Events() {
       title: 'Minneapolis Chriskindl Market',
       time: '7:00 PM',
       location: 'North Loop',
-      description: 'Enjoy the festive environment of the Chriskindl market and hear us perform live on stage, singing many of your favorites.'
+      description: 'Enjoy the festive environment of the Chriskindl market and hear us perform live on stage, singing many of your favorites.',
+      image: 'https://images.unsplash.com/photo-1699802703996-d19cc0b185b9'
     },
     {
       id: 'icca-quarterfinal-2026',
@@ -29,18 +31,21 @@ export function Events() {
       title: 'ICCA Quarterfinal Competition',
       time: '7:00 PM',
       location: 'Ted Mann Concert Hall',
-      description: 'Join us as we compete in the International Championship of Collegiate A Cappella!'
+      description: 'Join us as we compete in the International Championship of Collegiate A Cappella!',
+      image: 'https://images.unsplash.com/photo-1760539619770-f58d0588db9e'
     }
   ];
 
   const pastEvents = [
     {
       title: 'Homecoming Block Party',
-      location: 'Coffman Memorial Plaza'
+      location: 'Coffman Memorial Plaza',
+      image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4'
     },
     {
       title: 'Minnesota State Fair',
-      location: 'University Stage'
+      location: 'University Stage',
+      image: 'https://images.unsplash.com/photo-1752300779727-13d587a42881'
     }
   ];
 
@@ -122,10 +127,12 @@ export function Events() {
               className="bg-white p-6 md:p-8 shadow-lg" 
               style={{ borderRadius: '20px' }}
             >
-              <div className="w-full h-48 bg-gradient-to-br from-[#8FA8C8] to-[#A3B8D3] mb-4 flex items-center justify-center" style={{ borderRadius: '15px' }}>
-                <span className="text-white/40 text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  EVENT PHOTO
-                </span>
+              <div className="w-full h-48 bg-gradient-to-br from-[#8FA8C8] to-[#A3B8D3] mb-4 overflow-hidden" style={{ borderRadius: '15px' }}>
+                <img 
+                  src={event.image} 
+                  alt={event.title} 
+                  className="w-full h-full object-cover" 
+                />
               </div>
               <h3 className="text-[#2B4C6F] mb-2" style={{ 
                 fontFamily: "'Yearbook Solid', sans-serif",
@@ -195,10 +202,12 @@ export function Events() {
 
                   {/* Event Preview Image */}
                   <div className="flex-shrink-0 lg:w-64">
-                    <div className="w-full h-48 bg-gradient-to-br from-[#8FA8C8] to-[#A3B8D3] flex items-center justify-center" style={{ borderRadius: '15px' }}>
-                      <span className="text-white/40 text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
-                        EVENT PHOTO
-                      </span>
+                    <div className="w-full h-48 bg-gradient-to-br from-[#8FA8C8] to-[#A3B8D3] overflow-hidden" style={{ borderRadius: '15px' }}>
+                      <img 
+                        src={event.image} 
+                        alt={event.title} 
+                        className="w-full h-full object-cover" 
+                      />
                     </div>
                   </div>
 

@@ -3,6 +3,9 @@ import { Header } from './components/Header';
 import { VideoNotification } from './components/VideoNotification';
 import { Home } from './pages/Home';
 import { About } from './pages/About';
+import { Members } from './pages/Members';
+import { Media } from './pages/Media';
+import { Donate } from './pages/Donate';
 import { Events } from './pages/Events';
 import { EventDetail } from './pages/EventDetail';
 import { Contact } from './pages/Contact';
@@ -19,6 +22,9 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/members" element={<Members />} />
+          <Route path="/media" element={<Media />} />
+          <Route path="/donate" element={<Donate />} />
           <Route path="/events" element={<Events />} />
           <Route path="/event/:eventId" element={<EventDetail />} />
           <Route path="/contact" element={<Contact />} />
