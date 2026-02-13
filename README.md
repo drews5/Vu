@@ -1,7 +1,7 @@
 
-  # Vocal U
+  # Vocal U A Cappella
 
-  This is a code bundle for Vocal U. The original project is available at https://www.figma.com/design/0ndmcKkFBtEmeLqAtcu33t/Vocal-U.
+  This is a code bundle for Vocal U A Cappella. The original project is available at https://www.figma.com/design/0ndmcKkFBtEmeLqAtcu33t/Vocal-U-A-Cappella.
 
   ## Running the code
 
