@@ -1,6 +1,6 @@
-import heroBackground from 'figma:asset/c6e1c046d817a28039f023a187d9a15bab8acb31.png';
+import heroBackground from 'figma:asset/15a7da513ab99cbb57e9735db4d4d232088838f1.png';
 import fullLogo from 'figma:asset/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
-import groupPhoto from 'figma:asset/91194fe61cc78fc80da50e07c2ba4be89812ea2b.png';
+import groupPhoto from 'figma:asset/8b7d52033414d4d2f0999bc47a30f6af9f485f36.png';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -59,21 +59,8 @@ export function Home() {
                 borderRadius: '20px'
               }}
               initial={{ y: 30, opacity: 0 }}
-              animate={{ 
-                y: 0, 
-                opacity: 1,
-                scale: [1, 1.05, 1]
-              }}
-              transition={{ 
-                y: { delay: 1.7, duration: 0.6 },
-                opacity: { delay: 1.7, duration: 0.6 },
-                scale: { 
-                  delay: 2.5,
-                  duration: 2,
-                  repeat: Infinity,
-                  repeatDelay: 1
-                }
-              }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 1.7, duration: 0.6 }}
               whileHover={{ scale: 1.08, y: -5 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -84,13 +71,15 @@ export function Home() {
       </motion.section>
 
       {/* We Are Vocal U Section */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 items-center" style={{ gap: '25px', marginBottom: '25px' }}>
+      <section 
+        className="bg-gray-100 shadow-lg p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center" 
+        style={{ gap: '25px', marginBottom: '25px', borderRadius: '20px' }}
+      >
         <motion.div 
           initial={{ x: -50, opacity: 0 }}
           whileInView={{ x: 0, opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="px-4 md:px-0"
         >
           <h2 className="mb-6 md:mb-8">
             <span className="text-[#A3B8D3]" style={{ 
@@ -153,96 +142,27 @@ export function Home() {
       </section>
 
       {/* Events Section */}
-      <motion.section 
-        initial={{ y: 50, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="relative py-12 md:py-16 px-6 md:px-12 mx-3 md:mx-0 overflow-hidden" 
-        style={{ marginBottom: '25px', borderRadius: '20px' }}
+      <section 
+        className="relative py-12 md:py-16 px-6 md:px-12 mx-3 md:mx-0" 
+        style={{ 
+          marginBottom: '25px', 
+          borderRadius: '20px',
+          background: 'linear-gradient(135deg, #91a8c6 0%, #7A97B7 100%)'
+        }}
       >
-        {/* Animated Gradient Background */}
-        <motion.div 
-          className="absolute inset-0"
-          animate={{
-            background: [
-              'linear-gradient(135deg, #91a8c6 0%, #7A97B7 50%, #91a8c6 100%)',
-              'linear-gradient(135deg, #7A97B7 0%, #91a8c6 50%, #7A97B7 100%)',
-              'linear-gradient(135deg, #91a8c6 0%, #7A97B7 50%, #91a8c6 100%)',
-            ]
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          style={{ borderRadius: '20px' }}
-        />
-        
-        {/* Decorative Animated Circles */}
-        <motion.div 
-          className="absolute top-10 right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"
-          animate={{ 
-            scale: [1, 1.2, 1],
-            x: [0, 20, 0],
-            y: [0, -20, 0]
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div 
-          className="absolute bottom-10 left-10 w-60 h-60 bg-black/10 rounded-full blur-3xl"
-          animate={{ 
-            scale: [1, 1.3, 1],
-            x: [0, -30, 0],
-            y: [0, 20, 0]
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div 
-          className="absolute top-1/2 left-1/2 w-32 h-32 bg-white/5 rounded-full blur-2xl"
-          animate={{ 
-            scale: [1, 1.5, 1],
-            rotate: [0, 180, 360]
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        />
-        
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Section Header */}
-          <div className="text-center mb-12 relative pb-[50px] pt-[25px]">
-            {/* Giant Background Title */}
-            <motion.h2 
-              initial={{ scale: 0.8, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2, duration: 1 }}
-              className="text-white/50 select-none absolute inset-0 flex items-center justify-center" 
+          <div className="text-center mb-12">
+            <h2 
+              className="text-white" 
               style={{ 
                 fontFamily: "'Yearbook Solid', sans-serif",
-                fontSize: 'clamp(70px, 10vw, 100px)',
-                letterSpacing: '0.05em',
-                lineHeight: '1',
-                fontWeight: 'bold'
+                fontSize: 'clamp(64px, 12vw, 120px)',
+                letterSpacing: '0.05em'
               }}
             >
               EVENTS
-            </motion.h2>
-            
-            {/* Overlaid Description - 70% of the way through */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="absolute inset-x-0 flex items-center justify-center"
-              style={{ top: '70%' }}
-            >
-              <p className="text-white text-center" style={{ 
-                fontFamily: 'Inter, sans-serif',
-                fontSize: 'clamp(15px, 2vw, 18px)',
-                fontWeight: '300',
-                letterSpacing: '0.02em',
-                textShadow: '0 2px 10px rgba(0,0,0,0.3)'
-              }}>
-                Don't miss our upcoming performances!
-              </p>
-            </motion.div>
+            </h2>
           </div>
           
           {/* Event Cards Carousel */}
@@ -251,18 +171,10 @@ export function Home() {
           </div>
 
           {/* CTA Button Below Cards */}
-          <motion.div 
-            className="text-center mt-10"
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-          >
+          <div className="text-center mt-10">
             <Link to="/events">
-              <motion.div
-                whileHover={{ scale: 1.08, y: -5 }}
-                whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center gap-3 bg-white text-[#2B4C6F] px-12 py-5 shadow-2xl hover:bg-gray-50 transition-all relative overflow-hidden group"
+              <button
+                className="inline-flex items-center gap-3 bg-white text-[#2B4C6F] px-12 py-5 shadow-2xl hover:bg-gray-50 hover:scale-105 hover:-translate-y-1 transition-all"
                 style={{ 
                   fontFamily: "'Yearbook Solid', sans-serif",
                   fontSize: '22px',
@@ -270,15 +182,13 @@ export function Home() {
                   borderRadius: '25px'
                 }}
               >
-                {/* Button Shine Effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                <span className="relative z-10">VIEW ALL EVENTS</span>
-                <ArrowRight className="w-6 h-6 relative z-10 group-hover:translate-x-2 transition-transform" />
-              </motion.div>
+                <span>VIEW ALL EVENTS</span>
+                <ArrowRight className="w-6 h-6" />
+              </button>
             </Link>
-          </motion.div>
+          </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Contact Form Section */}
       <motion.section 

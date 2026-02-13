@@ -1,4 +1,3 @@
-import { motion } from 'motion/react';
 import { Play, Image as ImageIcon } from 'lucide-react';
 
 const mediaItems = [
@@ -12,18 +11,8 @@ const mediaItems = [
 
 export function Media() {
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="pb-8 md:pb-16"
-    >
-      <motion.section 
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-        style={{ marginTop: '25px', marginBottom: '25px' }}
-      >
+    <div className="pb-8 md:pb-16">
+      <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div className="bg-[#8FA8C8] shadow-xl py-16 md:py-24 px-4 text-center" style={{ borderRadius: '20px' }}>
           <h1 
             className="text-white" 
@@ -39,18 +28,13 @@ export function Media() {
             A collection of our favorite moments, from high-stakes competitions to casual campus gigs.
           </p>
         </div>
-      </motion.section>
+      </section>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: '25px' }}>
         {mediaItems.map((item, index) => (
-          <motion.div
+          <div
             key={index}
-            initial={{ scale: 0.9, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ y: -5 }}
-            className="group relative cursor-pointer overflow-hidden shadow-lg"
+            className="group relative cursor-pointer overflow-hidden shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
             style={{ borderRadius: '20px', aspectRatio: '16/9' }}
           >
             <img 
@@ -74,9 +58,9 @@ export function Media() {
                 {item.title}
               </p>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 }

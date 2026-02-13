@@ -1,4 +1,4 @@
-import { Mail, Instagram, Facebook, Youtube, MapPin } from 'lucide-react';
+import { Mail, Instagram, Facebook, Youtube, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
 import { motion } from 'motion/react';
 
@@ -276,21 +276,26 @@ export function Contact() {
 
               <div className="flex items-start gap-4">
                 <div className="bg-[#8FA8C8] p-3" style={{ borderRadius: '15px' }}>
-                  <MapPin className="w-6 h-6 text-white" />
+                  <MessageCircle className="w-6 h-6 text-white" />
                 </div>
                 <div>
                   <h3 className="text-[#2B4C6F] mb-1" style={{ 
                     fontFamily: 'Inter, sans-serif',
                     fontSize: '17px',
                     fontWeight: '600'
-                  }}>Location</h3>
-                  <p className="text-[#2B4C6F]/80" style={{ 
-                    fontFamily: 'Inter, sans-serif',
-                    fontSize: '16px'
-                  }}>
-                    University of Minnesota<br />
-                    Minneapolis, MN 55455
-                  </p>
+                  }}>Instagram DMs</h3>
+                  <a 
+                    href="https://instagram.com/vocaluminn" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#8FA8C8] hover:text-[#7A97B7] transition-colors" 
+                    style={{ 
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '16px'
+                    }}
+                  >
+                    @vocaluminn
+                  </a>
                 </div>
               </div>
             </div>

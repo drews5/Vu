@@ -1,5 +1,4 @@
 import { Calendar } from 'lucide-react';
-import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 
 export function Events() {
@@ -50,25 +49,12 @@ export function Events() {
   ];
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="pb-8 md:pb-16"
-    >
+    <div className="pb-8 md:pb-16">
       {/* Hero Section */}
-      <motion.section 
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-        style={{ marginTop: '25px', marginBottom: '25px' }}
-      >
+      <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div className="bg-[#8FA8C8] shadow-xl py-16 md:py-24 px-4 md:px-8" style={{ borderRadius: '20px' }}>
           <div className="max-w-5xl mx-auto text-center">
-            <motion.h1 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
+            <h1 
               className="text-white mb-4" 
               style={{ 
                 fontFamily: "'Yearbook Solid', sans-serif",
@@ -77,11 +63,8 @@ export function Events() {
               }}
             >
               EVENTS
-            </motion.h1>
-            <motion.p 
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
+            </h1>
+            <p 
               className="text-white" 
               style={{ 
                 fontFamily: 'Inter, sans-serif',
@@ -89,19 +72,13 @@ export function Events() {
               }}
             >
               Come and see what we're all about by going to a live event!
-            </motion.p>
+            </p>
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Our Performances */}
-      <motion.section 
-        initial={{ y: 30, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        style={{ marginBottom: '25px' }}
-      >
+      <section style={{ marginBottom: '25px' }}>
         <h2 className="text-[#2B4C6F] mb-4 px-4 md:px-0" style={{ 
           fontFamily: "'Yearbook Solid', sans-serif",
           fontSize: 'clamp(32px, 6vw, 48px)'
@@ -117,14 +94,9 @@ export function Events() {
         
         <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: '25px' }}>
           {pastEvents.map((event, index) => (
-            <motion.div 
+            <div 
               key={index} 
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.2, duration: 0.5 }}
-              whileHover={{ y: -8, scale: 1.02 }}
-              className="bg-white p-6 md:p-8 shadow-lg" 
+              className="bg-white p-6 md:p-8 shadow-lg hover:shadow-xl transition-shadow" 
               style={{ borderRadius: '20px' }}
             >
               <div className="w-full h-48 bg-gradient-to-br from-[#8FA8C8] to-[#A3B8D3] mb-4 overflow-hidden" style={{ borderRadius: '15px' }}>
@@ -146,18 +118,13 @@ export function Events() {
               }}>
                 {event.location}
               </p>
-            </motion.div>
+            </div>
           ))}
         </div>
-      </motion.section>
+      </section>
 
       {/* Upcoming Events */}
-      <motion.section
-        initial={{ y: 30, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
+      <section>
         <h2 className="text-[#2B4C6F] mb-6 md:mb-8 px-4 md:px-0" style={{ 
           fontFamily: "'Yearbook Solid', sans-serif",
           fontSize: 'clamp(32px, 6vw, 48px)'
@@ -167,22 +134,14 @@ export function Events() {
         <div className="space-y-6">
           {upcomingEvents.map((event, index) => (
             <Link to={`/event/${event.id}`} key={index}>
-              <motion.div 
-                initial={{ x: -30, opacity: 0 }}
-                whileInView={{ x: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.15, duration: 0.5 }}
-                whileHover={{ scale: 1.01, x: 5 }}
-                className="bg-white p-6 md:p-8 shadow-lg hover:shadow-xl transition-shadow cursor-pointer" 
+              <div 
+                className="bg-white p-6 md:p-8 shadow-lg hover:shadow-xl hover:scale-[1.01] hover:translate-x-1 transition-all cursor-pointer" 
                 style={{ borderRadius: '20px' }}
               >
                 <div className="flex flex-col lg:flex-row" style={{ gap: '25px' }}>
                   {/* Date Box */}
-                  <motion.div 
-                    whileHover={{ scale: 1.05, rotate: 2 }}
-                    className="flex-shrink-0"
-                  >
-                    <div className="bg-[#91a8c6] text-white p-6 text-center" style={{ borderRadius: '15px', minWidth: '120px' }}>
+                  <div className="flex-shrink-0">
+                    <div className="bg-[#91a8c6] text-white p-6 text-center hover:scale-105 hover:rotate-2 transition-transform" style={{ borderRadius: '15px', minWidth: '120px' }}>
                       <div style={{ 
                         fontFamily: "'Yearbook Solid', sans-serif",
                         fontSize: '32px',
@@ -198,7 +157,7 @@ export function Events() {
                         {event.year}
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
 
                   {/* Event Preview Image */}
                   <div className="flex-shrink-0 lg:w-64">
@@ -234,11 +193,11 @@ export function Events() {
                     </p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </Link>
           ))}
         </div>
-      </motion.section>
-    </motion.div>
+      </section>
+    </div>
   );
 }

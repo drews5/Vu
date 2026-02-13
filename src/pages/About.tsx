@@ -1,5 +1,3 @@
-import { motion } from 'motion/react';
-
 export function About() {
   const repertoire = [
     { title: 'Back to Black', artist: 'Amy Winehouse' },
@@ -18,24 +16,11 @@ export function About() {
   ];
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="pb-8 md:pb-16"
-    >
+    <div className="pb-8 md:pb-16">
       {/* Hero Section */}
-      <motion.section 
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-        style={{ marginTop: '25px', marginBottom: '25px' }}
-      >
+      <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div className="relative overflow-hidden shadow-xl h-[250px] md:h-[400px] bg-[#2B4C6F] flex items-center justify-center" style={{ borderRadius: '20px' }}>
-          <motion.h1 
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
+          <h1 
             className="text-white px-4" 
             style={{ 
               fontFamily: "'Yearbook Solid', sans-serif",
@@ -44,27 +29,20 @@ export function About() {
             }}
           >
             ABOUT US
-          </motion.h1>
+          </h1>
         </div>
-      </motion.section>
+      </section>
 
       {/* Our Mission */}
-      <motion.section 
-        initial={{ y: 30, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        style={{ marginBottom: '25px' }}
-      >
+      <section style={{ marginBottom: '25px' }}>
         <h2 className="text-[#2B4C6F] mb-4 md:mb-6 px-4 md:px-0" style={{ 
           fontFamily: "'Yearbook Solid', sans-serif",
           fontSize: 'clamp(32px, 6vw, 48px)'
         }}>
           Our Mission
         </h2>
-        <motion.div 
-          whileHover={{ scale: 1.01 }}
-          className="text-[#2B4C6F] leading-relaxed bg-white p-6 md:p-8 shadow-lg space-y-4" 
+        <div 
+          className="text-[#2B4C6F] leading-relaxed bg-white p-6 md:p-8 shadow-lg space-y-4 hover:shadow-xl transition-shadow" 
           style={{ 
             fontFamily: 'Inter, sans-serif',
             fontSize: '17px',
@@ -82,17 +60,11 @@ export function About() {
             "A cappella is a way to unify a huge world of culture with the human voice. By arranging, practicing and performing, we are able to pay unique homage to some of today's greatest hits and yesterday's greatest memories."
             <div className="mt-2">- Vocal U A Cappella</div>
           </div>
-        </motion.div>
-      </motion.section>
+        </div>
+      </section>
 
       {/* Our Repertoire */}
-      <motion.section 
-        initial={{ y: 30, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        style={{ marginBottom: '25px' }}
-      >
+      <section style={{ marginBottom: '25px' }}>
         <h2 className="text-[#2B4C6F] mb-4 md:mb-6 px-4 md:px-0" style={{ 
           fontFamily: "'Yearbook Solid', sans-serif",
           fontSize: 'clamp(32px, 6vw, 48px)'
@@ -108,14 +80,9 @@ export function About() {
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: '25px' }}>
           {repertoire.map((song, index) => (
-            <motion.div 
+            <div 
               key={index} 
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05, duration: 0.4 }}
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="bg-white p-6 shadow-lg" 
+              className="bg-white p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all" 
               style={{ borderRadius: '20px' }}
             >
               <h3 className="text-[#2B4C6F] mb-2" style={{ 
@@ -135,10 +102,10 @@ export function About() {
                   {song.note}
                 </p>
               )}
-            </motion.div>
+            </div>
           ))}
         </div>
-      </motion.section>
-    </motion.div>
+      </section>
+    </div>
   );
 }
