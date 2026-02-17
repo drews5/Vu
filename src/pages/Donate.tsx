@@ -64,20 +64,34 @@ export function Donate() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left: Givebutter Embed Container (8/12 columns) */}
         <div 
-          className="lg:col-span-7 bg-white shadow-2xl overflow-hidden relative" 
+          className="lg:col-span-7 bg-white shadow-2xl overflow-hidden relative flex flex-col" 
           style={{ 
             borderRadius: '24px',
-            height: '900px', // Adjusted height
+            minHeight: '800px',
             width: '100%',
             border: '1px solid rgba(0,0,0,0.05)'
           }}
         >
-          <iframe
-            src="https://givebutter.com/embed/c/vu"
-            className="w-full h-full border-0 absolute inset-0"
-            title="Vocal U Donation"
-            allow="payment"
-          />
+          <div className="p-4 bg-gray-50 border-b flex justify-between items-center">
+            <span className="text-[#2B4C6F] font-bold text-sm" style={fontInter}>Givebutter Secure Donation</span>
+            <a 
+              href="https://givebutter.com/vu" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[#8FA8C8] text-xs hover:underline font-bold"
+              style={fontInter}
+            >
+              Open in new tab ↗
+            </a>
+          </div>
+          <div className="flex-grow relative bg-gray-50/50">
+            <iframe
+              src="https://givebutter.com/embed/c/vu"
+              className="w-full h-full border-0 absolute inset-0"
+              title="Vocal U Donation"
+              allow="payment"
+            />
+          </div>
         </div>
 
         {/* Right: Other Ways & Venmo (5/12 columns) */}
