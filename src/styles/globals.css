@@ -206,6 +206,6 @@ h1, h2, h3, button, .font-yearbook {
 }
 
 .animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 15s ease infinite;
+  background-size: 400% 400% !important;
+  animation: gradient-shift 15s ease infinite !important;
 }

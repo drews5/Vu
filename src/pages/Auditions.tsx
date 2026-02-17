@@ -322,30 +322,32 @@ export function Auditions() {
   return (
     <div className="pb-24">
       {/* Header with Logo and Animated Gradient */}
-      <section className="relative py-6 flex flex-col items-center justify-center overflow-hidden mb-6 mx-3 md:mx-0 mt-4 animate-gradient shadow-xl" 
+      <section className="relative py-8 flex items-center justify-center overflow-hidden mb-6 mx-3 md:mx-0 mt-4 animate-gradient shadow-xl" 
         style={{ 
           borderRadius: '24px',
           background: 'linear-gradient(-45deg, #2B4C6F, #3d5e82, #8FA8C8, #7A97B7)'
         }}>
         
-        <div className="relative z-10 text-center px-6 w-full flex flex-col items-center">
-          <Link to="/" className="mb-4 group">
+        <div className="relative z-10 text-center px-6 w-full flex items-center justify-center gap-6 md:gap-10">
+          <Link to="/" className="group shrink-0">
             <img 
               src={logoImage} 
               alt="Vocal U Logo" 
-              className="h-12 md:h-16 w-auto transition-transform group-hover:scale-105" 
+              className="h-14 md:h-20 w-auto transition-transform group-hover:scale-105" 
             />
           </Link>
           
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 40px)', letterSpacing: '0.05em' }}>
-              AUDITIONS
-            </h1>
-            <div className="flex justify-center gap-4 text-white/80 mt-1 font-bold tracking-widest text-[9px]" style={fontInter}>
-              <div className="flex items-center gap-1.5"><Calendar className="w-3 h-3" /> FEB 18 & 19</div>
-              <div className="flex items-center gap-1.5"><Clock className="w-3 h-3" /> 6:00 - 9:00</div>
-            </div>
-          </motion.div>
+          <div className="text-left">
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+              <h1 className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '0.05em', lineHeight: '1' }}>
+                AUDITIONS
+              </h1>
+              <div className="flex gap-4 text-white/80 mt-2 font-bold tracking-widest text-[10px]" style={fontInter}>
+                <div className="flex items-center gap-1.5 uppercase"><Calendar className="w-3.5 h-3.5" /> FEB 18 & 19</div>
+                <div className="flex items-center gap-1.5 uppercase"><Clock className="w-3.5 h-3.5" /> 6:00 - 9:00 PM</div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
