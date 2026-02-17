@@ -182,12 +182,12 @@ export function Auditions() {
     const col2 = daySlots.slice(half);
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-1">
+      <div className="grid grid-cols-2 gap-x-1 md:gap-x-2 gap-y-0.5 md:gap-y-1">
         {[col1, col2].map((column, colIdx) => (
           <div key={colIdx} className="space-y-0.5">
-            <div className="grid grid-cols-10 gap-1 px-2 py-1 bg-gray-50 rounded text-[9px] font-bold text-gray-400 tracking-widest uppercase" style={fontInter}>
-              <div className="col-span-3">TIME</div>
-              <div className="col-span-7">NAME</div>
+            <div className="grid grid-cols-10 gap-0.5 md:gap-1 px-1 md:px-2 py-0.5 md:py-1 bg-gray-50 rounded text-[8px] md:text-[9px] font-bold text-gray-400 tracking-widest uppercase" style={fontInter}>
+              <div className="col-span-4 md:col-span-3">TIME</div>
+              <div className="col-span-6 md:col-span-7">NAME</div>
             </div>
             {column.map((slot) => {
               const isConfirming = confirmingId?.id === slot.id;
@@ -199,29 +199,29 @@ export function Auditions() {
               return (
                 <div 
                   key={slot.id} 
-                  className={`grid grid-cols-10 gap-1 items-center p-1 rounded transition-all border ${
+                  className={`grid grid-cols-10 gap-0.5 md:gap-1 items-center p-0.5 md:p-1 rounded transition-all border ${
                     isConfirming ? 'border-[#8FA8C8] bg-[#8FA8C8]/5' : 
                     isBooked ? 'border-transparent bg-gray-50/50 opacity-80' : 
                     isBreak ? 'border-transparent bg-gray-100' : 
                     'border-transparent hover:border-gray-100 hover:bg-gray-50'
                   }`}
                 >
-                  <div className="col-span-3 px-0.5">
-                    <span className={`font-bold text-[12px] ${isBooked ? 'text-gray-400' : 'text-[#2B4C6F]'}`} style={fontInter}>{displayTime}</span>
+                  <div className="col-span-4 md:col-span-3 px-0.5">
+                    <span className={`font-bold text-[10px] md:text-[12px] ${isBooked ? 'text-gray-400' : 'text-[#2B4C6F]'}`} style={fontInter}>{displayTime}</span>
                   </div>
 
-                  <div className="col-span-7 relative group">
+                  <div className="col-span-6 md:col-span-7 relative group">
                     {isBreak ? (
-                      <span className="italic text-gray-400 font-medium px-1.5 text-[9px] uppercase tracking-tighter" style={fontInter}>--- BREAK ---</span>
+                      <span className="italic text-gray-400 font-medium px-1 md:px-1.5 text-[8px] md:text-[9px] uppercase tracking-tighter" style={fontInter}>---</span>
                     ) : isBooked ? (
-                      <div className="flex items-center justify-between gap-1 px-1.5 py-0.5 bg-white rounded shadow-sm border border-gray-100">
-                        <span className="font-bold text-[#2B4C6F] text-[12px] truncate" style={fontInter}>{slot.name}</span>
+                      <div className="flex items-center justify-between gap-0.5 md:gap-1 px-1 md:px-1.5 py-0.5 bg-white rounded shadow-sm border border-gray-100">
+                        <span className="font-bold text-[#2B4C6F] text-[10px] md:text-[12px] truncate" style={fontInter}>{slot.name}</span>
                         {!isConfirming && (
                           <button 
                             onClick={() => startConfirmation(slot.id, 'delete')} 
                             className="text-gray-300 hover:text-red-500 transition-opacity p-0.5"
                           >
-                            <Trash2 className="w-2.5 h-2.5" />
+                            <Trash2 className="w-2 md:w-2.5 h-2 md:h-2.5" />
                           </button>
                         )}
                       </div>
@@ -230,7 +230,7 @@ export function Auditions() {
                         <input
                           type="text"
                           placeholder="Name"
-                          className={`w-full px-1.5 py-0.5 bg-white border rounded outline-none transition-all text-[12px] font-bold pr-6 ${
+                          className={`w-full px-1 md:px-1.5 py-0.5 bg-white border rounded outline-none transition-all text-[10px] md:text-[12px] font-bold pr-5 md:pr-6 ${
                             editingId === slot.id ? 'border-[#8FA8C8]' : 'border-gray-200'
                           }`}
                           style={fontInter}
@@ -247,13 +247,13 @@ export function Auditions() {
                               initial={{ opacity: 0, scale: 0.5 }}
                               animate={{ opacity: 1, scale: 1 }}
                               exit={{ opacity: 0, scale: 0.5 }}
-                              className="absolute right-1"
+                              className="absolute right-0.5"
                             >
                               <button
                                 onClick={() => startConfirmation(slot.id, 'save')}
                                 className="p-0.5 bg-[#8FA8C8] text-white rounded hover:bg-[#7A97B7] shadow-sm transition-colors"
                               >
-                                <Check className="w-3 h-3" />
+                                <Check className="w-2.5 h-2.5 md:w-3 md:h-3" />
                               </button>
                             </motion.div>
                           )}
@@ -322,7 +322,7 @@ export function Auditions() {
   return (
     <div className="pb-24">
       {/* Header with Logo and Animated Gradient */}
-      <section className="relative py-8 flex items-center justify-center overflow-hidden mb-6 mx-0 mt-[25px] animate-gradient shadow-xl" 
+      <section className="relative py-4 md:py-8 flex items-center justify-center overflow-hidden mb-4 md:mb-6 mx-0 mt-[15px] md:mt-[25px] animate-gradient shadow-xl" 
         style={{ 
           borderRadius: '24px',
           background: 'linear-gradient(115deg, #2B4C6F, #8FA8C8, #2B4C6F, #8FA8C8, #2B4C6F)'
@@ -353,20 +353,20 @@ export function Auditions() {
 
       <div className="px-0">
         {/* Sign Up Section */}
-        <section className="bg-white rounded-[24px] shadow-xl overflow-hidden mb-[25px] border border-gray-100">
-          <div className="px-6 py-3 border-b border-gray-50 flex justify-between items-center">
+        <section className="bg-white rounded-[16px] md:rounded-[24px] shadow-xl overflow-hidden mb-4 md:mb-[25px] border border-gray-100">
+          <div className="px-4 py-2 md:px-6 md:py-3 border-b border-gray-50 flex justify-between items-center">
             <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: '18px' }}>
               SIGN UP
             </h2>
           </div>
 
-          <div className="p-2 md:p-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="p-1 md:p-4">
+            <div className="grid grid-cols-2 gap-2 md:gap-8">
               {daysData.map((dayInfo) => (
                 <div key={dayInfo.day}>
-                  <div className="flex items-baseline gap-2 mb-3 border-b border-gray-100 pb-1">
-                    <h3 className="text-[#8FA8C8] text-sm uppercase tracking-widest font-bold" style={fontYearbook}>{dayInfo.day}</h3>
-                    <span className="text-[#8FA8C8]/60 text-[10px] font-bold uppercase tracking-wider" style={fontInter}>{dayInfo.date}</span>
+                  <div className="flex items-baseline gap-1 md:gap-2 mb-2 md:mb-3 border-b border-gray-100 pb-1">
+                    <h3 className="text-[#8FA8C8] text-[10px] md:text-sm uppercase tracking-widest font-bold" style={fontYearbook}>{dayInfo.day}</h3>
+                    <span className="text-[#8FA8C8]/60 text-[8px] md:text-[10px] font-bold uppercase tracking-wider" style={fontInter}>{dayInfo.date}</span>
                   </div>
 
                   {loading ? (
