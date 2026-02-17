@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { Heart, DollarSign, Star } from 'lucide-react';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
+const fontInter = { fontFamily: 'Inter, sans-serif' };
 
 const tiers = [
   { title: 'Friend of VU', amount: '$25', description: 'Covers sheet music for one group member.', Icon: Heart },
