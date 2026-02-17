@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { Heart, DollarSign, Star } from 'lucide-react';
+import logoImage from 'figma:asset/d4630c01b543cc75980f0b293230859d29654fbb.png';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
@@ -97,24 +98,57 @@ export function Donate() {
 
         {/* Right: Other Ways & Venmo (5/12 columns) */}
         <div className="lg:col-span-5 space-y-6">
-          {/* Venmo Card */}
-          <div className="bg-[#008CFF] p-8 shadow-xl text-white flex flex-col items-center text-center group transition-transform hover:scale-[1.02]" style={{ borderRadius: '24px' }}>
-            <div className="bg-white p-4 rounded-full mb-4 shadow-inner">
-              <svg viewBox="0 0 24 24" className="w-12 h-12 text-[#008CFF] fill-current">
+          {/* Venmo Card - Authentic Venmo Styling */}
+          <div 
+            className="bg-white p-0 shadow-2xl transition-transform hover:scale-[1.01] overflow-hidden border border-gray-100" 
+            style={{ borderRadius: '28px' }}
+          >
+            {/* Venmo Header */}
+            <div className="bg-[#008CFF] py-4 px-6 flex justify-between items-center">
+              <svg viewBox="0 0 24 24" className="w-24 h-8 fill-white">
                 <path d="M19.011 2.399h-14.022c-1.42 0-2.589 1.169-2.589 2.589v14.022c0 1.42 1.169 2.589 2.589 2.589h14.022c1.42 0 2.589-1.169 2.589-2.589v-14.022c0-1.42-1.169-2.589-2.589-2.589zm-4.706 14.153c-1.049 1.139-2.482 1.635-4.298 1.488-1.554-.124-2.735-.85-3.543-2.178-.711-1.169-.916-2.502-.615-3.999.301-1.497.943-2.618 1.926-3.364s2.219-1.119 3.708-1.119c.969 0 1.834.205 2.595.615.761.411 1.348.981 1.761 1.711.413.73.619 1.558.619 2.484 0 1.058-.23 2.016-.69 2.873-.46.857-1.114 1.488-1.963 1.894-.849.406-1.789.609-2.82.609-1.031 0-1.892-.205-2.583-.615-.691-.41-1.139-.993-1.344-1.75-.205-.757-.102-1.616.309-2.576l.161-.349h2.394l-.151.328c-.287.625-.333 1.129-.138 1.511.195.382.551.573 1.068.573s.912-.191 1.185-.573c.273-.382.409-.886.409-1.511 0-.625-.136-1.129-.409-1.511-.273-.382-.668-.573-1.185-.573s-.91.191-1.177.573c-.267.382-.401.886-.401 1.511 0 .625.134 1.129.401 1.511.267.382.66.573 1.177.573.517 0 .873-.191 1.068-.573.195-.382.253-.886.174-1.511h.02c.002.321.003.623.003.905 0 .918-.179 1.74-.537 2.466z"/>
               </svg>
+              <div className="bg-white/20 px-3 py-1 rounded-full text-white text-[10px] font-bold tracking-widest uppercase" style={fontInter}>Profile</div>
             </div>
-            <h2 className="text-3xl mb-1" style={fontYearbook}>Venmo</h2>
-            <p className="text-xl mb-6 font-bold tracking-tight" style={fontInter}>@vocalu</p>
-            <a 
-              href="https://venmo.com/u/vocalu" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="w-full bg-white text-[#008CFF] py-4 rounded-2xl font-bold text-lg shadow-lg hover:bg-gray-50 transition-colors uppercase tracking-widest"
-              style={fontYearbook}
-            >
-              Open Venmo
-            </a>
+
+            {/* Profile Content */}
+            <div className="p-8 flex flex-col items-center">
+              <div className="relative mb-6">
+                <div 
+                  className="w-32 h-32 flex items-center justify-center bg-[#8FA8C8] shadow-lg border-4 border-white" 
+                  style={{ borderRadius: '50%' }}
+                >
+                  <img src={logoImage} alt="Vocal U" className="w-20 h-auto" />
+                </div>
+                <div className="absolute bottom-1 right-1 bg-[#008CFF] p-2 rounded-full border-2 border-white shadow-md">
+                  <Check className="w-4 h-4 text-white" />
+                </div>
+              </div>
+
+              <h2 className="text-2xl font-bold text-[#3D4248] mb-0.5" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}>Vocal U A Cappella</h2>
+              <p className="text-[#008CFF] font-bold text-lg mb-6" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}>@vocalu</p>
+              
+              <div className="w-full space-y-3">
+                <a 
+                  href="https://venmo.com/u/vocalu" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="block w-full bg-[#008CFF] text-white py-4 rounded-full font-bold text-lg shadow-lg hover:bg-[#0074D9] transition-all active:scale-[0.98] text-center"
+                  style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}
+                >
+                  Pay or Request
+                </a>
+                <p className="text-gray-400 text-xs font-medium uppercase tracking-widest" style={fontInter}>Scan or click to give</p>
+              </div>
+            </div>
+
+            {/* Venmo Footer Tip */}
+            <div className="bg-gray-50 py-4 px-8 border-t border-gray-100">
+              <p className="text-[11px] text-gray-400 leading-tight text-center" style={fontInter}>
+                Payments are secure and processed directly by Venmo. 
+                Vocal U is a self-funded student organization.
+              </p>
+            </div>
           </div>
 
           {/* Other Ways to Help */}
