@@ -36,7 +36,7 @@ const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
       <h3 className="text-[#2B4C6F] text-xl mb-1" style={fontYearbook}>
         {member.name}
       </h3>
-      <p className="text-[#8FA8C8] font-bold text-sm uppercase tracking-wider mb-2">{member.role}</p>
+      <p className="text-[#8FA8C8] font-bold text-sm tracking-wider mb-2">{member.role}</p>
       <div className="space-y-1 text-sm text-[#2B4C6F]/70" style={{ fontFamily: 'Inter, sans-serif' }}>
         <p>{member.part}</p>
         <p>{member.major}</p>

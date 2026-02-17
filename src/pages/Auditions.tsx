@@ -185,9 +185,9 @@ export function Auditions() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-1 md:gap-x-2 gap-y-0.5 md:gap-y-1">
         {[col1, col2].map((column, colIdx) => (
           <div key={colIdx} className="space-y-0.5">
-            <div className="grid grid-cols-10 gap-0.5 md:gap-1 px-1 md:px-2 py-0.5 md:py-1 bg-gray-50 rounded text-[8px] md:text-[9px] font-bold text-gray-400 tracking-widest uppercase" style={fontInter}>
-              <div className="col-span-4 md:col-span-3">TIME</div>
-              <div className="col-span-6 md:col-span-7">NAME</div>
+            <div className="grid grid-cols-10 gap-0.5 md:gap-1 px-1 md:px-2 py-0.5 md:py-1 bg-gray-50 rounded text-[8px] md:text-[9px] font-bold text-gray-400 tracking-widest" style={fontInter}>
+              <div className="col-span-4 md:col-span-3">Time</div>
+              <div className="col-span-6 md:col-span-7">Name</div>
             </div>
             {column.map((slot) => {
               const isConfirming = confirmingId?.id === slot.id;
@@ -270,7 +270,7 @@ export function Auditions() {
                           exit={{ opacity: 0, scale: 0.9, y: 0 }}
                           className="absolute right-0 top-full z-20 bg-white shadow-2xl rounded-lg p-2 border-2 border-[#8FA8C8] flex flex-col gap-1.5 min-w-[140px]"
                         >
-                          <div className="text-[8px] font-bold text-[#8FA8C8] uppercase tracking-wider" style={fontInter}>Student ID</div>
+                          <div className="text-[8px] font-bold text-[#8FA8C8] tracking-wider" style={fontInter}>Student ID</div>
                           <div className="flex items-center gap-1">
                             <input 
                               autoFocus
@@ -343,8 +343,8 @@ export function Auditions() {
                 AUDITIONS
               </h1>
               <div className="flex gap-6 text-white/90 mt-2 font-bold tracking-widest text-[12px] md:text-[14px]" style={fontInter}>
-                <div className="flex items-center gap-2 uppercase"><Calendar className="w-4 h-4 md:w-5 md:h-5" /> FEB 18 & 19</div>
-                <div className="flex items-center gap-2 uppercase"><Clock className="w-4 h-4 md:w-5 md:h-5" /> 6:00 - 9:00 PM</div>
+                <div className="flex items-center gap-2"><Calendar className="w-4 h-4 md:w-5 md:h-5" /> Feb 18 & 19</div>
+                <div className="flex items-center gap-2"><Clock className="w-4 h-4 md:w-5 md:h-5" /> 6:00 - 9:00 PM</div>
               </div>
             </motion.div>
           </div>

@@ -171,12 +171,13 @@ export function Contact() {
             <button
               type="submit"
               disabled={status === 'sending'}
-              className="w-full bg-[#8FA8C8] text-white px-8 py-4 hover:bg-[#7A97B7] transition-all shadow-lg disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full bg-[#8FA8C8] text-white px-8 py-4 hover:bg-[#7A97B7] transition-all shadow-lg disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] font-bold"
               style={{
                 ...fontYearbook,
                 fontSize: '18px',
                 letterSpacing: '0.05em',
                 borderRadius: '20px',
+                fontWeight: 'bold',
               }}
             >
               {status === 'sending' ? 'SENDING...' : 'SEND MESSAGE'}
@@ -302,8 +303,8 @@ export function Contact() {
               updated on audition dates and other opportunities to get involved!
             </p>
             <button
-              className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-gray-100 transition-all hover:scale-105 active:scale-[0.98]"
-              style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '20px' }}
+              className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-gray-100 transition-all hover:scale-105 active:scale-[0.98] font-bold"
+              style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '20px', fontWeight: 'bold' }}
             >
               AUDITION INFO
             </button>

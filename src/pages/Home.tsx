@@ -36,7 +36,7 @@ function EventCard({ event }: { event: FeaturedEvent }) {
         />
         <div className="absolute top-4 left-4">
           <span
-            className="bg-[#8FA8C8] text-white px-3 py-1 text-[10px] font-bold uppercase tracking-widest shadow-sm"
+            className="bg-[#8FA8C8] text-white px-3 py-1 text-[10px] font-bold tracking-widest shadow-sm"
             style={{ borderRadius: '8px', ...fontYearbook }}
           >
             {event.tag}
@@ -120,7 +120,7 @@ export function Home() {
 
             <Link
               to="/event/spring-showcase-2026"
-              className="bg-white text-[#2B4C6F] px-8 md:px-12 py-3 md:py-4 shadow-lg hover:bg-gray-100 transition-all flex-shrink-0 hover:scale-[1.08] hover:-translate-y-1 active:scale-[0.98] text-center"
+              className="bg-white text-[#2B4C6F] px-8 md:px-12 py-3 md:py-4 shadow-lg hover:bg-gray-100 transition-all flex-shrink-0 hover:scale-[1.08] hover:-translate-y-1 active:scale-[0.98] text-center font-bold"
               style={{
                 ...fontYearbook,
                 fontSize: 'clamp(16px, 2vw, 20px)',
@@ -227,7 +227,7 @@ export function Home() {
           <div className="text-center">
             <Link to="/events">
               <button
-                className="inline-flex items-center gap-3 bg-white text-[#2B4C6F] px-12 py-5 shadow-2xl hover:bg-gray-50 hover:scale-105 hover:-translate-y-1 transition-all"
+                className="inline-flex items-center gap-3 bg-white text-[#2B4C6F] px-12 py-5 shadow-2xl hover:bg-gray-50 hover:scale-105 hover:-translate-y-1 transition-all font-bold"
                 style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em', borderRadius: '25px' }}
               >
                 <span>VIEW ALL EVENTS</span>

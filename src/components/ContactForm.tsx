@@ -85,8 +85,8 @@ const ContactInfo = memo(function ContactInfo() {
         </p>
         <Link to="/auditions">
           <button
-            className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-gray-100 transition-colors hover:scale-105 active:scale-95"
-            style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '20px' }}
+            className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-gray-100 transition-colors hover:scale-105 active:scale-95 font-bold"
+            style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '20px', fontWeight: 'bold' }}
           >
             AUDITION INFO
           </button>
@@ -202,8 +202,8 @@ export function ContactForm() {
           <button
             type="submit"
             disabled={status === 'sending'}
-            className="w-full bg-[#8FA8C8] text-white px-8 py-4 hover:bg-[#7A97B7] transition-colors shadow-lg disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98]"
-            style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '20px' }}
+            className="w-full bg-[#8FA8C8] text-white px-8 py-4 hover:bg-[#7A97B7] transition-colors shadow-lg disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] font-bold"
+            style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '20px', fontWeight: 'bold' }}
           >
             {status === 'sending' ? 'SENDING...' : 'SEND MESSAGE'}
           </button>

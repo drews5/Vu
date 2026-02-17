@@ -5,18 +5,18 @@ const fontInter = { fontFamily: 'Inter, sans-serif' };
 
 const repertoire = [
   { title: 'Back to Black', artist: 'Amy Winehouse' },
-  { title: 'BLACK HORSE AND THE CHERRY TREE', artist: 'KT Tunstall' },
-  { title: 'DIE WITH A SMILE', artist: 'Bruno Mars & Lady Gaga' },
+  { title: 'Black Horse and the Cherry Tree', artist: 'KT Tunstall' },
+  { title: 'Die With A Smile', artist: 'Bruno Mars & Lady Gaga' },
   { title: 'Disturbia', artist: 'Rihanna' },
   { title: "Let's Groove", artist: 'Earth, Wind, and Fire' },
   { title: 'Out My Way', artist: 'Leroy Sanchez' },
-  { title: 'SANTA BABY TELL ME', artist: 'Eartha Kitt, Ariana Grande' },
-  { title: 'RIBS', artist: 'Lorde' },
-  { title: 'PHINEAS & FERB MEDLEY', artist: 'Dan Povenmire' },
-  { title: 'OSCAR WINNING TEARS', artist: 'Raye' },
-  { title: 'TEETH', artist: '5 Seconds of Summer' },
-  { title: 'WINGS', artist: 'Little Mix' },
-  { title: 'All FOR US', artist: 'Labrinth', note: 'Alumni Song' },
+  { title: 'Santa Baby Tell Me', artist: 'Eartha Kitt, Ariana Grande' },
+  { title: 'Ribs', artist: 'Lorde' },
+  { title: 'Phineas & Ferb Medley', artist: 'Dan Povenmire' },
+  { title: 'Oscar Winning Tears', artist: 'Raye' },
+  { title: 'Teeth', artist: '5 Seconds of Summer' },
+  { title: 'Wings', artist: 'Little Mix' },
+  { title: 'All For Us', artist: 'Labrinth', note: 'Alumni Song' },
 ];
 
 const SongCard = memo(function SongCard({

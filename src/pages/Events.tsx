@@ -1,5 +1,5 @@
 import { useEffect, useState, memo } from 'react';
-import { Calendar, MapPin, ArrowRight, Clock, Share2 } from 'lucide-react';
+import { Calendar, MapPin, ArrowRight, Clock, Share2, Navigation } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 
@@ -14,6 +14,7 @@ interface Event {
   title: string;
   time: string;
   location: string;
+  address?: string;
   description: string;
   image: string;
   status: 'Upcoming' | 'Previous';
@@ -27,46 +28,61 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
     e.preventDefault();
     e.stopPropagation();
     
+    const shareUrl = `${window.location.origin}/event/${event.slug}`;
+    const shareTitle = event.title;
+    const shareText = `Check out ${event.title} by Vocal U!`;
+
     if (navigator.share) {
       try {
         await navigator.share({
-          title: event.title,
-          text: `Check out ${event.title} by Vocal U!`,
-          url: `${window.location.origin}/event/${event.slug}`,
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl,
         });
       } catch (err) {
-        console.error('Error sharing:', err);
+        if ((err as Error).name !== 'AbortError') {
+          console.error('Error sharing:', err);
+          // Fallback if share fails
+          navigator.clipboard.writeText(shareUrl);
+          alert('Link copied to clipboard!');
+        }
       }
     } else {
       // Fallback: Copy to clipboard
-      navigator.clipboard.writeText(`${window.location.origin}/event/${event.slug}`);
-      alert('Link copied to clipboard!');
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        alert('Link copied to clipboard!');
+      } catch (err) {
+        console.error('Clipboard error:', err);
+        alert('Could not copy link. Please copy the URL from your browser.');
+      }
     }
   };
 
-  const handleAddToCalendar = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (!event.fullDate) return;
+  const getCalendarUrl = () => {
+    if (!event.fullDate) return '#';
 
     const title = encodeURIComponent(event.title);
-    const location = encodeURIComponent(event.location);
+    const location = encodeURIComponent(`${event.location} ${event.address || ''}`);
     const details = encodeURIComponent(event.description);
     
     // Create Google Calendar link
     const startDate = event.fullDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
     const endDate = new Date(event.fullDate.getTime() + 2 * 60 * 60 * 1000).toISOString().replace(/-|:|\.\d\d\d/g, "");
     
-    const googleUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
-    window.open(googleUrl, '_blank');
+    return `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
+  };
+
+  const getNavigationUrl = () => {
+    const query = encodeURIComponent(`${event.location} ${event.address || ''}`);
+    return `https://www.google.com/maps/search/?api=1&query=${query}`;
   };
 
   return (
     <div className="relative">
       <Link 
         to={`/event/${event.slug}`}
-        className={`group bg-white overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex flex-col md:flex-row h-full md:h-64 ${
+        className={`group bg-white overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex flex-col md:flex-row h-full md:min-h-64 ${
           isUpcoming ? 'ring-2 ring-[#8FA8C8]/20 shadow-xl' : 'shadow-lg'
         }`}
         style={{ borderRadius: '24px' }}
@@ -80,7 +96,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
             loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-            <span className="text-white text-sm font-bold flex items-center gap-2">
+            <span className="text-white text-sm font-black flex items-center gap-2">
               VIEW DETAILS <ArrowRight className="w-4 h-4" />
             </span>
           </div>
@@ -94,7 +110,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
         </div>
 
         {/* Content Section */}
-        <div className="p-6 md:p-8 flex flex-col flex-grow justify-center relative bg-white">
+        <div className="p-6 md:p-8 pb-20 md:pb-24 flex flex-col flex-grow justify-center relative bg-white">
           <div className="flex flex-col gap-1 mb-4">
             <div className="flex items-center gap-2 text-[#8FA8C8] font-bold text-xs tracking-widest" style={fontInter}>
               <Calendar className="w-3.5 h-3.5" />
@@ -124,20 +140,33 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
 
       {/* Action Buttons Layered Over */}
       {isUpcoming && (
-        <div className="absolute bottom-6 right-6 md:bottom-8 md:right-8 flex gap-2 z-10">
-          <button 
-            onClick={handleAddToCalendar}
-            className="bg-gray-50 text-[#8FA8C8] p-2.5 rounded-full hover:bg-[#8FA8C8] hover:text-white transition-all shadow-sm border border-gray-100"
-            title="Add to Calendar"
+        <div className="absolute bottom-6 left-6 right-6 md:bottom-8 md:right-8 md:left-auto flex flex-wrap gap-3 z-10">
+          <a 
+            href={getCalendarUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8] hover:text-white transition-all shadow-md border border-[#8FA8C8]/20 group/btn"
           >
             <Calendar className="w-4 h-4" />
-          </button>
+            <span className="text-[11px] font-bold uppercase tracking-wider" style={fontInter}>Add to Calendar</span>
+          </a>
+          <a 
+            href={getNavigationUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8] hover:text-white transition-all shadow-md border border-[#8FA8C8]/20"
+          >
+            <Navigation className="w-4 h-4" />
+            <span className="text-[11px] font-bold uppercase tracking-wider" style={fontInter}>Navigate</span>
+          </a>
           <button 
             onClick={handleShare}
-            className="bg-gray-50 text-[#8FA8C8] p-2.5 rounded-full hover:bg-[#8FA8C8] hover:text-white transition-all shadow-sm border border-gray-100"
-            title="Share Event"
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8] hover:text-white transition-all shadow-md border border-[#8FA8C8]/20"
           >
             <Share2 className="w-4 h-4" />
+            <span className="text-[11px] font-bold uppercase tracking-wider" style={fontInter}>Share</span>
           </button>
         </div>
       )}
@@ -169,6 +198,7 @@ export function Events() {
             title: r.title,
             time: r.display_time || d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             location: r.location,
+            address: r.address,
             description: r.description,
             image: r.image_url,
             status: r.status,

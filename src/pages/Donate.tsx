@@ -34,8 +34,8 @@ const TierCard = memo(function TierCard({
         {tier.description}
       </p>
       <button
-        className="w-full bg-[#8FA8C8] text-white py-3 font-bold uppercase tracking-widest hover:scale-105 active:scale-95 transition-transform"
-        style={{ borderRadius: '15px', ...fontYearbook }}
+        className="w-full bg-[#8FA8C8] text-white py-3 font-bold tracking-widest hover:scale-105 active:scale-95 transition-transform"
+        style={{ borderRadius: '15px', ...fontYearbook, fontWeight: 'bold' }}
       >
         DONATE
       </button>
@@ -76,7 +76,7 @@ export function Donate() {
               <svg viewBox="0 0 512 512" className="w-8 h-8">
                 <path fill="#ffffff" d="M364.178 131.79c8.97 14.762 13.013 29.966 13.013 49.172 0 61.26-52.48 140.84-95.074 196.72h-97.285l-39.016-232.48 85.185-8.06 20.627 165.426c19.275-31.29 43.062-80.464 43.062-113.989 0-18.35-3.155-30.85-8.085-41.142l77.573-15.648z"/>
               </svg>
-              <div className="bg-white/20 px-3 py-1 rounded-full text-white text-[10px] font-bold tracking-widest uppercase" style={fontInter}>Profile</div>
+              <div className="bg-white/20 px-3 py-1 rounded-full text-white text-[10px] font-bold tracking-widest" style={fontInter}>Profile</div>
             </div>
 
             {/* Profile Content */}
@@ -184,7 +184,7 @@ export function Donate() {
               </div>
 
               <div className="bg-gray-50 p-6 rounded-2xl">
-                <p className="text-[11px] text-gray-400 uppercase tracking-widest font-bold mb-2">Note</p>
+                <p className="text-[11px] text-gray-400 tracking-widest font-bold mb-2">Note</p>
                 <p className="text-xs text-[#2B4C6F]/60 leading-relaxed italic">
                   Vocal U is a self-funded student organization. Every contribution goes directly toward our music and performances.
                 </p>
