@@ -140,7 +140,7 @@ export function Home() {
         style={{ gap: '25px', marginBottom: '25px', borderRadius: '20px' }}
       >
         <div>
-          <h2 className="mb-6 md:mb-8">
+          <h2 className="mb-6 md:mb-8 whitespace-nowrap">
             <span
               className="text-[#A3B8D3]"
               style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 56px)' }}
