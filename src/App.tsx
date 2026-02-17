@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
+import { Footer } from './components/Footer';
 import { VideoNotification } from './components/VideoNotification';
 
 const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
@@ -53,6 +54,7 @@ function AppContent() {
         </Suspense>
       </div>
       {!isAuditionsPage && <VideoNotification />}
+      {!isAuditionsPage && <Footer />}
     </div>
   );
 }

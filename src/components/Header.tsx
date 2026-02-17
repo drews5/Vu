@@ -105,10 +105,10 @@ export function Header() {
                     onMouseLeave={() => setAboutDropdownOpen(false)}
                   >
                     <div
-                      className={`px-4 py-2 cursor-default transition-all duration-200 font-bold ${
+                      className={`px-4 py-2 cursor-default transition-all duration-200 ${
                         isAboutActive ? 'text-white' : 'text-white/90 hover:text-white'
                       }`}
-                      style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em', fontWeight: 'bold' }}
+                      style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em' }}
                     >
                       {item.name}
                     </div>
@@ -127,8 +127,8 @@ export function Header() {
                             <Link
                               key={dropItem.path}
                               to={dropItem.path}
-                              className="block px-6 py-2 text-[#2B4C6F] hover:bg-[#8FA8C8]/10 transition-colors font-bold"
-                              style={{ ...fontYearbook, fontSize: '18px', fontWeight: 'bold' }}
+                              className="block px-6 py-2 text-[#2B4C6F] hover:bg-[#8FA8C8]/10 transition-colors"
+                              style={{ ...fontYearbook, fontSize: '18px' }}
                             >
                               {dropItem.name}
                             </Link>
@@ -140,12 +140,12 @@ export function Header() {
                 ) : (
                   <Link
                     to={item.path}
-                    className={`px-4 py-2 transition-all duration-200 font-bold ${
+                    className={`px-4 py-2 transition-all duration-200 ${
                       location.pathname === item.path
                         ? 'text-white'
                         : 'text-white/90 hover:text-white hover:scale-105'
                     }`}
-                    style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em', fontWeight: 'bold' }}
+                    style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em' }}
                   >
                     {item.name}
                   </Link>

@@ -242,8 +242,6 @@ export function Home() {
       <section className="mx-3 md:mx-0" style={{ marginBottom: '25px' }}>
         <ContactForm />
       </section>
-
-      <Footer />
     </div>
   );
 }
