@@ -156,7 +156,13 @@ async function setupAndSeed() {
     for (let hour = startHour; hour < endHour; hour++) {
       for (let minute = 0; minute < 60; minute += 5) {
         const time = `${hour > 12 ? hour - 12 : hour}:${minute === 0 ? '00' : minute < 10 ? '0' + minute : minute} PM`;
-        slots.push({ day, time, status: 'Available' });
+        
+        // Add a break every hour at the :55 mark
+        if (minute === 55) {
+          slots.push({ day, time, status: 'Break' });
+        } else {
+          slots.push({ day, time, status: 'Available' });
+        }
       }
     }
     return slots;

@@ -125,7 +125,7 @@ export function Auditions() {
           .from('auditions')
           .update({
             name: nameToSave,
-            email: emailInput.trim(),
+            email: emailInput.trim().toLowerCase(), // Case sensitive lowercase storage
             status: 'Booked'
           })
           .eq('id', id);
@@ -134,7 +134,7 @@ export function Auditions() {
         triggerConfetti();
       } else {
         if (emailInput.trim().toLowerCase() !== slot.email?.trim().toLowerCase()) {
-          alert("Student ID doesn't match the one used to book this slot!");
+          alert("Student ID doesn't match!");
           setIsSubmitting(false);
           return;
         }
@@ -173,138 +173,100 @@ export function Auditions() {
     { day: 'Thursday', date: 'Feb 19th' }
   ];
 
-  return (
-    <div className="pb-24">
-      {/* Skinnier Header */}
-      <section className="relative py-6 flex items-center justify-center overflow-hidden mb-6 mx-3 md:mx-0 mt-4" style={{ borderRadius: '24px' }}>
-        <div 
-          className="absolute inset-0 bg-[#2B4C6F] z-0"
-          style={{
-            backgroundImage: 'radial-gradient(circle at 20% 30%, #3d5e82 0%, transparent 70%), radial-gradient(circle at 80% 70%, #8FA8C8 0%, transparent 70%)'
-          }}
-        />
-        
-        <div className="relative z-10 text-center px-6">
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(32px, 5vw, 48px)', letterSpacing: '0.05em' }}>
-              AUDITIONS
-            </h1>
-            <div className="flex justify-center gap-4 text-white/80 mt-1 font-bold tracking-widest text-[9px]" style={fontInter}>
-              <div className="flex items-center gap-1.5"><Calendar className="w-3 h-3" /> FEB 18 & 19</div>
-              <div className="flex items-center gap-1.5"><Clock className="w-3 h-3" /> 6:00 - 9:00 PM</div>
+  const renderSlots = (daySlots: AuditionSlot[]) => {
+    // Split slots into 2 columns
+    const half = Math.ceil(daySlots.length / 2);
+    const col1 = daySlots.slice(0, half);
+    const col2 = daySlots.slice(half);
+
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {[col1, col2].map((column, colIdx) => (
+          <div key={colIdx} className="space-y-1">
+            <div className="grid grid-cols-10 gap-2 px-3 py-1.5 bg-gray-50 rounded-lg text-[9px] font-bold text-gray-400 tracking-widest uppercase">
+              <div className="col-span-3">TIME</div>
+              <div className="col-span-7">NAME</div>
             </div>
-          </motion.div>
-        </div>
-      </section>
+            {column.map((slot) => {
+              const isConfirming = confirmingId?.id === slot.id;
+              const isBooked = slot.status === 'Booked';
+              const isBreak = slot.status === 'Break';
+              const hasText = (tempNames[slot.id] || '').trim().length > 0;
 
-      <div className="max-w-7xl mx-auto px-2 md:px-4">
-        {/* Sign Up Section */}
-        <section className="bg-white rounded-[24px] shadow-xl overflow-hidden mb-8 border border-gray-100">
-          <div className="px-6 py-4 border-b border-gray-50 flex justify-between items-center">
-            <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: '20px' }}>
-              SIGN UP
-            </h2>
-          </div>
+              return (
+                <div 
+                  key={slot.id} 
+                  className={`grid grid-cols-10 gap-2 items-center p-1.5 rounded-lg transition-all border ${
+                    isConfirming ? 'border-[#8FA8C8] bg-[#8FA8C8]/5' : 
+                    isBooked ? 'border-transparent bg-gray-50/50 opacity-80' : 
+                    isBreak ? 'border-transparent bg-amber-50/30' : 
+                    'border-transparent hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="col-span-3 px-1">
+                    <span className={`font-bold text-[11px] ${isBooked ? 'text-gray-400' : 'text-[#2B4C6F]'}`} style={fontInter}>{slot.time}</span>
+                  </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2">
-            {daysData.map((dayInfo, dayIdx) => (
-              <div key={dayInfo.day} className={`p-4 md:p-6 ${dayIdx === 0 ? 'lg:border-r border-gray-100' : ''}`}>
-                <div className="flex items-baseline gap-2 mb-4">
-                  <h3 className="text-[#8FA8C8] text-lg uppercase tracking-widest" style={fontYearbook}>{dayInfo.day}</h3>
-                  <span className="text-[#8FA8C8]/60 text-xs font-bold uppercase tracking-wider" style={fontInter}>{dayInfo.date}</span>
-                </div>
-
-                {loading ? (
-                  <div className="py-12 flex justify-center"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#8FA8C8]" /></div>
-                ) : (
-                  <div className="space-y-1.5">
-                    <div className="grid grid-cols-10 gap-2 px-3 py-1.5 bg-gray-50 rounded-lg text-[9px] font-bold text-gray-400 tracking-widest uppercase">
-                      <div className="col-span-3">TIME</div>
-                      <div className="col-span-7">NAME</div>
-                    </div>
-
-                    <div className="max-h-[400px] lg:max-h-none overflow-y-auto pr-1 space-y-1 custom-scrollbar">
-                      {slots.filter(s => s.day === dayInfo.day).map((slot) => {
-                        const isConfirming = confirmingId?.id === slot.id;
-                        const isBooked = slot.status === 'Booked';
-                        const isBreak = slot.status === 'Break';
-                        const hasText = (tempNames[slot.id] || '').trim().length > 0;
-
-                        return (
-                          <div 
-                            key={slot.id} 
-                            className={`grid grid-cols-10 gap-2 items-center p-1.5 rounded-lg transition-all border ${
-                              isConfirming ? 'border-[#8FA8C8] bg-[#8FA8C8]/5' : 
-                              isBooked ? 'border-transparent bg-gray-50/50 opacity-80' : 
-                              isBreak ? 'border-transparent bg-amber-50/30' : 
-                              'border-transparent hover:bg-gray-50'
-                            }`}
+                  <div className="col-span-7 relative group">
+                    {isBreak ? (
+                      <span className="italic text-amber-600/40 font-medium px-2 text-[9px] uppercase">--- BREAK ---</span>
+                    ) : isBooked ? (
+                      <div className="flex items-center justify-between gap-2 px-2 py-1 bg-white rounded-md shadow-sm border border-gray-100">
+                        <span className="font-bold text-[#2B4C6F] text-[11px] truncate">{slot.name}</span>
+                        {!isConfirming && (
+                          <button 
+                            onClick={() => startConfirmation(slot.id, 'delete')} 
+                            className="text-gray-300 hover:text-red-500 transition-opacity p-0.5"
                           >
-                            <div className="col-span-3 px-1">
-                              <span className={`font-bold text-xs ${isBooked ? 'text-gray-400' : 'text-[#2B4C6F]'}`} style={fontInter}>{slot.time}</span>
-                            </div>
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="relative flex items-center">
+                        <input
+                          type="text"
+                          placeholder="Name"
+                          className={`w-full px-2 py-1.5 bg-white border rounded-md outline-none transition-all text-[11px] font-bold pr-8 ${
+                            editingId === slot.id ? 'border-[#8FA8C8]' : 'border-gray-200'
+                          }`}
+                          value={tempNames[slot.id] || ''}
+                          onFocus={() => setEditingSlotId(slot.id)}
+                          onChange={(e) => handleNameChange(slot.id, e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && hasText) startConfirmation(slot.id, 'save');
+                          }}
+                        />
+                        <AnimatePresence>
+                          {hasText && (
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.5 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.5 }}
+                              className="absolute right-1.5"
+                            >
+                              <button
+                                onClick={() => startConfirmation(slot.id, 'save')}
+                                className="p-1 bg-[#8FA8C8] text-white rounded hover:bg-[#7A97B7] shadow-sm transition-colors"
+                              >
+                                <Check className="w-3.5 h-3.5" />
+                              </button>
 
-                            <div className="col-span-7 relative group">
-                              {isBreak ? (
-                                <span className="italic text-amber-600/40 font-medium px-2 text-[9px] uppercase">--- BREAK ---</span>
-                              ) : isBooked ? (
-                                <div className="flex items-center justify-between gap-2 px-2 py-1 bg-white rounded-md shadow-sm border border-gray-100">
-                                  <span className="font-bold text-[#2B4C6F] text-xs truncate">{slot.name}</span>
-                                  {!isConfirming && (
-                                    <button 
-                                      onClick={() => startConfirmation(slot.id, 'delete')} 
-                                      className="text-gray-300 hover:text-red-500 transition-opacity p-0.5"
-                                    >
-                                      <Trash2 className="w-3 h-3" />
-                                    </button>
-                                  )}
-                                </div>
-                              ) : (
-                                <div className="relative flex items-center">
-                                  <input
-                                    type="text"
-                                    placeholder="TYPE NAME..."
-                                    className={`w-full px-2 py-1.5 bg-white border rounded-md outline-none transition-all text-xs font-bold pr-8 ${
-                                      editingId === slot.id ? 'border-[#8FA8C8]' : 'border-gray-200'
-                                    }`}
-                                    value={tempNames[slot.id] || ''}
-                                    onFocus={() => setEditingSlotId(slot.id)}
-                                    onChange={(e) => handleNameChange(slot.id, e.target.value)}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter' && hasText) startConfirmation(slot.id, 'save');
-                                    }}
-                                  />
-                                  <AnimatePresence>
-                                    {hasText && (
-                                      <motion.button
-                                        initial={{ opacity: 0, scale: 0.5 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.5 }}
-                                        onClick={() => startConfirmation(slot.id, 'save')}
-                                        className="absolute right-1.5 p-1 bg-[#8FA8C8] text-white rounded hover:bg-[#7A97B7] shadow-sm transition-colors"
-                                      >
-                                        <Check className="w-3 h-3" />
-                                      </motion.button>
-                                    )}
-                                  </AnimatePresence>
-                                </div>
-                              )}
-
-                              {/* 📧 Inline Mini Popup - Optimized Spacing */}
+                              {/* 📧 Inline Mini Popup - Positioned under checkmark */}
                               <AnimatePresence>
                                 {isConfirming && (
                                   <motion.div 
                                     initial={{ opacity: 0, scale: 0.9, y: 0 }}
                                     animate={{ opacity: 1, scale: 1, y: 8 }}
                                     exit={{ opacity: 0, scale: 0.9, y: 0 }}
-                                    className="absolute left-0 right-0 top-full z-20 bg-white shadow-2xl rounded-lg p-2 border-2 border-[#8FA8C8] flex flex-col gap-1.5 max-w-[200px]"
+                                    className="absolute right-0 top-full z-20 bg-white shadow-2xl rounded-lg p-2 border-2 border-[#8FA8C8] flex flex-col gap-1.5 min-w-[160px]"
                                   >
-                                    <div className="text-[8px] font-bold text-[#8FA8C8] uppercase tracking-wider">Student ID (lastname123)</div>
+                                    <div className="text-[8px] font-bold text-[#8FA8C8] uppercase tracking-wider">Student ID</div>
                                     <div className="flex items-center gap-1.5">
                                       <input 
                                         autoFocus
                                         type="text"
-                                        placeholder="ID"
+                                        placeholder="lastname123"
                                         className="flex-1 bg-gray-50 px-2 py-1 rounded text-[10px] outline-none font-bold min-w-0"
                                         value={emailInput}
                                         onChange={(e) => setEmailInput(e.target.value)}
@@ -337,19 +299,72 @@ export function Auditions() {
                                   </motion.div>
                                 )}
                               </AnimatePresence>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    )}
                   </div>
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="pb-24">
+      {/* Header */}
+      <section className="relative py-6 flex items-center justify-center overflow-hidden mb-6 mx-3 md:mx-0 mt-4" style={{ borderRadius: '24px' }}>
+        <div 
+          className="absolute inset-0 bg-[#2B4C6F] z-0"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 20% 30%, #3d5e82 0%, transparent 70%), radial-gradient(circle at 80% 70%, #8FA8C8 0%, transparent 70%)'
+          }}
+        />
+        <div className="relative z-10 text-center px-6">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <h1 className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(32px, 5vw, 48px)', letterSpacing: '0.05em' }}>
+              AUDITIONS
+            </h1>
+            <div className="flex justify-center gap-4 text-white/80 mt-1 font-bold tracking-widest text-[9px]" style={fontInter}>
+              <div className="flex items-center gap-1.5"><Calendar className="w-3 h-3" /> FEB 18 & 19</div>
+              <div className="flex items-center gap-1.5"><Clock className="w-3 h-3" /> 6:00 - 9:00 PM</div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-2 md:px-4">
+        {/* Sign Up Section */}
+        <section className="bg-white rounded-[24px] shadow-xl overflow-hidden mb-8 border border-gray-100">
+          <div className="px-6 py-4 border-b border-gray-50">
+            <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: '20px' }}>
+              SIGN UP
+            </h2>
+          </div>
+
+          <div className="p-4 md:p-6 space-y-12">
+            {daysData.map((dayInfo) => (
+              <div key={dayInfo.day}>
+                <div className="flex items-baseline gap-2 mb-4 border-b border-gray-100 pb-2">
+                  <h3 className="text-[#8FA8C8] text-lg uppercase tracking-widest" style={fontYearbook}>{dayInfo.day}</h3>
+                  <span className="text-[#8FA8C8]/60 text-sm font-bold uppercase tracking-wider" style={fontInter}>{dayInfo.date}</span>
+                </div>
+
+                {loading ? (
+                  <div className="py-12 flex justify-center"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#8FA8C8]" /></div>
+                ) : (
+                  renderSlots(slots.filter(s => s.day === dayInfo.day))
                 )}
               </div>
             ))}
           </div>
         </section>
 
-        {/* 📚 Information Grid */}
+        {/* Info Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
           <div className="bg-white p-6 rounded-[20px] shadow-lg border-t-4 border-[#8FA8C8]">
             <Users className="w-5 h-5 text-[#8FA8C8] mb-3" />
