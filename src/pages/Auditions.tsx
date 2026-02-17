@@ -322,7 +322,7 @@ export function Auditions() {
   return (
     <div className="pb-24">
       {/* Header with Logo and Animated Gradient */}
-      <section className="relative py-8 flex items-center justify-center overflow-hidden mb-6 mx-3 md:mx-[50px] mt-[25px] animate-gradient shadow-xl" 
+      <section className="relative py-8 flex items-center justify-center overflow-hidden mb-6 mx-3 md:mx-0 mt-[25px] animate-gradient shadow-xl" 
         style={{ 
           borderRadius: '24px',
           background: 'linear-gradient(115deg, #2B4C6F, #8FA8C8, #2B4C6F, #8FA8C8, #2B4C6F)'
@@ -351,7 +351,7 @@ export function Auditions() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-2 md:px-[50px]">
+      <div className="px-2 md:px-0">
         {/* Sign Up Section */}
         <section className="bg-white rounded-[24px] shadow-xl overflow-hidden mb-[25px] border border-gray-100">
           <div className="px-6 py-3 border-b border-gray-50 flex justify-between items-center">
