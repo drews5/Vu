@@ -43,31 +43,43 @@ const TierCard = memo(function TierCard({
 
 export function Donate() {
   return (
-    <div className="pb-8 md:pb-16">
+    <div className="pb-8 md:pb-16 min-h-screen">
       <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
-          className="bg-[#91a8c6] shadow-xl py-16 md:py-24 px-4 text-center text-white"
+          className="bg-[#91a8c6] shadow-xl py-12 md:py-16 px-4 text-center text-white"
           style={{ borderRadius: '20px' }}
         >
           <h1
-            style={{ ...fontYearbook, fontSize: 'clamp(48px, 10vw, 96px)', letterSpacing: '0.05em' }}
+            style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}
           >
             SUPPORT US
           </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-lg opacity-90" style={{ fontFamily: 'Inter, sans-serif' }}>
+          <p className="mt-4 max-w-2xl mx-auto text-base md:text-lg opacity-90" style={{ fontFamily: 'Inter, sans-serif' }}>
             Vocal U is a self-funded student organization. Your donations help us cover travel, recording
             costs, and competition fees.
           </p>
         </div>
       </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: '25px', marginBottom: '40px' }}>
-        {tiers.map((tier, index) => (
-          <TierCard key={index} tier={tier} />
-        ))}
+      {/* Givebutter Embed Container */}
+      <div 
+        className="bg-white shadow-2xl overflow-hidden relative" 
+        style={{ 
+          borderRadius: '24px',
+          height: '1000px', // High enough to contain the donation flow
+          width: '100%',
+          border: '1px solid rgba(0,0,0,0.05)'
+        }}
+      >
+        <iframe
+          src="https://givebutter.com/embed/c/vu"
+          className="w-full h-full border-0 absolute inset-0"
+          title="Vocal U Donation"
+          allow="payment"
+        />
       </div>
 
-      <div className="bg-white p-8 shadow-lg" style={{ borderRadius: '20px' }}>
+      <div className="bg-white p-8 shadow-lg mt-8" style={{ borderRadius: '20px' }}>
         <h2 className="text-[#2B4C6F] text-2xl mb-4 text-center" style={fontYearbook}>
           OTHER WAYS TO HELP
         </h2>
@@ -75,14 +87,14 @@ export function Donate() {
           className="grid grid-cols-1 md:grid-cols-2 gap-8 text-[#2B4C6F]/80"
           style={{ fontFamily: 'Inter, sans-serif' }}
         >
-          <div className="space-y-2">
+          <div className="space-y-2 text-center md:text-left">
             <h3 className="font-bold text-lg text-[#2B4C6F]">Spread the Word</h3>
             <p>
               Follow us on Instagram and TikTok, share our posts, and tell your friends about our upcoming
               shows!
             </p>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 text-center md:text-left">
             <h3 className="font-bold text-lg text-[#2B4C6F]">Venmo</h3>
             <p>
               You can also donate directly via Venmo @VocalU-UMN. Every dollar counts towards our next
