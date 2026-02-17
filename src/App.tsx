@@ -38,7 +38,7 @@ function AppContent() {
     <div className="min-h-screen bg-white">
       <ScrollToTop />
       {!isAuditionsPage && <Header />}
-      <div className={isAuditionsPage ? "px-3 md:px-[50px]" : "px-3 md:px-[50px] pb-[25px]"}>
+      <div className={isAuditionsPage ? "px-3 md:px-[50px]" : "px-3 md:px-[50px]"}>
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -52,9 +52,9 @@ function AppContent() {
             <Route path="/auditions" element={<Auditions />} />
           </Routes>
         </Suspense>
+        {!isAuditionsPage && <Footer />}
       </div>
       {!isAuditionsPage && <VideoNotification />}
-      {!isAuditionsPage && <Footer />}
     </div>
   );
 }
