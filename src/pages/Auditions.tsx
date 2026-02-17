@@ -322,10 +322,10 @@ export function Auditions() {
   return (
     <div className="pb-24">
       {/* Header with Logo and Animated Gradient */}
-      <section className="relative py-8 flex items-center justify-center overflow-hidden mb-6 mx-3 md:mx-0 mt-4 animate-gradient shadow-xl" 
+      <section className="relative py-8 flex items-center justify-center overflow-hidden mb-6 mx-3 md:mx-[50px] mt-[25px] animate-gradient shadow-xl" 
         style={{ 
           borderRadius: '24px',
-          background: 'linear-gradient(90deg, #2B4C6F, #8FA8C8, #2B4C6F, #8FA8C8, #2B4C6F, #8FA8C8, #2B4C6F)'
+          background: 'linear-gradient(115deg, #2B4C6F, #8FA8C8, #2B4C6F, #8FA8C8, #2B4C6F)'
         }}>
         
         <div className="relative z-10 text-center px-6 w-full flex items-center justify-center gap-6 md:gap-10">
@@ -342,18 +342,18 @@ export function Auditions() {
               <h1 className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '0.05em', lineHeight: '1' }}>
                 AUDITIONS
               </h1>
-              <div className="flex gap-4 text-white/80 mt-2 font-bold tracking-widest text-[10px]" style={fontInter}>
-                <div className="flex items-center gap-1.5 uppercase"><Calendar className="w-3.5 h-3.5" /> FEB 18 & 19</div>
-                <div className="flex items-center gap-1.5 uppercase"><Clock className="w-3.5 h-3.5" /> 6:00 - 9:00 PM</div>
+              <div className="flex gap-6 text-white/90 mt-2 font-bold tracking-widest text-[12px] md:text-[14px]" style={fontInter}>
+                <div className="flex items-center gap-2 uppercase"><Calendar className="w-4 h-4 md:w-5 md:h-5" /> FEB 18 & 19</div>
+                <div className="flex items-center gap-2 uppercase"><Clock className="w-4 h-4 md:w-5 md:h-5" /> 6:00 - 9:00 PM</div>
               </div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-2 md:px-4">
+      <div className="max-w-7xl mx-auto px-2 md:px-[50px]">
         {/* Sign Up Section */}
-        <section className="bg-white rounded-[24px] shadow-xl overflow-hidden mb-8 border border-gray-100">
+        <section className="bg-white rounded-[24px] shadow-xl overflow-hidden mb-[25px] border border-gray-100">
           <div className="px-6 py-3 border-b border-gray-50 flex justify-between items-center">
             <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: '18px' }}>
               SIGN UP
@@ -361,12 +361,12 @@ export function Auditions() {
           </div>
 
           <div className="p-2 md:p-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {daysData.map((dayInfo) => (
                 <div key={dayInfo.day}>
-                  <div className="flex items-baseline gap-2 mb-2 border-b border-gray-100 pb-1">
-                    <h3 className="text-[#8FA8C8] text-base uppercase tracking-widest font-bold" style={fontYearbook}>{dayInfo.day}</h3>
-                    <span className="text-[#8FA8C8]/60 text-xs font-bold uppercase tracking-wider" style={fontInter}>{dayInfo.date}</span>
+                  <div className="flex items-baseline gap-2 mb-3 border-b border-gray-100 pb-1">
+                    <h3 className="text-[#8FA8C8] text-sm uppercase tracking-widest font-bold" style={fontYearbook}>{dayInfo.day}</h3>
+                    <span className="text-[#8FA8C8]/60 text-[10px] font-bold uppercase tracking-wider" style={fontInter}>{dayInfo.date}</span>
                   </div>
 
                   {loading ? (
@@ -381,7 +381,7 @@ export function Auditions() {
         </section>
 
         {/* Info Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-[25px]">
           <div className="bg-white p-6 rounded-[20px] shadow-lg border-t-4 border-[#8FA8C8]">
             <Users className="w-5 h-5 text-[#8FA8C8] mb-3" />
             <h3 className="text-[#2B4C6F] text-base mb-1" style={fontYearbook}>WALK-INS</h3>
