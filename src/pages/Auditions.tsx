@@ -125,7 +125,7 @@ export function Auditions() {
           .from('auditions')
           .update({
             name: nameToSave,
-            email: emailInput.trim(), // We're using the 'email' column to store the ID
+            email: emailInput.trim(),
             status: 'Booked'
           })
           .eq('id', id);
@@ -133,7 +133,6 @@ export function Auditions() {
         if (error) throw error;
         triggerConfetti();
       } else {
-        // Delete mode
         if (emailInput.trim().toLowerCase() !== slot.email?.trim().toLowerCase()) {
           alert("Student ID doesn't match the one used to book this slot!");
           setIsSubmitting(false);
@@ -152,7 +151,6 @@ export function Auditions() {
         if (error) throw error;
       }
 
-      // Success - Only reset state AFTER DB success
       setConfirmingId(null);
       setEmailInput('');
       setEditingSlotId(null);
@@ -164,7 +162,7 @@ export function Auditions() {
       await fetchSlots();
     } catch (error: any) {
       console.error('Submission Error:', error);
-      alert(`Could not update slot: ${error.message || 'Check your internet connection or try again.'}`);
+      alert(`Could not update slot: ${error.message || 'Check your internet connection.'}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -177,8 +175,8 @@ export function Auditions() {
 
   return (
     <div className="pb-24">
-      {/* 🚀 Header Section */}
-      <section className="relative py-8 flex items-center justify-center overflow-hidden mb-8 mx-3 md:mx-0 mt-6" style={{ borderRadius: '32px' }}>
+      {/* Skinnier Header */}
+      <section className="relative py-6 flex items-center justify-center overflow-hidden mb-6 mx-3 md:mx-0 mt-4" style={{ borderRadius: '24px' }}>
         <div 
           className="absolute inset-0 bg-[#2B4C6F] z-0"
           style={{
@@ -188,158 +186,162 @@ export function Auditions() {
         
         <div className="relative z-10 text-center px-6">
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(36px, 6vw, 60px)', letterSpacing: '0.05em' }}>
+            <h1 className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(32px, 5vw, 48px)', letterSpacing: '0.05em' }}>
               AUDITIONS
             </h1>
-            <div className="flex justify-center gap-6 text-white/80 mt-1 font-bold tracking-widest text-[10px]" style={fontInter}>
-              <div className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" /> FEB 18 & 19</div>
-              <div className="flex items-center gap-2"><Clock className="w-3.5 h-3.5" /> 6:00 - 9:00 PM</div>
+            <div className="flex justify-center gap-4 text-white/80 mt-1 font-bold tracking-widest text-[9px]" style={fontInter}>
+              <div className="flex items-center gap-1.5"><Calendar className="w-3 h-3" /> FEB 18 & 19</div>
+              <div className="flex items-center gap-1.5"><Clock className="w-3 h-3" /> 6:00 - 9:00 PM</div>
             </div>
           </motion.div>
         </div>
       </section>
 
-      <div className="max-w-6xl mx-auto px-4">
-        {/* 📊 Sign Up Section */}
-        <section className="bg-white rounded-[32px] shadow-2xl overflow-hidden mb-16 border border-gray-100">
-          <div className="px-8 py-6 border-b border-gray-50">
-            <h2 className="text-[#2B4C6F] text-left opacity-80" style={{ ...fontYearbook, fontSize: '24px' }}>
+      <div className="max-w-7xl mx-auto px-2 md:px-4">
+        {/* Sign Up Section */}
+        <section className="bg-white rounded-[24px] shadow-xl overflow-hidden mb-8 border border-gray-100">
+          <div className="px-6 py-4 border-b border-gray-50 flex justify-between items-center">
+            <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: '20px' }}>
               SIGN UP
             </h2>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {daysData.map((dayInfo, dayIdx) => (
-              <div key={dayInfo.day} className={`p-6 md:p-8 ${dayIdx === 0 ? 'lg:border-r border-gray-100' : ''}`}>
-                <div className="flex items-baseline gap-2 mb-6">
-                  <h3 className="text-[#8FA8C8] text-xl uppercase tracking-widest" style={fontYearbook}>{dayInfo.day}</h3>
-                  <span className="text-[#8FA8C8]/60 text-sm font-bold uppercase tracking-wider" style={fontInter}>{dayInfo.date}</span>
+              <div key={dayInfo.day} className={`p-4 md:p-6 ${dayIdx === 0 ? 'lg:border-r border-gray-100' : ''}`}>
+                <div className="flex items-baseline gap-2 mb-4">
+                  <h3 className="text-[#8FA8C8] text-lg uppercase tracking-widest" style={fontYearbook}>{dayInfo.day}</h3>
+                  <span className="text-[#8FA8C8]/60 text-xs font-bold uppercase tracking-wider" style={fontInter}>{dayInfo.date}</span>
                 </div>
 
                 {loading ? (
-                  <div className="py-20 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#8FA8C8]" /></div>
+                  <div className="py-12 flex justify-center"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#8FA8C8]" /></div>
                 ) : (
-                  <div className="space-y-2">
-                    <div className="grid grid-cols-10 gap-2 px-4 py-2 bg-gray-50 rounded-xl text-[10px] font-bold text-gray-400 tracking-widest uppercase">
+                  <div className="space-y-1.5">
+                    <div className="grid grid-cols-10 gap-2 px-3 py-1.5 bg-gray-50 rounded-lg text-[9px] font-bold text-gray-400 tracking-widest uppercase">
                       <div className="col-span-3">TIME</div>
                       <div className="col-span-7">NAME</div>
                     </div>
 
-                    {slots.filter(s => s.day === dayInfo.day).map((slot) => {
-                      const isConfirming = confirmingId?.id === slot.id;
-                      const isBooked = slot.status === 'Booked';
-                      const isBreak = slot.status === 'Break';
-                      const hasText = (tempNames[slot.id] || '').trim().length > 0;
+                    <div className="max-h-[400px] lg:max-h-none overflow-y-auto pr-1 space-y-1 custom-scrollbar">
+                      {slots.filter(s => s.day === dayInfo.day).map((slot) => {
+                        const isConfirming = confirmingId?.id === slot.id;
+                        const isBooked = slot.status === 'Booked';
+                        const isBreak = slot.status === 'Break';
+                        const hasText = (tempNames[slot.id] || '').trim().length > 0;
 
-                      return (
-                        <div 
-                          key={slot.id} 
-                          className={`grid grid-cols-10 gap-2 items-center p-2 rounded-xl transition-all border ${
-                            isConfirming ? 'border-[#8FA8C8] bg-[#8FA8C8]/5' : 
-                            isBooked ? 'border-transparent bg-gray-50/50 opacity-80' : 
-                            isBreak ? 'border-transparent bg-amber-50/30' : 
-                            'border-transparent hover:bg-gray-50'
-                          }`}
-                        >
-                          <div className="col-span-3 px-2">
-                            <span className={`font-bold text-sm ${isBooked ? 'text-gray-400' : 'text-[#2B4C6F]'}`} style={fontInter}>{slot.time}</span>
-                          </div>
+                        return (
+                          <div 
+                            key={slot.id} 
+                            className={`grid grid-cols-10 gap-2 items-center p-1.5 rounded-lg transition-all border ${
+                              isConfirming ? 'border-[#8FA8C8] bg-[#8FA8C8]/5' : 
+                              isBooked ? 'border-transparent bg-gray-50/50 opacity-80' : 
+                              isBreak ? 'border-transparent bg-amber-50/30' : 
+                              'border-transparent hover:bg-gray-50'
+                            }`}
+                          >
+                            <div className="col-span-3 px-1">
+                              <span className={`font-bold text-xs ${isBooked ? 'text-gray-400' : 'text-[#2B4C6F]'}`} style={fontInter}>{slot.time}</span>
+                            </div>
 
-                          <div className="col-span-7 relative group">
-                            {isBreak ? (
-                              <span className="italic text-amber-600/40 font-medium px-3 text-[10px] uppercase">--- BREAK ---</span>
-                            ) : isBooked ? (
-                              <div className="flex items-center justify-between gap-2 px-3 py-2 bg-white rounded-lg shadow-sm border border-gray-100">
-                                <span className="font-bold text-[#2B4C6F] text-sm truncate">{slot.name}</span>
-                                {!isConfirming && (
-                                  <button 
-                                    onClick={() => startConfirmation(slot.id, 'delete')} 
-                                    className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1"
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                  </button>
-                                )}
-                              </div>
-                            ) : (
-                              <div className="relative flex items-center">
-                                <input
-                                  type="text"
-                                  placeholder="TYPE NAME..."
-                                  className={`w-full px-3 py-2 bg-white border rounded-lg outline-none transition-all text-sm font-bold pr-10 ${
-                                    editingId === slot.id ? 'border-[#8FA8C8]' : 'border-gray-200'
-                                  }`}
-                                  value={tempNames[slot.id] || ''}
-                                  onFocus={() => setEditingSlotId(slot.id)}
-                                  onChange={(e) => handleNameChange(slot.id, e.target.value)}
-                                  onKeyDown={(e) => {
-                                    if (e.key === 'Enter' && hasText) startConfirmation(slot.id, 'save');
-                                  }}
-                                />
-                                <AnimatePresence>
-                                  {hasText && (
-                                    <motion.button
-                                      initial={{ opacity: 0, scale: 0.5 }}
-                                      animate={{ opacity: 1, scale: 1 }}
-                                      exit={{ opacity: 0, scale: 0.5 }}
-                                      onClick={() => startConfirmation(slot.id, 'save')}
-                                      className="absolute right-2 p-1 bg-[#8FA8C8] text-white rounded hover:bg-[#7A97B7] shadow-sm transition-colors"
+                            <div className="col-span-7 relative group">
+                              {isBreak ? (
+                                <span className="italic text-amber-600/40 font-medium px-2 text-[9px] uppercase">--- BREAK ---</span>
+                              ) : isBooked ? (
+                                <div className="flex items-center justify-between gap-2 px-2 py-1 bg-white rounded-md shadow-sm border border-gray-100">
+                                  <span className="font-bold text-[#2B4C6F] text-xs truncate">{slot.name}</span>
+                                  {!isConfirming && (
+                                    <button 
+                                      onClick={() => startConfirmation(slot.id, 'delete')} 
+                                      className="text-gray-300 hover:text-red-500 transition-opacity p-0.5"
                                     >
-                                      <Check className="w-3.5 h-3.5" />
-                                    </motion.button>
+                                      <Trash2 className="w-3 h-3" />
+                                    </button>
                                   )}
-                                </AnimatePresence>
-                              </div>
-                            )}
-
-                            {/* 📧 Inline Mini Popup - Positioned Below */}
-                            <AnimatePresence>
-                              {isConfirming && (
-                                <motion.div 
-                                  initial={{ opacity: 0, scale: 0.9, y: 0 }}
-                                  animate={{ opacity: 1, scale: 1, y: 10 }}
-                                  exit={{ opacity: 0, scale: 0.9, y: 0 }}
-                                  className="absolute left-0 right-0 top-full z-20 bg-white shadow-2xl rounded-xl p-3 border-2 border-[#8FA8C8] flex flex-col gap-2 max-w-[240px] mx-auto lg:mx-0"
-                                >
-                                  <div className="text-[9px] font-bold text-[#8FA8C8] uppercase tracking-wider">Verify Student ID (e.g. gopher123)</div>
-                                  <div className="flex items-center gap-2">
-                                    <input 
-                                      autoFocus
-                                      type="text"
-                                      placeholder="Student ID"
-                                      className="flex-1 bg-gray-50 px-2 py-1.5 rounded text-xs outline-none font-bold"
-                                      value={emailInput}
-                                      onChange={(e) => setEmailInput(e.target.value)}
-                                      onKeyDown={(e) => {
-                                        if (e.key === 'Enter') processAction();
-                                        if (e.key === 'Escape') setConfirmingId(null);
-                                      }}
-                                    />
-                                    <button 
-                                      onClick={processAction} 
-                                      disabled={isSubmitting || !emailInput.trim()} 
-                                      className="p-1.5 bg-[#8FA8C8] text-white rounded hover:bg-[#7A97B7] disabled:opacity-50"
-                                    >
-                                      {isSubmitting ? (
-                                        <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent animate-spin rounded-full" />
-                                      ) : (
-                                        <Check className="w-3.5 h-3.5" />
-                                      )}
-                                    </button>
-                                    <button 
-                                      onClick={() => setConfirmingId(null)} 
-                                      disabled={isSubmitting}
-                                      className="p-1.5 bg-gray-100 text-gray-400 rounded hover:bg-gray-200"
-                                    >
-                                      <X className="w-3.5 h-3.5" />
-                                    </button>
-                                  </div>
-                                </motion.div>
+                                </div>
+                              ) : (
+                                <div className="relative flex items-center">
+                                  <input
+                                    type="text"
+                                    placeholder="TYPE NAME..."
+                                    className={`w-full px-2 py-1.5 bg-white border rounded-md outline-none transition-all text-xs font-bold pr-8 ${
+                                      editingId === slot.id ? 'border-[#8FA8C8]' : 'border-gray-200'
+                                    }`}
+                                    value={tempNames[slot.id] || ''}
+                                    onFocus={() => setEditingSlotId(slot.id)}
+                                    onChange={(e) => handleNameChange(slot.id, e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter' && hasText) startConfirmation(slot.id, 'save');
+                                    }}
+                                  />
+                                  <AnimatePresence>
+                                    {hasText && (
+                                      <motion.button
+                                        initial={{ opacity: 0, scale: 0.5 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.5 }}
+                                        onClick={() => startConfirmation(slot.id, 'save')}
+                                        className="absolute right-1.5 p-1 bg-[#8FA8C8] text-white rounded hover:bg-[#7A97B7] shadow-sm transition-colors"
+                                      >
+                                        <Check className="w-3 h-3" />
+                                      </motion.button>
+                                    )}
+                                  </AnimatePresence>
+                                </div>
                               )}
-                            </AnimatePresence>
+
+                              {/* 📧 Inline Mini Popup - Optimized Spacing */}
+                              <AnimatePresence>
+                                {isConfirming && (
+                                  <motion.div 
+                                    initial={{ opacity: 0, scale: 0.9, y: 0 }}
+                                    animate={{ opacity: 1, scale: 1, y: 8 }}
+                                    exit={{ opacity: 0, scale: 0.9, y: 0 }}
+                                    className="absolute left-0 right-0 top-full z-20 bg-white shadow-2xl rounded-lg p-2 border-2 border-[#8FA8C8] flex flex-col gap-1.5 max-w-[200px]"
+                                  >
+                                    <div className="text-[8px] font-bold text-[#8FA8C8] uppercase tracking-wider">Student ID (lastname123)</div>
+                                    <div className="flex items-center gap-1.5">
+                                      <input 
+                                        autoFocus
+                                        type="text"
+                                        placeholder="ID"
+                                        className="flex-1 bg-gray-50 px-2 py-1 rounded text-[10px] outline-none font-bold min-w-0"
+                                        value={emailInput}
+                                        onChange={(e) => setEmailInput(e.target.value)}
+                                        onKeyDown={(e) => {
+                                          if (e.key === 'Enter') processAction();
+                                          if (e.key === 'Escape') setConfirmingId(null);
+                                        }}
+                                      />
+                                      <div className="flex items-center gap-1 shrink-0">
+                                        <button 
+                                          onClick={processAction} 
+                                          disabled={isSubmitting || !emailInput.trim()} 
+                                          className="p-1 bg-[#8FA8C8] text-white rounded hover:bg-[#7A97B7] disabled:opacity-50"
+                                        >
+                                          {isSubmitting ? (
+                                            <div className="w-3 h-3 border-2 border-white border-t-transparent animate-spin rounded-full" />
+                                          ) : (
+                                            <Check className="w-3 h-3" />
+                                          )}
+                                        </button>
+                                        <button 
+                                          onClick={() => setConfirmingId(null)} 
+                                          disabled={isSubmitting}
+                                          className="p-1 bg-gray-100 text-gray-400 rounded hover:bg-gray-200"
+                                        >
+                                          <X className="w-3 h-3" />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
               </div>
@@ -348,21 +350,21 @@ export function Auditions() {
         </section>
 
         {/* 📚 Information Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white p-8 rounded-[24px] shadow-lg border-t-4 border-[#8FA8C8]">
-            <Users className="w-6 h-6 text-[#8FA8C8] mb-4" />
-            <h3 className="text-[#2B4C6F] text-lg mb-2" style={fontYearbook}>WALK-INS</h3>
-            <p className="text-gray-500 text-sm leading-relaxed" style={fontInter}>Didn't get a slot? Just come to the desk at the audition location and we'll fit you in.</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+          <div className="bg-white p-6 rounded-[20px] shadow-lg border-t-4 border-[#8FA8C8]">
+            <Users className="w-5 h-5 text-[#8FA8C8] mb-3" />
+            <h3 className="text-[#2B4C6F] text-base mb-1" style={fontYearbook}>WALK-INS</h3>
+            <p className="text-gray-500 text-[11px] leading-relaxed" style={fontInter}>Didn't get a slot? Just come to the desk at the audition location and we'll fit you in.</p>
           </div>
-          <div className="bg-white p-8 rounded-[24px] shadow-lg border-t-4 border-[#2B4C6F]">
-            <Music className="w-6 h-6 text-[#2B4C6F] mb-4" />
-            <h3 className="text-[#2B4C6F] text-lg mb-2" style={fontYearbook}>PREPARATION</h3>
-            <p className="text-gray-500 text-sm leading-relaxed" style={fontInter}>Prepare 30-60s of any song that shows off your voice. Plus a quick chat!</p>
+          <div className="bg-white p-6 rounded-[20px] shadow-lg border-t-4 border-[#2B4C6F]">
+            <Music className="w-5 h-5 text-[#2B4C6F] mb-3" />
+            <h3 className="text-[#2B4C6F] text-base mb-1" style={fontYearbook}>PREPARATION</h3>
+            <p className="text-gray-500 text-[11px] leading-relaxed" style={fontInter}>Prepare 30-60s of any song that shows off your voice. Plus a quick chat!</p>
           </div>
-          <div className="bg-white p-8 rounded-[24px] shadow-lg border-t-4 border-amber-400">
-            <AlertCircle className="w-6 h-6 text-amber-500 mb-4" />
-            <h3 className="text-[#2B4C6F] text-lg mb-2" style={fontYearbook}>LOCATION</h3>
-            <p className="text-gray-500 text-sm leading-relaxed" style={fontInter}>UMN Campus. Exact room details will be sent to your student email after booking.</p>
+          <div className="bg-white p-6 rounded-[20px] shadow-lg border-t-4 border-amber-400">
+            <AlertCircle className="w-5 h-5 text-amber-500 mb-3" />
+            <h3 className="text-[#2B4C6F] text-base mb-1" style={fontYearbook}>LOCATION</h3>
+            <p className="text-gray-500 text-[11px] leading-relaxed" style={fontInter}>UMN Campus. Room details will be sent to your student email after booking.</p>
           </div>
         </div>
       </div>

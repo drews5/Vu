@@ -149,12 +149,22 @@ async function setupAndSeed() {
   else console.log('Events seeded successfully');
 
   // 3. Seed Auditions
+  const generateSlots = (day) => {
+    const slots = [];
+    const startHour = 18; // 6 PM
+    const endHour = 21; // 9 PM
+    for (let hour = startHour; hour < endHour; hour++) {
+      for (let minute = 0; minute < 60; minute += 5) {
+        const time = `${hour > 12 ? hour - 12 : hour}:${minute === 0 ? '00' : minute < 10 ? '0' + minute : minute} PM`;
+        slots.push({ day, time, status: 'Available' });
+      }
+    }
+    return slots;
+  };
+
   const auditionSlots = [
-    { day: 'Wednesday', time: '6:00 PM', status: 'Available' },
-    { day: 'Wednesday', time: '6:05 PM', status: 'Available' },
-    { day: 'Wednesday', time: '6:10 PM', status: 'Available' },
-    { day: 'Thursday', time: '6:00 PM', status: 'Available' },
-    { day: 'Thursday', time: '6:05 PM', status: 'Available' }
+    ...generateSlots('Wednesday'),
+    ...generateSlots('Thursday')
   ];
 
   await supabase.from('auditions').delete().neq('id', '00000000-0000-0000-0000-000000000000');
