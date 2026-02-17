@@ -79,7 +79,7 @@ export function Home() {
       } else {
         const formatted = data.map((r: any) => ({
           tag: r.tag,
-          date: new Date(r.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase(),
+            date: new Date(r.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
           title: r.title,
           location: r.location,
           link: `/event/${r.slug}`,
