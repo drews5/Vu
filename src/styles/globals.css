@@ -190,3 +190,11 @@ html {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Ensure Yearbook Solid is crisp */
+h1, h2, h3, button, .font-yearbook {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-weight: normal; /* Webfonts like Yearbook Solid shouldn't have artificial bolding */
+}

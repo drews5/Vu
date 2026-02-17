@@ -182,10 +182,10 @@ export function Auditions() {
     const col2 = daySlots.slice(half);
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-1">
         {[col1, col2].map((column, colIdx) => (
-          <div key={colIdx} className="space-y-1">
-            <div className="grid grid-cols-10 gap-2 px-3 py-1 bg-gray-50 rounded text-[8px] font-bold text-gray-400 tracking-widest uppercase">
+          <div key={colIdx} className="space-y-0.5">
+            <div className="grid grid-cols-10 gap-1 px-2 py-1 bg-gray-50 rounded text-[9px] font-bold text-gray-400 tracking-widest uppercase">
               <div className="col-span-3">TIME</div>
               <div className="col-span-7">NAME</div>
             </div>
@@ -198,29 +198,29 @@ export function Auditions() {
               return (
                 <div 
                   key={slot.id} 
-                  className={`grid grid-cols-10 gap-2 items-center p-1 rounded-lg transition-all border ${
+                  className={`grid grid-cols-10 gap-1 items-center p-1 rounded transition-all border ${
                     isConfirming ? 'border-[#8FA8C8] bg-[#8FA8C8]/5' : 
                     isBooked ? 'border-transparent bg-gray-50/50 opacity-80' : 
                     isBreak ? 'border-transparent bg-amber-50/30' : 
                     'border-transparent hover:bg-gray-50'
                   }`}
                 >
-                  <div className="col-span-3 px-1">
-                    <span className={`font-bold text-[10px] ${isBooked ? 'text-gray-400' : 'text-[#2B4C6F]'}`} style={fontInter}>{slot.time}</span>
+                  <div className="col-span-3 px-0.5">
+                    <span className={`font-bold text-[12px] ${isBooked ? 'text-gray-400' : 'text-[#2B4C6F]'}`} style={fontInter}>{slot.time}</span>
                   </div>
 
                   <div className="col-span-7 relative group">
                     {isBreak ? (
-                      <span className="italic text-amber-600/40 font-medium px-2 text-[8px] uppercase tracking-tighter">--- BREAK ---</span>
+                      <span className="italic text-amber-600/40 font-medium px-1 text-[9px] uppercase tracking-tighter">--- BREAK ---</span>
                     ) : isBooked ? (
-                      <div className="flex items-center justify-between gap-2 px-2 py-0.5 bg-white rounded shadow-sm border border-gray-100">
-                        <span className="font-bold text-[#2B4C6F] text-[10px] truncate">{slot.name}</span>
+                      <div className="flex items-center justify-between gap-1 px-1.5 py-0.5 bg-white rounded shadow-sm border border-gray-100">
+                        <span className="font-bold text-[#2B4C6F] text-[12px] truncate">{slot.name}</span>
                         {!isConfirming && (
                           <button 
                             onClick={() => startConfirmation(slot.id, 'delete')} 
                             className="text-gray-300 hover:text-red-500 transition-opacity p-0.5"
                           >
-                            <Trash2 className="w-2.5 h-2.5" />
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         )}
                       </div>
@@ -229,7 +229,7 @@ export function Auditions() {
                         <input
                           type="text"
                           placeholder="Name"
-                          className={`w-full px-2 py-0.5 bg-white border rounded outline-none transition-all text-[10px] font-bold pr-6 ${
+                          className={`w-full px-1.5 py-0.5 bg-white border rounded outline-none transition-all text-[12px] font-bold pr-6 ${
                             editingId === slot.id ? 'border-[#8FA8C8]' : 'border-gray-200'
                           }`}
                           value={tempNames[slot.id] || ''}
@@ -356,13 +356,13 @@ export function Auditions() {
             </h2>
           </div>
 
-          <div className="p-2 md:p-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="p-2 md:p-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-8">
               {daysData.map((dayInfo) => (
                 <div key={dayInfo.day}>
-                  <div className="flex items-baseline gap-2 mb-3 border-b border-gray-100 pb-1">
-                    <h3 className="text-[#8FA8C8] text-sm uppercase tracking-widest font-bold" style={fontYearbook}>{dayInfo.day}</h3>
-                    <span className="text-[#8FA8C8]/60 text-[10px] font-bold uppercase tracking-wider" style={fontInter}>{dayInfo.date}</span>
+                  <div className="flex items-baseline gap-2 mb-2 border-b border-gray-100 pb-1">
+                    <h3 className="text-[#8FA8C8] text-base uppercase tracking-widest font-bold" style={fontYearbook}>{dayInfo.day}</h3>
+                    <span className="text-[#8FA8C8]/60 text-xs font-bold uppercase tracking-wider" style={fontInter}>{dayInfo.date}</span>
                   </div>
 
                   {loading ? (
