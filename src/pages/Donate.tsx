@@ -64,40 +64,8 @@ export function Donate() {
       </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left: Givebutter Embed Container (8/12 columns) */}
-        <div 
-          className="lg:col-span-7 bg-white shadow-2xl overflow-hidden relative flex flex-col" 
-          style={{ 
-            borderRadius: '24px',
-            minHeight: '800px',
-            width: '100%',
-            border: '1px solid rgba(0,0,0,0.05)'
-          }}
-        >
-          <div className="p-4 bg-gray-50 border-b flex justify-between items-center">
-            <span className="text-[#2B4C6F] font-bold text-sm" style={fontInter}>Givebutter Secure Donation</span>
-            <a 
-              href="https://givebutter.com/vu" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-[#8FA8C8] text-xs hover:underline font-bold"
-              style={fontInter}
-            >
-              Open in new tab ↗
-            </a>
-          </div>
-          <div className="flex-grow relative bg-gray-50/50">
-            <iframe
-              src="https://givebutter.com/embed/c/vu"
-              className="w-full h-full border-0 absolute inset-0"
-              title="Vocal U Donation"
-              allow="payment"
-            />
-          </div>
-        </div>
-
-        {/* Right: Other Ways & Venmo (5/12 columns) */}
-        <div className="lg:col-span-5 space-y-6">
+        {/* Venmo & Other Ways (Right on Desktop, TOP on Mobile) */}
+        <div className="order-1 lg:order-2 lg:col-span-5 space-y-6">
           {/* Venmo Card - Authentic Venmo Styling */}
           <div 
             className="bg-white p-0 shadow-2xl transition-transform hover:scale-[1.01] overflow-hidden border border-gray-100" 
@@ -189,6 +157,38 @@ export function Donate() {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Givebutter Embed Container (Left on Desktop, BOTTOM on Mobile) */}
+        <div 
+          className="order-2 lg:order-1 lg:col-span-7 bg-white shadow-2xl overflow-hidden relative flex flex-col" 
+          style={{ 
+            borderRadius: '24px',
+            minHeight: '800px',
+            width: '100%',
+            border: '1px solid rgba(0,0,0,0.05)'
+          }}
+        >
+          <div className="p-4 bg-gray-50 border-b flex justify-between items-center">
+            <span className="text-[#2B4C6F] font-bold text-sm" style={fontInter}>Givebutter Secure Donation</span>
+            <a 
+              href="https://givebutter.com/vu" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[#8FA8C8] text-xs hover:underline font-bold"
+              style={fontInter}
+            >
+              Open in new tab ↗
+            </a>
+          </div>
+          <div className="flex-grow relative bg-gray-50/50">
+            <iframe
+              src="https://givebutter.com/embed/c/vu"
+              className="w-full h-full border-0 absolute inset-0"
+              title="Vocal U Donation"
+              allow="payment"
+            />
           </div>
         </div>
       </div>
