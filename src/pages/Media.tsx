@@ -62,7 +62,7 @@ export function Media() {
             className="text-white/90 mt-4 max-w-2xl mx-auto text-lg"
             style={{ fontFamily: 'Inter, sans-serif' }}
           >
-            A collection of our favorite moments, from high-stakes competitions to casual campus gigs.
+            A look back at some of our favorite moments, from ICCA competitions to casual campus performances.
           </p>
         </div>
       </section>

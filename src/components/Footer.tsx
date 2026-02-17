@@ -56,7 +56,7 @@ export const Footer = memo(function Footer() {
               loading="lazy"
             />
             <p className="text-white/70 text-[9px] md:text-sm leading-relaxed">
-              Gender-inclusive a cappella at UMN, established in 2011.
+              Gender-inclusive a cappella at the University of Minnesota, established in 2011.
             </p>
           </div>
 

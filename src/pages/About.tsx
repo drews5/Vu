@@ -75,15 +75,14 @@ export function About() {
           style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7', borderRadius: '16px' }}
         >
           <p>
-            Established in 2011, Vocal U A Cappella seeks to develop musical talent within its own members
-            and to display and promote the arts among audiences!
+            Founded in 2011, Vocal U A Cappella is dedicated to fostering musical growth within our group while sharing our passion for the arts with the community.
           </p>
           <p>
-            We use our variety in sound and person to perform at charity events that resonate with our
+            We embrace our diversity of voices and backgrounds to perform at charity events that resonate with our
             members, seek to build the University community at U of M events, and spread our harmonies in
             the surrounding communities, especially the University District and greater Twin Cities area.
-            Our goal is to share the universal language that is music through the unique form of a cappella
-            to as many people as possible.
+            Our mission is to share the universal language of music through the unique form of a cappella,
+            reaching as many people as we can.
           </p>
           <div className="italic text-[#2B4C6F]/80 border-l-4 border-[#8FA8C8] pl-4">
             "A cappella is a way to unify a huge world of culture with the human voice. By arranging,

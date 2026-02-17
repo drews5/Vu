@@ -391,7 +391,7 @@ export function Auditions() {
           <div className="bg-white p-6 rounded-2xl border border-gray-100 border-t-4 border-t-[#2B4C6F] shadow-sm">
             <Music className="w-5 h-5 text-[#2B4C6F] mb-3" />
             <h3 className="text-[#2B4C6F] text-base mb-1" style={fontYearbook}>PREPARATION</h3>
-            <p className="text-gray-500 text-[11px] leading-relaxed" style={fontInter}>Prepare 30-60s of any song that shows off your voice. Plus a quick chat!</p>
+            <p className="text-gray-500 text-[11px] leading-relaxed" style={fontInter}>Prepare 30-60 seconds of any song that highlights your range. We'll also have a quick chat to get to know you!</p>
           </div>
           <div className="bg-white p-6 rounded-2xl border border-gray-100 border-t-4 border-t-amber-400 shadow-sm">
             <AlertCircle className="w-5 h-5 text-amber-500 mb-3" />
