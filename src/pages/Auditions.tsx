@@ -221,7 +221,7 @@ export function Auditions() {
                             onClick={() => startConfirmation(slot.id, 'delete')} 
                             className="text-gray-300 hover:text-red-500 transition-opacity p-0.5"
                           >
-                            <Trash2 className="w-3.5 h-3.5" />
+                            <Trash2 className="w-2.5 h-2.5" />
                           </button>
                         )}
                       </div>
@@ -242,7 +242,7 @@ export function Auditions() {
                           }}
                         />
                         <AnimatePresence>
-                          {hasText && (
+                          {hasText && !isBooked && (
                             <motion.div
                               initial={{ opacity: 0, scale: 0.5 }}
                               animate={{ opacity: 1, scale: 1 }}
@@ -255,59 +255,60 @@ export function Auditions() {
                               >
                                 <Check className="w-3 h-3" />
                               </button>
-
-                              <AnimatePresence>
-                                {isConfirming && (
-                                  <motion.div 
-                                    initial={{ opacity: 0, scale: 0.9, y: 0 }}
-                                    animate={{ opacity: 1, scale: 1, y: 4 }}
-                                    exit={{ opacity: 0, scale: 0.9, y: 0 }}
-                                    className="absolute right-0 top-full z-20 bg-white shadow-2xl rounded-lg p-2 border-2 border-[#8FA8C8] flex flex-col gap-1.5 min-w-[140px]"
-                                  >
-                                    <div className="text-[8px] font-bold text-[#8FA8C8] uppercase tracking-wider" style={fontInter}>Student ID</div>
-                                    <div className="flex items-center gap-1">
-                                      <input 
-                                        autoFocus
-                                        type="text"
-                                        placeholder="lastname123"
-                                        className="flex-1 bg-gray-50 px-1.5 py-1 rounded text-[10px] outline-none font-bold min-w-0"
-                                        style={fontInter}
-                                        value={emailInput}
-                                        onChange={(e) => setEmailInput(e.target.value)}
-                                        onKeyDown={(e) => {
-                                          if (e.key === 'Enter') processAction();
-                                          if (e.key === 'Escape') setConfirmingId(null);
-                                        }}
-                                      />
-                                      <div className="flex items-center gap-0.5 shrink-0">
-                                        <button 
-                                          onClick={processAction} 
-                                          disabled={isSubmitting || !emailInput.trim()} 
-                                          className="p-1 bg-[#8FA8C8] text-white rounded hover:bg-[#7A97B7] disabled:opacity-50"
-                                        >
-                                          {isSubmitting ? (
-                                            <div className="w-2.5 h-2.5 border-2 border-white border-t-transparent animate-spin rounded-full" />
-                                          ) : (
-                                            <Check className="w-2.5 h-2.5" />
-                                          )}
-                                        </button>
-                                        <button 
-                                          onClick={() => setConfirmingId(null)} 
-                                          disabled={isSubmitting}
-                                          className="p-1 bg-gray-100 text-gray-400 rounded hover:bg-gray-200"
-                                        >
-                                          <X className="w-2.5 h-2.5" />
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </motion.div>
-                                )}
-                              </AnimatePresence>
                             </motion.div>
                           )}
                         </AnimatePresence>
                       </div>
                     )}
+
+                    {/* 📧 Inline Mini Popup - Universal placement */}
+                    <AnimatePresence>
+                      {isConfirming && (
+                        <motion.div 
+                          initial={{ opacity: 0, scale: 0.9, y: 0 }}
+                          animate={{ opacity: 1, scale: 1, y: 4 }}
+                          exit={{ opacity: 0, scale: 0.9, y: 0 }}
+                          className="absolute right-0 top-full z-20 bg-white shadow-2xl rounded-lg p-2 border-2 border-[#8FA8C8] flex flex-col gap-1.5 min-w-[140px]"
+                        >
+                          <div className="text-[8px] font-bold text-[#8FA8C8] uppercase tracking-wider" style={fontInter}>Student ID</div>
+                          <div className="flex items-center gap-1">
+                            <input 
+                              autoFocus
+                              type="text"
+                              placeholder="lastname123"
+                              className="flex-1 bg-gray-50 px-1.5 py-1 rounded text-[10px] outline-none font-bold min-w-0"
+                              style={fontInter}
+                              value={emailInput}
+                              onChange={(e) => setEmailInput(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') processAction();
+                                if (e.key === 'Escape') setConfirmingId(null);
+                              }}
+                            />
+                            <div className="flex items-center gap-0.5 shrink-0">
+                              <button 
+                                onClick={processAction} 
+                                disabled={isSubmitting || !emailInput.trim()} 
+                                className="p-1 bg-[#8FA8C8] text-white rounded hover:bg-[#7A97B7] disabled:opacity-50"
+                              >
+                                {isSubmitting ? (
+                                  <div className="w-2.5 h-2.5 border-2 border-white border-t-transparent animate-spin rounded-full" />
+                                ) : (
+                                  <Check className="w-2.5 h-2.5" />
+                                )}
+                              </button>
+                              <button 
+                                onClick={() => setConfirmingId(null)} 
+                                disabled={isSubmitting}
+                                className="p-1 bg-gray-100 text-gray-400 rounded hover:bg-gray-200"
+                              >
+                                <X className="w-2.5 h-2.5" />
+                              </button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
               );
@@ -320,14 +321,12 @@ export function Auditions() {
 
   return (
     <div className="pb-24">
-      {/* Header with Logo */}
-      <section className="relative py-6 flex flex-col items-center justify-center overflow-hidden mb-6 mx-3 md:mx-0 mt-4" style={{ borderRadius: '24px' }}>
-        <div 
-          className="absolute inset-0 bg-[#2B4C6F] z-0"
-          style={{
-            backgroundImage: 'radial-gradient(circle at 20% 30%, #3d5e82 0%, transparent 70%), radial-gradient(circle at 80% 70%, #8FA8C8 0%, transparent 70%)'
-          }}
-        />
+      {/* Header with Logo and Animated Gradient */}
+      <section className="relative py-6 flex flex-col items-center justify-center overflow-hidden mb-6 mx-3 md:mx-0 mt-4 animate-gradient shadow-xl" 
+        style={{ 
+          borderRadius: '24px',
+          background: 'linear-gradient(-45deg, #2B4C6F, #3d5e82, #8FA8C8, #7A97B7)'
+        }}>
         
         <div className="relative z-10 text-center px-6 w-full flex flex-col items-center">
           <Link to="/" className="mb-4 group">
