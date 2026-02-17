@@ -18,15 +18,15 @@ interface Member {
 const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
   return (
     <div
-      className="bg-white p-6 shadow-lg flex flex-col items-center text-center relative overflow-hidden"
-      style={{ borderRadius: '20px' }}
+      className="bg-white p-6 border border-gray-100 flex flex-col items-center text-center relative overflow-hidden"
+      style={{ borderRadius: '16px' }}
     >
       {member.is_vp && (
         <div className="absolute top-4 right-[-35px] bg-[#8FA8C8] text-white py-1 px-10 rotate-45 text-[10px] font-bold tracking-widest z-10">
           VP
         </div>
       )}
-      <div className="w-32 h-32 bg-[#91a8c6]/20 rounded-full mb-4 flex items-center justify-center overflow-hidden">
+      <div className="w-32 h-32 bg-[#91a8c6]/10 rounded-full mb-4 flex items-center justify-center overflow-hidden">
         {member.photo ? (
           <img src={member.photo} alt={member.name} className="w-full h-full object-cover" />
         ) : (
@@ -117,8 +117,8 @@ export function Members() {
     <div className="pb-8 md:pb-16">
       <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
-          className="bg-[#2B4C6F] shadow-xl py-16 md:py-24 px-4 text-center"
-          style={{ borderRadius: '20px' }}
+          className="bg-[#2B4C6F] py-16 md:py-24 px-4 text-center"
+          style={{ borderRadius: '16px' }}
         >
           <h1
             className="text-white"

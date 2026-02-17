@@ -24,8 +24,8 @@ function EventCard({ event }: { event: FeaturedEvent }) {
   return (
     <Link
       to={event.link}
-      className="group bg-white overflow-hidden border border-white/20 transition-all hover:bg-gray-50 active:scale-[0.98] flex flex-col"
-      style={{ borderRadius: '24px' }}
+      className="group bg-white overflow-hidden border border-gray-100 transition-all hover:bg-gray-50 active:scale-[0.98] flex flex-col"
+      style={{ borderRadius: '16px' }}
     >
       <div className="relative h-48 overflow-hidden">
         <img
@@ -97,8 +97,8 @@ export function Home() {
       {/* Hero Section */}
       <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
-          className="relative overflow-hidden shadow-xl"
-          style={{ borderRadius: '20px', height: '576px' }}
+          className="relative overflow-hidden border border-gray-100 shadow-sm"
+          style={{ borderRadius: '16px', height: '576px' }}
         >
           <img
             src={heroBackground}
@@ -120,12 +120,12 @@ export function Home() {
 
             <Link
               to="/event/spring-showcase-2026"
-              className="bg-white text-[#2B4C6F] px-8 md:px-12 py-3 md:py-4 shadow-lg hover:bg-gray-100 transition-all flex-shrink-0 hover:scale-[1.08] hover:-translate-y-1 active:scale-[0.98] text-center font-bold"
+              className="bg-white text-[#2B4C6F] px-8 md:px-12 py-3 md:py-4 border border-gray-100 hover:bg-gray-100 transition-all flex-shrink-0 active:scale-[0.98] text-center font-bold"
               style={{
                 ...fontYearbook,
                 fontSize: 'clamp(16px, 2vw, 20px)',
                 letterSpacing: '0.05em',
-                borderRadius: '20px',
+                borderRadius: '12px',
               }}
             >
               SPRING SHOWCASE
@@ -136,8 +136,8 @@ export function Home() {
 
       {/* We Are Vocal U Section */}
       <section
-        className="bg-gray-100 shadow-lg p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center"
-        style={{ gap: '25px', marginBottom: '25px', borderRadius: '20px' }}
+        className="bg-gray-50 border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center"
+        style={{ gap: '25px', marginBottom: '25px', borderRadius: '16px' }}
       >
         <div>
           <h2 className="mb-6 md:mb-8 whitespace-nowrap">
@@ -173,8 +173,8 @@ export function Home() {
 
           <Link
             to="/about"
-            className="inline-flex items-center gap-2 bg-[#8FA8C8] text-white px-8 py-3 shadow-lg hover:bg-[#7A97B7] transition-all hover:translate-x-1"
-            style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '20px' }}
+            className="inline-flex items-center gap-2 bg-[#8FA8C8] text-white px-8 py-3 hover:bg-[#7A97B7] transition-all"
+            style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}
           >
             LEARN MORE
             <ArrowRight className="w-5 h-5" />
@@ -182,14 +182,14 @@ export function Home() {
         </div>
 
         <div
-          className="overflow-hidden shadow-xl"
-          style={{ borderRadius: '20px' }}
+          className="overflow-hidden border border-gray-100"
+          style={{ borderRadius: '16px' }}
         >
           <img
             src={groupPhoto}
             alt="Vocal U Group Members"
             className="w-full h-[300px] md:h-[500px] object-cover"
-            style={{ filter: 'brightness(1.08) saturate(1.05)' }}
+            style={{ filter: 'brightness(1.02) saturate(1.02)' }}
             loading="lazy"
           />
         </div>
@@ -200,7 +200,7 @@ export function Home() {
         className="relative py-16 md:py-24 px-6 md:px-12 mx-3 md:mx-0"
         style={{
           marginBottom: '25px',
-          borderRadius: '20px',
+          borderRadius: '16px',
           background: 'linear-gradient(135deg, #91a8c6 0%, #7A97B7 100%)',
         }}
       >
@@ -227,8 +227,8 @@ export function Home() {
           <div className="text-center">
             <Link to="/events">
               <button
-                className="inline-flex items-center gap-3 bg-white text-[#2B4C6F] px-12 py-5 shadow-2xl hover:bg-gray-50 hover:scale-105 hover:-translate-y-1 transition-all font-bold"
-                style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em', borderRadius: '25px' }}
+                className="inline-flex items-center gap-3 bg-white text-[#2B4C6F] px-12 py-5 border border-gray-100 hover:bg-gray-50 active:scale-[0.98] transition-all font-bold"
+                style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em', borderRadius: '16px' }}
               >
                 <span>VIEW ALL EVENTS</span>
                 <ArrowRight className="w-6 h-6" />

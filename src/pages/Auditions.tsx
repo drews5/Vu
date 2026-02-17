@@ -322,9 +322,9 @@ export function Auditions() {
   return (
     <div className="pb-24">
       {/* Header with Logo and Animated Gradient */}
-      <section className="relative py-4 md:py-8 flex items-center justify-center overflow-hidden mb-4 md:mb-6 mx-0 mt-[15px] md:mt-[25px] animate-gradient shadow-xl" 
+      <section className="relative py-4 md:py-8 flex items-center justify-center overflow-hidden mb-4 md:mb-6 mx-0 mt-[15px] md:mt-[25px] animate-gradient border border-gray-100 shadow-sm" 
         style={{ 
-          borderRadius: '24px',
+          borderRadius: '16px',
           background: 'linear-gradient(115deg, #2B4C6F, #8FA8C8, #2B4C6F, #8FA8C8, #2B4C6F)'
         }}>
         
@@ -353,7 +353,7 @@ export function Auditions() {
 
       <div className="px-0">
         {/* Sign Up Section */}
-        <section className="bg-white rounded-[16px] md:rounded-[24px] shadow-xl overflow-hidden mb-4 md:mb-[25px] border border-gray-100">
+        <section className="bg-white rounded-2xl shadow-sm overflow-hidden mb-4 md:mb-[25px] border border-gray-100">
           <div className="px-4 py-2 md:px-6 md:py-3 border-b border-gray-50 flex justify-between items-center">
             <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: '18px' }}>
               SIGN UP
@@ -383,17 +383,17 @@ export function Auditions() {
 
         {/* Info Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-[25px]">
-          <div className="bg-white p-6 rounded-[20px] shadow-lg border-t-4 border-[#8FA8C8]">
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 border-t-4 border-t-[#8FA8C8] shadow-sm">
             <Users className="w-5 h-5 text-[#8FA8C8] mb-3" />
             <h3 className="text-[#2B4C6F] text-base mb-1" style={fontYearbook}>WALK-INS</h3>
             <p className="text-gray-500 text-[11px] leading-relaxed" style={fontInter}>Didn't get a slot? Just come to the desk at the audition location and we'll fit you in.</p>
           </div>
-          <div className="bg-white p-6 rounded-[20px] shadow-lg border-t-4 border-[#2B4C6F]">
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 border-t-4 border-t-[#2B4C6F] shadow-sm">
             <Music className="w-5 h-5 text-[#2B4C6F] mb-3" />
             <h3 className="text-[#2B4C6F] text-base mb-1" style={fontYearbook}>PREPARATION</h3>
             <p className="text-gray-500 text-[11px] leading-relaxed" style={fontInter}>Prepare 30-60s of any song that shows off your voice. Plus a quick chat!</p>
           </div>
-          <div className="bg-white p-6 rounded-[20px] shadow-lg border-t-4 border-amber-400">
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 border-t-4 border-t-amber-400 shadow-sm">
             <AlertCircle className="w-5 h-5 text-amber-500 mb-3" />
             <h3 className="text-[#2B4C6F] text-base mb-1" style={fontYearbook}>LOCATION</h3>
             <p className="text-gray-500 text-[11px] leading-relaxed" style={fontInter}>UMN Campus. Room details will be sent to your student email after booking.</p>

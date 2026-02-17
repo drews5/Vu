@@ -82,10 +82,10 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
     <div className="relative">
       <Link 
         to={`/event/${event.slug}`}
-        className={`group bg-white overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex flex-col md:flex-row h-full md:min-h-64 ${
-          isUpcoming ? 'ring-2 ring-[#8FA8C8]/20 shadow-xl' : 'shadow-lg'
+        className={`group bg-white overflow-hidden border border-gray-100 transition-all duration-300 hover:bg-gray-50 flex flex-col md:flex-row h-full md:min-h-64 ${
+          isUpcoming ? 'ring-1 ring-[#8FA8C8]/30 shadow-md' : 'shadow-sm'
         }`}
-        style={{ borderRadius: '24px' }}
+        style={{ borderRadius: '16px' }}
       >
         {/* Image Section */}
         <div className="relative w-full md:w-80 h-48 md:h-auto overflow-hidden shrink-0">
@@ -229,8 +229,8 @@ export function Events() {
       {/* Hero Section */}
       <section style={{ marginTop: '25px', marginBottom: '40px' }}>
         <div
-          className="bg-[#8FA8C8] shadow-2xl py-20 md:py-32 px-4 md:px-8 overflow-hidden relative"
-          style={{ borderRadius: '24px' }}
+          className="bg-[#8FA8C8] py-20 md:py-32 px-4 md:px-8 overflow-hidden relative border border-gray-100 shadow-sm"
+          style={{ borderRadius: '16px' }}
         >
           {/* Decorative Background Elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />

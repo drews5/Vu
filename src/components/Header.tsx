@@ -81,8 +81,8 @@ export function Header() {
 
   return (
     <header
-      className="bg-[#8FA8C8] mx-3 md:mx-[50px] mt-[25px] px-4 md:px-8 py-4 shadow-lg relative z-50"
-      style={{ borderRadius: '20px' }}
+      className="bg-[#8FA8C8] mx-3 md:mx-[50px] mt-[25px] px-4 md:px-8 py-4 border border-[#8FA8C8] shadow-sm relative z-50"
+      style={{ borderRadius: '16px' }}
     >
       <div className="max-w-7xl mx-auto">
         {/* Desktop Layout */}

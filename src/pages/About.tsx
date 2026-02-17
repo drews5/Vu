@@ -26,8 +26,8 @@ const SongCard = memo(function SongCard({
 }) {
   return (
     <div
-      className="bg-white p-6 shadow-lg"
-      style={{ borderRadius: '20px' }}
+      className="bg-white p-6 border border-gray-100"
+      style={{ borderRadius: '16px' }}
     >
       <h3 className="text-[#2B4C6F] mb-2" style={{ ...fontYearbook, fontSize: '20px' }}>
         {song.title}
@@ -50,8 +50,8 @@ export function About() {
       {/* Hero Section */}
       <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
-          className="relative overflow-hidden shadow-xl h-[250px] md:h-[400px] bg-[#2B4C6F] flex items-center justify-center"
-          style={{ borderRadius: '20px' }}
+          className="relative overflow-hidden h-[250px] md:h-[400px] bg-[#2B4C6F] flex items-center justify-center"
+          style={{ borderRadius: '16px' }}
         >
           <h1
             className="text-white px-4"
@@ -71,8 +71,8 @@ export function About() {
           Our Mission
         </h2>
         <div
-          className="text-[#2B4C6F] leading-relaxed bg-white p-6 md:p-8 shadow-lg space-y-4 transition-shadow"
-          style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7', borderRadius: '20px' }}
+          className="text-[#2B4C6F] leading-relaxed bg-white p-6 md:p-8 border border-gray-100 space-y-4"
+          style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7', borderRadius: '16px' }}
         >
           <p>
             Established in 2011, Vocal U A Cappella seeks to develop musical talent within its own members

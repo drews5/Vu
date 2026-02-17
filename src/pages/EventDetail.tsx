@@ -117,7 +117,7 @@ export function EventDetail() {
   return (
     <div className="pb-16 md:pb-24">
       <section style={{ marginTop: '25px', marginBottom: '25px' }}>
-        <div className="bg-white shadow-2xl overflow-hidden" style={{ borderRadius: '24px' }}>
+        <div className="bg-white border border-gray-100 shadow-sm overflow-hidden" style={{ borderRadius: '16px' }}>
           {/* Back Button */}
           <div className="p-6 md:p-8 pb-0">
             <Link to="/events" className="inline-flex items-center gap-2 text-[#8FA8C8] hover:text-[#2B4C6F] transition-colors font-bold text-sm uppercase tracking-widest font-bold" style={fontInter}>
@@ -141,7 +141,7 @@ export function EventDetail() {
                 {/* Left Column: Image and Description */}
                 <div className="lg:col-span-2 space-y-8">
                   {event.imageUrl && (
-                    <div className="relative rounded-3xl overflow-hidden shadow-xl">
+                    <div className="relative rounded-2xl overflow-hidden border border-gray-100">
                       <img src={event.imageUrl} alt={event.title} className="w-full h-auto object-cover max-h-[500px]" />
                       {isUpcoming && (
                         <div className="absolute top-6 left-6">
@@ -160,7 +160,7 @@ export function EventDetail() {
                   {/* Action Buttons */}
                   <div className="flex flex-col gap-3">
                     {event.ticketLink && (
-                      <a href={event.ticketLink} target="_blank" rel="noreferrer" className="w-full bg-[#8FA8C8] text-white py-5 rounded-2xl font-bold text-center shadow-lg hover:bg-[#7A97B7] transition-all hover:scale-[1.02] active:scale-[0.98] font-bold" style={fontYearbook}>
+                      <a href={event.ticketLink} target="_blank" rel="noreferrer" className="w-full bg-[#8FA8C8] text-white py-5 rounded-2xl font-bold text-center border border-[#8FA8C8] hover:bg-[#7A97B7] transition-all active:scale-[0.98] font-bold" style={fontYearbook}>
                         GET TICKETS
                       </a>
                     )}
@@ -169,7 +169,7 @@ export function EventDetail() {
                         href={getCalendarUrl()} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="w-full bg-white text-[#2B4C6F] border-2 border-gray-100 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:border-[#8FA8C8] transition-all group shadow-sm font-bold" 
+                        className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:border-[#8FA8C8] transition-all group font-bold" 
                         style={fontInter}
                       >
                         <Calendar className="w-5 h-5 text-[#8FA8C8]" /> Add to Calendar
@@ -179,18 +179,18 @@ export function EventDetail() {
                       href={getNavigationUrl()} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="w-full bg-white text-[#2B4C6F] border-2 border-gray-100 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:border-[#8FA8C8] transition-all group shadow-sm font-bold" 
+                      className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:border-[#8FA8C8] transition-all group font-bold" 
                       style={fontInter}
                     >
                       <Navigation className="w-5 h-5 text-[#8FA8C8]" /> Navigate to Venue
                     </a>
-                    <button onClick={handleShare} className="w-full bg-white text-[#2B4C6F] border-2 border-gray-100 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:border-[#8FA8C8] transition-all group shadow-sm font-bold" style={fontInter}>
+                    <button onClick={handleShare} className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:border-[#8FA8C8] transition-all group font-bold" style={fontInter}>
                       <Share2 className="w-5 h-5 text-[#8FA8C8]" /> Share Event
                     </button>
                   </div>
 
                   {/* Location Card */}
-                  <div className="bg-gray-50 p-6 rounded-3xl space-y-4 border border-gray-100">
+                  <div className="bg-gray-50 p-6 rounded-2xl space-y-4 border border-gray-100">
                     <div className="flex items-start gap-3">
                       <MapPin className="w-6 h-6 text-[#8FA8C8] shrink-0 mt-1" />
                       <div>

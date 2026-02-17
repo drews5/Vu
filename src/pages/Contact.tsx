@@ -61,8 +61,8 @@ export function Contact() {
       {/* Hero Section */}
       <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
-          className="bg-[#8FA8C8] shadow-xl py-16 md:py-24 px-4 md:px-8"
-          style={{ borderRadius: '20px' }}
+          className="bg-[#8FA8C8] py-16 md:py-24 px-4 md:px-8 shadow-sm"
+          style={{ borderRadius: '16px' }}
         >
           <div className="max-w-5xl mx-auto text-center">
             <h1
@@ -80,7 +80,7 @@ export function Contact() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: '25px' }}>
         {/* Contact Form */}
-        <div className="bg-white p-6 md:p-8 shadow-lg" style={{ borderRadius: '20px' }}>
+        <div className="bg-white p-6 md:p-8 border border-gray-100 shadow-sm" style={{ borderRadius: '16px' }}>
           <h2
             className="text-[#2B4C6F] mb-6"
             style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}
@@ -199,8 +199,8 @@ export function Contact() {
         {/* Contact Info */}
         <div className="space-y-6">
           <div
-            className="bg-white p-6 md:p-8 shadow-lg hover:scale-[1.02] transition-transform"
-            style={{ borderRadius: '20px' }}
+            className="bg-white p-6 md:p-8 border border-gray-100"
+            style={{ borderRadius: '16px' }}
           >
             <h2
               className="text-[#2B4C6F] mb-6"
@@ -211,7 +211,7 @@ export function Contact() {
 
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <div className="bg-[#8FA8C8] p-3" style={{ borderRadius: '15px' }}>
+                <div className="bg-[#8FA8C8] p-3" style={{ borderRadius: '12px' }}>
                   <Mail className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -228,7 +228,7 @@ export function Contact() {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="bg-[#8FA8C8] p-3" style={{ borderRadius: '15px' }}>
+                <div className="bg-[#8FA8C8] p-3" style={{ borderRadius: '12px' }}>
                   <MessageCircle className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -253,8 +253,8 @@ export function Contact() {
           </div>
 
           <div
-            className="bg-white p-6 md:p-8 shadow-lg hover:scale-[1.02] transition-transform"
-            style={{ borderRadius: '20px' }}
+            className="bg-white p-6 md:p-8 border border-gray-100"
+            style={{ borderRadius: '16px' }}
           >
             <h2
               className="text-[#2B4C6F] mb-6"
@@ -275,9 +275,9 @@ export function Contact() {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-[#8FA8C8] p-4 hover:bg-[#7A97B7] transition-all hover:scale-110 hover:rotate-[5deg] active:scale-90"
+                  className="bg-[#8FA8C8] p-4 hover:bg-[#7A97B7] transition-all hover:rotate-[5deg] active:scale-90"
                   aria-label={s.label}
-                  style={{ borderRadius: '15px' }}
+                  style={{ borderRadius: '12px' }}
                 >
                   <s.Icon className="w-6 h-6 text-white" />
                 </a>
@@ -286,8 +286,8 @@ export function Contact() {
           </div>
 
           <div
-            className="bg-[#8FA8C8] p-6 md:p-8 shadow-lg text-white hover:scale-[1.02] transition-transform"
-            style={{ borderRadius: '20px' }}
+            className="bg-[#8FA8C8] p-6 md:p-8 text-white"
+            style={{ borderRadius: '16px' }}
           >
             <h2
               className="mb-4"
@@ -303,8 +303,8 @@ export function Contact() {
               updated on audition dates and other opportunities to get involved!
             </p>
             <button
-              className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-gray-100 transition-all hover:scale-105 active:scale-[0.98] font-bold"
-              style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '20px', fontWeight: 'bold' }}
+              className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-gray-100 transition-all active:scale-[0.98] font-bold"
+              style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '12px', fontWeight: 'bold' }}
             >
               AUDITION INFO
             </button>

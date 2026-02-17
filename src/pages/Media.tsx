@@ -17,8 +17,8 @@ type MediaItem = (typeof mediaItems)[number];
 const MediaCard = memo(function MediaCard({ item }: { item: MediaItem }) {
   return (
     <div
-      className="relative overflow-hidden shadow-lg"
-      style={{ borderRadius: '20px', aspectRatio: '16/9' }}
+      className="group relative cursor-pointer overflow-hidden border border-gray-100"
+      style={{ borderRadius: '16px', aspectRatio: '16/9' }}
     >
       <img
         src={item.thumbnail}
@@ -49,8 +49,8 @@ export function Media() {
     <div className="pb-8 md:pb-16">
       <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
-          className="bg-[#8FA8C8] shadow-xl py-16 md:py-24 px-4 text-center"
-          style={{ borderRadius: '20px' }}
+          className="bg-[#8FA8C8] py-16 md:py-24 px-4 text-center"
+          style={{ borderRadius: '16px' }}
         >
           <h1
             className="text-white"

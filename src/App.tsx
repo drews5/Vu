@@ -34,7 +34,7 @@ function AppContent() {
   const isAuditionsPage = location.pathname === '/auditions';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <ScrollToTop />
       {!isAuditionsPage && <Header />}
       <div className={isAuditionsPage ? "px-3 md:px-[50px]" : "px-3 md:px-[50px] pb-[25px]"}>

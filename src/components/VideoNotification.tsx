@@ -22,11 +22,11 @@ export function VideoNotification() {
     <>
       {!showModal && (
         <div
-          className="fixed bottom-6 right-6 z-50 bg-white shadow-2xl cursor-pointer group max-w-[200px] transition-transform hover:scale-105"
-          style={{ borderRadius: '20px' }}
+          className="fixed bottom-6 right-6 z-50 bg-white shadow-lg cursor-pointer group max-w-[200px] transition-transform active:scale-95"
+          style={{ borderRadius: '16px' }}
           onClick={openModal}
         >
-          <div className="relative overflow-hidden" style={{ borderRadius: '20px' }}>
+          <div className="relative overflow-hidden" style={{ borderRadius: '16px' }}>
             <div className="relative h-28 overflow-hidden">
               <img
                 src={THUMBNAIL_URL}
@@ -57,18 +57,18 @@ export function VideoNotification() {
           onClick={closeModal}
         >
           <div
-            className="relative w-full max-w-4xl bg-white"
-            style={{ borderRadius: '20px' }}
+            className="relative w-full max-w-4xl bg-white border border-gray-100 shadow-xl"
+            style={{ borderRadius: '16px' }}
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={closeModal}
-              className="absolute -top-4 -right-4 bg-white text-[#2B4C6F] rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors z-10"
+              className="absolute -top-4 -right-4 bg-white text-[#2B4C6F] rounded-full p-3 border border-gray-100 shadow-md hover:bg-gray-100 transition-colors z-10"
             >
               <X className="w-6 h-6" />
             </button>
 
-            <div className="relative pt-[56.25%] overflow-hidden" style={{ borderRadius: '20px' }}>
+            <div className="relative pt-[56.25%] overflow-hidden" style={{ borderRadius: '16px' }}>
               <iframe
                 className="absolute top-0 left-0 w-full h-full"
                 src={`https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1`}
@@ -76,7 +76,7 @@ export function VideoNotification() {
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                style={{ borderRadius: '20px' }}
+                style={{ borderRadius: '16px' }}
                 loading="lazy"
               />
             </div>

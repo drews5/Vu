@@ -48,8 +48,8 @@ export function Donate() {
     <div className="pb-8 md:pb-16 min-h-screen">
       <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
-          className="bg-[#91a8c6] shadow-xl py-12 md:py-16 px-4 text-center text-white"
-          style={{ borderRadius: '20px' }}
+          className="bg-[#91a8c6] py-12 md:py-16 px-4 text-center text-white border border-gray-100 shadow-sm"
+          style={{ borderRadius: '16px' }}
         >
           <h1
             style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}
@@ -68,8 +68,8 @@ export function Donate() {
         <div className="order-1 lg:order-2 lg:col-span-5 space-y-6">
           {/* Venmo Card - Authentic Venmo Styling */}
           <div 
-            className="bg-white p-0 shadow-2xl transition-transform hover:scale-[1.01] overflow-hidden border border-gray-100" 
-            style={{ borderRadius: '28px' }}
+            className="bg-white p-0 border border-gray-100 shadow-sm overflow-hidden" 
+            style={{ borderRadius: '16px' }}
           >
             {/* Venmo Header */}
             <div className="bg-[#008CFF] py-4 px-6 flex justify-between items-center">
@@ -83,12 +83,12 @@ export function Donate() {
             <div className="p-8 flex flex-col items-center">
               <div className="relative mb-6">
                 <div 
-                  className="w-32 h-32 flex items-center justify-center bg-[#8FA8C8] shadow-lg border-4 border-white" 
+                  className="w-32 h-32 flex items-center justify-center bg-[#8FA8C8] border-4 border-white shadow-sm" 
                   style={{ borderRadius: '50%' }}
                 >
                   <img src={logoImage} alt="Vocal U" className="w-20 h-auto" />
                 </div>
-                <div className="absolute bottom-1 right-1 bg-[#008CFF] p-2 rounded-full border-2 border-white shadow-md">
+                <div className="absolute bottom-1 right-1 bg-[#008CFF] p-2 rounded-full border-2 border-white shadow-sm">
                   <Check className="w-4 h-4 text-white" />
                 </div>
               </div>
@@ -101,7 +101,7 @@ export function Donate() {
                   href="https://venmo.com/u/vocalu" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="block w-full bg-[#008CFF] text-white py-4 rounded-full font-bold text-lg shadow-lg hover:bg-[#0074D9] transition-all active:scale-[0.98] text-center"
+                  className="block w-full bg-[#008CFF] text-white py-4 rounded-full font-bold text-lg shadow-sm hover:bg-[#0074D9] transition-all active:scale-[0.98] text-center"
                   style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}
                 >
                   Pay or Request
@@ -121,12 +121,11 @@ export function Donate() {
 
         {/* Givebutter Embed Container (Left on Desktop, MIDDLE on Mobile) */}
         <div 
-          className="order-2 lg:order-1 lg:col-span-7 lg:row-span-2 bg-white shadow-2xl overflow-hidden relative flex flex-col" 
+          className="order-2 lg:order-1 lg:col-span-7 lg:row-span-2 bg-white shadow-sm overflow-hidden relative flex flex-col border border-gray-100" 
           style={{ 
-            borderRadius: '24px',
+            borderRadius: '16px',
             minHeight: '800px',
-            width: '100%',
-            border: '1px solid rgba(0,0,0,0.05)'
+            width: '100%'
           }}
         >
           <div className="p-4 bg-gray-50 border-b flex justify-between items-center">
@@ -153,14 +152,14 @@ export function Donate() {
 
         {/* Other Ways to Help Section (BOTTOM on Mobile, RIGHT on Desktop) */}
         <div className="order-3 lg:order-2 lg:col-span-5 space-y-6">
-          <div className="bg-white p-8 shadow-xl" style={{ borderRadius: '24px', border: '1px solid rgba(0,0,0,0.05)' }}>
+          <div className="bg-white p-8 border border-gray-100 shadow-sm" style={{ borderRadius: '16px' }}>
             <h2 className="text-[#2B4C6F] text-2xl mb-8 border-b pb-4" style={fontYearbook}>
               Other Ways to Help
             </h2>
             
             <div className="space-y-8" style={fontInter}>
               <div className="flex gap-4">
-                <div className="bg-[#8FA8C8]/10 p-3 rounded-2xl h-fit">
+                <div className="bg-[#8FA8C8]/10 p-3 rounded-xl h-fit">
                   <Heart className="w-6 h-6 text-[#8FA8C8]" />
                 </div>
                 <div>
@@ -172,7 +171,7 @@ export function Donate() {
               </div>
 
               <div className="flex gap-4">
-                <div className="bg-[#8FA8C8]/10 p-3 rounded-2xl h-fit">
+                <div className="bg-[#8FA8C8]/10 p-3 rounded-xl h-fit">
                   <Star className="w-6 h-6 text-[#8FA8C8]" />
                 </div>
                 <div>
@@ -183,7 +182,7 @@ export function Donate() {
                 </div>
               </div>
 
-              <div className="bg-gray-50 p-6 rounded-2xl">
+              <div className="bg-gray-50 p-6 rounded-xl">
                 <p className="text-[11px] text-gray-400 tracking-widest font-bold mb-2">Note</p>
                 <p className="text-xs text-[#2B4C6F]/60 leading-relaxed italic">
                   Vocal U is a self-funded student organization. Every contribution goes directly toward our music and performances.

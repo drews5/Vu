@@ -9,8 +9,8 @@ const ContactInfo = memo(function ContactInfo() {
   return (
     <div className="space-y-6">
       <div
-        className="bg-white p-6 md:p-8 shadow-lg hover:scale-[1.02] transition-transform"
-        style={{ borderRadius: '20px' }}
+        className="bg-white p-6 md:p-8 border border-gray-100 shadow-sm"
+        style={{ borderRadius: '16px' }}
       >
         <h3
           className="text-[#2B4C6F] mb-6"
@@ -67,8 +67,8 @@ const ContactInfo = memo(function ContactInfo() {
       </div>
 
       <div
-        className="bg-[#8FA8C8] p-6 md:p-8 shadow-lg text-white hover:scale-[1.02] transition-transform"
-        style={{ borderRadius: '20px' }}
+        className="bg-[#8FA8C8] p-6 md:p-8 text-white shadow-sm"
+        style={{ borderRadius: '16px' }}
       >
         <h3
           className="mb-4"
@@ -85,8 +85,8 @@ const ContactInfo = memo(function ContactInfo() {
         </p>
         <Link to="/auditions">
           <button
-            className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-gray-100 transition-colors hover:scale-105 active:scale-95 font-bold"
-            style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '20px', fontWeight: 'bold' }}
+            className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-gray-100 transition-colors active:scale-95 font-bold"
+            style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '12px', fontWeight: 'bold' }}
           >
             AUDITION INFO
           </button>
@@ -137,7 +137,7 @@ export function ContactForm() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mx-3 md:mx-0">
-      <div className="bg-white p-6 md:p-8 shadow-lg" style={{ borderRadius: '20px' }}>
+      <div className="bg-white p-6 md:p-8 border border-gray-100 shadow-sm" style={{ borderRadius: '16px' }}>
         <h2
           className="text-[#2B4C6F] mb-2"
           style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}
@@ -202,8 +202,8 @@ export function ContactForm() {
           <button
             type="submit"
             disabled={status === 'sending'}
-            className="w-full bg-[#8FA8C8] text-white px-8 py-4 hover:bg-[#7A97B7] transition-colors shadow-lg disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] font-bold"
-            style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '20px', fontWeight: 'bold' }}
+            className="w-full bg-[#8FA8C8] text-white px-8 py-4 border border-[#8FA8C8] hover:bg-[#7A97B7] transition-colors disabled:opacity-50 active:scale-[0.98] font-bold"
+            style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px', fontWeight: 'bold' }}
           >
             {status === 'sending' ? 'SENDING...' : 'SEND MESSAGE'}
           </button>
