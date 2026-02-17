@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Calendar } from 'lucide-react';
+import { useEffect, useState, memo } from 'react';
+import { Calendar, MapPin, ArrowRight, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 
@@ -18,6 +18,70 @@ interface Event {
   image: string;
   status: 'Upcoming' | 'Previous';
 }
+
+const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Event }) {
+  const isUpcoming = event.status === 'Upcoming';
+  
+  return (
+    <Link 
+      to={`/event/${event.slug}`}
+      className={`group bg-white overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex flex-col md:flex-row h-full md:h-64 ${
+        isUpcoming ? 'ring-2 ring-[#8FA8C8]/20 shadow-xl' : 'shadow-lg'
+      }`}
+      style={{ borderRadius: '24px' }}
+    >
+      {/* Image Section */}
+      <div className="relative w-full md:w-80 h-48 md:h-auto overflow-hidden shrink-0">
+        <img 
+          src={event.image} 
+          alt={event.title} 
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+          <span className="text-white text-sm font-bold flex items-center gap-2">
+            VIEW DETAILS <ArrowRight className="w-4 h-4" />
+          </span>
+        </div>
+        {isUpcoming && (
+          <div className="absolute top-4 left-4">
+            <span className="bg-[#8FA8C8] text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] shadow-lg border border-white/20" style={fontYearbook}>
+              UPCOMING
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Content Section */}
+      <div className="p-6 md:p-8 flex flex-col flex-grow justify-center relative bg-white">
+        <div className="flex flex-col gap-1 mb-4">
+          <div className="flex items-center gap-2 text-[#8FA8C8] font-bold text-xs tracking-widest uppercase" style={fontInter}>
+            <Calendar className="w-3.5 h-3.5" />
+            {event.date}, {event.year}
+          </div>
+          <h3 className="text-[#2B4C6F] text-2xl md:text-3xl leading-tight group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
+            {event.title}
+          </h3>
+        </div>
+
+        <div className="flex flex-wrap gap-y-2 gap-x-6 text-[#2B4C6F]/60 text-sm mb-4" style={fontInter}>
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-[#8FA8C8]/60" />
+            {event.time}
+          </div>
+          <div className="flex items-center gap-2 max-w-xs">
+            <MapPin className="w-4 h-4 text-[#8FA8C8]/60 shrink-0" />
+            <span className="truncate">{event.location}</span>
+          </div>
+        </div>
+
+        <p className="text-[#2B4C6F]/70 text-sm line-clamp-2 md:line-clamp-3 leading-relaxed max-w-2xl" style={fontInter}>
+          {event.description}
+        </p>
+      </div>
+    </Link>
+  );
+});
 
 export function Events() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -68,22 +132,26 @@ export function Events() {
   }
 
   return (
-    <div className="pb-8 md:pb-16">
+    <div className="pb-16 md:pb-24">
       {/* Hero Section */}
-      <section style={{ marginTop: '25px', marginBottom: '25px' }}>
+      <section style={{ marginTop: '25px', marginBottom: '40px' }}>
         <div
-          className="bg-[#8FA8C8] shadow-xl py-16 md:py-24 px-4 md:px-8"
-          style={{ borderRadius: '20px' }}
+          className="bg-[#8FA8C8] shadow-2xl py-20 md:py-32 px-4 md:px-8 overflow-hidden relative"
+          style={{ borderRadius: '24px' }}
         >
-          <div className="max-w-5xl mx-auto text-center">
+          {/* Decorative Background Elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+          
+          <div className="max-w-5xl mx-auto text-center relative z-10">
             <h1
-              className="text-white mb-4"
-              style={{ ...fontYearbook, fontSize: 'clamp(48px, 10vw, 96px)', letterSpacing: '0.05em' }}
+              className="text-white mb-6 drop-shadow-lg"
+              style={{ ...fontYearbook, fontSize: 'clamp(56px, 12vw, 110px)', letterSpacing: '0.05em', lineHeight: '0.9' }}
             >
-              EVENTS
+              OUR EVENTS
             </h1>
-            <p className="text-white" style={{ ...fontInter, fontSize: '17px' }}>
-              Come and see what we're all about!
+            <p className="text-white/90 max-w-2xl mx-auto font-medium tracking-wide uppercase text-sm md:text-lg" style={fontInter}>
+              Join us for live performances, workshops, and more.
             </p>
           </div>
         </div>
@@ -91,46 +159,19 @@ export function Events() {
 
       {/* Upcoming Events */}
       {upcomingEvents.length > 0 && (
-        <section className="mb-12">
-          <h2
-            className="text-[#2B4C6F] mb-6 md:mb-8 px-4 md:px-0"
-            style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 48px)' }}
-          >
-            UPCOMING EVENTS
-          </h2>
-          <div className="space-y-6">
+        <section className="mb-20">
+          <div className="flex items-center gap-6 mb-10 px-4 md:px-0">
+            <h2
+              className="text-[#2B4C6F] shrink-0"
+              style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 48px)' }}
+            >
+              UPCOMING
+            </h2>
+            <div className="h-[2px] w-full bg-[#8FA8C8]/20 rounded-full" />
+          </div>
+          <div className="flex flex-col gap-8">
             {upcomingEvents.map((event) => (
-              <Link to={`/event/${event.slug}`} key={event.id}>
-                <div
-                  className="bg-white p-6 md:p-8 shadow-lg hover:scale-[1.01] transition-all cursor-pointer"
-                  style={{ borderRadius: '20px' }}
-                >
-                  <div className="flex flex-col lg:flex-row" style={{ gap: '25px' }}>
-                    <div className="flex-shrink-0">
-                      <div
-                        className="bg-[#91a8c6] text-white p-6 text-center"
-                        style={{ borderRadius: '15px', minWidth: '120px' }}
-                      >
-                        <div style={{ ...fontYearbook, fontSize: '32px' }}>{event.date}</div>
-                        <div style={{ ...fontInter, fontSize: '18px' }}>{event.year}</div>
-                      </div>
-                    </div>
-                    <div className="flex-shrink-0 lg:w-64">
-                      <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-[15px]" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-[#2B4C6F] mb-3" style={{ ...fontYearbook, fontSize: 'clamp(24px, 4vw, 32px)' }}>
-                        {event.title}
-                      </h3>
-                      <div className="flex items-center gap-3 text-[#2B4C6F] mb-3">
-                        <Calendar className="w-5 h-5 text-[#8FA8C8]" />
-                        <span>{event.time} &bull; {event.location}</span>
-                      </div>
-                      <p className="text-[#2B4C6F]/80 line-clamp-3">{event.description}</p>
-                    </div>
-                  </div>
-                </div>
-              </Link>
+              <UnifiedEventCard key={event.id} event={event} />
             ))}
           </div>
         </section>
@@ -138,19 +179,18 @@ export function Events() {
 
       {/* Past Performances */}
       <section>
-        <h2
-          className="text-[#2B4C6F] mb-4 px-4 md:px-0"
-          style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 48px)' }}
-        >
-          PAST PERFORMANCES
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="flex items-center gap-6 mb-10 px-4 md:px-0">
+          <h2
+            className="text-[#2B4C6F] shrink-0 opacity-60"
+            style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 48px)' }}
+          >
+            PAST EVENTS
+          </h2>
+          <div className="h-[2px] w-full bg-[#8FA8C8]/10 rounded-full" />
+        </div>
+        <div className="flex flex-col gap-8">
           {pastEvents.map((event) => (
-            <div key={event.id} className="bg-white p-6 shadow-lg hover:shadow-xl transition-shadow" style={{ borderRadius: '20px' }}>
-              <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-[15px] mb-4" />
-              <h3 className="text-[#2B4C6F] mb-2" style={{ ...fontYearbook, fontSize: '22px' }}>{event.title}</h3>
-              <p className="text-[#8FA8C8]">{event.location}</p>
-            </div>
+            <UnifiedEventCard key={event.id} event={event} />
           ))}
         </div>
       </section>
