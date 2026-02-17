@@ -53,13 +53,13 @@ const ContactInfo = memo(function ContactInfo() {
                 Instagram DMs
               </h4>
               <a
-                href="https://instagram.com/vocaluminn"
+                href="https://www.instagram.com/vocal_u"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#8FA8C8] hover:text-[#7A97B7] transition-colors"
                 style={{ ...fontInter, fontSize: '15px' }}
               >
-                @vocaluminn
+                @vocal_u
               </a>
             </div>
           </div>

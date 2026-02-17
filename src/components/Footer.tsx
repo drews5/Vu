@@ -30,10 +30,10 @@ const resourceLinks = [
 ];
 
 const socialIcons = [
-  { href: 'https://instagram.com/vocaluminn', label: 'Instagram', Icon: Instagram },
-  { href: 'https://facebook.com/vocaluminn', label: 'Facebook', Icon: Facebook },
-  { href: 'https://youtube.com/@vocaluminn', label: 'YouTube', Icon: Youtube },
-  { href: 'https://tiktok.com/@vocaluminn', label: 'TikTok', Icon: TikTokIcon },
+  { href: 'https://www.instagram.com/vocal_u', label: 'Instagram', Icon: Instagram },
+  { href: 'https://www.facebook.com/vocaluacappella/', label: 'Facebook', Icon: Facebook },
+  { href: 'https://www.youtube.com/@vocal-u', label: 'YouTube', Icon: Youtube },
+  { href: 'https://www.tiktok.com/@vocalumn', label: 'TikTok', Icon: TikTokIcon },
 ];
 
 export const Footer = memo(function Footer() {
