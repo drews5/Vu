@@ -18,11 +18,11 @@ interface Member {
 const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
   return (
     <div
-      className="bg-white p-6 shadow-lg flex flex-col items-center text-center hover:-translate-y-2 transition-transform relative overflow-hidden"
+      className="bg-white p-6 shadow-lg flex flex-col items-center text-center relative overflow-hidden"
       style={{ borderRadius: '20px' }}
     >
       {member.is_vp && (
-        <div className="absolute top-4 right-[-35px] bg-[#8FA8C8] text-white py-1 px-10 rotate-45 text-[10px] font-bold tracking-widest shadow-sm z-10">
+        <div className="absolute top-4 right-[-35px] bg-[#8FA8C8] text-white py-1 px-10 rotate-45 text-[10px] font-bold tracking-widest z-10">
           VP
         </div>
       )}

@@ -102,7 +102,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
           </div>
           {isUpcoming && (
             <div className="absolute top-4 left-4">
-              <span className="bg-[#8FA8C8] text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] shadow-lg border border-white/20" style={fontYearbook}>
+              <span className="bg-[#8FA8C8] text-white px-4 py-1.5 rounded-full text-[10px] font-bold tracking-[0.2em] border border-white/20" style={fontYearbook}>
                 UPCOMING
               </span>
             </div>
@@ -237,12 +237,12 @@ export function Events() {
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/5 rounded-full translate-y-1/2 -translate-x-1/2" />
           
           <div className="max-w-5xl mx-auto text-center relative z-10">
-            <h1
-              className="text-white mb-6 drop-shadow-lg"
-              style={{ ...fontYearbook, fontSize: 'clamp(56px, 12vw, 110px)', letterSpacing: '0.05em', lineHeight: '0.9' }}
-            >
-              OUR EVENTS
-            </h1>
+                    <h1
+                      className="text-white mb-6"
+                      style={{ ...fontYearbook, fontSize: 'clamp(56px, 12vw, 110px)', letterSpacing: '0.05em', lineHeight: '0.9' }}
+                    >
+                      OUR EVENTS
+                    </h1>
             <p className="text-white/90 max-w-2xl mx-auto font-medium tracking-wide text-sm md:text-lg" style={fontInter}>
               Join us for live performances, workshops, and more.
             </p>

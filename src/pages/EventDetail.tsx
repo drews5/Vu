@@ -145,7 +145,7 @@ export function EventDetail() {
                       <img src={event.imageUrl} alt={event.title} className="w-full h-auto object-cover max-h-[500px]" />
                       {isUpcoming && (
                         <div className="absolute top-6 left-6">
-                          <span className="bg-[#8FA8C8] text-white px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest shadow-lg" style={fontYearbook}>Upcoming</span>
+                          <span className="bg-[#8FA8C8] text-white px-6 py-2 rounded-full text-xs font-bold tracking-widest" style={fontYearbook}>Upcoming</span>
                         </div>
                       )}
                     </div>

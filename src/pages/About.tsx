@@ -26,7 +26,7 @@ const SongCard = memo(function SongCard({
 }) {
   return (
     <div
-      className="bg-white p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
+      className="bg-white p-6 shadow-lg"
       style={{ borderRadius: '20px' }}
     >
       <h3 className="text-[#2B4C6F] mb-2" style={{ ...fontYearbook, fontSize: '20px' }}>
@@ -71,7 +71,7 @@ export function About() {
           Our Mission
         </h2>
         <div
-          className="text-[#2B4C6F] leading-relaxed bg-white p-6 md:p-8 shadow-lg space-y-4 hover:shadow-xl transition-shadow"
+          className="text-[#2B4C6F] leading-relaxed bg-white p-6 md:p-8 shadow-lg space-y-4 transition-shadow"
           style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7', borderRadius: '20px' }}
         >
           <p>

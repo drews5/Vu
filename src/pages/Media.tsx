@@ -17,16 +17,16 @@ type MediaItem = (typeof mediaItems)[number];
 const MediaCard = memo(function MediaCard({ item }: { item: MediaItem }) {
   return (
     <div
-      className="group relative cursor-pointer overflow-hidden shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
+      className="relative overflow-hidden shadow-lg"
       style={{ borderRadius: '20px', aspectRatio: '16/9' }}
     >
       <img
         src={item.thumbnail}
         alt={item.title}
-        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        className="w-full h-full object-cover transition-transform duration-500"
         loading="lazy"
       />
-      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/40 transition-colors flex items-center justify-center">
         <div className="bg-white/20 backdrop-blur-md p-4 rounded-full">
           {item.type === 'video' ? (
             <Play className="w-8 h-8 text-white fill-white" />

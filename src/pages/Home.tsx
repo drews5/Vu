@@ -36,7 +36,7 @@ function EventCard({ event }: { event: FeaturedEvent }) {
         />
         <div className="absolute top-4 left-4">
           <span
-            className="bg-[#8FA8C8] text-white px-3 py-1 text-[10px] font-bold tracking-widest shadow-sm"
+            className="bg-[#8FA8C8] text-white px-3 py-1 text-[10px] font-bold tracking-widest"
             style={{ borderRadius: '8px', ...fontYearbook }}
           >
             {event.tag}
@@ -182,7 +182,7 @@ export function Home() {
         </div>
 
         <div
-          className="overflow-hidden shadow-xl hover:scale-[1.02] transition-transform"
+          className="overflow-hidden shadow-xl"
           style={{ borderRadius: '20px' }}
         >
           <img
