@@ -1,11 +1,14 @@
+# Vocal U Website
 
-  # Vocal U A Cappella
+University of Minnesota's Premier gender-inclusive a cappella group.
 
-  This is a code bundle for Vocal U A Cappella. The original project is available at https://www.figma.com/design/0ndmcKkFBtEmeLqAtcu33t/Vocal-U-A-Cappella.
+## Tech Stack
+- React + TypeScript
+- Vite
+- Tailwind CSS
+- Supabase (Backend/CMS)
+- Vercel (Deployment)
 
-  ## Running the code
-
-  Run `npm i` to install the dependencies.
-
-  Run `npm run dev` to start the development server.
-  
+## Setup
+1. `npm install`
+2. `npm run dev`
