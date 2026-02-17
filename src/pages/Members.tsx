@@ -1,86 +1,163 @@
-import { motion } from 'motion/react';
+import { memo, useEffect, useState, useMemo } from 'react';
 import { Instagram, Music } from 'lucide-react';
-import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { supabase } from '../utils/supabase';
 
-const members = [
-  { name: 'Alex Johnson', role: 'President', part: 'Baritone', major: 'Music Education', year: 'Senior' },
-  { name: 'Sarah Miller', role: 'Business Manager', part: 'Soprano', major: 'Marketing', year: 'Junior' },
-  { name: 'Jordan Lee', role: 'Music Director', part: 'Tenor', major: 'Composition', year: 'Senior' },
-  { name: 'Maya Patel', role: 'Social Chair', part: 'Alto', major: 'Psychology', year: 'Sophomore' },
-  { name: 'Chris Evans', role: 'Member', part: 'Bass', major: 'Engineering', year: 'Freshman' },
-  { name: 'Elena Rodriguez', role: 'Member', part: 'Mezzo', major: 'Political Science', year: 'Junior' },
-  { name: 'Sam Taylor', role: 'Member', part: 'Tenor', major: 'Computer Science', year: 'Sophomore' },
-  { name: 'Grace Kim', role: 'Member', part: 'Soprano', major: 'Biology', year: 'Senior' },
-];
+const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
+
+interface Member {
+  name: string;
+  role: string;
+  part: string;
+  major: string;
+  year: string;
+  photo?: string;
+  instagram?: string;
+  is_vp?: boolean;
+}
+
+const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
+  return (
+    <div
+      className="bg-white p-6 shadow-lg flex flex-col items-center text-center hover:-translate-y-2 transition-transform relative overflow-hidden"
+      style={{ borderRadius: '20px' }}
+    >
+      {member.is_vp && (
+        <div className="absolute top-4 right-[-35px] bg-[#8FA8C8] text-white py-1 px-10 rotate-45 text-[10px] font-bold tracking-widest shadow-sm z-10">
+          VP
+        </div>
+      )}
+      <div className="w-32 h-32 bg-[#91a8c6]/20 rounded-full mb-4 flex items-center justify-center overflow-hidden">
+        {member.photo ? (
+          <img src={member.photo} alt={member.name} className="w-full h-full object-cover" />
+        ) : (
+          <Music className="w-12 h-12 text-[#91a8c6]" />
+        )}
+      </div>
+      <h3 className="text-[#2B4C6F] text-xl mb-1" style={fontYearbook}>
+        {member.name}
+      </h3>
+      <p className="text-[#8FA8C8] font-bold text-sm uppercase tracking-wider mb-2">{member.role}</p>
+      <div className="space-y-1 text-sm text-[#2B4C6F]/70" style={{ fontFamily: 'Inter, sans-serif' }}>
+        <p>{member.part}</p>
+        <p>{member.major}</p>
+        <p>{member.year}</p>
+      </div>
+      {member.instagram && (
+        <div className="mt-4 flex gap-2 hover:scale-110 transition-transform">
+          <a href={`https://instagram.com/${member.instagram}`} target="_blank" rel="noreferrer">
+            <Instagram className="w-5 h-5 text-[#8FA8C8] cursor-pointer hover:text-[#2B4C6F]" />
+          </a>
+        </div>
+      )}
+    </div>
+  );
+});
+
+const PART_ORDER = ['Soprano', 'Mezzo', 'Alto', 'Tenor', 'Bass/Bari', 'Vocal Percussionist', 'Member'];
 
 export function Members() {
+  const [members, setMembers] = useState<Member[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchMembers() {
+      const { data, error } = await supabase
+        .from('members')
+        .select('*')
+        .order('display_order', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching members:', error);
+      } else {
+        setMembers(data.map((m: any) => ({
+          name: m.name,
+          role: m.role,
+          part: m.part,
+          major: m.major,
+          year: m.year,
+          photo: m.photo_url,
+          instagram: m.instagram,
+          is_vp: m.is_vp
+        })));
+      }
+      setLoading(false);
+    }
+
+    fetchMembers();
+  }, []);
+
+  const groupedMembers = useMemo(() => {
+    const groups: Record<string, Member[]> = {};
+    
+    members.forEach(member => {
+      const part = member.part || 'Member';
+      if (!groups[part]) {
+        groups[part] = [];
+      }
+      groups[part].push(member);
+    });
+
+    // Sort the parts based on PART_ORDER
+    return Object.keys(groups).sort((a, b) => {
+      const indexA = PART_ORDER.indexOf(a);
+      const indexB = PART_ORDER.indexOf(b);
+      
+      if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      
+      return indexA - indexB;
+    }).map(part => ({
+      part,
+      members: groups[part]
+    }));
+  }, [members]);
+
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="pb-8 md:pb-16"
-    >
-      <motion.section 
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-        style={{ marginTop: '25px', marginBottom: '25px' }}
-      >
-        <div className="bg-[#2B4C6F] shadow-xl py-16 md:py-24 px-4 text-center" style={{ borderRadius: '20px' }}>
-          <motion.h1 
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-white" 
-            style={{ 
-              fontFamily: "'Yearbook Solid', sans-serif",
-              fontSize: 'clamp(48px, 10vw, 96px)',
-              letterSpacing: '0.05em'
-            }}
+    <div className="pb-8 md:pb-16">
+      <section style={{ marginTop: '25px', marginBottom: '25px' }}>
+        <div
+          className="bg-[#2B4C6F] shadow-xl py-16 md:py-24 px-4 text-center"
+          style={{ borderRadius: '20px' }}
+        >
+          <h1
+            className="text-white"
+            style={{ ...fontYearbook, fontSize: 'clamp(48px, 10vw, 96px)', letterSpacing: '0.05em' }}
           >
             OUR MEMBERS
-          </motion.h1>
-          <p className="text-white/80 mt-4 max-w-2xl mx-auto font-inter">
-            Meet the talented individuals who make up the Vocal U family. We come from all majors and backgrounds, united by our love for music.
+          </h1>
+          <p
+            className="text-white/80 mt-4 max-w-2xl mx-auto"
+            style={{ fontFamily: 'Inter, sans-serif' }}
+          >
+            Meet the talented individuals who make up the Vocal U family.
           </p>
         </div>
-      </motion.section>
-
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '25px' }}>
-        {members.map((member, index) => (
-          <motion.div
-            key={index}
-            initial={{ y: 30, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.1, duration: 0.5 }}
-            whileHover={{ y: -10 }}
-            className="bg-white p-6 shadow-lg flex flex-col items-center text-center"
-            style={{ borderRadius: '20px' }}
-          >
-            <div className="w-32 h-32 bg-[#91a8c6]/20 rounded-full mb-4 flex items-center justify-center overflow-hidden">
-               <Music className="w-12 h-12 text-[#91a8c6]" />
-            </div>
-            <h3 className="text-[#2B4C6F] text-xl mb-1" style={{ fontFamily: "'Yearbook Solid', sans-serif" }}>
-              {member.name}
-            </h3>
-            <p className="text-[#8FA8C8] font-bold text-sm uppercase tracking-wider mb-2">
-              {member.role}
-            </p>
-            <div className="space-y-1 text-sm text-[#2B4C6F]/70 font-inter">
-              <p>{member.part}</p>
-              <p>{member.major} • {member.year}</p>
-            </div>
-            <motion.div 
-              className="mt-4 flex gap-2"
-              whileHover={{ scale: 1.1 }}
-            >
-              <Instagram className="w-5 h-5 text-[#8FA8C8] cursor-pointer hover:text-[#2B4C6F]" />
-            </motion.div>
-          </motion.div>
-        ))}
       </section>
-    </motion.div>
+
+      {loading ? (
+        <div className="flex justify-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#8FA8C8]" />
+        </div>
+      ) : (
+        <div className="space-y-12">
+          {groupedMembers.map(({ part, members }) => (
+            <section key={part}>
+              <h2 
+                className="text-[#2B4C6F] mb-6 px-4 md:px-0 uppercase tracking-widest border-b-2 border-[#8FA8C8]/20 pb-2"
+                style={{ ...fontYearbook, fontSize: '28px' }}
+              >
+                {part === 'Bass/Bari' ? 'Bass / Baritones' : `${part}s`}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '25px' }}>
+                {members.map((member, index) => (
+                  <MemberCard key={index} member={member} />
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
