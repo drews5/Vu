@@ -325,7 +325,7 @@ export function Auditions() {
       <section className="relative py-8 flex items-center justify-center overflow-hidden mb-6 mx-3 md:mx-0 mt-4 animate-gradient shadow-xl" 
         style={{ 
           borderRadius: '24px',
-          background: 'linear-gradient(-45deg, #2B4C6F, #3d5e82, #8FA8C8, #7A97B7)'
+          background: 'linear-gradient(90deg, #2B4C6F, #8FA8C8, #2B4C6F, #8FA8C8, #2B4C6F, #8FA8C8, #2B4C6F)'
         }}>
         
         <div className="relative z-10 text-center px-6 w-full flex items-center justify-center gap-6 md:gap-10">
