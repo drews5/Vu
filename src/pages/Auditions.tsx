@@ -135,8 +135,9 @@ export function Auditions() {
         if (error) throw error;
         triggerConfetti();
       } else {
+        // Delete mode
         if (emailInput.trim().toLowerCase() !== slot.email?.trim().toLowerCase()) {
-          alert("Student ID doesn't match!");
+          alert("Student ID doesn't match the one used to book this slot!");
           setIsSubmitting(false);
           return;
         }
@@ -176,7 +177,6 @@ export function Auditions() {
   ];
 
   const renderSlots = (daySlots: AuditionSlot[]) => {
-    // Split slots into 2 columns for this day
     const half = Math.ceil(daySlots.length / 2);
     const col1 = daySlots.slice(0, half);
     const col2 = daySlots.slice(half);
@@ -185,7 +185,7 @@ export function Auditions() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-1">
         {[col1, col2].map((column, colIdx) => (
           <div key={colIdx} className="space-y-0.5">
-            <div className="grid grid-cols-10 gap-1 px-2 py-1 bg-gray-50 rounded text-[9px] font-bold text-gray-400 tracking-widest uppercase">
+            <div className="grid grid-cols-10 gap-1 px-2 py-1 bg-gray-50 rounded text-[9px] font-bold text-gray-400 tracking-widest uppercase" style={fontInter}>
               <div className="col-span-3">TIME</div>
               <div className="col-span-7">NAME</div>
             </div>
@@ -194,6 +194,7 @@ export function Auditions() {
               const isBooked = slot.status === 'Booked';
               const isBreak = slot.status === 'Break';
               const hasText = (tempNames[slot.id] || '').trim().length > 0;
+              const displayTime = slot.time.replace(' PM', '');
 
               return (
                 <div 
@@ -201,20 +202,20 @@ export function Auditions() {
                   className={`grid grid-cols-10 gap-1 items-center p-1 rounded transition-all border ${
                     isConfirming ? 'border-[#8FA8C8] bg-[#8FA8C8]/5' : 
                     isBooked ? 'border-transparent bg-gray-50/50 opacity-80' : 
-                    isBreak ? 'border-transparent bg-amber-50/30' : 
-                    'border-transparent hover:bg-gray-50'
+                    isBreak ? 'border-transparent bg-gray-100' : 
+                    'border-transparent hover:border-gray-100 hover:bg-gray-50'
                   }`}
                 >
                   <div className="col-span-3 px-0.5">
-                    <span className={`font-bold text-[12px] ${isBooked ? 'text-gray-400' : 'text-[#2B4C6F]'}`} style={fontInter}>{slot.time}</span>
+                    <span className={`font-bold text-[12px] ${isBooked ? 'text-gray-400' : 'text-[#2B4C6F]'}`} style={fontInter}>{displayTime}</span>
                   </div>
 
                   <div className="col-span-7 relative group">
                     {isBreak ? (
-                      <span className="italic text-amber-600/40 font-medium px-1 text-[9px] uppercase tracking-tighter">--- BREAK ---</span>
+                      <span className="italic text-gray-400 font-medium px-1.5 text-[9px] uppercase tracking-tighter" style={fontInter}>--- BREAK ---</span>
                     ) : isBooked ? (
                       <div className="flex items-center justify-between gap-1 px-1.5 py-0.5 bg-white rounded shadow-sm border border-gray-100">
-                        <span className="font-bold text-[#2B4C6F] text-[12px] truncate">{slot.name}</span>
+                        <span className="font-bold text-[#2B4C6F] text-[12px] truncate" style={fontInter}>{slot.name}</span>
                         {!isConfirming && (
                           <button 
                             onClick={() => startConfirmation(slot.id, 'delete')} 
@@ -232,6 +233,7 @@ export function Auditions() {
                           className={`w-full px-1.5 py-0.5 bg-white border rounded outline-none transition-all text-[12px] font-bold pr-6 ${
                             editingId === slot.id ? 'border-[#8FA8C8]' : 'border-gray-200'
                           }`}
+                          style={fontInter}
                           value={tempNames[slot.id] || ''}
                           onFocus={() => setEditingSlotId(slot.id)}
                           onChange={(e) => handleNameChange(slot.id, e.target.value)}
@@ -262,13 +264,14 @@ export function Auditions() {
                                     exit={{ opacity: 0, scale: 0.9, y: 0 }}
                                     className="absolute right-0 top-full z-20 bg-white shadow-2xl rounded-lg p-2 border-2 border-[#8FA8C8] flex flex-col gap-1.5 min-w-[140px]"
                                   >
-                                    <div className="text-[8px] font-bold text-[#8FA8C8] uppercase tracking-wider">Student ID</div>
+                                    <div className="text-[8px] font-bold text-[#8FA8C8] uppercase tracking-wider" style={fontInter}>Student ID</div>
                                     <div className="flex items-center gap-1">
                                       <input 
                                         autoFocus
                                         type="text"
                                         placeholder="lastname123"
                                         className="flex-1 bg-gray-50 px-1.5 py-1 rounded text-[10px] outline-none font-bold min-w-0"
+                                        style={fontInter}
                                         value={emailInput}
                                         onChange={(e) => setEmailInput(e.target.value)}
                                         onKeyDown={(e) => {
@@ -341,14 +344,14 @@ export function Auditions() {
             </h1>
             <div className="flex justify-center gap-4 text-white/80 mt-1 font-bold tracking-widest text-[9px]" style={fontInter}>
               <div className="flex items-center gap-1.5"><Calendar className="w-3 h-3" /> FEB 18 & 19</div>
-              <div className="flex items-center gap-1.5"><Clock className="w-3 h-3" /> 6:00 - 9:00 PM</div>
+              <div className="flex items-center gap-1.5"><Clock className="w-3 h-3" /> 6:00 - 9:00</div>
             </div>
           </motion.div>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-2 md:px-4">
-        {/* Sign Up Section - 4 Columns */}
+        {/* Sign Up Section */}
         <section className="bg-white rounded-[24px] shadow-xl overflow-hidden mb-8 border border-gray-100">
           <div className="px-6 py-3 border-b border-gray-50 flex justify-between items-center">
             <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: '18px' }}>
@@ -356,7 +359,7 @@ export function Auditions() {
             </h2>
           </div>
 
-          <div className="p-2 md:p-3">
+          <div className="p-2 md:p-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-8">
               {daysData.map((dayInfo) => (
                 <div key={dayInfo.day}>

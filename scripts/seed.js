@@ -153,17 +153,23 @@ async function setupAndSeed() {
     const slots = [];
     const startHour = 18; // 6 PM
     const endHour = 21; // 9 PM
-    for (let hour = startHour; hour < endHour; hour++) {
-      for (let minute = 0; minute < 60; minute += 5) {
-        const time = `${hour > 12 ? hour - 12 : hour}:${minute === 0 ? '00' : minute < 10 ? '0' + minute : minute} PM`;
-        
-        // Add a break every hour at the :55 mark
-        if (minute === 55) {
-          slots.push({ day, time, status: 'Break' });
-        } else {
-          slots.push({ day, time, status: 'Available' });
-        }
+    
+    let totalMinutes = 0;
+    const durationMinutes = (endHour - startHour) * 60;
+
+    while (totalMinutes < durationMinutes) {
+      const hour24 = startHour + Math.floor(totalMinutes / 60);
+      const minute = totalMinutes % 60;
+      const time = `${hour24 > 12 ? hour24 - 12 : hour24}:${minute === 0 ? '00' : minute < 10 ? '0' + minute : minute} PM`;
+      
+      // Add a break every 45 minutes
+      if (totalMinutes > 0 && totalMinutes % 45 === 0) {
+        slots.push({ day, time, status: 'Break' });
+      } else {
+        slots.push({ day, time, status: 'Available' });
       }
+      
+      totalMinutes += 5; // Move to next 5-min slot
     }
     return slots;
   };
