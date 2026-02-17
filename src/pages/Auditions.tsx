@@ -182,7 +182,7 @@ export function Auditions() {
     const col2 = daySlots.slice(half);
 
     return (
-      <div className="grid grid-cols-2 gap-x-1 md:gap-x-2 gap-y-0.5 md:gap-y-1">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-1 md:gap-x-2 gap-y-0.5 md:gap-y-1">
         {[col1, col2].map((column, colIdx) => (
           <div key={colIdx} className="space-y-0.5">
             <div className="grid grid-cols-10 gap-0.5 md:gap-1 px-1 md:px-2 py-0.5 md:py-1 bg-gray-50 rounded text-[8px] md:text-[9px] font-bold text-gray-400 tracking-widest uppercase" style={fontInter}>
@@ -364,9 +364,10 @@ export function Auditions() {
             <div className="grid grid-cols-2 gap-2 md:gap-8">
               {daysData.map((dayInfo) => (
                 <div key={dayInfo.day}>
-                  <div className="flex items-baseline gap-1 md:gap-2 mb-2 md:mb-3 border-b border-gray-100 pb-1">
-                    <h3 className="text-[#8FA8C8] text-[10px] md:text-sm uppercase tracking-widest font-bold" style={fontYearbook}>{dayInfo.day}</h3>
-                    <span className="text-[#8FA8C8]/60 text-[8px] md:text-[10px] font-bold uppercase tracking-wider" style={fontInter}>{dayInfo.date}</span>
+                  <div className="flex items-baseline gap-2 mb-2 border-b border-gray-100 pb-1 px-1">
+                    <h3 className="text-[#8FA8C8] uppercase tracking-widest" style={{ ...fontYearbook, fontSize: 'clamp(12px, 1.5vw, 16px)' }}>
+                      {dayInfo.day} <span className="opacity-60">{dayInfo.date}</span>
+                    </h3>
                   </div>
 
                   {loading ? (
