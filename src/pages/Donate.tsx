@@ -121,7 +121,7 @@ export function Donate() {
 
         {/* Givebutter Embed Container (Left on Desktop, MIDDLE on Mobile) */}
         <div 
-          className="order-2 lg:order-1 lg:col-span-7 bg-white shadow-2xl overflow-hidden relative flex flex-col" 
+          className="order-2 lg:order-1 lg:col-span-7 lg:row-span-2 bg-white shadow-2xl overflow-hidden relative flex flex-col" 
           style={{ 
             borderRadius: '24px',
             minHeight: '800px',
