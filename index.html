@@ -5,6 +5,27 @@
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Vocal U A Cappella</title>
+      <style>
+        .font-yearbook {
+          opacity: 0;
+        }
+        .fonts-loaded .font-yearbook {
+          opacity: 1;
+          transition: opacity 0.4s ease-in-out;
+        }
+      </style>
+      <script>
+        (function() {
+          const font = new FontFace('Yearbook Solid', 'url(/src/assets/fonts/yearbook_solid.woff2)');
+          document.fonts.add(font);
+          document.fonts.ready.then(() => {
+            document.documentElement.classList.add('fonts-loaded');
+          }).catch(() => {
+            // Fallback if font fails to load
+            document.documentElement.classList.add('fonts-loaded');
+          });
+        })();
+      </script>
     </head>
 
     <body>

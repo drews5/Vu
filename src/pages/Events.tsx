@@ -2,6 +2,7 @@ import { useEffect, useState, memo } from 'react';
 import { Calendar, MapPin, ArrowRight, Clock, Share2, Navigation } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
+import { motion } from 'motion/react';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
@@ -23,11 +24,11 @@ interface Event {
 
 const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Event }) {
   const isUpcoming = event.status === 'Upcoming';
-  
+
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     const shareUrl = `${window.location.origin}/event/${event.slug}`;
     const shareTitle = event.title;
     const shareText = `Check out ${event.title} by Vocal U!`;
@@ -65,11 +66,11 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
     const title = encodeURIComponent(event.title);
     const location = encodeURIComponent(`${event.location} ${event.address || ''}`);
     const details = encodeURIComponent(event.description);
-    
+
     // Create Google Calendar link
     const startDate = event.fullDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
     const endDate = new Date(event.fullDate.getTime() + 2 * 60 * 60 * 1000).toISOString().replace(/-|:|\.\d\d\d/g, "");
-    
+
     return `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
   };
 
@@ -80,94 +81,104 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
 
   return (
     <div className="relative">
-      <Link 
-        to={`/event/${event.slug}`}
-        className={`group bg-white overflow-hidden border border-gray-100 transition-all duration-300 hover:bg-gray-50 flex flex-col md:flex-row h-full md:min-h-64 ${
-          isUpcoming ? 'ring-1 ring-[#8FA8C8]/30 shadow-md' : 'shadow-sm'
-        }`}
-        style={{ borderRadius: '16px' }}
+      <motion.div
+        whileHover={{ y: -4 }}
+        whileTap={{ scale: 0.99 }}
       >
-        {/* Image Section */}
-        <div className="relative w-full md:w-80 h-48 md:h-auto overflow-hidden shrink-0">
-          <img 
-            src={event.image} 
-            alt={event.title} 
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-            <span className="text-white text-sm font-black flex items-center gap-2">
-              VIEW DETAILS <ArrowRight className="w-4 h-4" />
-            </span>
-          </div>
-          {isUpcoming && (
-            <div className="absolute top-4 left-4">
-              <span className="bg-[#8FA8C8] text-white px-4 py-1.5 rounded-full text-[10px] font-bold tracking-[0.2em] border border-white/20" style={fontYearbook}>
-                UPCOMING
+        <Link
+          to={`/event/${event.slug}`}
+          className={`group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-2xl flex flex-col md:flex-row h-full md:min-h-64 cursor-pointer ${isUpcoming ? 'ring-1 ring-[#8FA8C8]/30 shadow-md' : 'shadow-sm'
+            }`}
+          style={{ borderRadius: '16px' }}
+        >
+          {/* Image Section */}
+          <div className="relative w-full md:w-80 h-48 md:h-auto overflow-hidden shrink-0">
+            <img
+              src={event.image}
+              alt={event.title}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+              <span className="text-white text-sm font-black flex items-center gap-2">
+                VIEW DETAILS <ArrowRight className="w-4 h-4" />
               </span>
             </div>
-          )}
-        </div>
-
-        {/* Content Section */}
-        <div className="p-6 md:p-8 pb-20 md:pb-24 flex flex-col flex-grow justify-center relative bg-white">
-          <div className="flex flex-col gap-1 mb-4">
-            <div className="flex items-center gap-2 text-[#8FA8C8] font-bold text-xs tracking-widest" style={fontInter}>
-              <Calendar className="w-3.5 h-3.5" />
-              {event.date}, {event.year}
-            </div>
-            <h3 className="text-[#2B4C6F] text-2xl md:text-3xl leading-tight group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
-              {event.title}
-            </h3>
+            {isUpcoming && (
+              <div className="absolute top-4 left-4">
+                <span className="bg-[#8FA8C8] text-white px-4 py-1.5 rounded-full text-[10px] tracking-[0.2em] border border-white/20 font-yearbook" style={fontYearbook}>
+                  Upcoming
+                </span>
+              </div>
+            )}
           </div>
 
-          <div className="flex flex-wrap gap-y-2 gap-x-6 text-[#2B4C6F]/60 text-sm mb-4" style={fontInter}>
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-[#8FA8C8]/60" />
-              {event.time}
+          {/* Content Section */}
+          <div className="p-6 md:p-8 pb-20 md:pb-24 flex flex-col flex-grow justify-center relative bg-white">
+            <div className="flex flex-col gap-1 mb-4">
+              <div className="flex items-center gap-2 text-[#8FA8C8] font-bold text-xs tracking-widest" style={fontInter}>
+                <Calendar className="w-3.5 h-3.5" />
+                {event.date}, {event.year}
+              </div>
+              <h3 className="text-[#2B4C6F] text-2xl md:text-3xl leading-tight group-hover:text-[#8FA8C8] transition-colors font-yearbook" style={fontYearbook}>
+                {event.title}
+              </h3>
             </div>
-            <div className="flex items-center gap-2 max-w-xs">
-              <MapPin className="w-4 h-4 text-[#8FA8C8]/60 shrink-0" />
-              <span className="truncate">{event.location}</span>
-            </div>
-          </div>
 
-          <p className="text-[#2B4C6F]/70 text-sm line-clamp-2 md:line-clamp-3 leading-relaxed max-w-2xl" style={fontInter}>
-            {event.description}
-          </p>
-        </div>
-      </Link>
+            <div className="flex flex-wrap gap-y-2 gap-x-6 text-[#2B4C6F]/60 text-sm mb-4" style={fontInter}>
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-[#8FA8C8]/60" />
+                {event.time}
+              </div>
+              <div className="flex items-center gap-2 max-w-xs">
+                <MapPin className="w-4 h-4 text-[#8FA8C8]/60 shrink-0" />
+                <span className="truncate">{event.location}</span>
+              </div>
+            </div>
+
+            <p className="text-[#2B4C6F]/70 text-sm line-clamp-2 md:line-clamp-3 leading-relaxed max-w-2xl" style={fontInter}>
+              {event.description}
+            </p>
+          </div>
+        </Link>
+      </motion.div>
 
       {/* Action Buttons Layered Over */}
       {isUpcoming && (
         <div className="absolute bottom-6 left-6 right-6 md:bottom-8 md:right-8 md:left-auto flex flex-wrap gap-3 z-10">
-          <a 
+          <motion.a
             href={getCalendarUrl()}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8] hover:text-white transition-all shadow-md border border-[#8FA8C8]/20 group/btn"
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/40 transition-all duration-200 border border-[#8FA8C8]/20 group/btn shadow-md cursor-pointer"
           >
             <Calendar className="w-4 h-4" />
             <span className="text-[11px] font-bold tracking-wider" style={fontInter}>Add to Calendar</span>
-          </a>
-          <a 
+          </motion.a>
+          <motion.a
             href={getNavigationUrl()}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8] hover:text-white transition-all shadow-md border border-[#8FA8C8]/20"
+            whileHover={{ x: 4 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/40 transition-all duration-200 border border-[#8FA8C8]/20 shadow-md cursor-pointer"
           >
             <Navigation className="w-4 h-4" />
             <span className="text-[11px] font-bold tracking-wider" style={fontInter}>Navigate</span>
-          </a>
-          <button 
+          </motion.a>
+          <motion.button
             onClick={handleShare}
-            className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8] hover:text-white transition-all shadow-md border border-[#8FA8C8]/20"
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/40 transition-all duration-200 border border-[#8FA8C8]/20 shadow-md cursor-pointer"
           >
             <Share2 className="w-4 h-4" />
             <span className="text-[11px] font-bold tracking-wider" style={fontInter}>Share</span>
-          </button>
+          </motion.button>
         </div>
       )}
     </div>
@@ -201,92 +212,82 @@ export function Events() {
             address: r.address,
             description: r.description,
             image: r.image_url,
-            status: r.status,
-            fullDate: d,
+            status: d > new Date() ? 'Upcoming' : 'Previous',
+            fullDate: d
           };
         });
-        setEvents(formatted);
+        setEvents(formatted as Event[]);
       }
       setLoading(false);
     }
-
     fetchEvents();
   }, []);
 
-  const upcomingEvents = events.filter(e => e.status === 'Upcoming');
-  const pastEvents = events.filter(e => e.status === 'Previous');
-
-  if (loading) {
-    return (
-      <div className="flex justify-center py-24">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8FA8C8]" />
-      </div>
-    );
-  }
-
   return (
-    <div className="pb-16 md:pb-24">
-      {/* Hero Section */}
-      <section style={{ marginTop: '25px', marginBottom: '40px' }}>
+    <div className="pb-8 md:pb-16 min-h-screen">
+      {/* Header Section */}
+      <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
-          className="bg-[#8FA8C8] py-14 md:py-22 px-4 md:px-8 overflow-hidden relative border border-gray-100 shadow-sm"
+          className="bg-[#91a8c6] py-10 md:py-16 px-4 text-center border border-gray-100 shadow-sm relative overflow-hidden"
           style={{ borderRadius: '16px' }}
         >
-          {/* Decorative Background Elements */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-          
-          <div className="max-w-5xl mx-auto text-center relative z-10">
-                    <h1
-                      className="text-white mb-4"
-                      style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em', lineHeight: '0.9' }}
-                    >
-                      OUR EVENTS
-                    </h1>
-            <p className="text-white/90 max-w-2xl mx-auto font-medium tracking-wide text-xs md:text-base" style={fontInter}>
+          <div className="max-w-4xl mx-auto relative z-10">
+            <h1
+              className="text-white mb-2 font-yearbook"
+              style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}
+            >
+              Events
+            </h1>
+            <p className="text-white/90 font-medium tracking-wide text-xs md:text-base" style={fontInter}>
               Join us for live performances, workshops, and more.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Upcoming Events */}
-      {upcomingEvents.length > 0 && (
-        <section className="mb-20">
-          <div className="flex items-center gap-6 mb-10 px-4 md:px-0">
-            <h2
-              className="text-[#2B4C6F] shrink-0"
-              style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 48px)' }}
-            >
-              UPCOMING
-            </h2>
-            <div className="h-[2px] w-full bg-[#8FA8C8]/20 rounded-full" />
+      <div className="max-w-6xl mx-auto space-y-12">
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <div className="w-10 h-10 border-4 border-[#8FA8C8]/30 border-t-[#8FA8C8] rounded-full animate-spin" />
           </div>
-          <div className="flex flex-col gap-8">
-            {upcomingEvents.map((event) => (
-              <UnifiedEventCard key={event.id} event={event} />
-            ))}
-          </div>
-        </section>
-      )}
+        ) : (
+          <>
+            {events.some(e => e.status === 'Upcoming') && (
+              <section>
+                <div className="flex items-center gap-4 mb-8">
+                  <h2 className="text-[#2B4C6F] text-2xl md:text-3xl font-yearbook whitespace-nowrap" style={fontYearbook}>
+                    Upcoming Events
+                  </h2>
+                  <div className="h-[1px] bg-[#8FA8C8]/20 flex-grow" />
+                </div>
+                <div className="grid grid-cols-1 gap-8">
+                  {events
+                    .filter((e) => e.status === 'Upcoming')
+                    .map((event) => (
+                      <UnifiedEventCard key={event.id} event={event} />
+                    ))}
+                </div>
+              </section>
+            )}
 
-      {/* Past Performances */}
-      <section>
-        <div className="flex items-center gap-6 mb-10 px-4 md:px-0">
-          <h2
-            className="text-[#2B4C6F] shrink-0 opacity-60"
-            style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 48px)' }}
-          >
-            PAST EVENTS
-          </h2>
-          <div className="h-[2px] w-full bg-[#8FA8C8]/10 rounded-full" />
-        </div>
-        <div className="flex flex-col gap-8">
-          {pastEvents.map((event) => (
-            <UnifiedEventCard key={event.id} event={event} />
-          ))}
-        </div>
-      </section>
+            <section>
+              <div className="flex items-center gap-4 mb-8">
+                <h2 className="text-[#2B4C6F] text-2xl md:text-3xl font-yearbook whitespace-nowrap" style={fontYearbook}>
+                  Past Events
+                </h2>
+                <div className="h-[1px] bg-[#8FA8C8]/20 flex-grow" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {events
+                  .filter((e) => e.status === 'Previous')
+                  .map((event) => (
+                    <UnifiedEventCard key={event.id} event={event} />
+                  ))}
+              </div>
+            </section>
+          </>
+        )}
+      </div>
     </div>
   );
 }

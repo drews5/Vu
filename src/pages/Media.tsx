@@ -1,5 +1,7 @@
 import { memo, useEffect, useState } from 'react';
+import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
+
 import { Instagram, Youtube, ExternalLink, Calendar, MessageCircle } from 'lucide-react';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
@@ -16,11 +18,13 @@ type InstaPost = {
 
 const InstagramCard = memo(function InstagramCard({ post }: { post: InstaPost }) {
   return (
-    <a
+    <motion.a
       href={post.permalink}
       target="_blank"
       rel="noopener noreferrer"
-      className="group bg-white overflow-hidden border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md flex flex-col"
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.98 }}
+      className="group bg-white overflow-hidden border border-gray-100 shadow-sm transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] flex flex-col cursor-pointer"
       style={{ borderRadius: '16px' }}
     >
       <div className="relative overflow-hidden bg-gray-50">
@@ -45,32 +49,35 @@ const InstagramCard = memo(function InstagramCard({ post }: { post: InstaPost })
           </div>
         </div>
       )}
-    </a>
+    </motion.a>
   );
 });
 
 const VideoCard = memo(function VideoCard({ item, isHighlighted = false }: { item: any, isHighlighted?: boolean }) {
   const vId = typeof item === 'string' ? item : item.snippet.resourceId.videoId;
-  const title = typeof item === 'string' ? 'ICCA 2025 SET: FULL PERFORMANCE' : item.snippet.title;
+  const title = typeof item === 'string' ? 'ICCA 2025 Set: Full Performance' : item.snippet.title;
   const dateStr = typeof item === 'string' ? 'Feb 2025' : new Date(item.snippet.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   return (
-    <div 
-      className={`bg-white overflow-hidden border shadow-md transition-all duration-300 hover:-translate-y-1 flex flex-col ${
-        isHighlighted ? 'border-[#8FA8C8] ring-4 ring-[#8FA8C8]/20' : 'border-gray-100'
-      }`}
+    <motion.div
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.99 }}
+      className={`bg-white overflow-hidden border shadow-md transition-[box-shadow,border-color] duration-300 hover:shadow-xl flex flex-col ${isHighlighted ? 'border-[#8FA8C8] ring-4 ring-[#8FA8C8]/20' : 'border-gray-100'
+        }`}
       style={{ borderRadius: '16px' }}
     >
       <div className={`relative bg-black ${isHighlighted ? 'pt-[56.25%]' : 'pt-[56.25%]'}`}>
         {isHighlighted && (
-          <div className="absolute top-4 left-4 z-10 bg-[#2B4C6F] text-white px-3 py-1 text-[10px] font-bold tracking-widest rounded-full shadow-lg" style={fontYearbook}>
-            FEATURED PERFORMANCE
+          <div className="absolute top-4 left-4 z-10">
+            <span className="bg-[#8FA8C8] text-white px-4 py-1.5 rounded-full text-[10px] tracking-[0.2em] border border-white/20 font-yearbook" style={fontYearbook}>
+              Upcoming
+            </span>
           </div>
         )}
-        <iframe 
+        <iframe
           className="absolute top-0 left-0 w-full h-full border-0"
-          src={`https://www.youtube.com/embed/${vId}?rel=0`} 
-          allow="autoplay; encrypted-media; picture-in-picture" 
+          src={`https://www.youtube.com/embed/${vId}?rel=0`}
+          allow="autoplay; encrypted-media; picture-in-picture"
           allowFullScreen
           title={title}
         />
@@ -81,8 +88,8 @@ const VideoCard = memo(function VideoCard({ item, isHighlighted = false }: { ite
             <Calendar className="w-3.5 h-3.5" />
             {dateStr}
           </div>
-          <h3 
-            className={`text-[#2B4C6F] leading-[1.2] uppercase line-clamp-2 ${isHighlighted ? 'text-xl md:text-2xl' : 'text-lg'}`} 
+          <h3
+            className={`text-[#2B4C6F] leading-[1.2] font-yearbook line-clamp-2 ${isHighlighted ? 'text-xl' : 'text-lg'}`}
             style={fontYearbook}
           >
             {title}
@@ -94,7 +101,7 @@ const VideoCard = memo(function VideoCard({ item, isHighlighted = false }: { ite
           </p>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 });
 
@@ -112,7 +119,7 @@ export function Media() {
 
       try {
         setLoading(true);
-        
+
         // Fetch YouTube
         const ytPromise = fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=5&playlistId=${YOUTUBE_PLAYLIST_ID}&key=${YOUTUBE_API_KEY}`)
           .then(res => res.json());
@@ -122,7 +129,7 @@ export function Media() {
           .then(res => res.json());
 
         const [ytData, instaData] = await Promise.all([ytPromise, instaPromise]);
-        
+
         if (ytData.items) {
           setVideos(ytData.items);
         }
@@ -152,16 +159,16 @@ export function Media() {
           style={{ borderRadius: '16px' }}
         >
           <h1
-            className="text-white"
+            className="text-white font-yearbook"
             style={{ fontFamily: "'Yearbook Solid', sans-serif", fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}
           >
-            MEDIA
+            Media
           </h1>
           <p
             className="text-white/90 mt-2 max-w-2xl mx-auto text-sm md:text-base"
             style={{ fontFamily: 'Inter, sans-serif' }}
           >
-            Explore our journey through performance, competition, and community.
+            Catch our latest performances and keep up with us on social media.
           </p>
         </div>
       </section>
@@ -176,40 +183,39 @@ export function Media() {
                 <Youtube className="w-5 h-5" />
                 <span className="tracking-widest text-sm font-bold">Latest Performances</span>
               </div>
-              <h2 className="text-[#2B4C6F] text-4xl md:text-5xl" style={fontYearbook}>
-                YOUTUBE
+              <h2 className="text-[#2B4C6F] text-4xl md:text-5xl font-yearbook" style={fontYearbook}>
+                YouTube
               </h2>
             </div>
-            <a
+            <motion.a
               href="https://www.youtube.com/@vocal-u/videos"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 border-2 border-[#8FA8C8] text-[#2B4C6F] px-5 py-2 transition-all hover:bg-[#8FA8C8]/10 font-bold"
+              whileHover={{ x: 4 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center gap-2 border-2 border-[#8FA8C8] text-[#2B4C6F] px-5 py-2 hover:bg-[#8FA8C8] hover:text-white transition-all duration-200 cursor-pointer"
               style={{ ...fontYearbook, borderRadius: '12px', fontSize: '14px' }}
             >
-              YOUTUBE CHANNEL
+              YouTube Channel
               <Youtube className="w-4 h-4" />
-            </a>
+            </motion.a>
           </div>
 
-          <div className="space-y-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {/* Highlighted Video */}
             <VideoCard item="wksl9wmTQio" isHighlighted={true} />
 
-            {/* Other Videos */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {loading ? (
-                Array(4).fill(0).map((_, i) => (
-                  <div key={i} className="aspect-video bg-gray-100 animate-pulse" style={{ borderRadius: '16px' }} />
-                ))
-              ) : error ? (
-                <p className="col-span-full text-[#2B4C6F]/60 text-center py-8" style={fontInter}>Unable to load additional videos.</p>
-              ) : (
-                videos.map((video) => (
-                  <VideoCard key={video.id} item={video} />
-                ))
-              )}
-            </div>
+            {loading ? (
+              Array(4).fill(0).map((_, i) => (
+                <div key={i} className="aspect-video bg-gray-100 animate-pulse" style={{ borderRadius: '16px' }} />
+              ))
+            ) : error ? (
+              <p className="col-span-full text-[#2B4C6F]/60 text-center py-8" style={fontInter}>Unable to load additional videos.</p>
+            ) : (
+              videos.map((video) => (
+                <VideoCard key={video.id} item={video} />
+              ))
+            )}
           </div>
         </section>
 
@@ -221,20 +227,22 @@ export function Media() {
                 <Instagram className="w-5 h-5" />
                 <span className="tracking-widest text-sm font-bold">Recent Photos</span>
               </div>
-              <h2 className="text-[#2B4C6F] text-4xl md:text-5xl" style={fontYearbook}>
-                INSTAGRAM
+              <h2 className="text-[#2B4C6F] text-4xl md:text-5xl font-yearbook" style={fontYearbook}>
+                Instagram
               </h2>
             </div>
-            <a
+            <motion.a
               href="https://www.instagram.com/vocal_u"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 border-2 border-[#8FA8C8] text-[#2B4C6F] px-5 py-2 transition-all hover:bg-[#8FA8C8]/10 font-bold"
+              whileHover={{ x: 4 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center gap-2 border-2 border-[#8FA8C8] text-[#2B4C6F] px-5 py-2 hover:bg-[#8FA8C8] hover:text-white transition-all duration-200 cursor-pointer"
               style={{ ...fontYearbook, borderRadius: '12px', fontSize: '14px' }}
             >
-              FOLLOW @VOCAL_U
+              Visit @vocal_u
               <Instagram className="w-4 h-4" />
-            </a>
+            </motion.a>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-10">
@@ -260,21 +268,28 @@ export function Media() {
             <MessageCircle className="w-8 h-8 text-[#2B4C6F]" />
           </div>
         </div>
-        <h2 className="text-[#2B4C6F] text-3xl md:text-4xl mb-4" style={fontYearbook}>
-          WANT MORE MEDIA?
+        <h2 className="text-[#2B4C6F] text-3xl md:text-4xl mb-4 font-yearbook" style={fontYearbook}>
+          Want more Media?
         </h2>
         <p className="text-[#2B4C6F]/70 max-w-xl mx-auto mb-8" style={fontInter}>
           If you're looking for additional media or want to reach out about something else, we'd love to hear from you.
         </p>
-        <Link
-          to="/contact"
-          className="inline-flex items-center gap-2 bg-[#2B4C6F] text-white px-8 py-3 transition-all hover:bg-[#1a2f45] font-bold"
-          style={{ ...fontYearbook, borderRadius: '12px' }}
+        <motion.div
+          whileHover={{ x: 6 }}
+          whileTap={{ scale: 0.95 }}
+          className="inline-block"
         >
-          GET IN TOUCH
-          <ExternalLink className="w-5 h-5" />
-        </Link>
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-2 bg-white text-[#2B4C6F] px-8 py-3 border border-gray-100 hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/50 transition-all duration-300 cursor-pointer"
+            style={{ ...fontYearbook, borderRadius: '12px' }}
+          >
+            Get in Touch
+            <ExternalLink className="w-5 h-5" />
+          </Link>
+        </motion.div>
       </section>
     </div>
   );
 }
+

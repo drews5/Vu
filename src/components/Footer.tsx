@@ -1,4 +1,6 @@
 import { memo, useState } from 'react';
+import { motion } from 'motion/react';
+
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook, Youtube } from 'lucide-react';
 import footerLogo from 'figma:asset/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
@@ -57,7 +59,7 @@ export const Footer = memo(function Footer() {
           </div>
 
           <div className="flex flex-col items-start">
-            <h3 className="mb-2 md:mb-4 font-bold" style={{ ...fontYearbook, fontSize: 'clamp(12px, 2vw, 18px)' }}>
+            <h3 className="mb-2 md:mb-4" style={{ ...fontYearbook, fontSize: 'clamp(12px, 2vw, 18px)' }}>
               RESOURCES
             </h3>
             <ul className="space-y-1 md:space-y-2" style={{ ...fontInter, fontSize: 'clamp(10px, 1.5vw, 14px)' }}>
@@ -68,12 +70,12 @@ export const Footer = memo(function Footer() {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white/70 hover:text-white transition-colors"
+                      className="text-white/70 hover:text-[#8FA8C8] transition-colors duration-300"
                     >
                       {link.label}
                     </a>
                   ) : (
-                    <Link to={link.to || ''} className="text-white/70 hover:text-white transition-colors">
+                    <Link to={link.to || ''} className="text-white/70 hover:text-[#8FA8C8] transition-colors duration-300">
                       {link.label}
                     </Link>
                   )}
@@ -83,13 +85,13 @@ export const Footer = memo(function Footer() {
           </div>
 
           <div className="flex flex-col items-start overflow-hidden">
-            <h3 className="mb-2 md:mb-4 font-bold" style={{ ...fontYearbook, fontSize: 'clamp(12px, 2vw, 18px)' }}>
+            <h3 className="mb-2 md:mb-4" style={{ ...fontYearbook, fontSize: 'clamp(12px, 2vw, 18px)' }}>
               CONNECT
             </h3>
             <div className="mb-2 md:mb-4 w-full relative">
               <button
                 onClick={handleCopy}
-                className="text-white/70 hover:text-white transition-colors truncate block w-full text-left cursor-pointer group relative"
+                className="text-white/70 hover:text-white/90 transition-colors truncate block w-full text-left cursor-pointer group relative"
                 style={{ ...fontInter, fontSize: 'clamp(10px, 1.5vw, 14px)' }}
               >
                 vocalu@umn.edu
@@ -103,20 +105,23 @@ export const Footer = memo(function Footer() {
             </div>
             <div className="flex gap-2 md:gap-3 flex-wrap">
               {socialIcons.map((s) => (
-                <a
+                <motion.a
                   key={s.label}
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-white/10 p-1 md:p-2.5 rounded-full hover:bg-white/20 transition-colors"
+                  whileHover={{ y: -2, scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="bg-white/10 p-1 md:p-2.5 rounded-full hover:bg-[#8FA8C8]/20 hover:text-[#8FA8C8] transition-all duration-200 cursor-pointer"
                   aria-label={s.label}
                 >
                   <s.Icon className="w-3 h-3 md:w-5 md:h-5" />
-                </a>
+                </motion.a>
               ))}
             </div>
           </div>
         </div>
+
 
         <div className="pt-6 md:pt-8 border-t border-white/10">
           <p className="text-white/50 text-[10px] md:text-sm text-center" style={fontInter}>

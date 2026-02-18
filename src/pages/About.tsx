@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { motion } from 'motion/react';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
@@ -25,11 +26,13 @@ const SongCard = memo(function SongCard({
   song: { title: string; artist: string; note?: string };
 }) {
   return (
-    <div
-      className="bg-white p-6 border border-gray-100"
+    <motion.div
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.99 }}
+      className="bg-white p-6 border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] cursor-default group"
       style={{ borderRadius: '16px' }}
     >
-      <h3 className="text-[#2B4C6F] mb-2" style={{ ...fontYearbook, fontSize: '20px' }}>
+      <h3 className="text-[#2B4C6F] mb-2 group-hover:text-[#8FA8C8] transition-colors font-yearbook" style={{ ...fontYearbook, fontSize: '20px' }}>
         {song.title}
       </h3>
       <p className="text-[#8FA8C8]" style={{ ...fontInter, fontSize: '15px' }}>
@@ -40,7 +43,7 @@ const SongCard = memo(function SongCard({
           {song.note}
         </p>
       )}
-    </div>
+    </motion.div>
   );
 });
 
@@ -54,10 +57,10 @@ export function About() {
           style={{ borderRadius: '16px' }}
         >
           <h1
-            className="text-white px-4"
+            className="text-white px-4 font-yearbook"
             style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}
           >
-            ABOUT US
+            About Us
           </h1>
         </div>
       </section>
@@ -65,7 +68,7 @@ export function About() {
       {/* Our Mission */}
       <section style={{ marginBottom: '25px' }}>
         <h2
-          className="text-[#2B4C6F] mb-4 md:mb-6 px-4 md:px-0"
+          className="text-[#2B4C6F] mb-4 md:mb-6 px-4 md:px-0 font-yearbook"
           style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 48px)' }}
         >
           Our Mission
@@ -96,7 +99,7 @@ export function About() {
       {/* Our Repertoire */}
       <section style={{ marginBottom: '25px' }}>
         <h2
-          className="text-[#2B4C6F] mb-4 md:mb-6 px-4 md:px-0"
+          className="text-[#2B4C6F] mb-4 md:mb-6 px-4 md:px-0 font-yearbook"
           style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 48px)' }}
         >
           Our Repertoire

@@ -1,6 +1,12 @@
+/// <reference types="vite/client" />
 import { memo, useEffect, useState, useMemo } from 'react';
 import { Instagram, Music } from 'lucide-react';
 import { supabase } from '../utils/supabase';
+import { motion } from 'motion/react';
+
+const memberPhotos = import.meta.glob('../assets/members/*.jpg', { eager: true, import: 'default' }) as Record<string, string>;
+const heroPhotos = import.meta.glob('../assets/group_photos/*.jpg', { eager: true, import: 'default' });
+const heroImageUrls = Object.values(heroPhotos) as string[];
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 
@@ -19,41 +25,77 @@ const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
   const nameParts = member.name.split(' ');
   const firstName = nameParts[0];
   const lastName = nameParts.slice(1).join(' ');
+  const isDaniel = member.name === 'Daniel Ho';
 
   return (
-    <div
-      className="bg-white p-3 border border-gray-100 flex flex-col items-center text-center relative overflow-hidden"
+    <motion.div
+      whileHover={{ y: -6 }}
+      whileTap={{ scale: 0.98 }}
+      className="group bg-white p-3 border border-gray-100 flex flex-col items-center text-center relative overflow-hidden transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] w-full"
       style={{ borderRadius: '12px' }}
     >
-      {member.is_vp && (
-        <div className="absolute top-2 right-[-35px] bg-[#8FA8C8] text-white py-1 px-10 rotate-45 text-[8px] font-bold tracking-widest z-10">
-          VP
+      {!isDaniel && member.is_vp && (
+        <div className="absolute top-2 right-[-35px] bg-[#8FA8C8] text-white py-1 px-10 rotate-45 text-[8px] tracking-widest z-10 shadow-sm">
+          Vice President
         </div>
       )}
-      <div className="w-16 h-16 bg-[#91a8c6]/10 rounded-full mb-2 flex items-center justify-center overflow-hidden">
+
+      {/* Photo Container - Rounded Rectangle */}
+      <div className="w-full aspect-[4/5] bg-[#91a8c6]/10 mb-3 overflow-hidden border border-gray-50 relative" style={{ borderRadius: '8px' }}>
         {member.photo ? (
-          <img src={member.photo} alt={member.name} className="w-full h-full object-cover" />
+          <img
+            src={member.photo}
+            alt={member.name}
+            className="w-full h-full object-cover"
+            style={{
+              imageRendering: 'auto',
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden'
+            }}
+            loading="lazy"
+          />
         ) : (
-          <Music className="w-8 h-8 text-[#91a8c6]" />
+          <div className="w-full h-full flex items-center justify-center">
+            <Music className="w-10 h-10 text-[#91a8c6]/40" />
+          </div>
+        )}
+
+        {/* Daniel's Custom Banner at the bottom of the photo */}
+        {isDaniel && (
+          <div className="absolute bottom-0 left-0 right-0 bg-[#2B4C6F] text-white py-1 text-[8px] tracking-widest z-20 shadow-sm font-sans">
+            Vocal Percussionist
+          </div>
         )}
       </div>
-      <h3 className="text-[#2B4C6F] text-base mb-0.5 leading-tight" style={fontYearbook}>
-        <div className="block">{firstName}</div>
-        <div className="block">{lastName}</div>
-      </h3>
-      <p className="text-[#8FA8C8] font-bold text-[10px] tracking-wider mb-1">{member.role}</p>
-      <div className="space-y-0 text-[11px] text-[#2B4C6F]/70" style={{ fontFamily: 'Inter, sans-serif' }}>
-        <p>{member.major}</p>
-        <p>{member.year}</p>
-      </div>
-      {member.instagram && (
-        <div className="mt-2 flex gap-2">
-          <a href={`https://instagram.com/${member.instagram}`} target="_blank" rel="noreferrer">
-            <Instagram className="w-3.5 h-3.5 text-[#8FA8C8] cursor-pointer hover:text-[#2B4C6F]" />
-          </a>
+
+      <div className="w-full flex flex-col items-center">
+        <h3 className="text-[#2B4C6F] text-lg mb-1 leading-none" style={fontYearbook}>
+          <span className="block">{firstName}</span>
+          <span className="block">{lastName}</span>
+        </h3>
+        <p className="text-[#8FA8C8] text-[10px] tracking-wider mb-2">{member.role}</p>
+
+        <div className="space-y-0.5 text-[11px] text-[#2B4C6F]/80 leading-tight" style={{ fontFamily: 'Inter, sans-serif' }}>
+          <p>{member.major}</p>
+          <p className="text-[#2B4C6F]/50">{member.year}</p>
         </div>
-      )}
-    </div>
+
+        {member.instagram && (
+          <div className="mt-2.5">
+            <motion.a
+              href={`https://instagram.com/${member.instagram}`}
+              target="_blank"
+              rel="noreferrer"
+              whileHover={{ y: -2, scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="text-[#8FA8C8] hover:text-[#2B4C6F] transition-colors duration-200 inline-block p-1 cursor-pointer"
+            >
+              <Instagram className="w-4 h-4" />
+            </motion.a>
+          </div>
+        )}
+      </div>
+    </motion.div>
   );
 });
 
@@ -73,16 +115,19 @@ export function Members() {
       if (error) {
         console.error('Error fetching members:', error);
       } else {
-        setMembers(data.map((m: any) => ({
-          name: m.name,
-          role: m.role,
-          part: m.part,
-          major: m.major,
-          year: m.year,
-          photo: m.photo_url,
-          instagram: m.instagram,
-          is_vp: m.is_vp
-        })));
+        setMembers(data.map((m: any) => {
+          const localPhotoKey = `../assets/members/${m.name}.jpg`;
+          return {
+            name: m.name,
+            role: m.role,
+            part: m.part,
+            major: m.major,
+            year: m.year,
+            photo: memberPhotos[localPhotoKey] || m.photo_url,
+            instagram: m.instagram,
+            is_vp: m.is_vp
+          };
+        }));
       }
       setLoading(false);
     }
@@ -92,7 +137,7 @@ export function Members() {
 
   const groupedMembers = useMemo(() => {
     const groups: Record<string, Member[]> = {};
-    
+
     members.forEach(member => {
       const part = member.part || 'Member';
       if (!groups[part]) {
@@ -101,15 +146,14 @@ export function Members() {
       groups[part].push(member);
     });
 
-    // Sort the parts based on PART_ORDER
     return Object.keys(groups).sort((a, b) => {
       const indexA = PART_ORDER.indexOf(a);
       const indexB = PART_ORDER.indexOf(b);
-      
+
       if (indexA === -1 && indexB === -1) return a.localeCompare(b);
       if (indexA === -1) return 1;
       if (indexB === -1) return -1;
-      
+
       return indexA - indexB;
     }).map(part => ({
       part,
@@ -118,25 +162,43 @@ export function Members() {
   }, [members]);
 
   return (
-    <div className="pb-8 md:pb-16">
+    <div className="pb-8 md:pb-16 px-4 md:px-0">
       {/* Hero Section */}
-      <section style={{ marginTop: '25px', marginBottom: '25px' }}>
+      <section style={{ marginTop: '25px', marginBottom: '40px' }}>
         <div
-          className="bg-[#2B4C6F] py-10 md:py-16 px-4 text-center"
-          style={{ borderRadius: '16px' }}
+          className="bg-[#2B4C6F] relative overflow-hidden flex items-center justify-center text-center py-12 md:py-20"
+          style={{ borderRadius: '16px', minHeight: '300px' }}
         >
-          <h1
-            className="text-white"
-            style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}
-          >
-            OUR MEMBERS
-          </h1>
-          <p
-            className="text-white/80 mt-2 max-w-2xl mx-auto text-sm md:text-base"
-            style={{ fontFamily: 'Inter, sans-serif' }}
-          >
-            Meet the talented individuals who make up the Vocal U family.
-          </p>
+          {/* Background Images */}
+          <div className="absolute inset-0 flex w-full h-full">
+            {heroImageUrls.length > 0 ? (
+              heroImageUrls.map((src, i) => (
+                <div key={i} className="flex-1 h-full relative overflow-hidden">
+                  <img src={src} className="absolute inset-0 w-full h-full object-cover" alt="Group photo" />
+                </div>
+              ))
+            ) : (
+              <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-20%,#8FA8C833,transparent)]" />
+            )}
+          </div>
+
+          {/* Navy Overlay */}
+          <div className="absolute inset-0 bg-[#2B4C6F]/85" />
+
+          <div className="relative z-10 px-4">
+            <h1
+              className="text-white relative font-yearbook"
+              style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}
+            >
+              Our Members
+            </h1>
+            <p
+              className="text-white/80 mt-2 max-w-2xl mx-auto text-sm md:text-base relative"
+              style={{ fontFamily: 'Inter, sans-serif' }}
+            >
+              Meet the voices of Vocal U.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -145,19 +207,21 @@ export function Members() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#8FA8C8]" />
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-12">
+        /* Flex container for Sections */
+        <div className="flex flex-wrap justify-center items-start gap-8">
           {groupedMembers.map(({ part, members }) => (
-            <section key={part} className="flex flex-col">
-              <h2 
-                className="text-[#2B4C6F] mb-6 uppercase tracking-widest border-b-2 border-[#8FA8C8]/20 pb-2 text-center"
+            <section key={part} className={`flex flex-col items-center w-full sm:w-auto ${part === 'Bass/Bari' ? 'max-w-[400px]' : 'max-w-[600px]'}`}>
+              <h2
+                className="text-[#2B4C6F] mb-6 tracking-widest border-b-2 border-[#8FA8C8]/20 pb-2 text-center w-full font-yearbook"
                 style={{ ...fontYearbook, fontSize: '18px' }}
               >
-                {part === 'Bass/Bari' ? 'Bass / Bari' : 
-                 part === 'Vocal Percussionist' ? 'Percussion' :
-                 part === 'Member' ? 'Members' :
-                 part.endsWith('s') ? part : `${part}s`}
+                {part === 'Bass/Bari' ? 'Bass / Bari' :
+                  part === 'Vocal Percussionist' ? 'Percussion' :
+                    part === 'Member' ? 'Members' :
+                      part.endsWith('s') ? part : `${part}s`}
               </h2>
-              <div className="flex flex-col gap-4">
+              {/* Grid: 3 cols min for others, 2 cols for Bass/Bari */}
+              <div className={`grid gap-4 w-full ${part === 'Bass/Bari' ? 'grid-cols-2' : 'grid-cols-3'}`}>
                 {members.map((member, index) => (
                   <MemberCard key={index} member={member} />
                 ))}

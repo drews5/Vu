@@ -1,13 +1,13 @@
 import { memo, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Clock, 
-  Users, 
-  Calendar, 
-  X, 
-  AlertCircle, 
-  Check, 
-  Trash2, 
+import {
+  Clock,
+  Users,
+  Calendar,
+  X,
+  AlertCircle,
+  Check,
+  Trash2,
   Music
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -87,7 +87,7 @@ export function Auditions() {
 
     const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
-    const interval: any = setInterval(function() {
+    const interval: any = setInterval(function () {
       const timeLeft = animationEnd - Date.now();
 
       if (timeLeft <= 0) {
@@ -106,7 +106,7 @@ export function Auditions() {
 
     const { id, mode } = confirmingId;
     const slot = slots.find(s => s.id === id);
-    
+
     if (!slot) {
       alert("Slot no longer exists.");
       setIsSubmitting(false);
@@ -131,7 +131,7 @@ export function Auditions() {
             status: 'Booked'
           })
           .eq('id', id);
-        
+
         if (error) throw error;
         triggerConfetti();
       } else {
@@ -150,7 +150,7 @@ export function Auditions() {
             status: 'Available'
           })
           .eq('id', id);
-        
+
         if (error) throw error;
       }
 
@@ -197,14 +197,13 @@ export function Auditions() {
               const displayTime = slot.time.replace(' PM', '');
 
               return (
-                <div 
-                  key={slot.id} 
-                  className={`grid grid-cols-10 gap-0.5 md:gap-1 items-center p-0.5 md:p-1 rounded transition-all border ${
-                    isConfirming ? 'border-[#8FA8C8] bg-[#8FA8C8]/5' : 
-                    isBooked ? 'border-transparent bg-gray-50/50 opacity-80' : 
-                    isBreak ? 'border-transparent bg-gray-100' : 
-                    'border-transparent hover:border-gray-100 hover:bg-gray-50'
-                  }`}
+                <div
+                  key={slot.id}
+                  className={`grid grid-cols-10 gap-0.5 md:gap-1 items-center p-0.5 md:p-1 rounded transition-all border ${isConfirming ? 'border-[#8FA8C8] bg-[#8FA8C8]/5' :
+                    isBooked ? 'border-transparent bg-gray-50/50 opacity-80' :
+                      isBreak ? 'border-transparent bg-gray-100' :
+                        'border-transparent hover:border-gray-100 hover:bg-gray-50'
+                    }`}
                 >
                   <div className="col-span-4 md:col-span-3 px-0.5">
                     <span className={`font-bold text-[10px] md:text-[12px] ${isBooked ? 'text-gray-400' : 'text-[#2B4C6F]'}`} style={fontInter}>{displayTime}</span>
@@ -217,8 +216,8 @@ export function Auditions() {
                       <div className="flex items-center justify-between gap-0.5 md:gap-1 px-1 md:px-1.5 py-0.5 bg-white rounded shadow-sm border border-gray-100">
                         <span className="font-bold text-[#2B4C6F] text-[10px] md:text-[12px] truncate" style={fontInter}>{slot.name}</span>
                         {!isConfirming && (
-                          <button 
-                            onClick={() => startConfirmation(slot.id, 'delete')} 
+                          <button
+                            onClick={() => startConfirmation(slot.id, 'delete')}
                             className="text-gray-300 hover:text-red-500 transition-opacity p-0.5"
                           >
                             <Trash2 className="w-2 md:w-2.5 h-2 md:h-2.5" />
@@ -230,9 +229,8 @@ export function Auditions() {
                         <input
                           type="text"
                           placeholder="Name"
-                          className={`w-full px-1 md:px-1.5 py-0.5 bg-white border rounded outline-none transition-all text-[10px] md:text-[12px] font-bold pr-5 md:pr-6 ${
-                            editingId === slot.id ? 'border-[#8FA8C8]' : 'border-gray-200'
-                          }`}
+                          className={`w-full px-1 md:px-1.5 py-0.5 bg-white border rounded outline-none transition-all text-[10px] md:text-[12px] font-bold pr-5 md:pr-6 ${editingId === slot.id ? 'border-[#8FA8C8]' : 'border-gray-200'
+                            }`}
                           style={fontInter}
                           value={tempNames[slot.id] || ''}
                           onFocus={() => setEditingSlotId(slot.id)}
@@ -264,7 +262,7 @@ export function Auditions() {
                     {/* 📧 Inline Mini Popup - Universal placement */}
                     <AnimatePresence>
                       {isConfirming && (
-                        <motion.div 
+                        <motion.div
                           initial={{ opacity: 0, scale: 0.9, y: 0 }}
                           animate={{ opacity: 1, scale: 1, y: 4 }}
                           exit={{ opacity: 0, scale: 0.9, y: 0 }}
@@ -272,7 +270,7 @@ export function Auditions() {
                         >
                           <div className="text-[8px] font-bold text-[#8FA8C8] tracking-wider" style={fontInter}>Student ID</div>
                           <div className="flex items-center gap-1">
-                            <input 
+                            <input
                               autoFocus
                               type="text"
                               placeholder="lastname123"
@@ -286,9 +284,9 @@ export function Auditions() {
                               }}
                             />
                             <div className="flex items-center gap-0.5 shrink-0">
-                              <button 
-                                onClick={processAction} 
-                                disabled={isSubmitting || !emailInput.trim()} 
+                              <button
+                                onClick={processAction}
+                                disabled={isSubmitting || !emailInput.trim()}
                                 className="p-1 bg-[#8FA8C8] text-white rounded hover:bg-[#7A97B7] disabled:opacity-50"
                               >
                                 {isSubmitting ? (
@@ -297,8 +295,8 @@ export function Auditions() {
                                   <Check className="w-2.5 h-2.5" />
                                 )}
                               </button>
-                              <button 
-                                onClick={() => setConfirmingId(null)} 
+                              <button
+                                onClick={() => setConfirmingId(null)}
                                 disabled={isSubmitting}
                                 className="p-1 bg-gray-100 text-gray-400 rounded hover:bg-gray-200"
                               >
@@ -322,21 +320,23 @@ export function Auditions() {
   return (
     <div className="pb-24">
       {/* Header with Logo and Solid Background */}
-      <section className="relative py-4 md:py-8 flex items-center justify-center overflow-hidden mb-4 md:mb-6 mx-0 mt-[15px] md:mt-[25px] border border-gray-100 shadow-sm" 
-        style={{ 
+      <section className="relative py-4 md:py-8 flex items-center justify-center overflow-hidden mb-4 md:mb-6 mx-0 mt-[15px] md:mt-[25px] border border-gray-100 shadow-sm"
+        style={{
           borderRadius: '16px',
           background: '#2B4C6F'
         }}>
-        
+
         <div className="relative z-10 text-center px-6 w-full flex items-center justify-center gap-6 md:gap-10">
-          <Link to="/" className="group shrink-0">
-            <img 
-              src={logoImage} 
-              alt="Vocal U Logo" 
-              className="h-14 md:h-20 w-auto transition-transform group-hover:scale-105" 
-            />
-          </Link>
-          
+          <div className="shrink-0 hover:-translate-y-0.5 transition-transform duration-200">
+            <Link to="/" className="group cursor-pointer">
+              <img
+                src={logoImage}
+                alt="Vocal U Logo"
+                className="h-14 md:h-20 w-auto"
+              />
+            </Link>
+          </div>
+
           <div className="text-left">
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
               <h1 className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '0.05em', lineHeight: '1' }}>
@@ -383,17 +383,17 @@ export function Auditions() {
 
         {/* Info Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-[25px]">
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 border-t-4 border-t-[#8FA8C8] shadow-sm">
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 border-t-4 border-t-[#8FA8C8] shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <Users className="w-5 h-5 text-[#8FA8C8] mb-3" />
             <h3 className="text-[#2B4C6F] text-base mb-1" style={fontYearbook}>WALK-INS</h3>
             <p className="text-gray-500 text-[11px] leading-relaxed" style={fontInter}>Didn't get a slot? Just come to the desk at the audition location and we'll fit you in.</p>
           </div>
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 border-t-4 border-t-[#2B4C6F] shadow-sm">
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 border-t-4 border-t-[#2B4C6F] shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <Music className="w-5 h-5 text-[#2B4C6F] mb-3" />
             <h3 className="text-[#2B4C6F] text-base mb-1" style={fontYearbook}>PREPARATION</h3>
             <p className="text-gray-500 text-[11px] leading-relaxed" style={fontInter}>Prepare 30-60 seconds of any song that highlights your range. We'll also have a quick chat to get to know you!</p>
           </div>
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 border-t-4 border-t-amber-400 shadow-sm">
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 border-t-4 border-t-amber-400 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <AlertCircle className="w-5 h-5 text-amber-500 mb-3" />
             <h3 className="text-[#2B4C6F] text-base mb-1" style={fontYearbook}>LOCATION</h3>
             <p className="text-gray-500 text-[11px] leading-relaxed" style={fontInter}>UMN Campus. Room details will be sent to your student email after booking.</p>

@@ -34,7 +34,7 @@ function EventCard({ event }: { event: FeaturedEvent }) {
         />
         <div className="absolute top-4 left-4">
           <span
-            className="bg-[#8FA8C8] text-white px-3 py-1 text-[10px] font-bold tracking-widest uppercase"
+            className="bg-[#8FA8C8] text-white px-3 py-1 text-[10px] tracking-widest font-yearbook"
             style={{ borderRadius: '8px', ...fontYearbook }}
           >
             {event.tag}
@@ -47,7 +47,7 @@ function EventCard({ event }: { event: FeaturedEvent }) {
           {event.date}
         </div>
         <h3
-          className="text-[#2B4C6F] mb-3 text-xl leading-tight group-hover:text-[#8FA8C8] transition-colors line-clamp-2 uppercase"
+          className="text-[#2B4C6F] mb-3 text-xl leading-tight group-hover:text-[#8FA8C8] transition-colors line-clamp-2 font-yearbook"
           style={fontYearbook}
         >
           {event.title}
@@ -62,26 +62,33 @@ function EventCard({ event }: { event: FeaturedEvent }) {
 
   if (event.isInstagram) {
     return (
-      <a
+      <motion.a
         href={event.link}
         target="_blank"
         rel="noopener noreferrer"
-        className="group bg-white overflow-hidden border border-gray-100 transition-all hover:bg-gray-50 active:scale-[0.98] flex flex-col"
+        whileHover={{ y: -4 }}
+        whileTap={{ scale: 0.98 }}
+        className="group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] flex flex-col cursor-pointer"
         style={{ borderRadius: '16px' }}
       >
         {content}
-      </a>
+      </motion.a>
     );
   }
 
   return (
-    <Link
-      to={event.link}
-      className="group bg-white overflow-hidden border border-gray-100 transition-all hover:bg-gray-50 active:scale-[0.98] flex flex-col"
-      style={{ borderRadius: '16px' }}
+    <motion.div
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.98 }}
     >
-      {content}
-    </Link>
+      <Link
+        to={event.link}
+        className="group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] flex flex-col cursor-pointer"
+        style={{ borderRadius: '16px' }}
+      >
+        {content}
+      </Link>
+    </motion.div>
   );
 }
 
@@ -171,10 +178,14 @@ export function Home() {
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.97 }}
             >
-              <Link
-                to="/event/spring-showcase-2026"
-                className="bg-white text-[#2B4C6F] px-8 md:px-12 py-3 md:py-4 border border-gray-100 hover:bg-gray-100 transition-all flex-shrink-0 active:scale-[0.98] text-center font-bold block"
+              <a
+                href="https://www.varsityvocals.com/events/2026-ichsa-gl-qf4-lakeville-hs"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white text-[#2B4C6F] px-8 md:px-12 py-3 md:py-4 border border-white hover:bg-[#8FA8C8] hover:text-white hover:border-[#8FA8C8] transition-all duration-300 flex-shrink-0 text-center block cursor-pointer font-yearbook shadow-md"
                 style={{
                   ...fontYearbook,
                   fontSize: 'clamp(16px, 2vw, 20px)',
@@ -182,8 +193,8 @@ export function Home() {
                   borderRadius: '12px',
                 }}
               >
-                SPRING SHOWCASE
-              </Link>
+                ICHSA 2026 Tickets
+              </a>
             </motion.div>
           </div>
         </div>
@@ -197,16 +208,16 @@ export function Home() {
         <div>
           <h2 className="mb-6 md:mb-8 whitespace-nowrap">
             <span
-              className="text-[#A3B8D3]"
+              className="text-[#A3B8D3] font-yearbook"
               style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 56px)' }}
             >
-              WE ARE{' '}
+              We Are{' '}
             </span>
             <span
-              className="text-[#2B4C6F]"
+              className="text-[#2B4C6F] font-yearbook"
               style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 56px)' }}
             >
-              VOCAL U
+              Vocal U
             </span>
           </h2>
 
@@ -226,14 +237,19 @@ export function Home() {
             </p>
           </div>
 
-          <Link
-            to="/about"
-            className="inline-flex items-center gap-2 bg-[#8FA8C8] text-white px-8 py-3 hover:bg-[#7A97B7] transition-all"
-            style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}
+          <motion.div
+            whileHover={{ x: 6 }}
+            whileTap={{ scale: 0.97 }}
           >
-            LEARN MORE
-            <ArrowRight className="w-5 h-5" />
-          </Link>
+            <Link
+              to="/about"
+              className="inline-flex items-center gap-2 bg-[#8FA8C8] text-white px-8 py-3 hover:bg-[#2B4C6F] hover:shadow-xl transition-all duration-200 group cursor-pointer font-yearbook"
+              style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}
+            >
+              Learn More
+              <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
+            </Link>
+          </motion.div>
         </div>
 
         <div
@@ -262,14 +278,14 @@ export function Home() {
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-10">
             <h2
-              className="text-white mb-2"
+              className="text-white mb-2 font-yearbook"
               style={{
                 ...fontYearbook,
                 fontSize: 'clamp(40px, 8vw, 80px)',
                 letterSpacing: '0.05em',
               }}
             >
-              EVENTS
+              Events
             </h2>
             <p className="text-white/90 font-medium tracking-wide text-xs md:text-base" style={fontInter}>
               Join us for live performances, workshops, and more.
@@ -283,15 +299,19 @@ export function Home() {
           </div>
 
           <div className="text-center">
-            <Link to="/events">
-              <button
-                className="inline-flex items-center gap-3 bg-white text-[#2B4C6F] px-10 py-4 border border-gray-100 hover:bg-gray-50 active:scale-[0.98] transition-all font-bold"
+            <motion.div
+              whileHover={{ x: 6 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              <Link
+                to="/events"
+                className="inline-flex items-center gap-3 bg-white text-[#2B4C6F] px-10 py-4 border border-white hover:bg-[#2B4C6F] hover:text-white hover:border-[#2B4C6F] transition-all duration-300 shadow-sm group cursor-pointer font-yearbook"
                 style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}
               >
-                <span>VIEW ALL EVENTS</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </Link>
+                <span>View All Events</span>
+                <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
+              </Link>
+            </motion.div>
           </div>
         </div>
       </section>

@@ -1,5 +1,7 @@
 import { Mail, Instagram, Facebook, Youtube, MessageCircle } from 'lucide-react';
 import { useState, useCallback } from 'react';
+import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
@@ -66,10 +68,10 @@ export function Contact() {
         >
           <div className="max-w-5xl mx-auto text-center">
             <h1
-              className="text-white mb-2"
+              className="text-white mb-2 font-yearbook"
               style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}
             >
-              CONTACT US
+              Contact Us
             </h1>
             <p className="text-white text-sm md:text-base" style={fontInter}>
               We'd love to hear from you!
@@ -82,10 +84,10 @@ export function Contact() {
         {/* Contact Form */}
         <div className="bg-white p-6 md:p-8 border border-gray-100 shadow-sm" style={{ borderRadius: '16px' }}>
           <h2
-            className="text-[#2B4C6F] mb-6"
+            className="text-[#2B4C6F] mb-6 font-yearbook"
             style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}
           >
-            SEND US A MESSAGE
+            Send us a message
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -168,20 +170,21 @@ export function Contact() {
               />
             </div>
 
-            <button
+            <motion.button
               type="submit"
               disabled={status === 'sending'}
-              className="w-full bg-[#8FA8C8] text-white px-8 py-4 hover:bg-[#7A97B7] transition-all shadow-lg disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] font-bold"
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full bg-[#8FA8C8] text-white px-8 py-4 hover:bg-[#2B4C6F] transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 cursor-pointer font-yearbook"
               style={{
                 ...fontYearbook,
                 fontSize: '18px',
                 letterSpacing: '0.05em',
                 borderRadius: '20px',
-                fontWeight: 'bold',
               }}
             >
-              {status === 'sending' ? 'SENDING...' : 'SEND MESSAGE'}
-            </button>
+              {status === 'sending' ? 'Sending...' : 'Send Message'}
+            </motion.button>
 
             {status === 'success' && (
               <p className="text-green-600 text-center" style={fontInter}>
@@ -203,10 +206,10 @@ export function Contact() {
             style={{ borderRadius: '16px' }}
           >
             <h2
-              className="text-[#2B4C6F] mb-6"
+              className="text-[#2B4C6F] mb-6 font-yearbook"
               style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}
             >
-              GET IN TOUCH
+              Get in Touch
             </h2>
 
             <div className="space-y-6">
@@ -242,7 +245,7 @@ export function Contact() {
                     href="https://www.instagram.com/vocal_u"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#8FA8C8] hover:text-[#7A97B7] transition-colors"
+                    className="text-[#8FA8C8] hover:text-[#2B4C6F] transition-all duration-300 inline-block hover:underline underline-offset-2"
                     style={{ ...fontInter, fontSize: '16px' }}
                   >
                     @vocal_u
@@ -257,10 +260,10 @@ export function Contact() {
             style={{ borderRadius: '16px' }}
           >
             <h2
-              className="text-[#2B4C6F] mb-6"
+              className="text-[#2B4C6F] mb-6 font-yearbook"
               style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}
             >
-              FOLLOW US
+              Follow Us
             </h2>
 
             <div className="flex gap-4">
@@ -270,17 +273,19 @@ export function Contact() {
                 { href: 'https://www.youtube.com/@vocal-u', label: 'YouTube', Icon: Youtube },
                 { href: 'https://www.tiktok.com/@vocalumn', label: 'TikTok', Icon: TikTokIcon },
               ].map((s) => (
-                <a
+                <motion.a
                   key={s.label}
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-[#8FA8C8] p-4 hover:bg-[#7A97B7] transition-all hover:rotate-[5deg] active:scale-90"
+                  whileHover={{ y: -2, scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="bg-[#8FA8C8] p-4 hover:bg-[#2B4C6F] transition-all duration-200 shadow-md hover:shadow-xl cursor-pointer"
                   aria-label={s.label}
                   style={{ borderRadius: '12px' }}
                 >
                   <s.Icon className="w-6 h-6 text-white" />
-                </a>
+                </motion.a>
               ))}
             </div>
           </div>
@@ -290,10 +295,10 @@ export function Contact() {
             style={{ borderRadius: '16px' }}
           >
             <h2
-              className="mb-4"
+              className="mb-4 font-yearbook"
               style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}
             >
-              INTERESTED IN JOINING?
+              Interested in joining?
             </h2>
             <p
               className="mb-6 leading-relaxed"
@@ -302,12 +307,19 @@ export function Contact() {
               We hold auditions at the beginning of each semester. Follow us on social media to stay
               updated on audition dates and other opportunities to get involved!
             </p>
-            <button
-              className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-gray-100 transition-all active:scale-[0.98] font-bold"
-              style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '12px', fontWeight: 'bold' }}
+            <motion.div
+              whileHover={{ x: 6 }}
+              whileTap={{ scale: 0.97 }}
+              className="inline-block"
             >
-              AUDITION INFO
-            </button>
+              <Link
+                to="/auditions"
+                className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 border border-gray-100 hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/50 transition-all duration-300 hover:shadow-xl inline-block cursor-pointer font-yearbook"
+                style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '12px' }}
+              >
+                Audition Info →
+              </Link>
+            </motion.div>
           </div>
         </div>
       </div>

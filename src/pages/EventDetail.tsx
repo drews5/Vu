@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Calendar, MapPin, Clock, Share2, Navigation, ArrowLeft } from 'lucide-react';
 import { useParams, Link } from 'react-router-dom';
+
 import { supabase } from '../utils/supabase';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
@@ -96,10 +97,10 @@ export function EventDetail() {
     const title = encodeURIComponent(event.title);
     const location = encodeURIComponent(`${event.location} ${event.address}`);
     const details = encodeURIComponent(event.description);
-    
+
     const startDate = event.fullDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
     const endDate = new Date(event.fullDate.getTime() + 2 * 60 * 60 * 1000).toISOString().replace(/-|:|\.\d\d\d/g, "");
-    
+
     return `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
   };
 
@@ -120,9 +121,11 @@ export function EventDetail() {
         <div className="bg-white border border-gray-100 shadow-sm overflow-hidden" style={{ borderRadius: '16px' }}>
           {/* Back Button */}
           <div className="p-6 md:p-8 pb-0">
-            <Link to="/events" className="inline-flex items-center gap-2 text-[#8FA8C8] hover:text-[#2B4C6F] transition-colors font-bold text-sm tracking-widest font-bold" style={fontInter}>
-              <ArrowLeft className="w-4 h-4" /> Back to Events
-            </Link>
+            <div className="inline-block hover:-translate-x-1 transition-transform duration-200">
+              <Link to="/events" className="inline-flex items-center gap-2 text-[#8FA8C8] hover:text-[#2B4C6F] transition-colors duration-200 text-sm tracking-widest cursor-pointer" style={fontInter}>
+                <ArrowLeft className="w-4 h-4" /> Back to Events
+              </Link>
+            </div>
           </div>
 
           <div className="max-w-5xl mx-auto p-6 md:p-12">
@@ -145,7 +148,7 @@ export function EventDetail() {
                       <img src={event.imageUrl} alt={event.title} className="w-full h-auto object-cover max-h-[500px]" />
                       {isUpcoming && (
                         <div className="absolute top-6 left-6">
-                          <span className="bg-[#8FA8C8] text-white px-6 py-2 rounded-full text-xs font-bold tracking-widest" style={fontYearbook}>Upcoming</span>
+                          <span className="bg-[#8FA8C8] text-white px-6 py-2 rounded-full text-xs tracking-widest" style={fontYearbook}>Upcoming</span>
                         </div>
                       )}
                     </div>
@@ -160,31 +163,41 @@ export function EventDetail() {
                   {/* Action Buttons */}
                   <div className="flex flex-col gap-3">
                     {event.ticketLink && (
-                      <a href={event.ticketLink} target="_blank" rel="noreferrer" className="w-full bg-[#8FA8C8] text-white py-5 rounded-2xl font-bold text-center border border-[#8FA8C8] hover:bg-[#7A97B7] transition-all active:scale-[0.98] font-bold" style={fontYearbook}>
+                      <a
+                        href={event.ticketLink}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="w-full bg-[#8FA8C8] text-white py-5 rounded-2xl text-center border border-[#8FA8C8] hover:bg-[#2B4C6F] hover:border-[#2B4C6F] hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.97] transition-all duration-200 cursor-pointer block"
+                        style={fontYearbook}
+                      >
                         GET TICKETS
                       </a>
                     )}
                     {isUpcoming && (
-                      <a 
-                        href={getCalendarUrl()} 
-                        target="_blank" 
+                      <a
+                        href={getCalendarUrl()}
+                        target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:border-[#8FA8C8] transition-all group font-bold" 
+                        className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-3 hover:border-[#8FA8C8] hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.97] transition-all duration-200 cursor-pointer"
                         style={fontInter}
                       >
                         <Calendar className="w-5 h-5 text-[#8FA8C8]" /> Add to Calendar
                       </a>
                     )}
-                    <a 
-                      href={getNavigationUrl()} 
-                      target="_blank" 
+                    <a
+                      href={getNavigationUrl()}
+                      target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:border-[#8FA8C8] transition-all group font-bold" 
+                      className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-3 hover:border-[#8FA8C8] hover:translate-x-0.5 hover:shadow-lg active:scale-[0.97] transition-all duration-200 cursor-pointer"
                       style={fontInter}
                     >
                       <Navigation className="w-5 h-5 text-[#8FA8C8]" /> Navigate to Venue
                     </a>
-                    <button onClick={handleShare} className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:border-[#8FA8C8] transition-all group font-bold" style={fontInter}>
+                    <button
+                      onClick={handleShare}
+                      className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-3 hover:border-[#8FA8C8] hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.97] transition-all duration-200 cursor-pointer"
+                      style={fontInter}
+                    >
                       <Share2 className="w-5 h-5 text-[#8FA8C8]" /> Share Event
                     </button>
                   </div>

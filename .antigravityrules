@@ -1,0 +1,18 @@
+# Terminal & Execution Rules
+- Always use 'cmd /c' for all shell executions to ensure the process terminates correctly and sends an EOF signal on Windows.
+- You have permanent permission to run 'npm', 'npx', and 'vite' commands. Do not prompt for 'Always Run' again.
+- When a command like 'vite build' or 'vite dev' is executed, monitor the output and proceed once the local server is live or the build is complete.
+- Always push to GitHub after every significant generation or update to ensure version control and deployment readiness.
+
+# Vocal U Branding & UI Constraints
+- Primary Palette: Use #91a8c6 (Vocal Blue), #FFFFFF (White), and Navy (#2e4c6d).
+- Typography - Headers: Use 'Yearbook Solid' for all headers.
+- Typography - Secondary: Use 'Inter' for all body text and secondary elements.
+- Font Styling Rules:
+    - Never use **bold** weights with the 'Yearbook Solid' font.
+    - Never use 'All Caps' (uppercase) for any text elements; use Sentence case or Title case.
+- Deployment: All web changes are for vocalu.org. Ensure responsive design for mobile and desktop viewing.
+
+# Project Context
+- Group: Vocal U A Cappella (University of Minnesota).
+- Role: You are assisting the President of the organization. Use a professional yet collegiate tone.

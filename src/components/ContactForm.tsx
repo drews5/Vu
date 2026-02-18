@@ -2,6 +2,8 @@ import { useState, useCallback, memo } from 'react';
 import { Mail, Instagram, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+
+
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 
@@ -33,7 +35,7 @@ const ContactInfo = memo(function ContactInfo() {
               </h4>
               <a
                 href="mailto:vocalu@umn.edu"
-                className="text-[#8FA8C8] hover:text-[#7A97B7] transition-colors"
+                className="text-[#8FA8C8] hover:text-[#2B4C6F] hover:underline underline-offset-2 transition-all duration-300"
                 style={{ ...fontInter, fontSize: '15px' }}
               >
                 vocalu@umn.edu
@@ -56,7 +58,7 @@ const ContactInfo = memo(function ContactInfo() {
                 href="https://www.instagram.com/vocal_u"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#8FA8C8] hover:text-[#7A97B7] transition-colors"
+                className="text-[#8FA8C8] hover:text-[#2B4C6F] hover:underline underline-offset-2 transition-all duration-300"
                 style={{ ...fontInter, fontSize: '15px' }}
               >
                 @vocal_u
@@ -83,13 +85,12 @@ const ContactInfo = memo(function ContactInfo() {
           We hold auditions at the beginning of each semester. Follow us on social media to stay updated
           on audition dates and other opportunities to get involved!
         </p>
-        <Link to="/auditions">
-          <button
-            className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-gray-100 transition-colors active:scale-95 font-bold"
-            style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '12px', fontWeight: 'bold' }}
-          >
-            AUDITION INFO
-          </button>
+        <Link
+          to="/auditions"
+          className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-[#2B4C6F] hover:text-white hover:translate-x-1.5 active:scale-[0.97] transition-all duration-200 hover:shadow-xl inline-block cursor-pointer"
+          style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '12px' }}
+        >
+          AUDITION INFO →
         </Link>
       </div>
     </div>
@@ -202,8 +203,8 @@ export function ContactForm() {
           <button
             type="submit"
             disabled={status === 'sending'}
-            className="w-full bg-[#8FA8C8] text-white px-8 py-4 border border-[#8FA8C8] hover:bg-[#7A97B7] transition-colors disabled:opacity-50 active:scale-[0.98] font-bold"
-            style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px', fontWeight: 'bold' }}
+            className="w-full bg-[#8FA8C8] text-white px-8 py-4 border border-[#8FA8C8] hover:bg-[#2B4C6F] hover:border-[#2B4C6F] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-200 hover:shadow-xl disabled:opacity-50 cursor-pointer"
+            style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}
           >
             {status === 'sending' ? 'SENDING...' : 'SEND MESSAGE'}
           </button>
