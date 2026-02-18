@@ -1,4 +1,5 @@
 import { memo, useEffect, useState, useCallback } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Clock,
@@ -319,6 +320,11 @@ export function Auditions() {
 
   return (
     <div className="pb-24">
+      <Helmet>
+        <title>Auditions | Join Vocal U A Cappella | UMN Recruitment</title>
+        <meta name="description" content="Audition for Vocal U A Cappella at the University of Minnesota. View the current audition schedule, sign up for a slot, and join our gender-inclusive vocal community." />
+        <link rel="canonical" href="https://vocalu.org/auditions" />
+      </Helmet>
       {/* Header with Logo and Solid Background */}
       <section className="relative py-4 md:py-8 flex items-center justify-center overflow-hidden mb-4 md:mb-6 mx-0 mt-[15px] md:mt-[25px] border border-gray-100 shadow-sm"
         style={{

@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 import { memo, useEffect, useState, useMemo } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Instagram, Music } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import { motion } from 'motion/react';
@@ -160,6 +161,11 @@ export function Members() {
 
   return (
     <div className="pb-8 md:pb-16 px-4 md:px-0">
+      <Helmet>
+        <title>Vocal U Members | Meet the Voices | UMN A Cappella</title>
+        <meta name="description" content="Meet the members of Vocal U, the University of Minnesota's premier gender-inclusive a cappella group. Our diverse group of talented singers perform throughout Minneapolis." />
+        <link rel="canonical" href="https://vocalu.org/members" />
+      </Helmet>
       {/* Hero Section */}
       <section style={{ marginTop: '25px', marginBottom: '40px' }}>
         <div

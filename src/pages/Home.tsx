@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import heroBackground from 'figma:asset/15a7da513ab99cbb57e9735db4d4d232088838f1.png';
 import fullLogo from 'figma:asset/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
 import groupPhoto from 'figma:asset/8b7d52033414d4d2f0999bc47a30f6af9f485f36.png';
@@ -139,6 +140,11 @@ export function Home() {
 
   return (
     <div className="pb-0">
+      <Helmet>
+        <title>Vocal U A Cappella | Home | UMN Minneapolis</title>
+        <meta name="description" content="Official home of Vocal U A Cappella at the University of Minnesota. Explore our music, meet our members, and find upcoming performances in Minneapolis." />
+        <link rel="canonical" href="https://vocalu.org/" />
+      </Helmet>
       {/* Hero Section */}
       <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
