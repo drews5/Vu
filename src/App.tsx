@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
+import { Analytics } from '@vercel/analytics/react';
 
 const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
 const About = lazy(() => import('./pages/About').then(m => ({ default: m.About })));
@@ -36,8 +37,9 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-white">
       <ScrollToTop />
-      {!isAuditionsPage && <Header />}
+      <Analytics />
       <div className={`max-w-[1440px] mx-auto ${isAuditionsPage ? "px-3 md:px-[50px]" : "px-3 md:px-[50px]"}`}>
+        {!isAuditionsPage && <Header />}
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Home />} />

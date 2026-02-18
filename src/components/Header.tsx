@@ -104,7 +104,7 @@ export function Header() {
       </div>
 
       <header
-        className={`max-w-[1340px] mx-3 md:mx-auto mt-[25px] px-4 md:px-8 py-4 border border-white/20 shadow-sm sticky top-6 z-50 transition-all duration-300 ${isScrolled ? 'bg-[#8FA8C8]/90 backdrop-blur-md shadow-md' : 'bg-[#8FA8C8] shadow-sm'
+        className={`w-full mt-[25px] px-4 md:px-8 py-4 border border-white/20 shadow-sm sticky top-6 z-50 transition-all duration-300 ${isScrolled ? 'bg-[#8FA8C8]/90 backdrop-blur-md shadow-md' : 'bg-[#8FA8C8] shadow-sm'
           }`}
         style={{ borderRadius: '16px' }}
       >

@@ -41,7 +41,7 @@ export const Footer = memo(function Footer() {
 
   return (
     <footer
-      className="max-w-[1340px] mx-auto bg-[#2B4C6F] text-white py-6 md:py-12 px-4 md:px-12 shadow-sm border border-white/5 mb-8"
+      className="w-full bg-[#2B4C6F] text-white py-6 md:py-12 px-4 md:px-12 shadow-sm border border-white/5 mb-8"
       style={{ borderRadius: '16px', marginTop: '25px' }}
     >
       <div className="max-w-7xl mx-auto">
