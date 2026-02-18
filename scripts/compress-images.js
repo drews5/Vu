@@ -18,8 +18,11 @@ async function compressImages() {
                 console.log(`Processing ${file} (${(stats.size / 1024 / 1024).toFixed(2)} MB)`);
 
                 await sharp(filePath)
-                    .resize(800) // Resize to a reasonable width for member cards
-                    .jpeg({ quality: 80, mozjpeg: true })
+                    .resize(600) // Reduced from 800 to further save space
+                    .modulate({
+                        saturation: 0.8 // Reduce saturation by 20% to make them more "dull"
+                    })
+                    .jpeg({ quality: 75, mozjpeg: true }) // Reduced quality to 75
                     .toFile(tempPath);
 
                 fs.unlinkSync(filePath);

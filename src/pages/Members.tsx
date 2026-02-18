@@ -28,10 +28,8 @@ const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
   const isDaniel = member.name === 'Daniel Ho';
 
   return (
-    <motion.div
-      whileHover={{ y: -6 }}
-      whileTap={{ scale: 0.98 }}
-      className="group bg-white p-3 border border-gray-100 flex flex-col items-center text-center relative overflow-hidden transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] w-full"
+    <div
+      className="bg-white p-3 border border-[#8FA8C8] flex flex-col items-center text-center relative overflow-hidden shadow-xl w-full"
       style={{ borderRadius: '12px' }}
     >
       {!isDaniel && member.is_vp && (
@@ -73,10 +71,9 @@ const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
           <span className="block">{firstName}</span>
           <span className="block">{lastName}</span>
         </h3>
-        <p className="text-[#8FA8C8] text-[10px] tracking-wider mb-2">{member.role}</p>
-
-        <div className="space-y-0.5 text-[11px] text-[#2B4C6F]/80 leading-tight" style={{ fontFamily: 'Inter, sans-serif' }}>
-          <p>{member.major}</p>
+        <div className="space-y-0.5 text-[11px] leading-tight" style={{ fontFamily: 'Inter, sans-serif' }}>
+          <p className="text-[#8FA8C8] tracking-wider mb-2">{member.role}</p>
+          <p className="text-[#2B4C6F]/80">{member.major}</p>
           <p className="text-[#2B4C6F]/50">{member.year}</p>
         </div>
 
@@ -95,7 +92,7 @@ const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 });
 
@@ -207,10 +204,10 @@ export function Members() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#8FA8C8]" />
         </div>
       ) : (
-        /* Flex container for Sections */
-        <div className="flex flex-wrap justify-center items-start gap-8">
+        /* 2-column grid on tablet+, single column on mobile */
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-12 items-start">
           {groupedMembers.map(({ part, members }) => (
-            <section key={part} className={`flex flex-col items-center w-full sm:w-auto ${part === 'Bass/Bari' ? 'max-w-[400px]' : 'max-w-[600px]'}`}>
+            <section key={part} className="flex flex-col items-center w-full">
               <h2
                 className="text-[#2B4C6F] mb-6 tracking-widest border-b-2 border-[#8FA8C8]/20 pb-2 text-center w-full font-yearbook"
                 style={{ ...fontYearbook, fontSize: '18px' }}
@@ -220,8 +217,8 @@ export function Members() {
                     part === 'Member' ? 'Members' :
                       part.endsWith('s') ? part : `${part}s`}
               </h2>
-              {/* Grid: 3 cols min for others, 2 cols for Bass/Bari */}
-              <div className={`grid gap-4 w-full ${part === 'Bass/Bari' ? 'grid-cols-2' : 'grid-cols-3'}`}>
+              {/* Card Grid: Standard 2 on mobile, 3 on desktop. Basses 4 on desktop for 4x1/2x2 */}
+              <div className={`grid gap-4 w-full ${part === 'Bass/Bari' ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3'}`}>
                 {members.map((member, index) => (
                   <MemberCard key={index} member={member} />
                 ))}
