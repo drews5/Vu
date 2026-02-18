@@ -37,7 +37,7 @@ function AppContent() {
     <div className="min-h-screen bg-white">
       <ScrollToTop />
       {!isAuditionsPage && <Header />}
-      <div className={isAuditionsPage ? "px-3 md:px-[50px]" : "px-3 md:px-[50px]"}>
+      <div className={`max-w-[1440px] mx-auto ${isAuditionsPage ? "px-3 md:px-[50px]" : "px-3 md:px-[50px]"}`}>
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Home />} />
