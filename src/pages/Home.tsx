@@ -161,7 +161,7 @@ export function Home() {
             <div className="flex-shrink-0">
               <img
                 src={fullLogo}
-                alt="Vocal U - University of Minnesota's Premier A Cappella Group"
+                alt="Vocal U - University of Minnesota's A Cappella Group"
                 className="w-full max-w-[264px] md:max-w-[330px]"
                 style={{ filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3))' }}
               />
