@@ -204,27 +204,38 @@ export function Members() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#8FA8C8]" />
         </div>
       ) : (
-        /* 2-column grid on tablet+, single column on mobile */
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-12 items-start">
-          {groupedMembers.map(({ part, members }) => (
-            <section key={part} className="flex flex-col items-center w-full">
-              <h2
-                className="text-[#2B4C6F] mb-6 tracking-widest border-b-2 border-[#8FA8C8]/20 pb-2 text-center w-full font-yearbook"
-                style={{ ...fontYearbook, fontSize: '18px' }}
+        /* Flex container for sections that allows them to grow proportional to their card count */
+        <div className="flex flex-wrap gap-x-8 gap-y-12 items-start justify-center">
+          {groupedMembers.map(({ part, members }) => {
+            const isBass = part === 'Bass/Bari';
+            const colCount = isBass ? 4 : 3;
+            return (
+              <section
+                key={part}
+                className="flex flex-col items-center"
+                style={{
+                  flex: `1 1 ${colCount * 180}px`, // Proportional growth
+                  maxWidth: isBass ? '900px' : '700px'
+                }}
               >
-                {part === 'Bass/Bari' ? 'Bass / Bari' :
-                  part === 'Vocal Percussionist' ? 'Percussion' :
-                    part === 'Member' ? 'Members' :
-                      part.endsWith('s') ? part : `${part}s`}
-              </h2>
-              {/* Card Grid: Standard 2 on mobile, 3 on desktop. Basses 4 on desktop for 4x1/2x2 */}
-              <div className={`grid gap-4 w-full ${part === 'Bass/Bari' ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3'}`}>
-                {members.map((member, index) => (
-                  <MemberCard key={index} member={member} />
-                ))}
-              </div>
-            </section>
-          ))}
+                <h2
+                  className="text-[#2B4C6F] mb-6 tracking-widest border-b-2 border-[#8FA8C8]/20 pb-2 text-center w-full font-yearbook"
+                  style={{ ...fontYearbook, fontSize: '18px' }}
+                >
+                  {part === 'Bass/Bari' ? 'Bass / Bari' :
+                    part === 'Vocal Percussionist' ? 'Percussion' :
+                      part === 'Member' ? 'Members' :
+                        part.endsWith('s') ? part : `${part}s`}
+                </h2>
+                {/* Card Grid: Using standard column counts to keep card sizes uniform */}
+                <div className={`grid gap-4 w-full ${isBass ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3'}`}>
+                  {members.map((member, index) => (
+                    <MemberCard key={index} member={member} />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
       )}
     </div>
