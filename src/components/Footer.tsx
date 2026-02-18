@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook, Youtube } from 'lucide-react';
 import footerLogo from 'figma:asset/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
@@ -13,14 +13,6 @@ const TikTokIcon = memo(function TikTokIcon({ className }: { className?: string 
     </svg>
   );
 });
-
-const quickLinks = [
-  { to: '/', label: 'Home' },
-  { to: '/about', label: 'About' },
-  { to: '/donate', label: 'Donate' },
-  { to: '/members', label: 'Members' },
-  { to: '/contact', label: 'Contact' },
-];
 
 const resourceLinks = [
   { to: '/auditions', label: 'Auditions', external: false },
@@ -37,7 +29,13 @@ const socialIcons = [
 ];
 
 export const Footer = memo(function Footer() {
-  const currentYear = new Date().getFullYear();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText('vocalu@umn.edu');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <footer
@@ -45,9 +43,7 @@ export const Footer = memo(function Footer() {
       style={{ borderRadius: '16px', marginTop: '25px' }}
     >
       <div className="max-w-7xl mx-auto">
-        {/* 3-Column Layout: Logo/Desc, Resources, Connect */}
         <div className="grid grid-cols-3 gap-4 md:gap-12 mb-8 text-left">
-          {/* Column 1: Logo and Description */}
           <div className="flex flex-col items-start">
             <img
               src={footerLogo}
@@ -60,7 +56,6 @@ export const Footer = memo(function Footer() {
             </p>
           </div>
 
-          {/* Column 2: Resources */}
           <div className="flex flex-col items-start">
             <h3 className="mb-2 md:mb-4 font-bold" style={{ ...fontYearbook, fontSize: 'clamp(12px, 2vw, 18px)' }}>
               RESOURCES
@@ -78,7 +73,7 @@ export const Footer = memo(function Footer() {
                       {link.label}
                     </a>
                   ) : (
-                    <Link to={link.to!} className="text-white/70 hover:text-white transition-colors">
+                    <Link to={link.to || ''} className="text-white/70 hover:text-white transition-colors">
                       {link.label}
                     </Link>
                   )}
@@ -87,19 +82,24 @@ export const Footer = memo(function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Connect */}
           <div className="flex flex-col items-start overflow-hidden">
             <h3 className="mb-2 md:mb-4 font-bold" style={{ ...fontYearbook, fontSize: 'clamp(12px, 2vw, 18px)' }}>
               CONNECT
             </h3>
-            <div className="mb-2 md:mb-4 w-full">
-              <a
-                href="mailto:vocalu@umn.edu"
-                className="text-white/70 hover:text-white transition-colors truncate block w-full"
+            <div className="mb-2 md:mb-4 w-full relative">
+              <button
+                onClick={handleCopy}
+                className="text-white/70 hover:text-white transition-colors truncate block w-full text-left cursor-pointer group relative"
                 style={{ ...fontInter, fontSize: 'clamp(10px, 1.5vw, 14px)' }}
               >
                 vocalu@umn.edu
-              </a>
+                <span
+                  className={`absolute -top-8 left-0 bg-white text-[#2B4C6F] text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none font-bold ${copied ? 'opacity-100' : 'opacity-0'
+                    }`}
+                >
+                  COPIED!
+                </span>
+              </button>
             </div>
             <div className="flex gap-2 md:gap-3 flex-wrap">
               {socialIcons.map((s) => (
@@ -120,7 +120,7 @@ export const Footer = memo(function Footer() {
 
         <div className="pt-6 md:pt-8 border-t border-white/10">
           <p className="text-white/50 text-[10px] md:text-sm text-center" style={fontInter}>
-            &copy; {currentYear} Vocal U A Cappella. This group is a Registered Student Organization and is independent of the University of Minnesota.
+            &copy; {new Date().getFullYear()} Vocal U A Cappella. This group is a Registered Student Organization and is independent of the University of Minnesota.
           </p>
         </div>
       </div>

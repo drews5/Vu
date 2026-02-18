@@ -16,36 +16,40 @@ interface Member {
 }
 
 const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
+  const nameParts = member.name.split(' ');
+  const firstName = nameParts[0];
+  const lastName = nameParts.slice(1).join(' ');
+
   return (
     <div
-      className="bg-white p-6 border border-gray-100 flex flex-col items-center text-center relative overflow-hidden"
-      style={{ borderRadius: '16px' }}
+      className="bg-white p-3 border border-gray-100 flex flex-col items-center text-center relative overflow-hidden"
+      style={{ borderRadius: '12px' }}
     >
       {member.is_vp && (
-        <div className="absolute top-4 right-[-35px] bg-[#8FA8C8] text-white py-1 px-10 rotate-45 text-[10px] font-bold tracking-widest z-10">
+        <div className="absolute top-2 right-[-35px] bg-[#8FA8C8] text-white py-1 px-10 rotate-45 text-[8px] font-bold tracking-widest z-10">
           VP
         </div>
       )}
-      <div className="w-32 h-32 bg-[#91a8c6]/10 rounded-full mb-4 flex items-center justify-center overflow-hidden">
+      <div className="w-16 h-16 bg-[#91a8c6]/10 rounded-full mb-2 flex items-center justify-center overflow-hidden">
         {member.photo ? (
           <img src={member.photo} alt={member.name} className="w-full h-full object-cover" />
         ) : (
-          <Music className="w-12 h-12 text-[#91a8c6]" />
+          <Music className="w-8 h-8 text-[#91a8c6]" />
         )}
       </div>
-      <h3 className="text-[#2B4C6F] text-xl mb-1" style={fontYearbook}>
-        {member.name}
+      <h3 className="text-[#2B4C6F] text-base mb-0.5 leading-tight" style={fontYearbook}>
+        <div className="block">{firstName}</div>
+        <div className="block">{lastName}</div>
       </h3>
-      <p className="text-[#8FA8C8] font-bold text-sm tracking-wider mb-2">{member.role}</p>
-      <div className="space-y-1 text-sm text-[#2B4C6F]/70" style={{ fontFamily: 'Inter, sans-serif' }}>
-        <p>{member.part}</p>
+      <p className="text-[#8FA8C8] font-bold text-[10px] tracking-wider mb-1">{member.role}</p>
+      <div className="space-y-0 text-[11px] text-[#2B4C6F]/70" style={{ fontFamily: 'Inter, sans-serif' }}>
         <p>{member.major}</p>
         <p>{member.year}</p>
       </div>
       {member.instagram && (
-        <div className="mt-4 flex gap-2 hover:scale-110 transition-transform">
+        <div className="mt-2 flex gap-2">
           <a href={`https://instagram.com/${member.instagram}`} target="_blank" rel="noreferrer">
-            <Instagram className="w-5 h-5 text-[#8FA8C8] cursor-pointer hover:text-[#2B4C6F]" />
+            <Instagram className="w-3.5 h-3.5 text-[#8FA8C8] cursor-pointer hover:text-[#2B4C6F]" />
           </a>
         </div>
       )}
@@ -115,19 +119,20 @@ export function Members() {
 
   return (
     <div className="pb-8 md:pb-16">
+      {/* Hero Section */}
       <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
-          className="bg-[#2B4C6F] py-16 md:py-24 px-4 text-center"
+          className="bg-[#2B4C6F] py-10 md:py-16 px-4 text-center"
           style={{ borderRadius: '16px' }}
         >
           <h1
             className="text-white"
-            style={{ ...fontYearbook, fontSize: 'clamp(48px, 10vw, 96px)', letterSpacing: '0.05em' }}
+            style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}
           >
             OUR MEMBERS
           </h1>
           <p
-            className="text-white/80 mt-4 max-w-2xl mx-auto"
+            className="text-white/80 mt-2 max-w-2xl mx-auto text-sm md:text-base"
             style={{ fontFamily: 'Inter, sans-serif' }}
           >
             Meet the talented individuals who make up the Vocal U family.
@@ -140,16 +145,19 @@ export function Members() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#8FA8C8]" />
         </div>
       ) : (
-        <div className="space-y-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-12">
           {groupedMembers.map(({ part, members }) => (
-            <section key={part}>
+            <section key={part} className="flex flex-col">
               <h2 
-                className="text-[#2B4C6F] mb-6 px-4 md:px-0 uppercase tracking-widest border-b-2 border-[#8FA8C8]/20 pb-2"
-                style={{ ...fontYearbook, fontSize: '28px' }}
+                className="text-[#2B4C6F] mb-6 uppercase tracking-widest border-b-2 border-[#8FA8C8]/20 pb-2 text-center"
+                style={{ ...fontYearbook, fontSize: '18px' }}
               >
-                {part === 'Bass/Bari' ? 'Bass / Baritones' : `${part}s`}
+                {part === 'Bass/Bari' ? 'Bass / Bari' : 
+                 part === 'Vocal Percussionist' ? 'Percussion' :
+                 part === 'Member' ? 'Members' :
+                 part.endsWith('s') ? part : `${part}s`}
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '25px' }}>
+              <div className="flex flex-col gap-4">
                 {members.map((member, index) => (
                   <MemberCard key={index} member={member} />
                 ))}

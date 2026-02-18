@@ -50,12 +50,12 @@ export function About() {
       {/* Hero Section */}
       <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
-          className="relative overflow-hidden h-[250px] md:h-[400px] bg-[#2B4C6F] flex items-center justify-center"
+          className="relative overflow-hidden h-[165px] md:h-[265px] bg-[#2B4C6F] flex items-center justify-center"
           style={{ borderRadius: '16px' }}
         >
           <h1
             className="text-white px-4"
-            style={{ ...fontYearbook, fontSize: 'clamp(48px, 10vw, 96px)', letterSpacing: '0.05em' }}
+            style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}
           >
             ABOUT US
           </h1>

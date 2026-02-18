@@ -120,7 +120,7 @@ export function EventDetail() {
         <div className="bg-white border border-gray-100 shadow-sm overflow-hidden" style={{ borderRadius: '16px' }}>
           {/* Back Button */}
           <div className="p-6 md:p-8 pb-0">
-            <Link to="/events" className="inline-flex items-center gap-2 text-[#8FA8C8] hover:text-[#2B4C6F] transition-colors font-bold text-sm uppercase tracking-widest font-bold" style={fontInter}>
+            <Link to="/events" className="inline-flex items-center gap-2 text-[#8FA8C8] hover:text-[#2B4C6F] transition-colors font-bold text-sm tracking-widest font-bold" style={fontInter}>
               <ArrowLeft className="w-4 h-4" /> Back to Events
             </Link>
           </div>

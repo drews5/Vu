@@ -212,7 +212,7 @@ export function Auditions() {
 
                   <div className="col-span-6 md:col-span-7 relative group">
                     {isBreak ? (
-                      <span className="italic text-gray-400 font-medium px-1 md:px-1.5 text-[8px] md:text-[9px] uppercase tracking-tighter" style={fontInter}>---</span>
+                      <span className="italic text-gray-400 font-medium px-1 md:px-1.5 text-[8px] md:text-[9px] tracking-tighter" style={fontInter}>---</span>
                     ) : isBooked ? (
                       <div className="flex items-center justify-between gap-0.5 md:gap-1 px-1 md:px-1.5 py-0.5 bg-white rounded shadow-sm border border-gray-100">
                         <span className="font-bold text-[#2B4C6F] text-[10px] md:text-[12px] truncate" style={fontInter}>{slot.name}</span>
@@ -321,11 +321,11 @@ export function Auditions() {
 
   return (
     <div className="pb-24">
-      {/* Header with Logo and Animated Gradient */}
-      <section className="relative py-4 md:py-8 flex items-center justify-center overflow-hidden mb-4 md:mb-6 mx-0 mt-[15px] md:mt-[25px] animate-gradient border border-gray-100 shadow-sm" 
+      {/* Header with Logo and Solid Background */}
+      <section className="relative py-4 md:py-8 flex items-center justify-center overflow-hidden mb-4 md:mb-6 mx-0 mt-[15px] md:mt-[25px] border border-gray-100 shadow-sm" 
         style={{ 
           borderRadius: '16px',
-          background: 'linear-gradient(115deg, #2B4C6F, #8FA8C8, #2B4C6F, #8FA8C8, #2B4C6F)'
+          background: '#2B4C6F'
         }}>
         
         <div className="relative z-10 text-center px-6 w-full flex items-center justify-center gap-6 md:gap-10">

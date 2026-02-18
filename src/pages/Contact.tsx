@@ -61,17 +61,17 @@ export function Contact() {
       {/* Hero Section */}
       <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
-          className="bg-[#8FA8C8] py-16 md:py-24 px-4 md:px-8 shadow-sm"
+          className="bg-[#8FA8C8] py-10 md:py-16 px-4 md:px-8 shadow-sm"
           style={{ borderRadius: '16px' }}
         >
           <div className="max-w-5xl mx-auto text-center">
             <h1
-              className="text-white mb-4"
-              style={{ ...fontYearbook, fontSize: 'clamp(48px, 10vw, 96px)', letterSpacing: '0.05em' }}
+              className="text-white mb-2"
+              style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}
             >
               CONTACT US
             </h1>
-            <p className="text-white" style={{ ...fontInter, fontSize: '17px' }}>
+            <p className="text-white text-sm md:text-base" style={fontInter}>
               We'd love to hear from you!
             </p>
           </div>

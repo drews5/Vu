@@ -149,7 +149,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
             className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8] hover:text-white transition-all shadow-md border border-[#8FA8C8]/20 group/btn"
           >
             <Calendar className="w-4 h-4" />
-            <span className="text-[11px] font-bold uppercase tracking-wider" style={fontInter}>Add to Calendar</span>
+            <span className="text-[11px] font-bold tracking-wider" style={fontInter}>Add to Calendar</span>
           </a>
           <a 
             href={getNavigationUrl()}
@@ -159,14 +159,14 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
             className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8] hover:text-white transition-all shadow-md border border-[#8FA8C8]/20"
           >
             <Navigation className="w-4 h-4" />
-            <span className="text-[11px] font-bold uppercase tracking-wider" style={fontInter}>Navigate</span>
+            <span className="text-[11px] font-bold tracking-wider" style={fontInter}>Navigate</span>
           </a>
           <button 
             onClick={handleShare}
             className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8] hover:text-white transition-all shadow-md border border-[#8FA8C8]/20"
           >
             <Share2 className="w-4 h-4" />
-            <span className="text-[11px] font-bold uppercase tracking-wider" style={fontInter}>Share</span>
+            <span className="text-[11px] font-bold tracking-wider" style={fontInter}>Share</span>
           </button>
         </div>
       )}
@@ -229,7 +229,7 @@ export function Events() {
       {/* Hero Section */}
       <section style={{ marginTop: '25px', marginBottom: '40px' }}>
         <div
-          className="bg-[#8FA8C8] py-20 md:py-32 px-4 md:px-8 overflow-hidden relative border border-gray-100 shadow-sm"
+          className="bg-[#8FA8C8] py-14 md:py-22 px-4 md:px-8 overflow-hidden relative border border-gray-100 shadow-sm"
           style={{ borderRadius: '16px' }}
         >
           {/* Decorative Background Elements */}
@@ -238,12 +238,12 @@ export function Events() {
           
           <div className="max-w-5xl mx-auto text-center relative z-10">
                     <h1
-                      className="text-white mb-6"
-                      style={{ ...fontYearbook, fontSize: 'clamp(56px, 12vw, 110px)', letterSpacing: '0.05em', lineHeight: '0.9' }}
+                      className="text-white mb-4"
+                      style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em', lineHeight: '0.9' }}
                     >
                       OUR EVENTS
                     </h1>
-            <p className="text-white/90 max-w-2xl mx-auto font-medium tracking-wide text-sm md:text-lg" style={fontInter}>
+            <p className="text-white/90 max-w-2xl mx-auto font-medium tracking-wide text-xs md:text-base" style={fontInter}>
               Join us for live performances, workshops, and more.
             </p>
           </div>

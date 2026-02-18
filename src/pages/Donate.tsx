@@ -46,17 +46,18 @@ const TierCard = memo(function TierCard({
 export function Donate() {
   return (
     <div className="pb-8 md:pb-16 min-h-screen">
+      {/* Hero Section */}
       <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
-          className="bg-[#91a8c6] py-12 md:py-16 px-4 text-center text-white border border-gray-100 shadow-sm"
+          className="bg-[#91a8c6] py-8 md:py-12 px-4 text-center text-white border border-gray-100 shadow-sm"
           style={{ borderRadius: '16px' }}
         >
           <h1
-            style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}
+            style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 64px)', letterSpacing: '0.05em' }}
           >
             SUPPORT US
           </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-base md:text-lg opacity-90" style={{ fontFamily: 'Inter, sans-serif' }}>
+          <p className="mt-2 max-w-2xl mx-auto text-sm md:text-base opacity-90" style={{ fontFamily: 'Inter, sans-serif' }}>
             Vocal U is a self-funded student organization. Your donations help us cover travel, recording
             costs, and competition fees.
           </p>

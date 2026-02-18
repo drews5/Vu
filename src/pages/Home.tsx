@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { ContactForm } from '../components/ContactForm';
 import { Footer } from '../components/Footer';
 import { supabase } from '../utils/supabase';
+import { motion } from 'motion/react';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
@@ -18,15 +19,12 @@ interface FeaturedEvent {
   location: string;
   link: string;
   image: string;
+  isInstagram?: boolean;
 }
 
 function EventCard({ event }: { event: FeaturedEvent }) {
-  return (
-    <Link
-      to={event.link}
-      className="group bg-white overflow-hidden border border-gray-100 transition-all hover:bg-gray-50 active:scale-[0.98] flex flex-col"
-      style={{ borderRadius: '16px' }}
-    >
+  const content = (
+    <>
       <div className="relative h-48 overflow-hidden">
         <img
           src={event.image}
@@ -36,7 +34,7 @@ function EventCard({ event }: { event: FeaturedEvent }) {
         />
         <div className="absolute top-4 left-4">
           <span
-            className="bg-[#8FA8C8] text-white px-3 py-1 text-[10px] font-bold tracking-widest"
+            className="bg-[#8FA8C8] text-white px-3 py-1 text-[10px] font-bold tracking-widest uppercase"
             style={{ borderRadius: '8px', ...fontYearbook }}
           >
             {event.tag}
@@ -49,7 +47,7 @@ function EventCard({ event }: { event: FeaturedEvent }) {
           {event.date}
         </div>
         <h3
-          className="text-[#2B4C6F] mb-3 text-xl leading-tight group-hover:text-[#8FA8C8] transition-colors"
+          className="text-[#2B4C6F] mb-3 text-xl leading-tight group-hover:text-[#8FA8C8] transition-colors line-clamp-2 uppercase"
           style={fontYearbook}
         >
           {event.title}
@@ -59,37 +57,77 @@ function EventCard({ event }: { event: FeaturedEvent }) {
           <span className="truncate">{event.location}</span>
         </div>
       </div>
+    </>
+  );
+
+  if (event.isInstagram) {
+    return (
+      <a
+        href={event.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group bg-white overflow-hidden border border-gray-100 transition-all hover:bg-gray-50 active:scale-[0.98] flex flex-col"
+        style={{ borderRadius: '16px' }}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link
+      to={event.link}
+      className="group bg-white overflow-hidden border border-gray-100 transition-all hover:bg-gray-50 active:scale-[0.98] flex flex-col"
+      style={{ borderRadius: '16px' }}
+    >
+      {content}
     </Link>
   );
 }
 
 export function Home() {
-  const [featuredEvents, setFeaturedEvents] = useState<FeaturedEvent[]>([]);
+  const [items, setItems] = useState<FeaturedEvent[]>([]);
 
   useEffect(() => {
-    async function fetchFeaturedEvents() {
-      const { data, error } = await supabase
+    async function fetchData() {
+      // Fetch Featured Events
+      const { data: eventsData, error: eventsError } = await supabase
         .from('events')
         .select('*')
         .eq('is_featured', true)
+        .order('date', { ascending: false })
         .limit(3);
 
-      if (error) {
-        console.error('Error fetching featured events:', error);
-      } else {
-        const formatted = data.map((r: any) => ({
-          tag: r.tag,
-            date: new Date(r.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-          title: r.title,
-          location: r.location,
-          link: `/event/${r.slug}`,
-          image: r.image_url,
-        }));
-        setFeaturedEvents(formatted);
+      // Fetch Instagram Posts for images
+      let instaPhotos: string[] = [];
+      try {
+        const res = await fetch('https://feeds.behold.so/rWuujcErcs5hcWQ5MPPw');
+        const data = await res.json();
+        if (data.posts) {
+          instaPhotos = data.posts.map((post: any) => post.mediaUrl);
+        }
+      } catch (err) {
+        console.error('Error fetching Instagram for Home:', err);
       }
+
+      if (eventsError) {
+        console.error('Error fetching featured events:', eventsError);
+      }
+
+      const formattedEvents = (eventsData || []).map((r: any, idx: number) => ({
+        tag: r.tag || 'Event',
+        date: new Date(r.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        title: r.title,
+        location: r.location,
+        link: `/event/${r.slug}`,
+        // Use Instagram photo if available, otherwise fallback to database image
+        image: instaPhotos[idx] || r.image_url,
+      }));
+
+      setItems(formattedEvents);
     }
 
-    fetchFeaturedEvents();
+    fetchData();
   }, []);
 
   return (
@@ -118,18 +156,35 @@ export function Home() {
 
             <div className="flex-grow" />
 
-            <Link
-              to="/event/spring-showcase-2026"
-              className="bg-white text-[#2B4C6F] px-8 md:px-12 py-3 md:py-4 border border-gray-100 hover:bg-gray-100 transition-all flex-shrink-0 active:scale-[0.98] text-center font-bold"
-              style={{
-                ...fontYearbook,
-                fontSize: 'clamp(16px, 2vw, 20px)',
-                letterSpacing: '0.05em',
-                borderRadius: '12px',
+            <motion.div
+              initial={{ scale: 1 }}
+              animate={{
+                scale: [1, 1.03, 1],
+                boxShadow: [
+                  "0 4px 6px rgba(0,0,0,0.1)",
+                  "0 10px 15px rgba(0,0,0,0.2)",
+                  "0 4px 6px rgba(0,0,0,0.1)"
+                ]
+              }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "easeInOut"
               }}
             >
-              SPRING SHOWCASE
-            </Link>
+              <Link
+                to="/event/spring-showcase-2026"
+                className="bg-white text-[#2B4C6F] px-8 md:px-12 py-3 md:py-4 border border-gray-100 hover:bg-gray-100 transition-all flex-shrink-0 active:scale-[0.98] text-center font-bold block"
+                style={{
+                  ...fontYearbook,
+                  fontSize: 'clamp(16px, 2vw, 20px)',
+                  letterSpacing: '0.05em',
+                  borderRadius: '12px',
+                }}
+              >
+                SPRING SHOWCASE
+              </Link>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -197,7 +252,7 @@ export function Home() {
 
       {/* Events Section */}
       <section
-        className="relative py-16 md:py-24 px-6 md:px-12 mx-3 md:mx-0"
+        className="relative py-12 md:py-16 px-6 md:px-12 mx-3 md:mx-0"
         style={{
           marginBottom: '25px',
           borderRadius: '16px',
@@ -205,21 +260,24 @@ export function Home() {
         }}
       >
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="text-center mb-12 md:mb-16">
+          <div className="text-center mb-10">
             <h2
-              className="text-white"
+              className="text-white mb-2"
               style={{
                 ...fontYearbook,
-                fontSize: 'clamp(64px, 12vw, 120px)',
+                fontSize: 'clamp(40px, 8vw, 80px)',
                 letterSpacing: '0.05em',
               }}
             >
               EVENTS
             </h2>
+            <p className="text-white/90 font-medium tracking-wide text-xs md:text-base" style={fontInter}>
+              Join us for live performances, workshops, and more.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
-            {featuredEvents.map((event, idx) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-10">
+            {items.map((event, idx) => (
               <EventCard key={idx} event={event} />
             ))}
           </div>
@@ -227,11 +285,11 @@ export function Home() {
           <div className="text-center">
             <Link to="/events">
               <button
-                className="inline-flex items-center gap-3 bg-white text-[#2B4C6F] px-12 py-5 border border-gray-100 hover:bg-gray-50 active:scale-[0.98] transition-all font-bold"
-                style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em', borderRadius: '16px' }}
+                className="inline-flex items-center gap-3 bg-white text-[#2B4C6F] px-10 py-4 border border-gray-100 hover:bg-gray-50 active:scale-[0.98] transition-all font-bold"
+                style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}
               >
                 <span>VIEW ALL EVENTS</span>
-                <ArrowRight className="w-6 h-6" />
+                <ArrowRight className="w-5 h-5" />
               </button>
             </Link>
           </div>

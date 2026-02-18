@@ -80,239 +80,246 @@ export function Header() {
     location.pathname === '/auditions';
 
   return (
-    <header
-      className="bg-[#8FA8C8] mx-3 md:mx-[50px] mt-[25px] px-4 md:px-8 py-4 border border-[#8FA8C8] shadow-sm relative z-50"
-      style={{ borderRadius: '16px' }}
-    >
-      <div className="max-w-7xl mx-auto">
-        {/* Desktop Layout */}
-        <div className="hidden lg:flex items-center justify-between relative">
-          <Link to="/" className="flex items-center">
-            <img
-              src={logoImage}
-              alt="Vocal U"
-              className="h-16 w-auto hover:scale-105 transition-transform duration-200"
-            />
-          </Link>
+    <>
+      {/* Top Mask - Solid white block above the header when sticky */}
+      <div className="fixed top-0 left-0 right-0 h-[24px] bg-white z-[45] pointer-events-none" />
 
-          <nav className="flex items-center absolute left-1/2 transform -translate-x-1/2">
-            {navItems.map((item, index) => (
-              <div key={item.path} className="flex items-center">
-                {item.dropdown ? (
-                  <div
-                    className="relative"
-                    onMouseEnter={() => setAboutDropdownOpen(true)}
-                    onMouseLeave={() => setAboutDropdownOpen(false)}
-                  >
+      {/* Corner Masks - Solid white blocks that extend from screen edges to cut off scrolling content behind rounded corners */}
+      <div className="sticky top-0 z-[48] pointer-events-none h-0">
+        <div className="absolute top-[24px] left-0 w-[28px] md:w-[66px] h-[16px] bg-white" />
+        <div className="absolute top-[24px] right-0 w-[28px] md:w-[66px] h-[16px] bg-white" />
+      </div>
+
+      <header
+        className="bg-[#8FA8C8]/80 backdrop-blur-md mx-3 md:mx-[50px] mt-[25px] px-4 md:px-8 py-4 border border-white/20 shadow-sm sticky top-6 z-50 transition-all duration-300"
+        style={{ borderRadius: '16px' }}
+      >
+        <div className="max-w-7xl mx-auto">
+          {/* Desktop Layout */}
+          <div className="hidden lg:flex items-center justify-between relative">
+            <Link to="/" className="flex items-center">
+              <img
+                src={logoImage}
+                alt="Vocal U"
+                className="h-16 w-auto hover:scale-105 transition-transform duration-200"
+              />
+            </Link>
+
+            <nav className="flex items-center absolute left-1/2 transform -translate-x-1/2">
+              {navItems.map((item, index) => (
+                <div key={item.path} className="flex items-center">
+                  {item.dropdown ? (
                     <div
-                      className={`px-4 py-2 cursor-default transition-all duration-200 ${
-                        isAboutActive ? 'text-white' : 'text-white/90 hover:text-white'
-                      }`}
+                      className="relative"
+                      onMouseEnter={() => setAboutDropdownOpen(true)}
+                      onMouseLeave={() => setAboutDropdownOpen(false)}
+                    >
+                      <div
+                        className={`px-4 py-2 cursor-default transition-all duration-200 ${isAboutActive ? 'text-white' : 'text-white/90 hover:text-white'
+                          }`}
+                        style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em' }}
+                      >
+                        {item.name}
+                      </div>
+
+                      <AnimatePresence>
+                        {aboutDropdownOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute top-full left-0 mt-2 bg-white shadow-lg py-2 min-w-[200px] z-50"
+                            style={{ borderRadius: '12px' }}
+                          >
+                            {item.dropdown.map((dropItem) => (
+                              <Link
+                                key={dropItem.path}
+                                to={dropItem.path}
+                                className="block px-6 py-2 text-[#2B4C6F] hover:bg-[#8FA8C8]/10 transition-colors"
+                                style={{ ...fontYearbook, fontSize: '18px' }}
+                              >
+                                {dropItem.name}
+                              </Link>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <Link
+                      to={item.path}
+                      className={`px-4 py-2 transition-all duration-200 ${location.pathname === item.path
+                        ? 'text-white'
+                        : 'text-white/90 hover:text-white hover:scale-105'
+                        }`}
                       style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em' }}
                     >
                       {item.name}
-                    </div>
+                    </Link>
+                  )}
+                  {index < navItems.length - 1 && <div className="h-6 w-[1px] bg-white/30" />}
+                </div>
+              ))}
+            </nav>
 
-                    <AnimatePresence>
-                      {aboutDropdownOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          transition={{ duration: 0.2 }}
-                          className="absolute top-full left-0 mt-2 bg-white shadow-lg py-2 min-w-[200px] z-50"
-                          style={{ borderRadius: '12px' }}
-                        >
-                          {item.dropdown.map((dropItem) => (
-                            <Link
-                              key={dropItem.path}
-                              to={dropItem.path}
-                              className="block px-6 py-2 text-[#2B4C6F] hover:bg-[#8FA8C8]/10 transition-colors"
-                              style={{ ...fontYearbook, fontSize: '18px' }}
-                            >
-                              {dropItem.name}
-                            </Link>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                ) : (
+            <div className="flex items-center gap-3">
+              {socialLinks.map((s) => (
+                <SocialIcon key={s.label} href={s.href} label={s.label} Icon={s.Icon} />
+              ))}
+            </div>
+          </div>
+
+          {/* Tablet Layout (Medium Screens) */}
+          <div className="hidden md:flex lg:hidden items-center justify-between">
+            <Link to="/" className="flex items-center">
+              <img
+                src={logoImage}
+                alt="Vocal U"
+                className="h-12 w-auto hover:scale-105 transition-transform duration-200"
+              />
+            </Link>
+
+            <nav className="flex items-center gap-1">
+              {navItems.map((item, index) => (
+                <div key={item.path} className="flex items-center">
                   <Link
                     to={item.path}
-                    className={`px-4 py-2 transition-all duration-200 ${
-                      location.pathname === item.path
-                        ? 'text-white'
-                        : 'text-white/90 hover:text-white hover:scale-105'
-                    }`}
-                    style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em' }}
+                    className={`px-2 py-1 transition-all duration-200 ${location.pathname === item.path
+                      ? 'text-white'
+                      : 'text-white/90 hover:text-white'
+                      }`}
+                    style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em' }}
                   >
                     {item.name}
                   </Link>
-                )}
-                {index < navItems.length - 1 && <div className="h-6 w-[1px] bg-white/30" />}
-              </div>
-            ))}
-          </nav>
+                  {index < navItems.length - 1 && <div className="h-4 w-[1px] bg-white/30" />}
+                </div>
+              ))}
+            </nav>
 
-          <div className="flex items-center gap-3">
-            {socialLinks.map((s) => (
-              <SocialIcon key={s.label} href={s.href} label={s.label} Icon={s.Icon} />
-            ))}
-          </div>
-        </div>
-
-        {/* Tablet Layout (Medium Screens) */}
-        <div className="hidden md:flex lg:hidden items-center justify-between">
-          <Link to="/" className="flex items-center">
-            <img
-              src={logoImage}
-              alt="Vocal U"
-              className="h-12 w-auto hover:scale-105 transition-transform duration-200"
-            />
-          </Link>
-
-          <nav className="flex items-center gap-1">
-            {navItems.map((item, index) => (
-              <div key={item.path} className="flex items-center">
-                <Link
-                  to={item.path}
-                  className={`px-2 py-1 transition-all duration-200 ${
-                    location.pathname === item.path
-                      ? 'text-white'
-                      : 'text-white/90 hover:text-white'
-                  }`}
-                  style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em' }}
-                >
-                  {item.name}
-                </Link>
-                {index < navItems.length - 1 && <div className="h-4 w-[1px] bg-white/30" />}
-              </div>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-2">
-            {socialLinks.map((s) => (
-              <SocialIcon key={s.label} href={s.href} label={s.label} Icon={s.Icon} size={4} />
-            ))}
-          </div>
-        </div>
-
-        {/* Mobile Layout */}
-        <div className="md:hidden">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center">
-              <img src={logoImage} alt="Vocal U" className="h-12 w-auto" loading="lazy" />
-            </Link>
-
-            <button
-              className="text-white active:scale-90 transition-transform"
-              onClick={() => setMobileMenuOpen((prev) => !prev)}
-            >
-              <AnimatePresence mode="wait">
-                {mobileMenuOpen ? (
-                  <motion.div
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <X className="w-6 h-6" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="menu"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Menu className="w-6 h-6" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
+            <div className="flex items-center gap-2">
+              {socialLinks.map((s) => (
+                <SocialIcon key={s.label} href={s.href} label={s.label} Icon={s.Icon} size={4} />
+              ))}
+            </div>
           </div>
 
-          <AnimatePresence>
-            {mobileMenuOpen && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="overflow-hidden"
+          {/* Mobile Layout */}
+          <div className="md:hidden">
+            <div className="flex items-center justify-between">
+              <Link to="/" className="flex items-center">
+                <img src={logoImage} alt="Vocal U" className="h-12 w-auto" loading="lazy" />
+              </Link>
+
+              <button
+                className="text-white active:scale-90 transition-transform"
+                onClick={() => setMobileMenuOpen((prev) => !prev)}
               >
-                <nav className="mt-4 pt-4 border-t border-white/30">
-                  {navItems.map((item) =>
-                    item.dropdown ? (
-                      <div key={item.path}>
-                        <button
-                          onClick={() => setAboutDropdownOpen((prev) => !prev)}
-                          className="w-full text-left px-4 py-3 text-white/90"
+                <AnimatePresence mode="wait">
+                  {mobileMenuOpen ? (
+                    <motion.div
+                      key="close"
+                      initial={{ rotate: -90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: 90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <X className="w-6 h-6" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="menu"
+                      initial={{ rotate: 90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: -90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Menu className="w-6 h-6" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </button>
+            </div>
+
+            <AnimatePresence>
+              {mobileMenuOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <nav className="mt-4 pt-4 border-t border-white/30">
+                    {navItems.map((item) =>
+                      item.dropdown ? (
+                        <div key={item.path}>
+                          <button
+                            onClick={() => setAboutDropdownOpen((prev) => !prev)}
+                            className="w-full text-left px-4 py-3 text-white/90"
+                            style={{ ...fontYearbook, fontSize: '20px', letterSpacing: '0.05em' }}
+                          >
+                            {item.name}
+                          </button>
+                          <AnimatePresence>
+                            {aboutDropdownOpen && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                className="pl-4 overflow-hidden"
+                              >
+                                {item.dropdown.map((dropItem) => (
+                                  <Link
+                                    key={dropItem.path}
+                                    to={dropItem.path}
+                                    onClick={closeMobileMenu}
+                                    className="block px-4 py-2 text-white/80"
+                                    style={{ ...fontYearbook, fontSize: '18px' }}
+                                  >
+                                    {dropItem.name}
+                                  </Link>
+                                ))}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      ) : (
+                        <Link
+                          key={item.path}
+                          to={item.path}
+                          onClick={closeMobileMenu}
+                          className={`block px-4 py-3 transition-all duration-200 ${location.pathname === item.path ? 'text-white' : 'text-white/90 hover:text-white'
+                            }`}
                           style={{ ...fontYearbook, fontSize: '20px', letterSpacing: '0.05em' }}
                         >
                           {item.name}
-                        </button>
-                        <AnimatePresence>
-                          {aboutDropdownOpen && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: 'auto', opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              className="pl-4 overflow-hidden"
-                            >
-                              {item.dropdown.map((dropItem) => (
-                                <Link
-                                  key={dropItem.path}
-                                  to={dropItem.path}
-                                  onClick={closeMobileMenu}
-                                  className="block px-4 py-2 text-white/80"
-                                  style={{ ...fontYearbook, fontSize: '18px' }}
-                                >
-                                  {dropItem.name}
-                                </Link>
-                              ))}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    ) : (
-                      <Link
-                        key={item.path}
-                        to={item.path}
-                        onClick={closeMobileMenu}
-                        className={`block px-4 py-3 transition-all duration-200 ${
-                          location.pathname === item.path ? 'text-white' : 'text-white/90 hover:text-white'
-                        }`}
-                        style={{ ...fontYearbook, fontSize: '20px', letterSpacing: '0.05em' }}
-                      >
-                        {item.name}
-                      </Link>
-                    )
-                  )}
+                        </Link>
+                      )
+                    )}
 
-                  <div className="flex items-center gap-3 px-4 py-4 mt-2">
-                    {socialLinks.map((s) => (
-                      <a
-                        key={s.label}
-                        href={s.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-white rounded-full p-2 active:scale-90 transition-transform"
-                        aria-label={s.label}
-                      >
-                        <s.Icon className="w-4 h-4 text-[#8FA8C8]" />
-                      </a>
-                    ))}
-                  </div>
-                </nav>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                    <div className="flex items-center gap-3 px-4 py-4 mt-2">
+                      {socialLinks.map((s) => (
+                        <a
+                          key={s.label}
+                          href={s.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-white rounded-full p-2 active:scale-90 transition-transform"
+                          aria-label={s.label}
+                        >
+                          <s.Icon className="w-4 h-4 text-[#8FA8C8]" />
+                        </a>
+                      ))}
+                    </div>
+                  </nav>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }
