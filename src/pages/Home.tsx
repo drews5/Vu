@@ -135,8 +135,8 @@ export function Home() {
       const selected = [...pastSlots, ...upcomingSlots].slice(0, 3);
 
       const formattedEvents: any[] = selected.map((r: any) => ({
-        // Always override tag from DB — past events must show "PAST EVENT"
-        tag: r.status === 'Previous' ? 'PAST EVENT' : 'UPCOMING',
+        // Always override tag from DB — past events must show "PAST"
+        tag: r.status === 'Previous' ? 'PAST' : 'UPCOMING',
         date: r.fullDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         title: r.title,
         location: r.location,
@@ -175,7 +175,7 @@ export function Home() {
     setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
   };
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const showArrows = items.length > (isMobile ? 1 : 3);
+  const showArrows = items.length > 1;
   return (
     <div className="pb-0">
       <Helmet>
@@ -341,15 +341,17 @@ export function Home() {
               <motion.div
                 animate={{ x: isMobile ? `-${currentIndex * 100}%` : '0%' }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="flex md:grid md:grid-cols-3 gap-6 md:gap-8"
+                className="flex md:grid md:grid-cols-3 gap-4 md:gap-8"
                 style={{
                   display: 'flex',
                   width: '100%',
                 }}
               >
                 {items.map((event, idx) => (
-                  <div key={idx} className="w-full shrink-0 md:shrink md:w-auto px-1 md:px-0">
-                    <EventCard event={event} />
+                  <div key={idx} className="w-full shrink-0 md:shrink md:flex-1 md:min-w-0 px-2 md:px-0 flex">
+                    <div className="w-full">
+                      <EventCard event={event} />
+                    </div>
                   </div>
                 ))}
               </motion.div>
@@ -359,14 +361,14 @@ export function Home() {
               <>
                 <button
                   onClick={prevSlide}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 translate-x-1 md:-translate-x-6 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors"
                   aria-label="Previous slide"
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </button>
                 <button
                   onClick={nextSlide}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1 md:translate-x-6 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors"
                   aria-label="Next slide"
                 >
                   <ChevronRight className="w-6 h-6" />
