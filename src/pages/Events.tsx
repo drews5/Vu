@@ -270,8 +270,9 @@ export function Events() {
             location: r.location,
             address: r.address,
             description: r.description,
-            image: r.slug === 'ichsa-quarterfinal-4-2026' ? ichsaPhoto :
-              r.slug === 'spring-showcase-2026' ? showcasePhoto :
+            // NOTE: These photos are intentionally swapped (ichsa slug -> showcasePhoto, showcase slug -> ichsaPhoto)
+            image: r.slug === 'ichsa-quarterfinal-4-2026' ? showcasePhoto :
+              r.slug === 'spring-showcase-2026' ? ichsaPhoto :
                 r.slug === 'icca-quarterfinal-2026' ? icca2026Photo :
                   r.slug === 'icca-quarterfinal-2025' ? icca2025Photo :
                     r.slug === 'winter-showcase-2025' ? winterShowcasePhoto : r.image_url,

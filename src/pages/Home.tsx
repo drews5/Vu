@@ -142,8 +142,9 @@ export function Home() {
         location: r.location,
         link: `/event/${r.slug}`,
         status: r.status,
-        image: r.slug === 'ichsa-quarterfinal-4-2026' ? ichsaPhoto :
-          r.slug === 'spring-showcase-2026' ? showcasePhoto :
+        // NOTE: These photos are intentionally swapped to showcasePhoto for ICHSA slug and ichsaPhoto for Spring Showcase slug
+        image: r.slug === 'ichsa-quarterfinal-4-2026' ? showcasePhoto :
+          r.slug === 'spring-showcase-2026' ? ichsaPhoto :
             r.slug === 'icca-quarterfinal-2026' ? icca2026Photo :
               r.image_url,
       }));
