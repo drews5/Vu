@@ -91,7 +91,7 @@ const VideoModal = ({ vId, onClose }: { vId: string; onClose: () => void }) => {
 const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen }: { item: any, isHighlighted?: boolean, onOpen: (vId: string) => void }) {
   const vId = typeof item === 'string' ? item : item.snippet.resourceId.videoId;
   const title = typeof item === 'string' ? 'ICCA 2025 Set: Full Performance' : item.snippet.title;
-  const dateStr = typeof item === 'string' ? 'Sept 2025' : new Date(item.snippet.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const dateStr = typeof item === 'string' ? 'Mar 1, 2025' : new Date(item.snippet.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   return (
     <motion.div
