@@ -5,8 +5,8 @@ import ichsaPhoto from '../assets/ichsa-quarterfinal.jpg';
 import showcasePhoto from '../assets/spring-showcase.jpg';
 import groupPhoto from '../assets/group-photo.jpg';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Calendar, MapPin } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
 import { ContactForm } from '../components/ContactForm';
 import { Footer } from '../components/Footer';
 import { supabase } from '../utils/supabase';
@@ -98,30 +98,47 @@ function EventCard({ event }: { event: FeaturedEvent }) {
 
 export function Home() {
   const [items, setItems] = useState<FeaturedEvent[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchData() {
-      // Fetch Featured Events
       const { data: eventsData, error: eventsError } = await supabase
         .from('events')
         .select('*')
-        .eq('is_featured', true)
-        .order('date', { ascending: false })
-        .limit(3);
+        .order('date', { ascending: true });
 
       if (eventsError) {
-        console.error('Error fetching featured events:', eventsError);
+        console.error('Error fetching events:', eventsError);
+        return;
       }
 
-      const formattedEvents = (eventsData || []).map((r: any) => ({
-        tag: r.tag || 'Event',
-        date: new Date(r.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      const now = new Date();
+      const processed = (eventsData || []).map((r: any) => {
+        const d = new Date(r.date);
+        return {
+          ...r,
+          fullDate: d,
+          status: d >= now ? 'Upcoming' : 'Previous'
+        };
+      });
+
+      const pastEvents = processed.filter((e: any) => e.status === 'Previous').sort((a: any, b: any) => b.fullDate.getTime() - a.fullDate.getTime());
+      const upcomingEvents = processed.filter((e: any) => e.status === 'Upcoming').sort((a: any, b: any) => a.fullDate.getTime() - b.fullDate.getTime());
+
+      const selected = [
+        ...(pastEvents.length > 0 ? [pastEvents[0]] : []),
+        ...upcomingEvents.slice(0, 2)
+      ];
+
+      const formattedEvents = selected.map((r: any) => ({
+        tag: r.tag || (r.status === 'Upcoming' ? 'Upcoming' : 'Past Event'),
+        date: r.fullDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         title: r.title,
         location: r.location,
         link: `/event/${r.slug}`,
-        // Use local high-res photo for specific events, otherwise fallback to DB
-        image: r.slug === 'ichsa-quarterfinal-4-2026' ? showcasePhoto :
-          r.slug === 'spring-showcase-2026' ? ichsaPhoto :
+        image: r.slug === 'ichsa-quarterfinal-4-2026' ? ichsaPhoto :
+          r.slug === 'spring-showcase-2026' ? showcasePhoto :
             r.image_url,
       }));
 
@@ -130,6 +147,16 @@ export function Home() {
 
     fetchData();
   }, []);
+
+  const nextSlide = () => {
+    if (items.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % items.length);
+  };
+
+  const prevSlide = () => {
+    if (items.length === 0) return;
+    setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
+  };
 
   return (
     <div className="pb-0">
@@ -291,12 +318,52 @@ export function Home() {
             </p>
           </div>
 
-          <div className="relative -mx-6 md:-mx-12 px-6 md:px-12 overflow-x-auto pb-8 hide-scrollbar">
-            <div className="flex gap-6 min-w-max h-full">
-              {items.map((event, idx) => (
-                <div key={idx} className="w-[85vw] md:w-[350px] min-h-[380px] h-full">
-                  <EventCard event={event} />
-                </div>
+          <div className="relative group/carousel px-4">
+            <div className="overflow-hidden">
+              <motion.div
+                animate={{ x: `-${currentIndex * 100}%` }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="flex md:grid md:grid-cols-3 gap-6"
+                style={{
+                  display: 'flex',
+                  width: '100%',
+                }}
+              >
+                {items.map((event, idx) => (
+                  <div key={idx} className="w-full shrink-0 px-2 md:px-0 md:shrink">
+                    <EventCard event={event} />
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+
+            {items.length > 1 && (
+              <>
+                <button
+                  onClick={prevSlide}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 bg-white/90 hover:bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 z-20 md:hidden"
+                  aria-label="Previous slide"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={nextSlide}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 bg-white/90 hover:bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 z-20 md:hidden"
+                  aria-label="Next slide"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+              </>
+            )}
+
+            {/* Pagination Dots for Mobile */}
+            <div className="flex justify-center gap-2 mt-6 md:hidden">
+              {items.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentIndex(idx)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${currentIndex === idx ? 'bg-white w-4' : 'bg-white/40'}`}
+                />
               ))}
             </div>
           </div>

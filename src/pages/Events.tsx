@@ -1,5 +1,5 @@
 import { useEffect, useState, memo } from 'react';
-import { Calendar, MapPin, ArrowRight, Clock, Share2, Navigation } from 'lucide-react';
+import { Calendar, MapPin, ArrowRight, Clock, Share2, Navigation, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
@@ -228,6 +228,25 @@ const PastEventCard = memo(function PastEventCard({ event }: { event: Event }) {
 export function Events() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pastIndex, setPastIndex] = useState(0);
+
+  const nextPast = () => {
+    const pastCount = events.filter(e => e.status === 'Previous').length;
+    if (pastCount === 0) return;
+    setPastIndex((prev: any) => (prev + 1) % pastCount);
+  };
+
+  const prevPast = () => {
+    const pastCount = events.filter(e => e.status === 'Previous').length;
+    if (pastCount === 0) return;
+    setPastIndex((prev: any) => (prev - 1 + pastCount) % pastCount);
+  };
+
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const isTablet = typeof window !== 'undefined' && window.innerWidth >= 768 && window.innerWidth < 1024;
+  const pastEvents = events.filter(e => e.status === 'Previous');
+  const showPastArrows = pastEvents.length > (isMobile ? 1 : isTablet ? 2 : 3);
+  const translatePercent = isMobile ? 100 : isTablet ? 50 : 33.333;
 
   useEffect(() => {
     async function fetchEvents() {
@@ -251,8 +270,8 @@ export function Events() {
             location: r.location,
             address: r.address,
             description: r.description,
-            image: r.slug === 'ichsa-quarterfinal-4-2026' ? showcasePhoto :
-              r.slug === 'spring-showcase-2026' ? ichsaPhoto :
+            image: r.slug === 'ichsa-quarterfinal-4-2026' ? ichsaPhoto :
+              r.slug === 'spring-showcase-2026' ? showcasePhoto :
                 r.slug === 'icca-quarterfinal-2026' ? icca2026Photo :
                   r.slug === 'icca-quarterfinal-2025' ? icca2025Photo :
                     r.slug === 'winter-showcase-2025' ? winterShowcasePhoto : r.image_url,
@@ -323,12 +342,55 @@ export function Events() {
                 <div className="h-[1px] bg-[#8FA8C8]/20 flex-grow" />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-8">
-                {events
-                  .filter((e) => e.status === 'Previous')
-                  .map((event) => (
-                    <PastEventCard key={event.id} event={event} />
-                  ))}
+              <div className="relative group/carousel">
+                <div className="overflow-hidden px-4 md:px-0">
+                  <motion.div
+                    animate={{ x: `-${pastIndex * translatePercent}%` }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    style={{
+                      display: 'flex',
+                      width: '100%',
+                    }}
+                  >
+                    {pastEvents.map((event) => (
+                      <div key={event.id} className="w-full md:w-1/2 lg:w-1/3 shrink-0 px-2 h-full">
+                        <PastEventCard event={event} />
+                      </div>
+                    ))}
+                  </motion.div>
+                </div>
+
+                {showPastArrows && (
+                  <>
+                    <button
+                      onClick={prevPast}
+                      className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors"
+                      aria-label="Previous past events"
+                    >
+                      <ChevronLeft className="w-6 h-6" />
+                    </button>
+                    <button
+                      onClick={nextPast}
+                      className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors"
+                      aria-label="Next past events"
+                    >
+                      <ChevronRight className="w-6 h-6" />
+                    </button>
+                  </>
+                )}
+
+                {/* Pagination Dots for Mobile */}
+                {isMobile && pastEvents.length > 1 && (
+                  <div className="flex justify-center gap-2 mt-6 md:hidden">
+                    {pastEvents.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setPastIndex(idx)}
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${pastIndex === idx ? 'bg-[#8FA8C8] w-4' : 'bg-[#8FA8C8]/40'}`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </section>
           </>
