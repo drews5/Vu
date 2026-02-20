@@ -4,6 +4,8 @@ import heroBackground from 'figma:asset/15a7da513ab99cbb57e9735db4d4d232088838f1
 import ichsaPhoto from '../assets/ichsa-quarterfinal.jpg';
 import showcasePhoto from '../assets/spring-showcase.jpg';
 import icca2026Photo from '../assets/icca-2026.jpg';
+import icca2025Photo from '../assets/icca-2025.jpg';
+import winterShowcasePhoto from '../assets/winter-showcase.jpg';
 import groupPhoto from '../assets/group-photo.jpg';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -128,8 +130,23 @@ export function Home() {
       const pastEvts = processed.filter((e: any) => e.status === 'Previous').sort((a: any, b: any) => b.fullDate.getTime() - a.fullDate.getTime());
       const upcomingEvts = processed.filter((e: any) => e.status === 'Upcoming').sort((a: any, b: any) => a.fullDate.getTime() - b.fullDate.getTime());
 
-      // Show all events: all upcoming events first (chronological), then all past events (reverse chronological)
-      const allEvents = [...upcomingEvts, ...pastEvts];
+      // First look triad: [closest past, next upcoming, next+1 upcoming]
+      const upcoming1 = upcomingEvts[0];
+      const upcoming2 = upcomingEvts[1];
+      const past1 = pastEvts[0];
+
+      // Build the list starting with the specific triad, then fill with the rest
+      const initialTriad = [
+        ...(past1 ? [past1] : []),
+        ...(upcoming1 ? [upcoming1] : []),
+        ...(upcoming2 ? [upcoming2] : [])
+      ];
+
+      // Filter out items already in the triad to avoid duplicates
+      const remainingUpcoming = upcomingEvts.filter((e: any) => !initialTriad.some((t: any) => t.id === e.id));
+      const remainingPast = pastEvts.filter((e: any) => !initialTriad.some((t: any) => t.id === e.id));
+
+      const allEvents = [...initialTriad, ...remainingUpcoming, ...remainingPast];
 
       const formattedEvents: any[] = allEvents.map((r: any) => ({
         // Always override tag from DB — past events must show "PAST"
@@ -143,15 +160,18 @@ export function Home() {
         image: r.slug === 'ichsa-quarterfinal-4-2026' ? showcasePhoto :
           r.slug === 'spring-showcase-2026' ? ichsaPhoto :
             r.slug === 'icca-quarterfinal-2026' ? icca2026Photo :
-              r.image_url,
+              r.slug === 'icca-quarterfinal-2025' ? icca2025Photo :
+                r.slug === 'winter-showcase-2025' ? winterShowcasePhoto :
+                  r.image_url,
       }));
 
-      // On mobile, ensure the first upcoming event is the starting view if it's not already at index 0
+      // On mobile, ensure the MOST UPCOMING event is the first card (index 0)
       const isMobileDevice = window.innerWidth < 768;
       if (isMobileDevice) {
-        const firstUpcomingIdx = formattedEvents.findIndex(e => e.status === 'Upcoming');
-        if (firstUpcomingIdx > 0) {
-          const [upcoming] = formattedEvents.splice(firstUpcomingIdx, 1);
+        // Find the absolute earliest upcoming event
+        const bestUpcomingIdx = formattedEvents.findIndex(e => e.status === 'Upcoming');
+        if (bestUpcomingIdx > 0) {
+          const [upcoming] = formattedEvents.splice(bestUpcomingIdx, 1);
           formattedEvents.unshift(upcoming);
         }
       }
