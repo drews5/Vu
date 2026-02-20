@@ -103,7 +103,19 @@ function EventCard({ event }: { event: FeaturedEvent }) {
 export function Home() {
   const [items, setItems] = useState<FeaturedEvent[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [visibleCards, setVisibleCards] = useState(1);
   const carouselRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) setVisibleCards(3);
+      else if (window.innerWidth >= 768) setVisibleCards(2);
+      else setVisibleCards(1);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -166,7 +178,6 @@ export function Home() {
     if (items.length === 0) return;
     setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
   };
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   const showArrows = items.length > 1;
   return (
     <div className="pb-0">
@@ -330,18 +341,19 @@ export function Home() {
           </div>
 
           <div className="relative group/carousel px-0">
-            <div className="overflow-visible py-8">
+            <div className="overflow-hidden py-8">
               <motion.div
-                animate={{ x: `-${currentIndex * (isMobile ? 100 : 33.333)}%` }}
+                animate={{ x: `-${currentIndex * (100 / visibleCards)}%` }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="flex gap-4 md:gap-8"
-                style={{
-                  display: 'flex',
-                  width: '100%',
-                }}
+                className="flex"
+                style={{ width: '100%' }}
               >
                 {items.map((event, idx) => (
-                  <div key={idx} className="w-full md:w-[calc(33.333%-1.35rem)] shrink-0 flex items-stretch">
+                  <div
+                    key={idx}
+                    className="shrink-0 px-2 md:px-4 flex items-stretch"
+                    style={{ width: `${100 / visibleCards}%` }}
+                  >
                     <div className="w-full">
                       <EventCard event={event} />
                     </div>
@@ -369,9 +381,9 @@ export function Home() {
               </>
             )}
 
-            {/* Pagination Dots for Mobile */}
+            {/* Pagination Dots for Mobile/Tablet */}
             {items.length > 1 && (
-              <div className="flex justify-center gap-2 mt-5 md:hidden">
+              <div className="flex justify-center gap-2 mt-5 lg:hidden">
                 {items.map((_, idx) => (
                   <button
                     key={idx}
