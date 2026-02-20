@@ -309,6 +309,7 @@ export function Home() {
           marginBottom: '25px',
           borderRadius: '16px',
           background: 'linear-gradient(135deg, #91a8c6 0%, #7A97B7 100%)',
+          overflow: 'hidden'
         }}
       >
         <div className="max-w-6xl mx-auto relative z-10">
@@ -328,8 +329,8 @@ export function Home() {
             </p>
           </div>
 
-          <div className="relative group/carousel px-4">
-            <div className="overflow-hidden px-4 md:px-0 -mx-4 md:mx-0 py-8">
+          <div className="relative group/carousel px-0">
+            <div className="overflow-visible py-8">
               <motion.div
                 animate={{ x: `-${currentIndex * (isMobile ? 100 : 33.333)}%` }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -353,14 +354,14 @@ export function Home() {
               <>
                 <button
                   onClick={prevSlide}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 translate-x-1 md:-translate-x-6 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors"
+                  className="absolute left-4 md:-left-6 top-1/2 -translate-y-1/2 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors"
                   aria-label="Previous slide"
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </button>
                 <button
                   onClick={nextSlide}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1 md:translate-x-6 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors"
+                  className="absolute right-4 md:-right-6 top-1/2 -translate-y-1/2 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors"
                   aria-label="Next slide"
                 >
                   <ChevronRight className="w-6 h-6" />
