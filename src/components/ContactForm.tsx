@@ -133,7 +133,7 @@ export function ContactForm() {
   }, []);
 
   const inputClass =
-    'w-full px-4 py-3 border-2 border-[#A3B8D3] focus:border-[#8FA8C8] focus:outline-none transition-colors';
+    'w-full px-4 py-3 border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-[#8FA8C8] focus:ring-4 focus:ring-[#8FA8C8]/20 focus:outline-none transition-all duration-300';
   const inputStyle = { borderRadius: '12px', ...fontInter, fontSize: '16px' };
 
   return (
@@ -203,7 +203,7 @@ export function ContactForm() {
           <button
             type="submit"
             disabled={status === 'sending'}
-            className="w-full bg-[#8FA8C8] text-white px-8 py-4 border border-[#8FA8C8] hover:bg-[#2B4C6F] hover:border-[#2B4C6F] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-200 hover:shadow-xl disabled:opacity-50 cursor-pointer"
+            className="w-full bg-[#2B4C6F] text-white px-8 py-4 border border-[#2B4C6F] hover:bg-[#8FA8C8] hover:border-[#8FA8C8] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-300 hover:shadow-xl disabled:opacity-50 cursor-pointer"
             style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}
           >
             {status === 'sending' ? 'SENDING...' : 'SEND MESSAGE'}

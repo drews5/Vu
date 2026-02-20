@@ -99,8 +99,8 @@ export function Header() {
 
       {/* Corner Masks - Solid white blocks that extend from screen edges to cut off scrolling content behind rounded corners */}
       <div className="sticky top-0 z-[48] pointer-events-none h-0">
-        <div className="absolute top-[24px] left-0 w-[28px] md:w-[66px] h-[16px] bg-white" />
-        <div className="absolute top-[24px] right-0 w-[28px] md:w-[66px] h-[16px] bg-white" />
+        <div className="absolute top-[24px] left-0 w-[40%] h-[16px] bg-white" />
+        <div className="absolute top-[24px] right-0 w-[40%] h-[16px] bg-white" />
       </div>
 
       <header
@@ -110,7 +110,7 @@ export function Header() {
       >
         <div className="max-w-7xl mx-auto">
           {/* Desktop Layout */}
-          <div className="hidden lg:flex items-center justify-between relative">
+          <div className="hidden md:flex items-center justify-between relative">
             <Link to="/" className="flex items-center">
               <img
                 src={logoImage}
@@ -120,10 +120,10 @@ export function Header() {
             </Link>
 
             <nav className="flex items-center absolute left-1/2 transform -translate-x-1/2">
-              {navItems.map((item) => {
+              {navItems.map((item, index) => {
                 return (
-                  <div key={item.path} className="flex items-center px-4">
-                    <div className="relative py-2 flex flex-col items-center group">
+                  <div key={item.path} className="flex items-center">
+                    <div className="relative py-2 flex flex-col items-center group px-2 lg:px-4">
                       {item.dropdown ? (
                         <div
                           className="relative"
@@ -135,7 +135,7 @@ export function Header() {
                               ? 'text-white'
                               : 'text-white/70 hover:text-white'
                               }`}
-                            style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em' }}
+                            style={{ ...fontYearbook, fontSize: 'clamp(16px, 1.8vw, 22px)', letterSpacing: '0.05em' }}
                           >
                             {item.name}
                           </div>
@@ -178,7 +178,7 @@ export function Header() {
                               ? 'text-white'
                               : 'text-white/70 hover:text-white'
                               }`}
-                            style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em' }}
+                            style={{ ...fontYearbook, fontSize: 'clamp(16px, 1.8vw, 22px)', letterSpacing: '0.05em' }}
                           >
                             {item.name}
                           </Link>
@@ -189,11 +189,14 @@ export function Header() {
                       {(location.pathname === item.path || (item.dropdown && isAboutActive)) && (
                         <motion.div
                           layoutId="navActionIndicator"
-                          className="absolute bottom-2 left-0 right-0 h-[3px] bg-white rounded-full z-20"
+                          className="absolute bottom-0 inset-x-2 lg:inset-x-4 h-[3px] bg-white rounded-full z-20"
                           transition={{ type: "spring", stiffness: 400, damping: 30 }}
                         />
                       )}
                     </div>
+                    {index < navItems.length - 1 && (
+                      <div className="h-6 w-[1px] bg-white/20" />
+                    )}
                   </div>
                 );
               })}
@@ -202,41 +205,6 @@ export function Header() {
             <div className="flex items-center gap-3">
               {socialLinks.map((s) => (
                 <SocialIcon key={s.label} href={s.href} label={s.label} Icon={s.Icon} />
-              ))}
-            </div>
-          </div>
-
-          {/* Tablet Layout (Medium Screens) */}
-          <div className="hidden md:flex lg:hidden items-center justify-between">
-            <Link to="/" className="flex items-center">
-              <img
-                src={logoImage}
-                alt="Vocal U"
-                className="h-12 w-auto hover:scale-105 transition-transform duration-200"
-              />
-            </Link>
-
-            <nav className="flex items-center gap-1">
-              {navItems.map((item, index) => (
-                <div key={item.path} className="flex items-center">
-                  <Link
-                    to={item.path}
-                    className={`px-2 py-1 transition-all duration-200 ${location.pathname === item.path
-                      ? 'text-white'
-                      : 'text-white/90 hover:text-white'
-                      }`}
-                    style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em' }}
-                  >
-                    {item.name}
-                  </Link>
-                  {index < navItems.length - 1 && <div className="h-4 w-[1px] bg-white/30" />}
-                </div>
-              ))}
-            </nav>
-
-            <div className="flex items-center gap-2">
-              {socialLinks.map((s) => (
-                <SocialIcon key={s.label} href={s.href} label={s.label} Icon={s.Icon} size={4} />
               ))}
             </div>
           </div>

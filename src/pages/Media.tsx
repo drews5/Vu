@@ -1,8 +1,8 @@
 import { memo, useEffect, useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 
-import { Instagram, Youtube, ExternalLink, Calendar, MessageCircle } from 'lucide-react';
+import { Instagram, Youtube, ExternalLink, Calendar, MessageCircle, X } from 'lucide-react';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
@@ -53,43 +53,82 @@ const InstagramCard = memo(function InstagramCard({ post }: { post: InstaPost })
   );
 });
 
-const VideoCard = memo(function VideoCard({ item, isHighlighted = false }: { item: any, isHighlighted?: boolean }) {
+const VideoModal = ({ vId, onClose }: { vId: string; onClose: () => void }) => {
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+      />
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        className="relative w-full max-w-5xl aspect-video bg-black shadow-2xl overflow-hidden z-[101]"
+        style={{ borderRadius: '24px' }}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white hover:text-[#8FA8C8] transition-colors z-20"
+        >
+          <X className="w-8 h-8" />
+        </button>
+        <iframe
+          className="w-full h-full border-0"
+          src={`https://www.youtube.com/embed/${vId}?autoplay=1&rel=0`}
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowFullScreen
+          title="Video Player"
+        />
+      </motion.div>
+    </div>
+  );
+};
+
+const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen }: { item: any, isHighlighted?: boolean, onOpen: (vId: string) => void }) {
   const vId = typeof item === 'string' ? item : item.snippet.resourceId.videoId;
   const title = typeof item === 'string' ? 'ICCA 2025 Set: Full Performance' : item.snippet.title;
-  const dateStr = typeof item === 'string' ? 'Feb 2025' : new Date(item.snippet.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const dateStr = typeof item === 'string' ? 'Sept 2025' : new Date(item.snippet.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   return (
     <motion.div
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.99 }}
-      className={`bg-white overflow-hidden border shadow-md transition-[box-shadow,border-color] duration-300 hover:shadow-xl flex flex-col ${isHighlighted ? 'border-[#8FA8C8] ring-4 ring-[#8FA8C8]/20' : 'border-gray-100'
+      onClick={() => onOpen(vId)}
+      className={`group bg-white overflow-hidden border shadow-md transition-[box-shadow,border-color] duration-300 hover:shadow-xl flex flex-col cursor-pointer ${isHighlighted ? 'border-[#8FA8C8] ring-4 ring-[#8FA8C8]/20' : 'border-gray-100'
         }`}
       style={{ borderRadius: '16px' }}
     >
       <div className={`relative bg-black ${isHighlighted ? 'pt-[56.25%]' : 'pt-[56.25%]'}`}>
         {isHighlighted && (
-          <div className="absolute top-4 left-4 z-10">
+          <div className="absolute bottom-4 left-4 z-10">
             <span className="bg-[#8FA8C8] text-white px-4 py-1.5 rounded-full text-[10px] tracking-[0.2em] border border-white/20 font-yearbook" style={fontYearbook}>
-              Upcoming
+              Featured
             </span>
           </div>
         )}
-        <iframe
-          className="absolute top-0 left-0 w-full h-full border-0"
-          src={`https://www.youtube.com/embed/${vId}?rel=0`}
-          allow="autoplay; encrypted-media; picture-in-picture"
-          allowFullScreen
-          title={title}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10 bg-black/20">
+          <div className="bg-white/20 backdrop-blur-md p-4 rounded-full border border-white/30">
+            <Youtube className="w-8 h-8 text-white shadow-xl" />
+          </div>
+        </div>
+        <img
+          src={`https://img.youtube.com/vi/${vId}/maxresdefault.jpg`}
+          alt={title}
+          className="absolute top-0 left-0 w-full h-full object-cover"
         />
       </div>
-      <div className={`p-5 flex-grow flex flex-col justify-between ${isHighlighted ? 'bg-gray-50/50' : ''}`}>
+      <div className={`p-5 flex-grow flex flex-col justify-between transition-colors ${isHighlighted ? 'bg-gray-50/50' : ''}`}>
         <div>
           <div className="flex items-center gap-2 text-[#8FA8C8] mb-2 tracking-wider font-semibold text-[10px]" style={fontInter}>
             <Calendar className="w-3.5 h-3.5" />
             {dateStr}
           </div>
           <h3
-            className={`text-[#2B4C6F] leading-[1.2] font-yearbook line-clamp-2 ${isHighlighted ? 'text-xl' : 'text-lg'}`}
+            className={`text-[#2B4C6F] group-hover:text-[#8FA8C8] transition-colors leading-[1.2] font-yearbook line-clamp-2 ${isHighlighted ? 'text-xl' : 'text-lg'}`}
             style={fontYearbook}
           >
             {title}
@@ -105,11 +144,14 @@ const VideoCard = memo(function VideoCard({ item, isHighlighted = false }: { ite
   );
 });
 
+
+
 export function Media() {
   const [videos, setVideos] = useState<any[]>([]);
   const [instaPosts, setInstaPosts] = useState<InstaPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadFeeds() {
@@ -152,6 +194,10 @@ export function Media() {
 
   return (
     <div className="pb-8 md:pb-16">
+      <AnimatePresence>
+        {activeVideo && <VideoModal vId={activeVideo} onClose={() => setActiveVideo(null)} />}
+      </AnimatePresence>
+
       {/* Header Section */}
       <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
@@ -203,7 +249,7 @@ export function Media() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {/* Highlighted Video */}
-            <VideoCard item="wksl9wmTQio" isHighlighted={true} />
+            <VideoCard item="wksl9wmTQio" isHighlighted={true} onOpen={setActiveVideo} />
 
             {loading ? (
               Array(4).fill(0).map((_, i) => (
@@ -213,11 +259,12 @@ export function Media() {
               <p className="col-span-full text-[#2B4C6F]/60 text-center py-8" style={fontInter}>Unable to load additional videos.</p>
             ) : (
               videos.map((video) => (
-                <VideoCard key={video.id} item={video} />
+                <VideoCard key={video.id} item={video} onOpen={setActiveVideo} />
               ))
             )}
           </div>
         </section>
+
 
         {/* Instagram Column */}
         <section>
@@ -288,6 +335,35 @@ export function Media() {
             <ExternalLink className="w-5 h-5" />
           </Link>
         </motion.div>
+      </section>
+
+      {/* Explore More Navigator */}
+      <section className="mt-24 border-t border-gray-100 pt-16">
+        <h2 className="text-[#2B4C6F] mb-10 text-center font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 36px)' }}>
+          EXPLORE MORE
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { name: 'About Us', path: '/about' },
+            { name: 'Our Members', path: '/members' },
+            { name: 'Support Us', path: '/donate' },
+            { name: 'Join Us', path: '/auditions' }
+          ].map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm hover:shadow-xl transition-all duration-300 text-center"
+              style={{ borderRadius: '20px' }}
+            >
+              <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
+                {item.name}
+              </h3>
+              <p className="text-[#8FA8C8] text-xs mt-2 tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                LEARN MORE →
+              </p>
+            </Link>
+          ))}
+        </div>
       </section>
     </div>
   );

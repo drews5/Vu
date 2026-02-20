@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
@@ -29,7 +30,7 @@ const SongCard = memo(function SongCard({
     <motion.div
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.99 }}
-      className="bg-white p-6 border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] cursor-default group"
+      className="bg-white p-6 border border-[#8FA8C8] shadow-xl -translate-y-1 cursor-default group"
       style={{ borderRadius: '16px' }}
     >
       <h3 className="text-[#2B4C6F] mb-2 group-hover:text-[#8FA8C8] transition-colors font-yearbook" style={{ ...fontYearbook, fontSize: '20px' }}>
@@ -114,6 +115,35 @@ export function About() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: '25px' }}>
           {repertoire.map((song, index) => (
             <SongCard key={index} song={song} />
+          ))}
+        </div>
+      </section>
+
+      {/* Explore More Navigator */}
+      <section className="mt-20 border-t border-gray-100 pt-16">
+        <h2 className="text-[#2B4C6F] mb-10 text-center font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 36px)' }}>
+          EXPLORE MORE
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { name: 'Our Members', path: '/members' },
+            { name: 'Our Media', path: '/media' },
+            { name: 'Support Us', path: '/donate' },
+            { name: 'Join Us', path: '/auditions' }
+          ].map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm hover:shadow-xl transition-all duration-300 text-center"
+              style={{ borderRadius: '20px' }}
+            >
+              <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
+                {item.name}
+              </h3>
+              <p className="text-[#8FA8C8] text-xs mt-2 tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                LEARN MORE →
+              </p>
+            </Link>
           ))}
         </div>
       </section>

@@ -45,7 +45,7 @@ export const Footer = memo(function Footer() {
       style={{ borderRadius: '16px', marginTop: '48px' }}
     >
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-3 gap-4 md:gap-12 mb-8 text-left">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-12 text-left">
           <div className="flex flex-col items-start">
             <img
               src={footerLogo}

@@ -1,8 +1,13 @@
 import { useEffect, useState, memo } from 'react';
 import { Calendar, MapPin, ArrowRight, Clock, Share2, Navigation } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
+import ichsaPhoto from '../assets/ichsa-quarterfinal.jpg';
+import showcasePhoto from '../assets/spring-showcase.jpg';
+import icca2026Photo from '../assets/icca-2026.jpg';
+import icca2025Photo from '../assets/icca-2025.jpg';
+import winterShowcasePhoto from '../assets/winter-showcase.jpg';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
@@ -80,70 +85,72 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
   };
 
   return (
-    <div className="relative">
-      <motion.div
-        whileHover={{ y: -4 }}
-        whileTap={{ scale: 0.99 }}
+    <motion.div
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.99 }}
+      className="relative h-full"
+    >
+      <Link
+        to={`/event/${event.slug}`}
+        className={`group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-2xl flex flex-col md:flex-row h-full md:min-h-64 cursor-pointer ${isUpcoming ? 'ring-1 ring-[#8FA8C8]/30 shadow-md' : 'shadow-sm'
+          }`}
+        style={{ borderRadius: '16px' }}
       >
-        <Link
-          to={`/event/${event.slug}`}
-          className={`group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-2xl flex flex-col md:flex-row h-full md:min-h-64 cursor-pointer ${isUpcoming ? 'ring-1 ring-[#8FA8C8]/30 shadow-md' : 'shadow-sm'
-            }`}
-          style={{ borderRadius: '16px' }}
-        >
-          {/* Image Section */}
-          <div className="relative w-full md:w-80 h-48 md:h-auto overflow-hidden shrink-0">
-            <img
-              src={event.image}
-              alt={event.title}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-              <span className="text-white text-sm font-black flex items-center gap-2">
-                VIEW DETAILS <ArrowRight className="w-4 h-4" />
+        {/* Image Section */}
+        <div className="relative w-full md:w-80 h-48 md:h-auto overflow-hidden shrink-0">
+          <img
+            src={event.image}
+            alt={event.title}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            style={{
+              filter: 'saturate(1.1) contrast(1.1)'
+            }}
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+            <span className="text-white text-sm font-black flex items-center gap-2">
+              VIEW DETAILS <ArrowRight className="w-4 h-4" />
+            </span>
+          </div>
+          {isUpcoming && (
+            <div className="absolute top-4 left-4">
+              <span className="bg-[#8FA8C8] text-white px-4 py-1.5 rounded-full text-[10px] tracking-[0.2em] border border-white/20 font-yearbook" style={fontYearbook}>
+                Upcoming
               </span>
             </div>
-            {isUpcoming && (
-              <div className="absolute top-4 left-4">
-                <span className="bg-[#8FA8C8] text-white px-4 py-1.5 rounded-full text-[10px] tracking-[0.2em] border border-white/20 font-yearbook" style={fontYearbook}>
-                  Upcoming
-                </span>
-              </div>
-            )}
+          )}
+        </div>
+
+        {/* Content Section */}
+        <div className="p-6 md:p-8 pb-24 md:pb-24 flex flex-col flex-grow justify-center relative bg-white">
+          <div className="flex flex-col gap-1 mb-4">
+            <div className="flex items-center gap-2 text-[#8FA8C8] font-bold text-xs tracking-widest" style={fontInter}>
+              <Calendar className="w-3.5 h-3.5" />
+              {event.date}, {event.year}
+            </div>
+            <h3 className="text-[#2B4C6F] text-2xl md:text-3xl leading-tight group-hover:text-[#8FA8C8] transition-colors font-yearbook" style={fontYearbook}>
+              {event.title}
+            </h3>
           </div>
 
-          {/* Content Section */}
-          <div className="p-6 md:p-8 pb-20 md:pb-24 flex flex-col flex-grow justify-center relative bg-white">
-            <div className="flex flex-col gap-1 mb-4">
-              <div className="flex items-center gap-2 text-[#8FA8C8] font-bold text-xs tracking-widest" style={fontInter}>
-                <Calendar className="w-3.5 h-3.5" />
-                {event.date}, {event.year}
-              </div>
-              <h3 className="text-[#2B4C6F] text-2xl md:text-3xl leading-tight group-hover:text-[#8FA8C8] transition-colors font-yearbook" style={fontYearbook}>
-                {event.title}
-              </h3>
+          <div className="flex flex-wrap gap-y-2 gap-x-6 text-[#2B4C6F]/60 text-sm mb-4" style={fontInter}>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-[#8FA8C8]/60" />
+              {event.time}
             </div>
-
-            <div className="flex flex-wrap gap-y-2 gap-x-6 text-[#2B4C6F]/60 text-sm mb-4" style={fontInter}>
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#8FA8C8]/60" />
-                {event.time}
-              </div>
-              <div className="flex items-center gap-2 max-w-xs">
-                <MapPin className="w-4 h-4 text-[#8FA8C8]/60 shrink-0" />
-                <span className="truncate">{event.location}</span>
-              </div>
+            <div className="flex items-center gap-2 max-w-xs">
+              <MapPin className="w-4 h-4 text-[#8FA8C8]/60 shrink-0" />
+              <span className="truncate">{event.location}</span>
             </div>
-
-            <p className="text-[#2B4C6F]/70 text-sm line-clamp-2 md:line-clamp-3 leading-relaxed max-w-2xl" style={fontInter}>
-              {event.description}
-            </p>
           </div>
-        </Link>
-      </motion.div>
 
-      {/* Action Buttons Layered Over */}
+          <p className="text-[#2B4C6F]/70 text-sm line-clamp-2 md:line-clamp-3 leading-relaxed max-w-2xl" style={fontInter}>
+            {event.description}
+          </p>
+        </div>
+      </Link>
+
+      {/* Action Buttons Layered Over - Inside motion.div now */}
       {isUpcoming && (
         <div className="absolute bottom-6 left-6 right-6 md:bottom-8 md:right-8 md:left-auto flex flex-wrap gap-3 z-10">
           <motion.a
@@ -156,7 +163,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
             className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/40 transition-all duration-200 border border-[#8FA8C8]/20 group/btn shadow-md cursor-pointer"
           >
             <Calendar className="w-4 h-4" />
-            <span className="text-[11px] font-bold tracking-wider" style={fontInter}>Add to Calendar</span>
+            <span className="text-[11px] font-normal tracking-wider" style={fontInter}>Add to Calendar</span>
           </motion.a>
           <motion.a
             href={getNavigationUrl()}
@@ -168,7 +175,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
             className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/40 transition-all duration-200 border border-[#8FA8C8]/20 shadow-md cursor-pointer"
           >
             <Navigation className="w-4 h-4" />
-            <span className="text-[11px] font-bold tracking-wider" style={fontInter}>Navigate</span>
+            <span className="text-[11px] font-normal tracking-wider" style={fontInter}>Navigate</span>
           </motion.a>
           <motion.button
             onClick={handleShare}
@@ -177,11 +184,44 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
             className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2.5 rounded-full hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/40 transition-all duration-200 border border-[#8FA8C8]/20 shadow-md cursor-pointer"
           >
             <Share2 className="w-4 h-4" />
-            <span className="text-[11px] font-bold tracking-wider" style={fontInter}>Share</span>
+            <span className="text-[11px] font-normal tracking-wider" style={fontInter}>Share</span>
           </motion.button>
         </div>
       )}
-    </div>
+    </motion.div>
+  );
+});
+
+const PastEventCard = memo(function PastEventCard({ event }: { event: Event }) {
+  return (
+    <motion.div
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.98 }}
+      className="h-full"
+    >
+      <Link
+        to={`/event/${event.slug}`}
+        className="flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full group"
+      >
+        <div className="relative aspect-video overflow-hidden">
+          <img
+            src={event.image}
+            alt={event.title}
+            className="w-full h-full object-cover transition-all duration-500 transform group-hover:scale-110"
+            style={{ filter: 'saturate(1.1) contrast(1.1)' }}
+            loading="lazy"
+          />
+        </div>
+        <div className="p-5 flex flex-col flex-grow">
+          <div className="flex items-center gap-2 text-[#8FA8C8] font-bold text-[10px] tracking-[0.2em] mb-2 uppercase" style={fontInter}>
+            {event.date}, {event.year}
+          </div>
+          <h3 className="text-[#2B4C6F] text-lg font-yearbook leading-tight group-hover:text-[#8FA8C8] transition-colors line-clamp-2" style={fontYearbook}>
+            {event.title}
+          </h3>
+        </div>
+      </Link>
+    </motion.div>
   );
 });
 
@@ -211,8 +251,12 @@ export function Events() {
             location: r.location,
             address: r.address,
             description: r.description,
-            image: r.image_url,
-            status: d > new Date() ? 'Upcoming' : 'Previous',
+            image: r.slug === 'ichsa-quarterfinal-4-2026' ? showcasePhoto :
+              r.slug === 'spring-showcase-2026' ? ichsaPhoto :
+                r.slug === 'icca-quarterfinal-2026' ? icca2026Photo :
+                  r.slug === 'icca-quarterfinal-2025' ? icca2025Photo :
+                    r.slug === 'winter-showcase-2025' ? winterShowcasePhoto : r.image_url,
+            status: new Date(d.setHours(23, 59, 59, 999)) >= new Date() ? 'Upcoming' : 'Previous',
             fullDate: d
           };
         });
@@ -238,8 +282,8 @@ export function Events() {
             >
               Events
             </h1>
-            <p className="text-white/90 font-medium tracking-wide text-xs md:text-base" style={fontInter}>
-              Join us for live performances, workshops, and more.
+            <p className="text-white/90 tracking-wide text-xs md:text-base" style={fontInter}>
+              Join us for live performances, competitions, and more.
             </p>
           </div>
         </div>
@@ -263,6 +307,7 @@ export function Events() {
                 <div className="grid grid-cols-1 gap-8">
                   {events
                     .filter((e) => e.status === 'Upcoming')
+                    .sort((a, b) => (a.fullDate?.getTime() || 0) - (b.fullDate?.getTime() || 0))
                     .map((event) => (
                       <UnifiedEventCard key={event.id} event={event} />
                     ))}
@@ -277,11 +322,12 @@ export function Events() {
                 </h2>
                 <div className="h-[1px] bg-[#8FA8C8]/20 flex-grow" />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-8">
                 {events
                   .filter((e) => e.status === 'Previous')
                   .map((event) => (
-                    <UnifiedEventCard key={event.id} event={event} />
+                    <PastEventCard key={event.id} event={event} />
                   ))}
               </div>
             </section>

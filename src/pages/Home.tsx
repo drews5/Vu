@@ -1,7 +1,9 @@
 import { Helmet } from 'react-helmet-async';
-import heroBackground from 'figma:asset/15a7da513ab99cbb57e9735db4d4d232088838f1.png';
 import fullLogo from 'figma:asset/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
-import groupPhoto from 'figma:asset/8b7d52033414d4d2f0999bc47a30f6af9f485f36.png';
+import heroBackground from 'figma:asset/15a7da513ab99cbb57e9735db4d4d232088838f1.png';
+import ichsaPhoto from '../assets/ichsa-quarterfinal.jpg';
+import showcasePhoto from '../assets/spring-showcase.jpg';
+import groupPhoto from '../assets/group-photo.jpg';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar, MapPin } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -81,10 +83,11 @@ function EventCard({ event }: { event: FeaturedEvent }) {
     <motion.div
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
+      className="h-full"
     >
       <Link
         to={event.link}
-        className="group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] flex flex-col cursor-pointer"
+        className="group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] flex flex-col h-full cursor-pointer"
         style={{ borderRadius: '16px' }}
       >
         {content}
@@ -106,30 +109,20 @@ export function Home() {
         .order('date', { ascending: false })
         .limit(3);
 
-      // Fetch Instagram Posts for images
-      let instaPhotos: string[] = [];
-      try {
-        const res = await fetch('https://feeds.behold.so/rWuujcErcs5hcWQ5MPPw');
-        const data = await res.json();
-        if (data.posts) {
-          instaPhotos = data.posts.map((post: any) => post.mediaUrl);
-        }
-      } catch (err) {
-        console.error('Error fetching Instagram for Home:', err);
-      }
-
       if (eventsError) {
         console.error('Error fetching featured events:', eventsError);
       }
 
-      const formattedEvents = (eventsData || []).map((r: any, idx: number) => ({
+      const formattedEvents = (eventsData || []).map((r: any) => ({
         tag: r.tag || 'Event',
         date: new Date(r.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         title: r.title,
         location: r.location,
         link: `/event/${r.slug}`,
-        // Use Instagram photo if available, otherwise fallback to database image
-        image: instaPhotos[idx] || r.image_url,
+        // Use local high-res photo for specific events, otherwise fallback to DB
+        image: r.slug === 'ichsa-quarterfinal-4-2026' ? showcasePhoto :
+          r.slug === 'spring-showcase-2026' ? ichsaPhoto :
+            r.image_url,
       }));
 
       setItems(formattedEvents);
@@ -208,7 +201,7 @@ export function Home() {
 
       {/* We Are Vocal U Section */}
       <section
-        className="bg-gray-50 border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center"
+        className="bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center shadow-sm hover:shadow-md transition-shadow duration-300"
         style={{ gap: '25px', marginBottom: '25px', borderRadius: '16px' }}
       >
         <div>
@@ -249,11 +242,11 @@ export function Home() {
           >
             <Link
               to="/about"
-              className="inline-flex items-center gap-2 bg-[#8FA8C8] text-white px-8 py-3 hover:bg-[#2B4C6F] hover:shadow-xl transition-all duration-200 group cursor-pointer font-yearbook"
+              className="inline-flex items-center gap-2 bg-[#2B4C6F] text-white px-8 py-3 border border-[#2B4C6F] hover:bg-white hover:text-[#2B4C6F] hover:shadow-xl transition-all duration-300 group cursor-pointer font-yearbook"
               style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}
             >
               Learn More
-              <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
+              <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </motion.div>
         </div>
@@ -266,7 +259,7 @@ export function Home() {
             src={groupPhoto}
             alt="Vocal U Group Members"
             className="w-full h-[300px] md:h-[500px] object-cover"
-            style={{ filter: 'brightness(1.02) saturate(1.02)' }}
+            style={{ filter: 'brightness(1.08) saturate(1.05)' }}
             loading="lazy"
           />
         </div>
@@ -293,15 +286,19 @@ export function Home() {
             >
               Events
             </h2>
-            <p className="text-white/90 font-medium tracking-wide text-xs md:text-base" style={fontInter}>
-              Join us for live performances, workshops, and more.
+            <p className="text-white/90 font-normal tracking-wide text-xs md:text-base" style={fontInter}>
+              Join us for live performances, competitions, and more.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-10">
-            {items.map((event, idx) => (
-              <EventCard key={idx} event={event} />
-            ))}
+          <div className="relative -mx-6 md:-mx-12 px-6 md:px-12 overflow-x-auto pb-8 hide-scrollbar">
+            <div className="flex gap-6 min-w-max h-full">
+              {items.map((event, idx) => (
+                <div key={idx} className="w-[85vw] md:w-[350px] min-h-[380px] h-full">
+                  <EventCard event={event} />
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="text-center">

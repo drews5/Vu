@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 import { memo, useEffect, useState, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
 import { Instagram, Music } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import { motion } from 'motion/react';
@@ -30,7 +31,7 @@ const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
 
   return (
     <div
-      className="bg-white p-3 border border-[#8FA8C8] flex flex-col items-center text-center relative overflow-hidden shadow-xl w-full"
+      className="bg-white p-3 border border-[#8FA8C8] flex flex-col items-center text-center relative overflow-hidden shadow-lg w-full group"
       style={{ borderRadius: '12px' }}
     >
       {!isDaniel && member.is_vp && (
@@ -40,7 +41,7 @@ const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
       )}
 
       {/* Photo Container - Rounded Rectangle */}
-      <div className="w-full aspect-[4/5] bg-[#91a8c6]/10 mb-3 overflow-hidden border border-gray-50 relative" style={{ borderRadius: '8px' }}>
+      <div className="w-full aspect-[4/5] bg-gradient-to-br from-gray-50 to-gray-100 mb-3 overflow-hidden border border-gray-100 relative scale-[1.02]" style={{ borderRadius: '8px' }}>
         {member.photo ? (
           <img
             src={member.photo}
@@ -244,6 +245,35 @@ export function Members() {
           })}
         </div>
       )}
+
+      {/* Explore More Navigator */}
+      <section className="mt-24 border-t border-gray-100 pt-16">
+        <h2 className="text-[#2B4C6F] mb-10 text-center font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 36px)' }}>
+          EXPLORE MORE
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { name: 'About Us', path: '/about' },
+            { name: 'Our Media', path: '/media' },
+            { name: 'Support Us', path: '/donate' },
+            { name: 'Join Us', path: '/auditions' }
+          ].map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm hover:shadow-xl transition-all duration-300 text-center"
+              style={{ borderRadius: '20px' }}
+            >
+              <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
+                {item.name}
+              </h3>
+              <p className="text-[#8FA8C8] text-xs mt-2 tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                LEARN MORE →
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

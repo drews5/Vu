@@ -3,6 +3,11 @@ import { Calendar, MapPin, Clock, Share2, Navigation, ArrowLeft } from 'lucide-r
 import { useParams, Link } from 'react-router-dom';
 
 import { supabase } from '../utils/supabase';
+import ichsaPhoto from '../assets/ichsa-quarterfinal.jpg';
+import showcasePhoto from '../assets/spring-showcase.jpg';
+import icca2026Photo from '../assets/icca-2026.jpg';
+import icca2025Photo from '../assets/icca-2025.jpg';
+import winterShowcasePhoto from '../assets/winter-showcase.jpg';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
@@ -49,7 +54,11 @@ export function EventDetail() {
           address: data.address,
           description: data.description,
           ticketLink: data.ticket_link,
-          imageUrl: data.image_url,
+          imageUrl: data.slug === 'ichsa-quarterfinal-4-2026' ? showcasePhoto :
+            data.slug === 'spring-showcase-2026' ? ichsaPhoto :
+              data.slug === 'icca-quarterfinal-2026' ? icca2026Photo :
+                data.slug === 'icca-quarterfinal-2025' ? icca2025Photo :
+                  data.slug === 'winter-showcase-2025' ? winterShowcasePhoto : data.image_url,
           fullDate: d,
           status: data.status,
         });
@@ -145,7 +154,14 @@ export function EventDetail() {
                 <div className="lg:col-span-2 space-y-8">
                   {event.imageUrl && (
                     <div className="relative rounded-2xl overflow-hidden border border-gray-100">
-                      <img src={event.imageUrl} alt={event.title} className="w-full h-auto object-cover max-h-[500px]" />
+                      <img
+                        src={event.imageUrl}
+                        alt={event.title}
+                        className="w-full h-auto object-cover max-h-[500px]"
+                        style={{
+                          filter: 'saturate(1.1) contrast(1.1)'
+                        }}
+                      />
                       {isUpcoming && (
                         <div className="absolute top-6 left-6">
                           <span className="bg-[#8FA8C8] text-white px-6 py-2 rounded-full text-xs tracking-widest" style={fontYearbook}>Upcoming</span>
@@ -184,15 +200,17 @@ export function EventDetail() {
                         <Calendar className="w-5 h-5 text-[#8FA8C8]" /> Add to Calendar
                       </a>
                     )}
-                    <a
-                      href={getNavigationUrl()}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-3 hover:border-[#8FA8C8] hover:translate-x-0.5 hover:shadow-lg active:scale-[0.97] transition-all duration-200 cursor-pointer"
-                      style={fontInter}
-                    >
-                      <Navigation className="w-5 h-5 text-[#8FA8C8]" /> Navigate to Venue
-                    </a>
+                    {isUpcoming && (
+                      <a
+                        href={getNavigationUrl()}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-3 hover:border-[#8FA8C8] hover:translate-x-0.5 hover:shadow-lg active:scale-[0.97] transition-all duration-200 cursor-pointer"
+                        style={fontInter}
+                      >
+                        <Navigation className="w-5 h-5 text-[#8FA8C8]" /> Navigate to Venue
+                      </a>
+                    )}
                     <button
                       onClick={handleShare}
                       className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-3 hover:border-[#8FA8C8] hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.97] transition-all duration-200 cursor-pointer"

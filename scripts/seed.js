@@ -107,40 +107,101 @@ async function setupAndSeed() {
   // 2. Seed Events
   const events = [
     {
-      slug: 'icca-quarterfinal-2026',
-      title: 'ICCA Quarterfinal Competition',
-      date: '2026-02-15T19:00:00Z',
-      location: 'Ted Mann Concert Hall',
-      address: '2128 S 4th St, Minneapolis, MN 55455',
-      description: 'Join Vocal U as we compete in the ICCA Quarterfinals!',
-      tag: 'MOST RECENT',
-      status: 'Previous',
-      is_featured: true,
-      image_url: 'https://images.unsplash.com/photo-1760539619770-f58d0588db9e'
-    },
-    {
       slug: 'spring-showcase-2026',
       title: 'Spring Showcase',
-      date: '2026-03-22T18:00:00Z',
-      location: 'Northrop Auditorium',
-      address: '84 Church St SE, Minneapolis, MN 55455',
-      description: 'Our annual Spring Showcase is back!',
+      date: '2026-05-02T19:30:00Z',
+      display_time: '7:30 PM',
+      location: 'Cowles Auditorium',
+      address: 'Humphrey School of Public Affairs, 301 19th Ave S, Minneapolis, MN 55455',
+      description: 'Our annual Spring Showcase is back! Join us for an evening of music and performances.',
       tag: 'UPCOMING',
       status: 'Upcoming',
       is_featured: true,
-      image_url: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae'
+      image_url: 'spring-showcase.jpg',
+      ticket_link: null
+    },
+    {
+      slug: 'ichsa-quarterfinal-4-2026',
+      title: '2026 ICHSA Great Lakes Quarterfinal 4',
+      date: '2026-02-21T19:00:00Z',
+      display_time: '7:00 PM — 10:00 PM',
+      location: 'Lakeville South High School',
+      address: '21135 Jacquard Ave, Lakeville, MN 55044',
+      description: `Featuring:
+The AHS Accidentals (Arcadia High School)
+The Accidentals (Southwest Christian High School)
+Encore (Lakeville South High School)
+Knight Club (Oak Creek High School)
+Noteworthy (Jordan High School)
+Out of the Blue (Gale-Ettrick-Trempealeau High School)
+Red Knotes (Benilde-St. Margaret's High School)
+Tonal Recall (Shell Lake High School)
+Vocal Point (Gale-Ettrick-Trempealeau High School)
+
+The top two finishing groups from this quarterfinal will advance to the ICHSA Great Lakes Semifinal. We invite you to Instagram this event using #ICHSA. Thanks!`,
+      tag: 'UPCOMING',
+      status: 'Upcoming',
+      is_featured: true,
+      image_url: 'ichsa-quarterfinal.jpg',
+      ticket_link: 'https://www.varsityvocals.com/events/2026-ichsa-gl-qf4-lakeville-hs'
+    },
+    {
+      slug: 'icca-quarterfinal-2026',
+      title: '2026 ICCA Great Lakes Quarterfinal',
+      date: '2026-02-14T19:00:00Z',
+      display_time: '7:00 PM',
+      location: 'Memorial Union',
+      address: '800 Langdon St, Madison, WI 53706',
+      description: 'Join Vocal U as we compete in the ICCA Great Lakes Quarterfinal in Madison!',
+      tag: 'COMPETITION',
+      status: 'Previous',
+      is_featured: true,
+      image_url: 'icca-2026.jpg'
+    },
+    {
+      slug: 'icca-quarterfinal-2025',
+      title: '2025 ICCA Great Lakes Quarterfinal',
+      date: '2025-03-01T19:00:00Z',
+      display_time: '7:00 PM',
+      location: 'Memorial Union',
+      address: '800 Langdon St, Madison, WI 53706',
+      description: 'Our 2025 ICCA Quarterfinal performance in Madison.',
+      tag: 'PAST COMPETITION',
+      status: 'Previous',
+      is_featured: true,
+      image_url: 'icca-2025.jpg'
+    },
+    {
+      slug: 'the-mix-2026',
+      title: 'The Mix 2026!',
+      date: '2026-05-15T18:00:00Z',
+      display_time: '6:00 PM – 11:00 PM',
+      location: 'O’Shaughnessy Distilling Co.',
+      address: '600 Malcolm Ave. SE Minneapolis, MN 55414',
+      description: `Join us for an unforgettable evening of generosity, connection, and celebration — The Mix 2026!
+
+Hosted by Custom One Charities, this signature event brings together community leaders, partners, and friends to raise critical funds for families and children across Minnesota. Guests will enjoy live entertainment, craft cocktails, chef-inspired bites, live and silent auctions and one incredible cause.
+
+The evening’s live entertainment includes a special performance by Vocal U, followed by an interactive magician and mind reader. The night concludes with a DJ-led after-party.
+
+Dress Code: Stylish, warm, and sophisticated (tailored jackets, blazers, cocktail dresses).`,
+      tag: 'UPCOMING',
+      status: 'Upcoming',
+      is_featured: true,
+      image_url: 'https://customonemn.com/wp-content/uploads/2024/11/The-Mix-Banners_Desktop.png'
     },
     {
       slug: 'winter-showcase-2025',
       title: 'Vocal U Winter Showcase',
       date: '2025-12-06T19:30:00Z',
+      display_time: '7:30 PM',
       location: 'Cowles Auditorium',
       address: '301 19th Ave S, Minneapolis, MN 55455',
       description: 'A highlight of our winter season.',
       tag: 'HIGHLIGHT',
       status: 'Previous',
       is_featured: true,
-      image_url: 'https://images.unsplash.com/photo-1689018161278-4e363b0c4a81'
+      image_url: 'winter-showcase.jpg'
     }
   ];
 
@@ -153,7 +214,7 @@ async function setupAndSeed() {
     const slots = [];
     const startHour = 18; // 6 PM
     const endHour = 21; // 9 PM
-    
+
     let totalMinutes = 0;
     const durationMinutes = (endHour - startHour) * 60;
 
@@ -161,14 +222,14 @@ async function setupAndSeed() {
       const hour24 = startHour + Math.floor(totalMinutes / 60);
       const minute = totalMinutes % 60;
       const time = `${hour24 > 12 ? hour24 - 12 : hour24}:${minute === 0 ? '00' : minute < 10 ? '0' + minute : minute} PM`;
-      
+
       // Add a break every 45 minutes
       if (totalMinutes > 0 && totalMinutes % 45 === 0) {
         slots.push({ day, time, status: 'Break' });
       } else {
         slots.push({ day, time, status: 'Available' });
       }
-      
+
       totalMinutes += 5; // Move to next 5-min slot
     }
     return slots;

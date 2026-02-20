@@ -1,52 +1,13 @@
 import { memo } from 'react';
 import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
 import { Heart, DollarSign, Star, Check } from 'lucide-react';
 import logoImage from 'figma:asset/d4630c01b543cc75980f0b293230859d29654fbb.png';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 
-const tiers = [
-  { title: 'Friend of VU', amount: '$25', description: 'Covers sheet music for one group member.', Icon: Heart },
-  { title: 'Music Maker', amount: '$50', description: 'Helps us purchase new arrangements.', Icon: Star },
-  { title: 'Patron', amount: '$100+', description: 'Supports our travel to competitions like ICCA.', Icon: DollarSign },
-];
 
-const TierCard = memo(function TierCard({
-  tier,
-}: {
-  tier: { title: string; amount: string; description: string; Icon: React.ComponentType<{ className?: string }> };
-}) {
-  return (
-    <motion.div
-      whileHover={{ y: -6 }}
-      whileTap={{ scale: 0.98 }}
-      className="bg-white p-8 shadow-lg text-center flex flex-col items-center transition-[box-shadow,border-color] duration-300 hover:shadow-2xl hover:border-[#8FA8C8]"
-      style={{ borderRadius: '20px' }}
-    >
-      <div className="bg-[#91a8c6]/10 p-4 rounded-full mb-4">
-        <tier.Icon className="w-8 h-8 text-[#91a8c6]" />
-      </div>
-      <h3 className="text-[#2B4C6F] text-2xl mb-2 font-yearbook" style={fontYearbook}>
-        {tier.title}
-      </h3>
-      <div className="text-[#8FA8C8] text-4xl mb-4 font-yearbook" style={fontYearbook}>
-        {tier.amount}
-      </div>
-      <p className="text-[#2B4C6F]/70 mb-6" style={{ fontFamily: 'Inter, sans-serif' }}>
-        {tier.description}
-      </p>
-      <motion.button
-        whileHover={{ y: -2 }}
-        whileTap={{ scale: 0.95 }}
-        className="w-full bg-[#8FA8C8] text-white py-3 tracking-widest hover:bg-[#2B4C6F] transition-all duration-300 cursor-pointer font-yearbook shadow-md"
-        style={{ borderRadius: '15px', ...fontYearbook }}
-      >
-        Donate
-      </motion.button>
-    </motion.div>
-  );
-});
 
 export function Donate() {
   return (
@@ -64,7 +25,7 @@ export function Donate() {
             Support Us
           </h1>
           <p className="mt-2 max-w-2xl mx-auto text-sm md:text-base opacity-90" style={{ fontFamily: 'Inter, sans-serif' }}>
-            Vocal U is a self-funded student organization. Your donations help us cover travel, recording
+            Vocal U is a self-funded student organization. Your donations help us cover travel, event
             costs, and competition fees.
           </p>
         </div>
@@ -184,23 +145,47 @@ export function Donate() {
                   <Star className="w-6 h-6 text-[#8FA8C8]" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-[#2B4C6F] text-lg mb-1">Corporate Matching</h3>
+                  <h3 className="font-bold text-[#2B4C6F] text-lg mb-1">Book Us for a Gig</h3>
                   <p className="text-[#2B4C6F]/70 text-sm leading-relaxed">
-                    Check if your employer matches donations to student organizations or non-profits.
+                    Have us perform at your next event! We love collaborating with other groups and performing for the community.
                   </p>
                 </div>
               </div>
 
-              <div className="bg-gray-50 p-6 rounded-xl">
-                <p className="text-[11px] text-gray-400 tracking-widest font-bold mb-2">Note</p>
-                <p className="text-xs text-[#2B4C6F]/60 leading-relaxed italic">
-                  Vocal U is a self-funded student organization. Every contribution goes directly toward our music and performances.
-                </p>
-              </div>
+
             </div>
           </div>
         </div>
       </div>
+
+      {/* Explore More Navigator */}
+      <section className="mt-24 border-t border-gray-100 pt-16">
+        <h2 className="text-[#2B4C6F] mb-10 text-center font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 36px)' }}>
+          EXPLORE MORE
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { name: 'About Us', path: '/about' },
+            { name: 'Our Members', path: '/members' },
+            { name: 'Our Media', path: '/media' },
+            { name: 'Join Us', path: '/auditions' }
+          ].map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm hover:shadow-xl transition-all duration-300 text-center"
+              style={{ borderRadius: '20px' }}
+            >
+              <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
+                {item.name}
+              </h3>
+              <p className="text-[#8FA8C8] text-xs mt-2 tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                LEARN MORE →
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
