@@ -45,15 +45,15 @@ export const Footer = memo(function Footer() {
       style={{ borderRadius: '16px', marginTop: '48px' }}
     >
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-12 text-left">
-          <div className="flex flex-col items-start">
+        <div className="grid grid-cols-1 md:grid-cols-[4fr_3fr_3fr] gap-8 md:gap-12 mb-12 text-left">
+          <div className="flex flex-col items-start pr-4">
             <img
               src={footerLogo}
               alt="Vocal U"
               className="h-8 md:h-16 w-auto mb-3 md:mb-4"
               loading="lazy"
             />
-            <p className="text-white/70 text-[9px] md:text-sm leading-relaxed">
+            <p className="text-white/70 text-[9px] md:text-sm leading-relaxed max-w-sm">
               Gender-inclusive a cappella at the University of Minnesota, established in 2011.
             </p>
           </div>
@@ -103,7 +103,7 @@ export const Footer = memo(function Footer() {
                 </span>
               </button>
             </div>
-            <div className="flex gap-2 md:gap-3 flex-wrap">
+            <div className="grid grid-cols-2 gap-3">
               {socialIcons.map((s) => (
                 <motion.a
                   key={s.label}
@@ -112,10 +112,10 @@ export const Footer = memo(function Footer() {
                   rel="noopener noreferrer"
                   whileHover={{ y: -2, scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  className="bg-white/10 p-1 md:p-2.5 rounded-full hover:bg-[#8FA8C8]/20 hover:text-[#8FA8C8] transition-all duration-200 cursor-pointer"
+                  className="bg-white/10 p-2 md:p-3 rounded-full hover:bg-[#8FA8C8]/20 hover:text-[#8FA8C8] transition-all duration-200 cursor-pointer flex items-center justify-center aspect-square"
                   aria-label={s.label}
                 >
-                  <s.Icon className="w-3 h-3 md:w-5 md:h-5" />
+                  <s.Icon className="w-3.5 h-3.5 md:w-5 md:h-5" />
                 </motion.a>
               ))}
             </div>
