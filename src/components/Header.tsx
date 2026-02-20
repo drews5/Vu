@@ -98,13 +98,13 @@ export function Header() {
       <div className="fixed top-0 left-0 right-0 h-[24px] bg-white z-[45] pointer-events-none" />
 
       {/* Corner Masks - Solid white blocks that extend from screen edges to cut off scrolling content behind rounded corners */}
-      <div className="sticky top-0 z-[48] pointer-events-none h-0">
+      <div className="sticky top-0 z-[48] pointer-events-none h-0 mx-3 md:mx-0">
         <div className="absolute top-[24px] left-0 w-[40%] h-[16px] bg-white" />
         <div className="absolute top-[24px] right-0 w-[40%] h-[16px] bg-white" />
       </div>
 
       <header
-        className={`w-full mt-[25px] px-4 md:px-8 py-4 border border-white/20 shadow-sm sticky top-6 z-50 transition-all duration-300 ${isScrolled ? 'bg-[#8FA8C8]/90 backdrop-blur-md shadow-md' : 'bg-[#8FA8C8] shadow-sm'
+        className={`mt-[25px] mx-3 md:mx-0 px-4 md:px-8 py-4 border border-white/20 shadow-sm sticky top-6 z-50 transition-all duration-300 ${isScrolled ? 'bg-[#8FA8C8]/90 backdrop-blur-md shadow-md' : 'bg-[#8FA8C8] shadow-sm'
           }`}
         style={{ borderRadius: '16px' }}
       >

@@ -187,7 +187,7 @@ export function Home() {
         <link rel="canonical" href="https://vocalu.org/" />
       </Helmet>
       {/* Hero Section */}
-      <section style={{ marginTop: '25px', marginBottom: '25px' }}>
+      <section className="mx-3 md:mx-0" style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
           className="relative overflow-hidden border border-gray-100 shadow-sm"
           style={{ borderRadius: '16px', height: '576px' }}
@@ -249,7 +249,7 @@ export function Home() {
 
       {/* We Are Vocal U Section */}
       <section
-        className="bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center shadow-sm hover:shadow-md transition-shadow duration-300"
+        className="bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center shadow-sm hover:shadow-md transition-shadow duration-300 mx-3 md:mx-0"
         style={{ gap: '25px', marginBottom: '25px', borderRadius: '16px' }}
       >
         <div>
