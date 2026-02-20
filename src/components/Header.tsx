@@ -55,13 +55,23 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Check auth status
+    const authStatus = localStorage.getItem('vu_portal_auth');
+    if (authStatus === 'true') {
+      setIsAuthenticated(true);
+    }
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
   const closeMobileMenu = useCallback(() => {
     setMobileMenuOpen(false);
     setAboutDropdownOpen(false);
@@ -203,6 +213,27 @@ export function Header() {
           </div>
         </div>
       </header>
+
+      {/* Member Ribbon */}
+      <AnimatePresence>
+        {isAuthenticated && (
+          <motion.div
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: -4, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30, delay: 0.5 }}
+            className="sticky top-[86px] md:top-[94px] mx-auto z-40 px-4 md:px-8 pointer-events-none"
+          >
+            <Link
+              to="/portal"
+              className="block bg-[#2B4C6F] text-white py-1 px-4 text-center rounded-b-xl shadow-[0_0_15px_rgba(43,76,111,0.3)] animate-pulse pointer-events-auto hover:bg-[#1a3249] transition-colors border-x border-b border-white/20 max-w-fit mx-auto"
+              style={{ fontSize: '11px', letterSpacing: '0.05em', fontFamily: 'Inter, sans-serif' }}
+            >
+              Hello, Returning Vocal U Member! <span className="underline ml-1 font-bold">Go to Portal &rarr;</span>
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

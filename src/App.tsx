@@ -12,6 +12,7 @@ const Events = lazy(() => import('./pages/Events').then(m => ({ default: m.Event
 const EventDetail = lazy(() => import('./pages/EventDetail').then(m => ({ default: m.EventDetail })));
 const Contact = lazy(() => import('./pages/Contact').then(m => ({ default: m.Contact })));
 const Auditions = lazy(() => import('./pages/Auditions').then(m => ({ default: m.Auditions })));
+const Portal = lazy(() => import('./pages/Portal').then(m => ({ default: m.Portal })));
 function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
@@ -29,12 +30,15 @@ function ScrollToTop() {
 function AppContent() {
   const location = useLocation();
   const isAuditionsPage = location.pathname === '/auditions';
+  const isPortalPage = location.pathname === '/portal';
+  const hideHeaderFooter = isAuditionsPage || isPortalPage;
+
   return (
     <div className="min-h-screen bg-white">
       <ScrollToTop />
       <Analytics />
       <div className="max-w-[1440px] mx-auto px-3 md:px-[50px]">
-        {!isAuditionsPage && <Header />}
+        {!hideHeaderFooter && <Header />}
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -46,9 +50,10 @@ function AppContent() {
             <Route path="/event/:eventId" element={<EventDetail />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/auditions" element={<Auditions />} />
+            <Route path="/portal" element={<Portal />} />
           </Routes>
         </Suspense>
-        {!isAuditionsPage && <Footer />}
+        {!hideHeaderFooter && <Footer />}
       </div>
     </div>
   );

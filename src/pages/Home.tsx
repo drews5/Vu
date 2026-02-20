@@ -200,12 +200,14 @@ export function Home() {
           />
           <div className="absolute inset-0 flex flex-col justify-between items-center py-8 md:py-12 px-4">
             <div className="flex-shrink-0">
-              <img
-                src={fullLogo}
-                alt="Vocal U - University of Minnesota's A Cappella Group"
-                className="w-full max-w-[264px] md:max-w-[330px]"
-                style={{ filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3))' }}
-              />
+              <Link to="/portal" className="cursor-default outline-none" draggable={false}>
+                <img
+                  src={fullLogo}
+                  alt="Vocal U - University of Minnesota's A Cappella Group"
+                  className="w-full max-w-[264px] md:max-w-[330px]"
+                  style={{ filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3))' }}
+                />
+              </Link>
             </div>
 
             <div className="flex-grow" />
