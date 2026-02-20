@@ -127,26 +127,9 @@ export function Home() {
         };
       });
 
-      const pastEvts = processed.filter((e: any) => e.status === 'Previous').sort((a: any, b: any) => b.fullDate.getTime() - a.fullDate.getTime());
-      const upcomingEvts = processed.filter((e: any) => e.status === 'Upcoming').sort((a: any, b: any) => a.fullDate.getTime() - b.fullDate.getTime());
-
-      // First look triad: [closest past, next upcoming, next+1 upcoming]
-      const upcoming1 = upcomingEvts[0];
-      const upcoming2 = upcomingEvts[1];
-      const past1 = pastEvts[0];
-
-      // Build the list starting with the specific triad, then fill with the rest
-      const initialTriad = [
-        ...(past1 ? [past1] : []),
-        ...(upcoming1 ? [upcoming1] : []),
-        ...(upcoming2 ? [upcoming2] : [])
-      ];
-
-      // Filter out items already in the triad to avoid duplicates
-      const remainingUpcoming = upcomingEvts.filter((e: any) => !initialTriad.some((t: any) => t.id === e.id));
-      const remainingPast = pastEvts.filter((e: any) => !initialTriad.some((t: any) => t.id === e.id));
-
-      const allEvents = [...initialTriad, ...remainingUpcoming, ...remainingPast];
+      // Strictly chronological sort (oldest to newest)
+      const allEvents = processed.sort((a: any, b: any) => a.fullDate.getTime() - b.fullDate.getTime());
+      const pastCount = allEvents.filter((e: any) => e.status === 'Previous').length;
 
       const formattedEvents: any[] = allEvents.map((r: any) => ({
         // Always override tag from DB — past events must show "PAST"
@@ -165,18 +148,10 @@ export function Home() {
                   r.image_url,
       }));
 
-      // On mobile, ensure the MOST UPCOMING event is the first card (index 0)
-      const isMobileDevice = window.innerWidth < 768;
-      if (isMobileDevice) {
-        // Find the absolute earliest upcoming event
-        const bestUpcomingIdx = formattedEvents.findIndex(e => e.status === 'Upcoming');
-        if (bestUpcomingIdx > 0) {
-          const [upcoming] = formattedEvents.splice(bestUpcomingIdx, 1);
-          formattedEvents.unshift(upcoming);
-        }
-      }
-
       setItems(formattedEvents);
+      const isMobileDevice = window.innerWidth < 768;
+      const initialIdx = isMobileDevice ? pastCount : Math.max(0, pastCount - 1);
+      setCurrentIndex(Math.min(initialIdx, Math.max(0, formattedEvents.length - 1)));
     }
 
     fetchData();
@@ -354,7 +329,7 @@ export function Home() {
           </div>
 
           <div className="relative group/carousel px-4">
-            <div className="overflow-hidden">
+            <div className="overflow-hidden px-4 md:px-0 -mx-4 md:mx-0 py-8">
               <motion.div
                 animate={{ x: `-${currentIndex * (isMobile ? 100 : 33.333)}%` }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -365,7 +340,7 @@ export function Home() {
                 }}
               >
                 {items.map((event, idx) => (
-                  <div key={idx} className="w-full md:w-[calc(33.333%-1.35rem)] shrink-0 flex">
+                  <div key={idx} className="w-full md:w-[calc(33.333%-1.35rem)] shrink-0 flex items-stretch">
                     <div className="w-full">
                       <EventCard event={event} />
                     </div>
