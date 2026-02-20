@@ -125,16 +125,18 @@ export function Home() {
         };
       });
 
-      const pastEvents = processed.filter((e: any) => e.status === 'Previous').sort((a: any, b: any) => b.fullDate.getTime() - a.fullDate.getTime());
-      const upcomingEvents = processed.filter((e: any) => e.status === 'Upcoming').sort((a: any, b: any) => a.fullDate.getTime() - b.fullDate.getTime());
+      const pastEvts = processed.filter((e: any) => e.status === 'Previous').sort((a: any, b: any) => b.fullDate.getTime() - a.fullDate.getTime());
+      const upcomingEvts = processed.filter((e: any) => e.status === 'Upcoming').sort((a: any, b: any) => a.fullDate.getTime() - b.fullDate.getTime());
 
-      const selected = [
-        ...(pastEvents.length > 0 ? [pastEvents[0]] : []),
-        ...upcomingEvents.slice(0, 2)
-      ];
+      // Always fill 3 slots: prioritize 1 past + 2 upcoming; fill gaps from additional past events
+      const upcomingSlots = upcomingEvts.slice(0, 2);
+      const pastSlotsNeeded = Math.max(1, 3 - upcomingSlots.length);
+      const pastSlots = pastEvts.slice(0, pastSlotsNeeded);
+      const selected = [...pastSlots, ...upcomingSlots].slice(0, 3);
 
-      const formattedEvents = selected.map((r: any) => ({
-        tag: r.tag || (r.status === 'Upcoming' ? 'UPCOMING' : 'PAST EVENT'),
+      const formattedEvents: any[] = selected.map((r: any) => ({
+        // Always override tag from DB — past events must show "PAST EVENT"
+        tag: r.status === 'Previous' ? 'PAST EVENT' : 'UPCOMING',
         date: r.fullDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         title: r.title,
         location: r.location,
@@ -146,12 +148,14 @@ export function Home() {
               r.image_url,
       }));
 
-      // On mobile, if we have a past and at least one upcoming, swap them so the upcoming is first
+      // On mobile, move the first upcoming to position 0 so it's the featured card
       const isMobileDevice = window.innerWidth < 768;
-      if (isMobileDevice && formattedEvents.length >= 2 && formattedEvents[0].status === 'Previous') {
-        const temp = formattedEvents[0];
-        formattedEvents[0] = formattedEvents[1];
-        formattedEvents[1] = temp;
+      if (isMobileDevice) {
+        const firstUpcomingIdx = formattedEvents.findIndex(e => e.status === 'Upcoming');
+        if (firstUpcomingIdx > 0) {
+          const [upcoming] = formattedEvents.splice(firstUpcomingIdx, 1);
+          formattedEvents.unshift(upcoming);
+        }
       }
 
       setItems(formattedEvents);
@@ -320,13 +324,13 @@ export function Home() {
               className="text-white mb-2 font-yearbook"
               style={{
                 ...fontYearbook,
-                fontSize: 'clamp(40px, 8vw, 80px)',
+                fontSize: 'clamp(48px, 8vw, 80px)',
                 letterSpacing: '0.05em',
               }}
             >
               Events
             </h2>
-            <p className="text-white/90 font-normal tracking-wide text-xs md:text-base" style={fontInter}>
+            <p className="text-white/90 font-normal tracking-wide text-sm md:text-base" style={fontInter}>
               Join us for live performances, competitions, and more.
             </p>
           </div>
@@ -370,18 +374,20 @@ export function Home() {
             )}
 
             {/* Pagination Dots for Mobile */}
-            <div className="flex justify-center gap-2 mt-6 md:hidden">
-              {items.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setCurrentIndex(idx)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${currentIndex === idx ? 'bg-white w-4' : 'bg-white/40'}`}
-                />
-              ))}
-            </div>
+            {items.length > 1 && (
+              <div className="flex justify-center gap-2 mt-5 md:hidden">
+                {items.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`h-2 rounded-full transition-all duration-300 ${currentIndex === idx ? 'bg-white w-4' : 'bg-white/40 w-2'}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
-          <div className="text-center">
+          <div className="text-center mt-8">
             <motion.div
               whileHover={{ x: 6 }}
               whileTap={{ scale: 0.97 }}

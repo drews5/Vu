@@ -342,8 +342,8 @@ export function Events() {
                 <div className="h-[1px] bg-[#8FA8C8]/20 flex-grow" />
               </div>
 
-              <div className="relative group/carousel">
-                <div className="overflow-hidden px-4 md:px-0">
+              <div className="relative group/carousel pb-4">
+                <div className="overflow-hidden px-4 md:px-0 pb-2">
                   <motion.div
                     animate={{ x: `-${pastIndex * translatePercent}%` }}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -353,7 +353,7 @@ export function Events() {
                     }}
                   >
                     {pastEvents.map((event) => (
-                      <div key={event.id} className="w-full md:w-1/2 lg:w-1/3 shrink-0 px-2 h-full">
+                      <div key={event.id} className="w-full md:w-1/2 lg:w-1/3 shrink-0 px-2" style={{ paddingBottom: '4px' }}>
                         <PastEventCard event={event} />
                       </div>
                     ))}
