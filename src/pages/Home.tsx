@@ -128,13 +128,10 @@ export function Home() {
       const pastEvts = processed.filter((e: any) => e.status === 'Previous').sort((a: any, b: any) => b.fullDate.getTime() - a.fullDate.getTime());
       const upcomingEvts = processed.filter((e: any) => e.status === 'Upcoming').sort((a: any, b: any) => a.fullDate.getTime() - b.fullDate.getTime());
 
-      // Always fill 3 slots: prioritize 1 past + 2 upcoming; fill gaps from additional past events
-      const upcomingSlots = upcomingEvts.slice(0, 2);
-      const pastSlotsNeeded = Math.max(1, 3 - upcomingSlots.length);
-      const pastSlots = pastEvts.slice(0, pastSlotsNeeded);
-      const selected = [...pastSlots, ...upcomingSlots].slice(0, 3);
+      // Show all events: all upcoming events first (chronological), then all past events (reverse chronological)
+      const allEvents = [...upcomingEvts, ...pastEvts];
 
-      const formattedEvents: any[] = selected.map((r: any) => ({
+      const formattedEvents: any[] = allEvents.map((r: any) => ({
         // Always override tag from DB — past events must show "PAST"
         tag: r.status === 'Previous' ? 'PAST' : 'UPCOMING',
         date: r.fullDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
@@ -149,7 +146,7 @@ export function Home() {
               r.image_url,
       }));
 
-      // On mobile, move the first upcoming to position 0 so it's the featured card
+      // On mobile, ensure the first upcoming event is the starting view if it's not already at index 0
       const isMobileDevice = window.innerWidth < 768;
       if (isMobileDevice) {
         const firstUpcomingIdx = formattedEvents.findIndex(e => e.status === 'Upcoming');
@@ -339,16 +336,16 @@ export function Home() {
           <div className="relative group/carousel px-4">
             <div className="overflow-hidden">
               <motion.div
-                animate={{ x: isMobile ? `-${currentIndex * 100}%` : '0%' }}
+                animate={{ x: `-${currentIndex * (isMobile ? 100 : 33.333)}%` }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="flex md:grid md:grid-cols-3 gap-4 md:gap-8"
+                className="flex gap-4 md:gap-8"
                 style={{
                   display: 'flex',
                   width: '100%',
                 }}
               >
                 {items.map((event, idx) => (
-                  <div key={idx} className="w-full shrink-0 md:shrink md:flex-1 md:min-w-0 px-2 md:px-0 flex">
+                  <div key={idx} className="w-full md:w-[calc(33.333%-1.35rem)] shrink-0 flex">
                     <div className="w-full">
                       <EventCard event={event} />
                     </div>
