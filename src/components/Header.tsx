@@ -143,26 +143,30 @@ export function Header() {
                           <AnimatePresence>
                             {aboutDropdownOpen && (
                               <motion.div
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                transition={{ duration: 0.2 }}
-                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white shadow-xl py-2 min-w-[200px] z-50 border border-[#8FA8C8]/10"
-                                style={{ borderRadius: '12px' }}
+                                initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                                className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50 pointer-events-auto"
                               >
-                                {item.dropdown.map((dropItem) => (
-                                  <Link
-                                    key={dropItem.path}
-                                    to={dropItem.path}
-                                    className={`block px-6 py-2 transition-all duration-200 hover:translate-x-1 font-yearbook ${location.pathname === dropItem.path
-                                      ? 'bg-[#8FA8C8]/10 text-[#2B4C6F]'
-                                      : 'text-[#2B4C6F]/70 hover:bg-[#8FA8C8]/5 hover:text-[#2B4C6F]'
-                                      }`}
-                                    style={{ ...fontYearbook, fontSize: '18px' }}
-                                  >
-                                    {dropItem.name}
-                                  </Link>
-                                ))}
+                                <div
+                                  className="bg-white/95 backdrop-blur-sm shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] py-2.5 min-w-[220px] border border-[#8FA8C8]/20"
+                                  style={{ borderRadius: '14px' }}
+                                >
+                                  {item.dropdown.map((dropItem) => (
+                                    <Link
+                                      key={dropItem.path}
+                                      to={dropItem.path}
+                                      className={`block px-6 py-2.5 transition-all duration-200 font-yearbook mx-1.5 ${location.pathname === dropItem.path
+                                          ? 'bg-[#8FA8C8]/15 text-[#2B4C6F]'
+                                          : 'text-[#2B4C6F] hover:bg-[#8FA8C8]/10'
+                                        }`}
+                                      style={{ ...fontYearbook, fontSize: '18px', borderRadius: '10px' }}
+                                    >
+                                      {dropItem.name}
+                                    </Link>
+                                  ))}
+                                </div>
                               </motion.div>
                             )}
                           </AnimatePresence>
