@@ -178,7 +178,7 @@ export function Home() {
     if (items.length === 0) return;
     setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
   };
-  const showArrows = items.length > 1;
+  const showArrows = items.length > visibleCards;
   return (
     <div className="pb-0">
       <Helmet>
@@ -187,7 +187,7 @@ export function Home() {
         <link rel="canonical" href="https://vocalu.org/" />
       </Helmet>
       {/* Hero Section */}
-      <section className="mx-3 md:mx-0" style={{ marginTop: '25px', marginBottom: '25px' }}>
+      <section style={{ marginTop: '25px', marginBottom: '25px' }}>
         <div
           className="relative overflow-hidden border border-gray-100 shadow-sm"
           style={{ borderRadius: '16px', height: '576px' }}
@@ -249,7 +249,7 @@ export function Home() {
 
       {/* We Are Vocal U Section */}
       <section
-        className="bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center shadow-sm hover:shadow-md transition-shadow duration-300 mx-3 md:mx-0"
+        className="bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center shadow-sm hover:shadow-md transition-shadow duration-300"
         style={{ gap: '25px', marginBottom: '25px', borderRadius: '16px' }}
       >
         <div>
@@ -315,7 +315,7 @@ export function Home() {
 
       {/* Events Section */}
       <section
-        className="relative py-12 md:py-16 px-6 md:px-12 mx-3 md:mx-0"
+        className="relative py-12 md:py-16 px-6 md:px-12"
         style={{
           marginBottom: '25px',
           borderRadius: '16px',
@@ -414,7 +414,7 @@ export function Home() {
       </section>
 
       {/* Contact Form Section */}
-      <section className="mx-3 md:mx-0" style={{ marginBottom: '25px' }}>
+      <section style={{ marginBottom: '25px' }}>
         <ContactForm />
       </section>
     </div>

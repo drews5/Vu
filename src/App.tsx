@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { Analytics } from '@vercel/analytics/react';
-
 const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
 const About = lazy(() => import('./pages/About').then(m => ({ default: m.About })));
 const Members = lazy(() => import('./pages/Members').then(m => ({ default: m.Members })));
@@ -13,7 +12,6 @@ const Events = lazy(() => import('./pages/Events').then(m => ({ default: m.Event
 const EventDetail = lazy(() => import('./pages/EventDetail').then(m => ({ default: m.EventDetail })));
 const Contact = lazy(() => import('./pages/Contact').then(m => ({ default: m.Contact })));
 const Auditions = lazy(() => import('./pages/Auditions').then(m => ({ default: m.Auditions })));
-
 function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
@@ -21,7 +19,6 @@ function PageLoader() {
     </div>
   );
 }
-
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -29,16 +26,14 @@ function ScrollToTop() {
   }, [pathname]);
   return null;
 }
-
 function AppContent() {
   const location = useLocation();
   const isAuditionsPage = location.pathname === '/auditions';
-
   return (
     <div className="min-h-screen bg-white">
       <ScrollToTop />
       <Analytics />
-      <div className={`max-w-[1440px] mx-auto ${isAuditionsPage ? "px-3 md:px-[50px]" : "px-3 md:px-[50px]"}`}>
+      <div className="max-w-[1440px] mx-auto px-3 md:px-[50px]">
         {!isAuditionsPage && <Header />}
         <Suspense fallback={<PageLoader />}>
           <Routes>
@@ -58,9 +53,7 @@ function AppContent() {
     </div>
   );
 }
-
 import { HelmetProvider } from 'react-helmet-async';
-
 export default function App() {
   return (
     <HelmetProvider>
