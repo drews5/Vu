@@ -34,6 +34,35 @@ export function Auditions() {
   const [emailInput, setEmailInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDeleteWarning, setShowDeleteWarning] = useState<{ id: string, name: string } | null>(null);
+
+  const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [isAuditionsOpen, setIsAuditionsOpen] = useState(false);
+
+  useEffect(() => {
+    const targetDate = new Date('2026-08-01T00:00:00').getTime();
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance <= 0) {
+        setIsAuditionsOpen(true);
+        return;
+      }
+
+      setTimeRemaining({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((distance % (1000 * 60)) / 1000),
+      });
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   const fetchSlots = useCallback(async () => {
     const { data, error } = await supabase
       .from('auditions')
@@ -302,65 +331,105 @@ export function Auditions() {
         </div>
       </section>
       <div className="px-0">
-        {/* Sign Up Section */}
-        <section className="bg-white rounded-2xl shadow-sm overflow-hidden mb-4 md:mb-[25px] border border-gray-100">
-          <div className="px-4 py-2 md:px-6 md:py-3 border-b border-gray-50 flex justify-center items-center">
-            <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: '18px' }}>
-              SIGN UP
-            </h2>
-          </div>
-          <div className="p-1 md:p-4">
-            <div className="grid grid-cols-2 gap-2 md:gap-8">
-              {daysData.map((dayInfo) => (
-                <div key={dayInfo.day}>
-                  <div className="flex flex-col items-center mb-3">
-                    <h3 className="text-[#2B4C6F] font-bold text-center whitespace-nowrap" style={{ ...fontInter, fontSize: 'clamp(11px, 1.4vw, 15px)' }}>
-                      {dayInfo.day}, {dayInfo.date}
-                    </h3>
-                    <div className="w-full h-[1px] bg-[#8FA8C8] mt-1.5" />
+        {/* Sign Up Section / Countdown Timer */}
+        {isAuditionsOpen ? (
+          <section className="bg-white rounded-2xl shadow-sm overflow-hidden mb-4 md:mb-[25px] border border-gray-100">
+            <div className="px-4 py-2 md:px-6 md:py-3 border-b border-gray-50 flex justify-center items-center">
+              <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: '18px' }}>
+                SIGN UP
+              </h2>
+            </div>
+            <div className="p-1 md:p-4">
+              <div className="grid grid-cols-2 gap-2 md:gap-8">
+                {daysData.map((dayInfo) => (
+                  <div key={dayInfo.day}>
+                    <div className="flex flex-col items-center mb-3">
+                      <h3 className="text-[#2B4C6F] font-bold text-center whitespace-nowrap" style={{ ...fontInter, fontSize: 'clamp(11px, 1.4vw, 15px)' }}>
+                        {dayInfo.day}, {dayInfo.date}
+                      </h3>
+                      <div className="w-full h-[1px] bg-[#8FA8C8] mt-1.5" />
+                    </div>
+                    {loading ? (
+                      <div className="py-12 flex justify-center"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#8FA8C8]" /></div>
+                    ) : (
+                      renderSlots(slots.filter(s => s.day === dayInfo.day))
+                    )}
                   </div>
-                  {loading ? (
-                    <div className="py-12 flex justify-center"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#8FA8C8]" /></div>
-                  ) : (
-                    renderSlots(slots.filter(s => s.day === dayInfo.day))
-                  )}
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : (
+          <section className="bg-white rounded-3xl shadow-xl overflow-hidden mb-12 border border-gray-100 relative mt-[25px]">
+            <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(#2B4C6F 1px, transparent 1px)`, backgroundSize: '20px 20px' }}></div>
+            <div className="p-8 md:p-16 text-center text-[#2B4C6F] relative z-10">
+              <h2 className="text-[#2B4C6F] drop-shadow-sm mb-10" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 42px)', letterSpacing: '0.05em' }}>
+                FALL AUDITIONS OPEN IN
+              </h2>
+              <div className="flex justify-center gap-2 md:gap-6 bg-gray-50/80 rounded-3xl p-4 md:p-10 backdrop-blur-md border border-gray-100 w-fit mx-auto shadow-inner">
+                <div className="flex flex-col items-center min-w-[70px] md:min-w-[120px]">
+                  <span className="text-[#8FA8C8] drop-shadow-sm leading-none" style={{ ...fontYearbook, fontSize: 'clamp(36px, 8vw, 84px)' }}>{String(timeRemaining.days).padStart(2, '0')}</span>
+                  <span className="text-[#2B4C6F] tracking-[0.2em] text-xs md:text-sm font-bold mt-4 opacity-80" style={fontInter}>DAYS</span>
                 </div>
-              ))}
+                <div className="w-[1px] md:w-[2px] bg-gray-200 my-4"></div>
+                <div className="flex flex-col items-center min-w-[70px] md:min-w-[120px]">
+                  <span className="text-[#8FA8C8] drop-shadow-sm leading-none" style={{ ...fontYearbook, fontSize: 'clamp(36px, 8vw, 84px)' }}>{String(timeRemaining.hours).padStart(2, '0')}</span>
+                  <span className="text-[#2B4C6F] tracking-[0.2em] text-xs md:text-sm font-bold mt-4 opacity-80" style={fontInter}>HRS</span>
+                </div>
+                <div className="w-[1px] md:w-[2px] bg-gray-200 my-4"></div>
+                <div className="flex flex-col items-center min-w-[70px] md:min-w-[120px]">
+                  <span className="text-[#8FA8C8] drop-shadow-sm leading-none" style={{ ...fontYearbook, fontSize: 'clamp(36px, 8vw, 84px)' }}>{String(timeRemaining.minutes).padStart(2, '0')}</span>
+                  <span className="text-[#2B4C6F] tracking-[0.2em] text-xs md:text-sm font-bold mt-4 opacity-80" style={fontInter}>MINS</span>
+                </div>
+                <div className="w-[1px] md:w-[2px] bg-gray-200 my-4"></div>
+                <div className="flex flex-col items-center min-w-[70px] md:min-w-[120px]">
+                  <span className="text-[#8FA8C8] drop-shadow-sm leading-none" style={{ ...fontYearbook, fontSize: 'clamp(36px, 8vw, 84px)' }}>{String(timeRemaining.seconds).padStart(2, '0')}</span>
+                  <span className="text-[#2B4C6F] tracking-[0.2em] text-xs md:text-sm font-bold mt-4 opacity-80" style={fontInter}>SECS</span>
+                </div>
+              </div>
+              <p className="mt-10 text-gray-600 max-w-2xl mx-auto text-lg md:text-xl font-medium tracking-wide" style={fontInter}>
+                Sign-ups will be available on <span className="text-[#2B4C6F] font-bold">August 1st, 2026</span>. Scroll down to prepare for your audition!
+              </p>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
         {/* Detailed Info Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-[25px]">
-          <div className="bg-white p-8 rounded-2xl border border-gray-100 border-t-4 border-t-[#8FA8C8] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-            <div className="bg-[#8FA8C8]/10 w-12 h-12 rounded-full flex items-center justify-center mb-6">
-              <Users className="w-6 h-6 text-[#8FA8C8]" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+          <div className="bg-white p-8 md:p-10 rounded-[32px] border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-[#8FA8C8]/10 rounded-bl-full -mr-8 -mt-8 transition-transform duration-500 group-hover:scale-110"></div>
+            <div className="bg-[#8FA8C8]/10 w-24 h-24 rounded-3xl flex items-center justify-center mb-8 relative z-10 rotate-3 transition-transform duration-500 group-hover:rotate-0">
+              <Users className="w-12 h-12 text-[#2B4C6F]" />
             </div>
-            <h3 className="text-[#2B4C6F] text-xl mb-3 font-yearbook" style={fontYearbook}>ARRIVAL</h3>
-            <p className="text-gray-600 text-[14px] leading-relaxed" style={fontInter}>
-              Please arrive 15 minutes before your slot to check in. If you're a walk-in, come by the desk and we'll fit you into the next available gap!
+            <h3 className="text-[#2B4C6F] text-2xl md:text-3xl mb-4 font-yearbook relative z-10" style={fontYearbook}>ARRIVAL</h3>
+            <p className="text-gray-700 text-[16px] md:text-[18px] leading-relaxed relative z-10 font-medium" style={fontInter}>
+              Please arrive <span className="font-bold text-[#2B4C6F]">15 minutes</span> before your slot to check in. If you're a walk-in, come by the desk and we'll fit you into the next available gap!
             </p>
           </div>
-          <div className="bg-white p-8 rounded-2xl border border-gray-100 border-t-4 border-t-[#2B4C6F] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-            <div className="bg-[#2B4C6F]/10 w-12 h-12 rounded-full flex items-center justify-center mb-6">
-              <Music className="w-6 h-6 text-[#2B4C6F]" />
+
+          <div className="bg-white p-8 md:p-10 rounded-[32px] border border-[#2B4C6F]/10 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group md:scale-105 z-10">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-[#2B4C6F]/5 rounded-bl-full -mr-8 -mt-8 transition-transform duration-500 group-hover:scale-110"></div>
+            <div className="bg-[#2B4C6F]/10 w-24 h-24 rounded-3xl flex items-center justify-center mb-8 relative z-10 -rotate-3 transition-transform duration-500 group-hover:rotate-0">
+              <Music className="w-12 h-12 text-[#2B4C6F]" />
             </div>
-            <h3 className="text-[#2B4C6F] text-xl mb-3 font-yearbook" style={fontYearbook}>PREPARATION</h3>
-            <p className="text-gray-600 text-[14px] leading-relaxed" style={fontInter}>
-              Prepare ~60 seconds (verse and a chorus) of a contemporary song (Pop, Rock, R&B, etc.) that showcases your voice. Just bring your talent!
+            <h3 className="text-[#2B4C6F] text-2xl md:text-3xl mb-4 font-yearbook relative z-10" style={fontYearbook}>PREPARATION</h3>
+            <p className="text-gray-700 text-[16px] md:text-[18px] leading-relaxed relative z-10 font-medium" style={fontInter}>
+              Prepare <span className="font-bold text-[#2B4C6F]">~60 seconds</span> (verse and a chorus) of a contemporary song (Pop, Rock, R&B, etc.) that showcases your voice. Just bring your talent!
             </p>
           </div>
-          <div className="bg-white p-8 rounded-2xl border border-gray-100 border-t-4 border-t-amber-400 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-            <div className="bg-amber-100 w-12 h-12 rounded-full flex items-center justify-center mb-6">
-              <Clock className="w-6 h-6 text-amber-500" />
+
+          <div className="bg-white p-8 md:p-10 rounded-[32px] border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-[#8FA8C8]/10 rounded-bl-full -mr-8 -mt-8 transition-transform duration-500 group-hover:scale-110"></div>
+            <div className="bg-[#8FA8C8]/10 w-24 h-24 rounded-3xl flex items-center justify-center mb-8 relative z-10 rotate-3 transition-transform duration-500 group-hover:rotate-0">
+              <Clock className="w-12 h-12 text-[#2B4C6F]" />
             </div>
-            <h3 className="text-[#2B4C6F] text-xl mb-3 font-yearbook" style={fontYearbook}>THE PROCESS</h3>
-            <p className="text-gray-600 text-[14px] leading-relaxed" style={fontInter}>
-              The process involves introducing yourself, a warm up/range check, and then singing your prepared song.
+            <h3 className="text-[#2B4C6F] text-2xl md:text-3xl mb-4 font-yearbook relative z-10" style={fontYearbook}>THE PROCESS</h3>
+            <p className="text-gray-700 text-[16px] md:text-[18px] leading-relaxed relative z-10 font-medium" style={fontInter}>
+              The process involves introducing yourself, a <span className="font-bold text-[#2B4C6F]">warm up/range check</span>, and then singing your prepared song!
             </p>
           </div>
         </div>
         {/* FAQ / Advice Section */}
-        <section className="mt-12 bg-gradient-to-br from-[#2B4C6F] to-[#1a3249] p-8 md:p-12 text-white overflow-hidden relative" style={{ borderRadius: '24px' }}>
+        <section className="mt-12 bg-[#2B4C6F] p-8 md:p-12 text-white overflow-hidden relative" style={{ borderRadius: '24px' }}>
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>

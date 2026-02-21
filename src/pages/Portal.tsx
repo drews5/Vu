@@ -58,13 +58,12 @@ export function Portal() {
                     <meta name="robots" content="noindex, nofollow" />
                 </Helmet>
                 <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 w-full max-w-md">
-                    <div className="flex justify-center mb-6">
-                        <div className="bg-[#8FA8C8]/10 w-16 h-16 rounded-full flex items-center justify-center">
-                            <Lock className="w-8 h-8 text-[#2B4C6F]" />
+                    <div className="flex justify-center mb-8">
+                        <div className="bg-[#8FA8C8]/10 w-20 h-20 rounded-full flex items-center justify-center shadow-sm">
+                            <Lock className="w-10 h-10 text-[#2B4C6F]" />
                         </div>
                     </div>
-                    <h1 className="text-2xl font-bold text-center text-[#2B4C6F] mb-2">Member Portal</h1>
-                    <p className="text-gray-500 text-center mb-8 text-sm">Enter the member password to continue.</p>
+
 
                     <form onSubmit={handleLogin} className="space-y-4">
                         <div>
@@ -222,7 +221,7 @@ export function Portal() {
                         </div>
 
                         {/* Quick Links Section */}
-                        <h3 className="font-bold text-lg text-gray-900 mb-2 mt-8 px-2">Quick Access</h3>
+                        <h3 className="font-bold text-lg text-gray-900 mb-2 mt-8 px-2 border-b pb-2 border-gray-200">Quick Access</h3>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <Link to="/events" className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:border-[#8FA8C8] flex flex-col items-center justify-center text-center group transition-colors">
                                 <Mic2 className="w-6 h-6 text-[#2B4C6F] mb-2 group-hover:text-[#8FA8C8] transition-colors" />
@@ -240,6 +239,75 @@ export function Portal() {
                                 <HomeIcon className="w-6 h-6 text-[#2B4C6F] mb-2 group-hover:text-[#8FA8C8] transition-colors" />
                                 <span className="text-sm font-semibold text-gray-800">Public Home</span>
                             </Link>
+                        </div>
+
+                        {/* Officer Corners Section */}
+                        <h3 className="font-bold text-lg text-gray-900 mb-2 mt-10 px-2 border-b pb-2 border-gray-200">Officer Corners</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                            {/* President */}
+                            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#8FA8C8] transition-all">
+                                <h4 className="font-bold text-[#2B4C6F] flex items-center gap-3 mb-4">
+                                    <span className="bg-blue-50 p-2 rounded-lg border border-blue-100"><Users className="w-5 h-5 text-blue-600" /></span>
+                                    President
+                                </h4>
+                                <ul className="space-y-3 text-sm text-gray-600">
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Roster Management</a></li>
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Constitution Updates</a></li>
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Alumni Network</a></li>
+                                </ul>
+                            </div>
+
+                            {/* Music Director */}
+                            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#8FA8C8] transition-all">
+                                <h4 className="font-bold text-[#2B4C6F] flex items-center gap-3 mb-4">
+                                    <span className="bg-indigo-50 p-2 rounded-lg border border-indigo-100"><Music className="w-5 h-5 text-indigo-600" /></span>
+                                    Music Director
+                                </h4>
+                                <ul className="space-y-3 text-sm text-gray-600">
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Setlist Planner</a></li>
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Drive & Sheet Music</a></li>
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Arrangement Subs</a></li>
+                                </ul>
+                            </div>
+
+                            {/* Business Manager */}
+                            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#8FA8C8] transition-all">
+                                <h4 className="font-bold text-[#2B4C6F] flex items-center gap-3 mb-4">
+                                    <span className="bg-green-50 p-2 rounded-lg border border-green-100"><FileText className="w-5 h-5 text-green-600" /></span>
+                                    Business Manager
+                                </h4>
+                                <ul className="space-y-3 text-sm text-gray-600">
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Treasury & Dues Map</a></li>
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Gig Contracts</a></li>
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Merch Orders</a></li>
+                                </ul>
+                            </div>
+
+                            {/* PR / Marketing */}
+                            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#8FA8C8] transition-all">
+                                <h4 className="font-bold text-[#2B4C6F] flex items-center gap-3 mb-4">
+                                    <span className="bg-purple-50 p-2 rounded-lg border border-purple-100"><Mic2 className="w-5 h-5 text-purple-600" /></span>
+                                    PR & Marketing
+                                </h4>
+                                <ul className="space-y-3 text-sm text-gray-600">
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Social Media Assets</a></li>
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Brand Guidelines</a></li>
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Content Calendar</a></li>
+                                </ul>
+                            </div>
+
+                            {/* Social Chair */}
+                            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#8FA8C8] transition-all">
+                                <h4 className="font-bold text-[#2B4C6F] flex items-center gap-3 mb-4">
+                                    <span className="bg-pink-50 p-2 rounded-lg border border-pink-100"><CalendarDays className="w-5 h-5 text-pink-600" /></span>
+                                    Social Chair
+                                </h4>
+                                <ul className="space-y-3 text-sm text-gray-600">
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Retreat Planning</a></li>
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Event Proposals</a></li>
+                                    <li><a href="#" className="flex items-center gap-2 hover:text-[#2B4C6F] hover:font-medium transition-colors"><ExternalLink className="w-3.5 h-3.5" /> Member Birthdays</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 )}
