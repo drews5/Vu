@@ -1,6 +1,7 @@
 import { memo, useEffect, useState, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'motion/react';
+import { PageTransition, childVariants } from '../components/PageTransition';
 import {
   Clock,
   Users,
@@ -303,14 +304,14 @@ export function Auditions() {
     );
   };
   return (
-    <div className="pb-24">
+    <PageTransition className="pb-24">
       <Helmet>
         <title>Auditions | Join Vocal U A Cappella | UMN Recruitment</title>
         <meta name="description" content="Audition for Vocal U A Cappella at the University of Minnesota. View the current audition schedule, sign up for a slot, and join our gender-inclusive vocal community." />
         <link rel="canonical" href="https://vocalu.org/auditions" />
       </Helmet>
       {/* Header with Logo and Solid Background */}
-      <section className="relative py-4 md:py-8 flex items-center justify-center overflow-hidden mb-4 md:mb-6 mx-0 mt-[15px] md:mt-[25px] border border-gray-100 shadow-sm" style={{ borderRadius: '16px', background: '#8FA8C8' }}>
+      <motion.section variants={childVariants} className="relative py-4 md:py-8 flex items-center justify-center overflow-hidden mb-4 md:mb-6 mx-0 mt-[15px] md:mt-[25px] border border-gray-100 shadow-sm" style={{ borderRadius: '16px', background: '#8FA8C8' }}>
         <div className="relative z-10 text-center px-6 w-full flex items-center justify-center gap-6 md:gap-10">
           <div className="shrink-0 hover:-translate-y-0.5 transition-transform duration-200">
             <Link to="/" className="group cursor-pointer">
@@ -318,7 +319,7 @@ export function Auditions() {
             </Link>
           </div>
           <div className="text-left">
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+            <div className="text-white">
               <h1 className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '0.05em', lineHeight: '1' }}>
                 AUDITIONS
               </h1>
@@ -326,14 +327,14 @@ export function Auditions() {
                 <div className="flex items-center gap-2"><Calendar className="w-4 h-4 md:w-5 md:h-5" /> Sep 18/19</div>
                 <div className="flex items-center gap-2"><Clock className="w-4 h-4 md:w-5 md:h-5" /> 6-9 PM</div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
-      </section>
+      </motion.section>
       <div className="px-0">
         {/* Sign Up Section / Countdown Timer */}
         {isAuditionsOpen ? (
-          <section className="bg-white rounded-2xl shadow-sm overflow-hidden mb-4 md:mb-[25px] border border-gray-100">
+          <motion.section variants={childVariants} className="bg-white rounded-2xl shadow-sm overflow-hidden mb-4 md:mb-[25px] border border-gray-100">
             <div className="px-4 py-2 md:px-6 md:py-3 border-b border-gray-50 flex justify-center items-center">
               <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: '18px' }}>
                 SIGN UP
@@ -358,9 +359,9 @@ export function Auditions() {
                 ))}
               </div>
             </div>
-          </section>
+          </motion.section>
         ) : (
-          <section className="bg-white rounded-3xl shadow-xl overflow-hidden mb-12 border border-gray-100 relative mt-[25px]">
+          <motion.section variants={childVariants} className="bg-white rounded-3xl shadow-xl overflow-hidden mb-12 border border-gray-100 relative mt-[25px]">
             <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(#2B4C6F 1px, transparent 1px)`, backgroundSize: '20px 20px' }}></div>
             <div className="p-8 md:p-16 text-center text-[#2B4C6F] relative z-10">
               <h2 className="text-[#2B4C6F] drop-shadow-sm mb-10" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 42px)', letterSpacing: '0.05em' }}>
@@ -391,11 +392,11 @@ export function Auditions() {
                 Sign-ups will be available on <span className="text-[#2B4C6F] font-bold">August 1st, 2026</span>. Scroll down to prepare for your audition!
               </p>
             </div>
-          </section>
+          </motion.section>
         )}
         {/* Detailed Info Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-          <div className="bg-white p-8 md:p-10 rounded-[32px] border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group">
+          <motion.div variants={childVariants} className="bg-white p-8 md:p-10 rounded-[32px] border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-40 h-40 bg-[#8FA8C8]/10 rounded-bl-full -mr-8 -mt-8 transition-transform duration-500 group-hover:scale-110"></div>
             <div className="bg-[#8FA8C8]/10 w-24 h-24 rounded-3xl flex items-center justify-center mb-8 relative z-10 rotate-3 transition-transform duration-500 group-hover:rotate-0">
               <Users className="w-12 h-12 text-[#2B4C6F]" />
@@ -404,9 +405,9 @@ export function Auditions() {
             <p className="text-gray-700 text-[16px] md:text-[18px] leading-relaxed relative z-10 font-medium" style={fontInter}>
               Please arrive <span className="font-bold text-[#2B4C6F]">15 minutes</span> before your slot to check in. If you're a walk-in, come by the desk and we'll fit you into the next available gap!
             </p>
-          </div>
+          </motion.div>
 
-          <div className="bg-white p-8 md:p-10 rounded-[32px] border border-[#2B4C6F]/10 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group md:scale-105 z-10">
+          <motion.div variants={childVariants} className="bg-white p-8 md:p-10 rounded-[32px] border border-[#2B4C6F]/10 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group md:scale-105 z-10">
             <div className="absolute top-0 right-0 w-40 h-40 bg-[#2B4C6F]/5 rounded-bl-full -mr-8 -mt-8 transition-transform duration-500 group-hover:scale-110"></div>
             <div className="bg-[#2B4C6F]/10 w-24 h-24 rounded-3xl flex items-center justify-center mb-8 relative z-10 -rotate-3 transition-transform duration-500 group-hover:rotate-0">
               <Music className="w-12 h-12 text-[#2B4C6F]" />
@@ -415,9 +416,9 @@ export function Auditions() {
             <p className="text-gray-700 text-[16px] md:text-[18px] leading-relaxed relative z-10 font-medium" style={fontInter}>
               Prepare <span className="font-bold text-[#2B4C6F]">~60 seconds</span> (verse and a chorus) of a contemporary song (Pop, Rock, R&B, etc.) that showcases your voice. Just bring your talent!
             </p>
-          </div>
+          </motion.div>
 
-          <div className="bg-white p-8 md:p-10 rounded-[32px] border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group">
+          <motion.div variants={childVariants} className="bg-white p-8 md:p-10 rounded-[32px] border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-40 h-40 bg-[#8FA8C8]/10 rounded-bl-full -mr-8 -mt-8 transition-transform duration-500 group-hover:scale-110"></div>
             <div className="bg-[#8FA8C8]/10 w-24 h-24 rounded-3xl flex items-center justify-center mb-8 relative z-10 rotate-3 transition-transform duration-500 group-hover:rotate-0">
               <Clock className="w-12 h-12 text-[#2B4C6F]" />
@@ -426,10 +427,10 @@ export function Auditions() {
             <p className="text-gray-700 text-[16px] md:text-[18px] leading-relaxed relative z-10 font-medium" style={fontInter}>
               The process involves introducing yourself, a <span className="font-bold text-[#2B4C6F]">warm up/range check</span>, and then singing your prepared song!
             </p>
-          </div>
+          </motion.div>
         </div>
         {/* FAQ / Advice Section */}
-        <section className="mt-12 bg-[#2B4C6F] p-8 md:p-12 text-white overflow-hidden relative" style={{ borderRadius: '24px' }}>
+        <motion.section variants={childVariants} className="mt-12 bg-[#2B4C6F] p-8 md:p-12 text-white overflow-hidden relative" style={{ borderRadius: '24px' }}>
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
@@ -459,9 +460,9 @@ export function Auditions() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
         {/* Explore More Navigator */}
-        <section className="mt-24 border-t border-gray-100 pt-16">
+        <motion.section variants={childVariants} className="mt-24 border-t border-gray-100 pt-16">
           <h2 className="text-[#2B4C6F] mb-10 text-center font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 36px)' }}>
             EXPLORE MORE
           </h2>
@@ -482,7 +483,7 @@ export function Auditions() {
               </Link>
             ))}
           </div>
-        </section>
+        </motion.section>
       </div>
       {/* Delete Warning Modal */}
       <AnimatePresence>
@@ -523,6 +524,6 @@ export function Auditions() {
           </div>
         )}
       </AnimatePresence>
-    </div>
+    </PageTransition>
   );
 }

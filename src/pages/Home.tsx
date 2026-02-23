@@ -14,6 +14,7 @@ import { ContactForm } from '../components/ContactForm';
 import { Footer } from '../components/Footer';
 import { supabase } from '../utils/supabase';
 import { motion } from 'motion/react';
+import { PageTransition, childVariants } from '../components/PageTransition';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
@@ -180,26 +181,44 @@ export function Home() {
   };
   const showArrows = items.length > visibleCards;
   return (
-    <div className="pb-0">
+    <PageTransition className="pb-0" delay={0}>
       <Helmet>
         <title>Vocal U A Cappella | Home | UMN Minneapolis</title>
         <meta name="description" content="Official home of Vocal U A Cappella at the University of Minnesota. Explore our music, meet our members, and find upcoming performances in Minneapolis." />
         <link rel="canonical" href="https://vocalu.org/" />
       </Helmet>
       {/* Hero Section */}
-      <section style={{ marginTop: '25px', marginBottom: '25px' }}>
+      <motion.section
+        initial="initial"
+        animate="animate"
+        variants={{
+          initial: { opacity: 0 },
+          animate: { opacity: 1, transition: { duration: 0.8 } }
+        }}
+        style={{ marginTop: '25px', marginBottom: '25px' }}
+      >
         <div
           className="relative overflow-hidden border border-gray-100 shadow-sm"
           style={{ borderRadius: '16px', height: '576px' }}
         >
-          <img
+          <motion.img
+            variants={{
+              initial: { scale: 1.05 },
+              animate: { scale: 1, transition: { duration: 1.5, ease: [0.22, 1, 0.36, 1] } }
+            }}
             src={heroBackground}
             alt="Vocal U Group"
             className="w-full h-full object-cover"
             style={{ filter: 'brightness(1.08) saturate(1.05)' }}
           />
           <div className="absolute inset-0 flex flex-col justify-between items-center py-8 md:py-12 px-4">
-            <div className="flex-shrink-0">
+            <motion.div
+              className="flex-shrink-0"
+              variants={{
+                initial: { opacity: 0, scale: 0.9, y: 10 },
+                animate: { opacity: 1, scale: 1, y: 0, transition: { delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
+              }}
+            >
               <Link to="/portal" className="cursor-default outline-none" draggable={false}>
                 <img
                   src={fullLogo}
@@ -208,49 +227,55 @@ export function Home() {
                   style={{ filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3))' }}
                 />
               </Link>
-            </div>
+            </motion.div>
 
             <div className="flex-grow" />
 
             <motion.div
-              initial={{ scale: 1 }}
-              animate={{
-                scale: [1, 1.03, 1],
-                boxShadow: [
-                  "0 4px 6px rgba(0,0,0,0.1)",
-                  "0 10px 15px rgba(0,0,0,0.2)",
-                  "0 4px 6px rgba(0,0,0,0.1)"
-                ]
+              variants={{
+                initial: { opacity: 0, scale: 0.9, y: 10 },
+                animate: { opacity: 1, scale: 1, y: 0, transition: { delay: 0.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
               }}
-              transition={{
-                duration: 2.5,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
             >
-              <a
-                href="https://www.varsityvocals.com/events/2026-ichsa-gl-qf4-lakeville-hs"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white text-[#2B4C6F] px-8 md:px-12 py-3 md:py-4 border border-white hover:bg-[#8FA8C8] hover:text-white hover:border-[#8FA8C8] transition-all duration-300 flex-shrink-0 text-center block cursor-pointer font-yearbook shadow-md"
-                style={{
-                  ...fontYearbook,
-                  fontSize: 'clamp(16px, 2vw, 20px)',
-                  letterSpacing: '0.05em',
-                  borderRadius: '12px',
+              <motion.div
+                initial={{ scale: 1 }}
+                animate={{
+                  scale: [1, 1.03, 1],
+                  boxShadow: [
+                    "0 4px 6px rgba(0,0,0,0.1)",
+                    "0 10px 15px rgba(0,0,0,0.2)",
+                    "0 4px 6px rgba(0,0,0,0.1)"
+                  ]
                 }}
+                transition={{
+                  duration: 2.5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
               >
-                ICHSA 2026 Tickets
-              </a>
+                <Link
+                  to="/event/spring-showcase-2026"
+                  className="bg-white text-[#2B4C6F] px-8 md:px-12 py-3 md:py-4 border border-white hover:bg-[#8FA8C8] hover:text-white hover:border-[#8FA8C8] transition-all duration-300 flex-shrink-0 text-center block cursor-pointer font-yearbook shadow-md"
+                  style={{
+                    ...fontYearbook,
+                    fontSize: 'clamp(16px, 2vw, 20px)',
+                    letterSpacing: '0.05em',
+                    borderRadius: '12px',
+                  }}
+                >
+                  Spring Showcase
+                </Link>
+              </motion.div>
             </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* We Are Vocal U Section */}
-      <section
+      <motion.section
+        variants={childVariants}
         className="bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center shadow-sm hover:shadow-md transition-shadow duration-300"
         style={{ gap: '25px', marginBottom: '25px', borderRadius: '16px' }}
       >
@@ -313,10 +338,11 @@ export function Home() {
             loading="lazy"
           />
         </div>
-      </section>
+      </motion.section>
 
       {/* Events Section */}
-      <section
+      <motion.section
+        variants={childVariants}
         className="relative py-12 md:py-16 px-6 md:px-12"
         style={{
           marginBottom: '25px',
@@ -413,12 +439,12 @@ export function Home() {
             </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Contact Form Section */}
-      <section style={{ marginBottom: '25px' }}>
+      <motion.section variants={childVariants} style={{ marginBottom: '25px' }}>
         <ContactForm />
-      </section>
-    </div>
+      </motion.section>
+    </PageTransition>
   );
 }

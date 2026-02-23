@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
+import { AnimatePresence } from 'motion/react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -40,18 +41,20 @@ function AppContent() {
       <div className="max-w-[1440px] mx-auto px-3 md:px-[50px]">
         {!hideHeaderFooter && <Header />}
         <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/members" element={<Members />} />
-            <Route path="/media" element={<Media />} />
-            <Route path="/donate" element={<Donate />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/event/:eventId" element={<EventDetail />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/auditions" element={<Auditions />} />
-            <Route path="/portal" element={<Portal />} />
-          </Routes>
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/members" element={<Members />} />
+              <Route path="/media" element={<Media />} />
+              <Route path="/donate" element={<Donate />} />
+              <Route path="/events" element={<Events />} />
+              <Route path="/event/:eventId" element={<EventDetail />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/auditions" element={<Auditions />} />
+              <Route path="/portal" element={<Portal />} />
+            </Routes>
+          </AnimatePresence>
         </Suspense>
         {!hideHeaderFooter && <Footer />}
       </div>

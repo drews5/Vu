@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { motion } from 'motion/react';
+import { PageTransition, childVariants } from '../components/PageTransition';
 import {
     LogOut,
     CalendarDays,
@@ -52,12 +54,12 @@ export function Portal() {
 
     if (!isAuthenticated) {
         return (
-            <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-4" style={fontInter}>
+            <PageTransition className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-4" style={fontInter}>
                 <Helmet>
                     <title>Member Login | Vocal U</title>
                     <meta name="robots" content="noindex, nofollow" />
                 </Helmet>
-                <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 w-full max-w-md">
+                <motion.div variants={childVariants} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 w-full max-w-md">
                     <div className="flex justify-center mb-8">
                         <div className="bg-[#8FA8C8]/10 w-20 h-20 rounded-full flex items-center justify-center shadow-sm">
                             <Lock className="w-10 h-10 text-[#2B4C6F]" />
@@ -89,8 +91,8 @@ export function Portal() {
                             &larr; Back to Public Site
                         </Link>
                     </div>
-                </div>
-            </div>
+                </motion.div>
+            </PageTransition>
         );
     }
 
@@ -101,7 +103,7 @@ export function Portal() {
     ];
 
     return (
-        <div className="min-h-screen bg-[#f1f5f9] flex flex-col md:flex-row" style={fontInter}>
+        <PageTransition className="min-h-screen bg-[#f1f5f9] flex flex-col md:flex-row" style={fontInter}>
             <Helmet>
                 <title>Member Portal | Vocal U</title>
                 <meta name="robots" content="noindex, nofollow" />
@@ -155,7 +157,7 @@ export function Portal() {
 
                 {/* DASHBOARD */}
                 {activeTab === 'dashboard' && (
-                    <div className="space-y-6 animate-in fade-in duration-300">
+                    <motion.div variants={childVariants} className="space-y-6 animate-in fade-in duration-300">
                         <h2 className="text-2xl font-bold text-gray-900 mb-6">Master Calendar & Rehearsals</h2>
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -309,12 +311,12 @@ export function Portal() {
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 )}
 
                 {/* REPERTOIRE */}
                 {activeTab === 'repertoire' && (
-                    <div className="space-y-6 animate-in fade-in duration-300">
+                    <motion.div variants={childVariants} className="space-y-6 animate-in fade-in duration-300">
                         <div className="flex flex-col sm:flex-row justify-between sm:items-end mb-6 gap-2">
                             <h2 className="text-2xl font-bold text-gray-900">Music Resources</h2>
                             <a href="https://drive.google.com/drive/folders/1ijPjbVvQpAJ917II7ZUZPXblDI3TP2zW?usp=drive_link" target="_blank" rel="noopener noreferrer" className="text-[#2B4C6F] hover:underline text-sm font-medium flex items-center gap-1 w-fit bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 transition-colors">
@@ -350,12 +352,12 @@ export function Portal() {
                             </h4>
                             <p className="text-sm text-gray-600">Please prepare your assigned parts thoroughly outside of rehearsal hours. Rehearsal is for blending as a group, not learning notes!</p>
                         </div>
-                    </div>
+                    </motion.div>
                 )}
 
                 {/* DOCUMENTS */}
                 {activeTab === 'documents' && (
-                    <div className="space-y-6 animate-in fade-in duration-300">
+                    <motion.div variants={childVariants} className="space-y-6 animate-in fade-in duration-300">
                         <h2 className="text-2xl font-bold text-gray-900 mb-6">Operations & Forms</h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -397,10 +399,10 @@ export function Portal() {
                                 </form>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 )}
 
             </main>
-        </div>
+        </PageTransition>
     );
 }
