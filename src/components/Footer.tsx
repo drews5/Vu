@@ -73,7 +73,7 @@ export const Footer = memo(function Footer() {
                 </span>
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="flex gap-2">
               {socialIcons.map((s) => (
                 <motion.a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" whileHover={{ y: -2, scale: 1.1 }} whileTap={{ scale: 0.9 }} className="bg-white/10 p-1.5 md:p-2.5 rounded-full hover:bg-[#8FA8C8]/20 hover:text-[#8FA8C8] transition-all duration-200 cursor-pointer flex items-center justify-center aspect-square" aria-label={s.label}>
                   <s.Icon className="w-2.5 h-2.5 md:w-4.5 md:h-4.5" />
