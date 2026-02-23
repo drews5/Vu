@@ -14,6 +14,7 @@ const EventDetail = lazy(() => import('./pages/EventDetail').then(m => ({ defaul
 const Contact = lazy(() => import('./pages/Contact').then(m => ({ default: m.Contact })));
 const Auditions = lazy(() => import('./pages/Auditions').then(m => ({ default: m.Auditions })));
 const Portal = lazy(() => import('./pages/Portal').then(m => ({ default: m.Portal })));
+const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
 function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
@@ -53,6 +54,7 @@ function AppContent() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/auditions" element={<Auditions />} />
               <Route path="/portal" element={<Portal />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </AnimatePresence>
         </Suspense>
