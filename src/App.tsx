@@ -4,8 +4,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { Analytics } from '@vercel/analytics/react';
-// @ts-ignore
-import { useWebHaptics } from 'web-haptics/react';
+
 import { HelmetProvider } from 'react-helmet-async';
 
 const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
@@ -37,11 +36,17 @@ function ScrollToTop() {
 }
 
 function GlobalHaptics() {
-  const { trigger } = useWebHaptics();
-
   useEffect(() => {
-    const isMobile = window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window);
+    const isMobile = 'ontouchstart' in window || window.matchMedia('(max-width: 768px)').matches;
     if (!isMobile) return;
+
+    const triggerHaptic = () => {
+      try {
+        if (navigator.vibrate) {
+          navigator.vibrate(10);
+        }
+      } catch (_) { /* graceful no-op */ }
+    };
 
     const handleClick = (e: MouseEvent) => {
       let target = e.target as HTMLElement | null;
@@ -51,7 +56,7 @@ function GlobalHaptics() {
           target.tagName === 'A' ||
           target.getAttribute('role') === 'button'
         ) {
-          trigger('success');
+          triggerHaptic();
           break;
         }
         target = target.parentElement;
@@ -60,7 +65,7 @@ function GlobalHaptics() {
 
     document.addEventListener('click', handleClick, true);
     return () => document.removeEventListener('click', handleClick, true);
-  }, [trigger]);
+  }, []);
 
   return null;
 }
@@ -100,6 +105,8 @@ function AppContent() {
     </div>
   );
 }
+
+
 
 export default function App() {
   return (

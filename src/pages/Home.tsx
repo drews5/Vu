@@ -8,13 +8,14 @@ import icca2025Photo from '../assets/icca-2025.jpg';
 import winterShowcasePhoto from '../assets/winter-showcase.jpg';
 import nightSongsPhoto from '../assets/night-songs.jpg';
 import groupPhoto from '../assets/group-photo.jpg';
+
 import { Link } from 'react-router-dom';
-import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
-import { useEffect, useState, useRef } from 'react';
+import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight, Copy, ChevronDown } from 'lucide-react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { ContactForm } from '../components/ContactForm';
-import { Footer } from '../components/Footer';
+
 import { supabase } from '../utils/supabase';
-import { motion, useScroll, useTransform, useMotionTemplate } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
@@ -130,26 +131,25 @@ function EventCard({ event }: { event: FeaturedEvent }) {
 }
 
 export function Home() {
-  const { scrollY } = useScroll();
-
-  // Transform values defined at top-level to avoid hook violations
-  const heroWidth = useTransform(scrollY, [0, 400], ['100vw', '100%']);
-  const heroHeight = useTransform(scrollY, [0, 300], ['100vh', '576px']);
-  const heroX = useTransform(scrollY, [0, 400], ['calc(-50vw + 50%)', '0px']);
-  const heroY = useTransform(scrollY, [0, 400], ['-130px', '0px']);
-  const heroRadius = useTransform(scrollY, [0, 300], ['0px', '16px']);
-
-  const heroBlur = useTransform(scrollY, [0, 300], ['16px', '0px']);
-  const heroFilter = useMotionTemplate`brightness(1.08) saturate(1.05) blur(${heroBlur})`;
-  const heroScale = useTransform(scrollY, [0, 400], [1.1, 1]);
-
-  const overlayOpacity = useTransform(scrollY, [0, 150], [1, 0]);
-  const contentOpacity = useTransform(scrollY, [150, 300], [0, 1]);
-
   const [items, setItems] = useState<FeaturedEvent[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCards, setVisibleCards] = useState(1);
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Track scroll for full-screen hero transition
+  useEffect(() => {
+    const handleScroll = () => {
+      // Small threshold to trigger the snap
+      if (window.scrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // initial check
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -226,70 +226,67 @@ export function Home() {
     setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
   };
   const showArrows = items.length > visibleCards;
+
   return (
-    <PageTransition className="pb-0" delay={0}>
+    <PageTransition className="pb-0 relative" delay={0}>
       <Helmet>
         <title>Vocal U A Cappella | Home | UMN Minneapolis</title>
         <meta name="description" content="Official home of Vocal U A Cappella at the University of Minnesota. Explore our music, meet our members, and find upcoming performances in Minneapolis." />
         <link rel="canonical" href="https://vocalu.org/" />
+        <style type="text/css">{`
+          body {
+            overflow-x: hidden;
+          }
+        `}</style>
       </Helmet>
+
       {/* Hero Section */}
       <motion.section
-        initial="initial"
-        animate="animate"
-        variants={{
-          initial: { opacity: 0 },
-          animate: { opacity: 1, transition: { duration: 0.8 } }
+        initial={false}
+        animate={{
+          marginTop: isScrolled ? 110 : 0,
+          marginBottom: isScrolled ? 25 : 0,
+          marginLeft: isScrolled ? 0 : 'calc(-50vw + 50%)',
+          marginRight: isScrolled ? 0 : 'calc(-50vw + 50%)'
         }}
-        // The placeholder so the page layout is stable
-        className="w-full relative z-[40]"
-        style={{ marginTop: '25px', marginBottom: '25px', height: '576px' }}
+        transition={{ type: 'spring', damping: 25, stiffness: 120 }}
+        style={{ position: 'relative', zIndex: 1 }}
       >
         <motion.div
-          className="overflow-hidden border border-gray-100 shadow-sm"
-          style={{
-            position: 'absolute',
-            width: heroWidth,
-            height: heroHeight,
-            x: heroX,
-            y: heroY,
-            borderRadius: heroRadius,
-            transformOrigin: 'top center'
+          className="relative overflow-hidden"
+          initial={false}
+          animate={{
+            height: isScrolled ? 576 : 'min(100vh, 160vw)', // limit height slightly on mobile to prevent extreme cropping
+            borderRadius: isScrolled ? 16 : 0,
+            border: isScrolled ? '1px solid rgba(243, 244, 246, 1)' : '0px solid rgba(243, 244, 246, 0)',
+            boxShadow: isScrolled ? '0 1px 2px 0 rgba(0, 0, 0, 0.05)' : 'none'
           }}
+          transition={{ type: 'spring', damping: 25, stiffness: 120 }}
         >
           <motion.img
             src={heroBackground}
             alt="Vocal U Group"
-            className="w-full h-full object-cover origin-center"
-            style={{
-              filter: heroFilter,
-              scale: heroScale
-            }}
+            className="w-full h-full object-cover"
+            style={{ filter: 'brightness(1.08) saturate(1.05)', objectPosition: 'center 20%' }}
+            layout
           />
-
-          {/* Fullscreen Overlay & Arrow */}
-          <motion.div
-            className="absolute inset-0 flex flex-col justify-end items-center pb-[10vh] pointer-events-none bg-[#8FA8C8]/30"
-            style={{ opacity: overlayOpacity }}
-          >
-            <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}>
-              <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white border border-white/20">
-                <ArrowRight className="w-6 h-6 rotate-90" />
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Actual Hero Content - Fades in as we scroll down */}
-          <motion.div
-            className="absolute inset-0 flex flex-col justify-between items-center py-8 md:py-12 px-4"
-            style={{ opacity: contentOpacity }}
-          >
-            <motion.div className="flex-shrink-0">
+          <div className="absolute inset-0 flex flex-col justify-between items-center pt-8 md:pt-12 pb-24 md:pb-16 px-4">
+            <motion.div
+              className="flex-shrink-0"
+              initial={false}
+              animate={{
+                opacity: 1,
+                scale: isScrolled ? (window.innerWidth < 768 ? 0.85 : 1) : (window.innerWidth < 768 ? 1 : 1.25),
+                y: isScrolled ? 0 : (window.innerWidth < 768 ? 10 : 20)
+              }}
+              transition={{ type: 'spring', damping: 25, stiffness: 120 }}
+              style={{ originY: 0 }}
+            >
               <Link to="/portal" className="cursor-default outline-none" draggable={false}>
                 <img
                   src={fullLogo}
                   alt="Vocal U - University of Minnesota's A Cappella Group"
-                  className="w-full max-w-[264px] md:max-w-[330px]"
+                  className="w-full max-w-[200px] md:max-w-[330px]"
                   style={{ filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3))' }}
                 />
               </Link>
@@ -298,45 +295,78 @@ export function Home() {
             <div className="flex-grow" />
 
             <motion.div
-              initial={{ scale: 1 }}
+              initial={false}
               animate={{
-                scale: [1, 1.03, 1],
-                boxShadow: [
-                  "0 4px 6px rgba(0,0,0,0.1)",
-                  "0 10px 15px rgba(0,0,0,0.2)",
-                  "0 4px 6px rgba(0,0,0,0.1)"
-                ]
+                opacity: 1, scale: 1, y: 0,
+                marginBottom: isScrolled ? 0 : (window.innerWidth < 768 ? 20 : 40)
               }}
-              transition={{
-                duration: 2.5,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
             >
-              <Link
-                to="/event/spring-showcase-2026"
-                className="bg-white text-[#2B4C6F] px-8 md:px-12 py-3 md:py-4 border border-white hover:bg-[#8FA8C8] hover:text-white hover:border-[#8FA8C8] transition-all duration-300 flex-shrink-0 text-center block cursor-pointer font-yearbook shadow-md"
-                style={{
-                  ...fontYearbook,
-                  fontSize: 'clamp(16px, 2vw, 20px)',
-                  letterSpacing: '0.05em',
-                  borderRadius: '12px',
+              <motion.div
+                initial={{ scale: 1 }}
+                animate={{
+                  scale: [1, 1.02, 1],
+                  boxShadow: [
+                    "0 4px 6px rgba(0,0,0,0.1)",
+                    "0 8px 12px rgba(0,0,0,0.15)",
+                    "0 4px 6px rgba(0,0,0,0.1)"
+                  ]
                 }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
               >
-                Spring Showcase
-              </Link>
+                <Link
+                  to="/event/spring-showcase-2026"
+                  className="bg-white text-[#2B4C6F] px-6 md:px-12 py-2.5 md:py-4 border border-white hover:bg-[#8FA8C8] hover:text-white hover:border-[#8FA8C8] transition-all duration-300 flex-shrink-0 text-center block cursor-pointer font-yearbook shadow-md"
+                  style={{
+                    ...fontYearbook,
+                    fontSize: 'clamp(14px, 4vw, 20px)',
+                    letterSpacing: '0.05em',
+                    borderRadius: '12px',
+                  }}
+                >
+                  Spring Showcase
+                </Link>
+              </motion.div>
             </motion.div>
-          </motion.div>
+          </div>
+
+          {/* Scroll Down Arrow inside Hero */}
+          <AnimatePresence>
+            {!isScrolled && (
+              <motion.div
+                initial={{ opacity: 0, y: -5 }}
+                animate={{ opacity: 1, y: 0, transition: { delay: 0.8, duration: 0.5 } }}
+                exit={{ opacity: 0, y: 5 }}
+                className="absolute bottom-[80px] md:bottom-6 left-1/2 -translate-x-1/2 cursor-pointer z-10"
+                onClick={() => window.scrollTo({ top: window.innerHeight * 0.7, behavior: 'smooth' })}
+              >
+                <motion.div
+                  animate={{ y: [0, 4, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                  className="bg-black/20 backdrop-blur-sm rounded-full p-2 md:bg-transparent md:backdrop-blur-none"
+                >
+                  <ChevronDown className="w-5 h-5 md:w-12 md:h-12 text-white/90 md:text-white drop-shadow-sm md:drop-shadow-md" strokeWidth={2} />
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </motion.section>
 
       {/* We Are Vocal U Section */}
       <motion.section
         variants={childVariants}
-        className="bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center shadow-sm hover:shadow-md transition-shadow duration-300"
-        style={{ gap: '25px', marginBottom: '25px', borderRadius: '16px' }}
+        className="bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center shadow-sm hover:shadow-md transition-shadow duration-300 relative z-10"
+        style={{
+          gap: '25px',
+          marginBottom: '25px',
+          borderRadius: '16px'
+        }}
       >
         <div>
           <h2 className="mb-6 md:mb-8 whitespace-nowrap">
@@ -407,7 +437,8 @@ export function Home() {
           marginBottom: '25px',
           borderRadius: '16px',
           background: 'linear-gradient(135deg, #91a8c6 0%, #7A97B7 100%)',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          zIndex: 1,
         }}
       >
         <div className="max-w-6xl mx-auto relative z-10">
@@ -501,7 +532,7 @@ export function Home() {
       </motion.section>
 
       {/* Contact Form Section */}
-      <motion.section variants={childVariants} style={{ marginBottom: '25px' }}>
+      <motion.section variants={childVariants} style={{ marginBottom: '25px', position: 'relative', zIndex: 1 }}>
         <ContactForm />
       </motion.section>
     </PageTransition>

@@ -56,10 +56,17 @@ export function Header() {
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAtBottom, setIsAtBottom] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
+
+      // Check if near bottom of page
+      const windowHeight = window.innerHeight;
+      const scrollY = window.scrollY;
+      const documentHeight = document.documentElement.scrollHeight;
+      setIsAtBottom(windowHeight + scrollY >= documentHeight - 100);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
 
@@ -84,83 +91,146 @@ export function Header() {
     location.pathname === '/auditions';
   return (
     <>
-      <div className="hidden md:block">
-        {/* Top Mask - Solid white block above the header when sticky */}
-        <div className="fixed top-0 left-0 right-0 h-[24px] bg-white z-[45] pointer-events-none" />
-        {/* Corner Masks - Solid white blocks that extend from screen edges to cut off scrolling content behind rounded corners */}
-        <div className="sticky top-0 z-[48] pointer-events-none h-0">
-          <div className="absolute top-[24px] left-0 w-[40%] h-[16px] bg-white" />
-          <div className="absolute top-[24px] right-0 w-[40%] h-[16px] bg-white" />
-        </div>
-      </div>
+      {/* Desktop Top Mask - Hides content scrolling above the island */}
+      <motion.div
+        className="hidden md:block fixed top-0 left-0 right-0 z-[51] bg-white pointer-events-none"
+        initial={{ height: 0 }}
+        animate={{ height: isScrolled ? 24 : 0 }}
+        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+      />
 
-      <header className={`hidden md:block mt-[25px] px-4 md:px-8 py-4 border border-white/20 shadow-sm sticky top-6 z-50 transition-all duration-300 ${isScrolled ? 'bg-[#8FA8C8]/90 backdrop-blur-md shadow-md' : 'bg-[#8FA8C8] shadow-sm'}`} style={{ borderRadius: '16px' }}>
-        <div className="max-w-7xl mx-auto">
-          {/* Desktop Layout */}
-          <div className="flex flex-col md:flex-row items-center justify-between relative">
-            <Link to="/" className="flex items-center">
-              <img src={logoImage} alt="Vocal U" className="h-16 w-auto hover:scale-105 transition-transform duration-200" />
-            </Link>
-            <nav className="flex items-center absolute left-1/2 transform -translate-x-1/2">
-              {navItems.map((item, index) => {
-                return (
-                  <div key={item.path} className="flex items-center">
-                    <div className="relative py-2 flex flex-col items-center group px-2 lg:px-4">
-                      {item.dropdown ? (
-                        <div className="relative" onMouseEnter={() => setAboutDropdownOpen(true)}
-                          onMouseLeave={() => setAboutDropdownOpen(false)}
-                        >
-                          <div className={`cursor-pointer transition-colors duration-200 flex items-center gap-1 font-yearbook ${location.pathname.startsWith(item.path) || isAboutActive ? 'text-white' : 'text-white/70 hover:text-white'}`} style={{ ...fontYearbook, fontSize: 'clamp(16px, 1.8vw, 22px)', letterSpacing: '0.05em' }}>
-                            {item.name}
+      <motion.div
+        className="hidden md:block fixed top-0 left-0 right-0 z-[50] flex justify-center pointer-events-none px-4 md:px-[50px]"
+        animate={{ paddingTop: isScrolled ? 24 : 0 }}
+        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+      >
+        <div className="relative w-full max-w-[1340px] flex justify-center">
+          {/* Inverted Corners to frame the island perfectly */}
+          <AnimatePresence>
+            {isScrolled && (
+              <>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute top-0 left-0 w-5 h-5 bg-white z-[52]"
+                  style={{
+                    maskImage: 'radial-gradient(circle at 100% 100%, transparent 20px, black 20px)',
+                    WebkitMaskImage: 'radial-gradient(circle at 100% 100%, transparent 20px, black 20px)'
+                  }}
+                />
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute top-0 right-0 w-5 h-5 bg-white z-[52]"
+                  style={{
+                    maskImage: 'radial-gradient(circle at 0% 100%, transparent 20px, black 20px)',
+                    WebkitMaskImage: 'radial-gradient(circle at 0% 100%, transparent 20px, black 20px)'
+                  }}
+                />
+              </>
+            )}
+          </AnimatePresence>
+
+          <motion.header
+            layout
+            className={`pointer-events-auto overflow-hidden w-full transition-shadow duration-300 ${isScrolled ? 'px-8 py-2.5 rounded-[20px] shadow-lg' : 'px-10 py-6 rounded-b-[24px] rounded-t-0'}`}
+            style={{
+              background: isScrolled
+                ? 'linear-gradient(135deg, rgba(143,168,200,0.92) 0%, rgba(163,188,220,0.88) 50%, rgba(143,168,200,0.92) 100%)'
+                : 'transparent',
+              backdropFilter: isScrolled ? 'blur(20px) saturate(1.6)' : 'none',
+              WebkitBackdropFilter: isScrolled ? 'blur(20px) saturate(1.6)' : 'none',
+              border: isScrolled ? '1px solid rgba(255,255,255,0.4)' : 'none',
+              boxShadow: isScrolled
+                ? '0 10px 40px rgba(43,76,111,0.15), inset 0 1px 0 rgba(255,255,255,0.4)'
+                : 'none',
+            }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          >
+            <div className="flex items-center justify-between gap-6 lg:gap-10 relative w-full">
+              <Link to="/" className="flex items-center shrink-0">
+                <motion.img
+                  layout
+                  src={logoImage}
+                  alt="Vocal U"
+                  className={`${isScrolled ? 'h-9' : 'h-14'} w-auto hover:scale-105 transition-all duration-300`}
+                />
+              </Link>
+
+              <nav className="flex items-center flex-1 justify-center gap-0">
+                {navItems.map((item, index) => {
+                  return (
+                    <div key={item.path} className="flex items-center">
+                      <div className="relative py-2 flex flex-col items-center group px-3 lg:px-5">
+                        {item.dropdown ? (
+                          <div className="relative" onMouseEnter={() => setAboutDropdownOpen(true)}
+                            onMouseLeave={() => setAboutDropdownOpen(false)}
+                          >
+                            <div className={`cursor-pointer transition-colors duration-200 flex items-center gap-1 font-yearbook ${location.pathname.startsWith(item.path) || isAboutActive ? 'text-white' : 'text-white/70 hover:text-white'}`} style={{ ...fontYearbook, fontSize: isScrolled ? '18px' : 'clamp(16px, 1.8vw, 22px)', letterSpacing: '0.05em' }}>
+                              {item.name}
+                            </div>
+                            <AnimatePresence>
+                              {aboutDropdownOpen && (
+                                <motion.div initial={{ opacity: 0, y: 8, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 8, scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 25 }} className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50 pointer-events-auto">
+                                  <div className="bg-white/95 backdrop-blur-sm shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] py-2.5 min-w-[220px] border border-[#8FA8C8]/20" style={{ borderRadius: '14px' }}>
+                                    {item.dropdown.map((dropItem) => (
+                                      <Link key={dropItem.path} to={dropItem.path} className={`block px-6 py-2.5 transition-all duration-200 font-yearbook mx-1.5 ${location.pathname === dropItem.path ? 'bg-[#8FA8C8]/15 text-[#2B4C6F]' : 'text-[#2B4C6F] hover:bg-[#8FA8C8]/10'}`} style={{ ...fontYearbook, fontSize: '18px', borderRadius: '10px' }}>
+                                        {dropItem.name}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
                           </div>
-                          <AnimatePresence>
-                            {aboutDropdownOpen && (
-                              <motion.div initial={{ opacity: 0, y: 8, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 8, scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 25 }} className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50 pointer-events-auto">
-                                <div className="bg-white/95 backdrop-blur-sm shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] py-2.5 min-w-[220px] border border-[#8FA8C8]/20" style={{ borderRadius: '14px' }}>
-                                  {item.dropdown.map((dropItem) => (
-                                    <Link key={dropItem.path} to={dropItem.path} className={`block px-6 py-2.5 transition-all duration-200 font-yearbook mx-1.5 ${location.pathname === dropItem.path ? 'bg-[#8FA8C8]/15 text-[#2B4C6F]' : 'text-[#2B4C6F] hover:bg-[#8FA8C8]/10'}`} style={{ ...fontYearbook, fontSize: '18px', borderRadius: '10px' }}>
-                                      {dropItem.name}
-                                    </Link>
-                                  ))}
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      ) : (
-                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                          <Link to={item.path} className={`px-0 py-2 transition-colors duration-200 font-yearbook ${location.pathname === item.path ? 'text-white' : 'text-white/70 hover:text-white'}`} style={{ ...fontYearbook, fontSize: 'clamp(16px, 1.8vw, 22px)', letterSpacing: '0.05em' }}>
-                            {item.name}
-                          </Link>
-                        </motion.div>
-                      )}
-                      {/* Active Underline */}
-                      {(location.pathname === item.path || (item.dropdown && isAboutActive)) && (
-                        <motion.div layoutId="navActionIndicator" className="absolute bottom-0 inset-x-2 lg:inset-x-4 h-[3px] bg-white rounded-full z-20" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+                        ) : (
+                          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                            <Link to={item.path} className={`px-0 py-2 transition-colors duration-200 font-yearbook ${location.pathname === item.path ? 'text-white' : 'text-white/70 hover:text-white'}`} style={{ ...fontYearbook, fontSize: isScrolled ? '18px' : 'clamp(16px, 1.8vw, 22px)', letterSpacing: '0.05em' }}>
+                              {item.name}
+                            </Link>
+                          </motion.div>
+                        )}
+                        {/* Active Underline */}
+                        {(location.pathname === item.path || (item.dropdown && isAboutActive)) && (
+                          <motion.div layoutId="navActionIndicatorDesktop" className="absolute bottom-0 inset-x-1 lg:inset-x-2 h-[2.5px] bg-white rounded-full z-20" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+                        )}
+                      </div>
+                      {index < navItems.length - 1 && (
+                        <div className="h-4 w-[1px] bg-white/40 mx-1 lg:mx-2" />
                       )}
                     </div>
-                    {index < navItems.length - 1 && (
-                      <div className="h-6 w-[1px] bg-white/20" />
-                    )}
-                  </div>
-                );
-              })}
-            </nav>
-            <div className="flex items-center gap-3">
-              {socialLinks.map((s) => (
-                <SocialIcon key={s.label} href={s.href} label={s.label} Icon={s.Icon} />
-              ))}
+                  );
+                })}
+              </nav>
+
+              <div className="flex items-center gap-2 lg:gap-3 shrink-0">
+                {socialLinks.map((s) => (
+                  <SocialIcon key={s.label} href={s.href} label={s.label} Icon={s.Icon} size={isScrolled ? 4 : 5} />
+                ))}
+              </div>
             </div>
-          </div>
+          </motion.header>
         </div>
-      </header>
+      </motion.div>
 
       {/* Mobile Dynamic Island */}
       <div className="md:hidden fixed bottom-6 left-0 right-0 z-[60] flex justify-center px-4 pointer-events-none">
         <motion.div
           layout
-          className={`pointer-events-auto bg-[#8FA8C8]/80 backdrop-blur-[24px] saturate-[1.5] border border-white/20 shadow-[0_12px_40px_rgba(143,168,200,0.5)] overflow-hidden rounded-[16px] ${!isScrolled || mobileMenuOpen ? 'w-full max-w-[420px]' : 'w-auto max-w-[100%]'
+          className={`pointer-events-auto overflow-hidden rounded-[16px] ${!isScrolled || mobileMenuOpen ? 'w-full max-w-[420px]' : 'w-auto max-w-[100%]'
             } ${mobileMenuOpen ? 'py-4' : 'py-3 px-3'}`}
+          style={{
+            background: 'linear-gradient(135deg, rgba(143,168,200,0.92) 0%, rgba(163,188,220,0.88) 50%, rgba(143,168,200,0.92) 100%)',
+            backdropFilter: 'blur(20px) saturate(1.6)',
+            WebkitBackdropFilter: 'blur(20px) saturate(1.6)',
+            border: '1px solid rgba(255,255,255,0.4)',
+            boxShadow: '0 10px 40px rgba(43,76,111,0.15), inset 0 1px 0 rgba(255,255,255,0.4)',
+          }}
+          animate={{
+            y: isAtBottom ? -310 : 0
+          }}
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
         >
           {/* Collapsed/Header state */}
@@ -261,7 +331,7 @@ export function Header() {
           >
             <Link
               to="/portal"
-              className="block bg-[#8FA8C8] text-white py-1 px-4 text-center rounded-b-xl shadow-[0_0_15px_rgba(143,168,200,0.3)] animate-pulse pointer-events-auto hover:bg-[#7A97B7] transition-colors border-x border-b border-white/20 max-w-fit mx-auto"
+              className="block bg-[#2B4C6F] text-white py-1 px-4 text-center rounded-b-xl shadow-[0_0_15px_rgba(43,76,111,0.3)] animate-pulse pointer-events-auto hover:bg-[#1a3249] transition-colors border-x border-b border-white/20 max-w-fit mx-auto"
               style={{ fontSize: '11px', letterSpacing: '0.05em', fontFamily: 'Inter, sans-serif' }}
             >
               Hello, Returning Vocal U Member! <span className="underline ml-1 font-bold">Go to Portal &rarr;</span>
