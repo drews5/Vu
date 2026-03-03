@@ -49,10 +49,11 @@ export const childVariants = {
 interface PageTransitionProps {
     children: ReactNode;
     className?: string;
+    style?: React.CSSProperties;
     delay?: number;
 }
 
-export function PageTransition({ children, className = '', delay = 0 }: PageTransitionProps) {
+export function PageTransition({ children, className = '', style, delay = 0 }: PageTransitionProps) {
     const location = useLocation();
 
     return (
@@ -72,6 +73,7 @@ export function PageTransition({ children, className = '', delay = 0 }: PageTran
                 },
             }}
             className={className}
+            style={style}
         >
             {children}
         </motion.div>

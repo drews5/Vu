@@ -4,6 +4,10 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { Analytics } from '@vercel/analytics/react';
+// @ts-ignore
+import { useWebHaptics } from 'web-haptics/react';
+import { HelmetProvider } from 'react-helmet-async';
+
 const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
 const About = lazy(() => import('./pages/About').then(m => ({ default: m.About })));
 const Members = lazy(() => import('./pages/Members').then(m => ({ default: m.Members })));
@@ -15,6 +19,7 @@ const Contact = lazy(() => import('./pages/Contact').then(m => ({ default: m.Con
 const Auditions = lazy(() => import('./pages/Auditions').then(m => ({ default: m.Auditions })));
 const Portal = lazy(() => import('./pages/Portal').then(m => ({ default: m.Portal })));
 const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
+
 function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
@@ -22,6 +27,7 @@ function PageLoader() {
     </div>
   );
 }
+
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -29,6 +35,36 @@ function ScrollToTop() {
   }, [pathname]);
   return null;
 }
+
+function GlobalHaptics() {
+  const { trigger } = useWebHaptics();
+
+  useEffect(() => {
+    const isMobile = window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window);
+    if (!isMobile) return;
+
+    const handleClick = (e: MouseEvent) => {
+      let target = e.target as HTMLElement | null;
+      while (target && target !== document.body) {
+        if (
+          target.tagName === 'BUTTON' ||
+          target.tagName === 'A' ||
+          target.getAttribute('role') === 'button'
+        ) {
+          trigger('success');
+          break;
+        }
+        target = target.parentElement;
+      }
+    };
+
+    document.addEventListener('click', handleClick, true);
+    return () => document.removeEventListener('click', handleClick, true);
+  }, [trigger]);
+
+  return null;
+}
+
 function AppContent() {
   const location = useLocation();
   const isAuditionsPage = location.pathname === '/auditions';
@@ -38,6 +74,7 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-white">
       <ScrollToTop />
+      <GlobalHaptics />
       <Analytics />
       <div className="max-w-[1440px] mx-auto px-3 md:px-[50px]">
         {!hideHeaderFooter && <Header />}
@@ -63,7 +100,9 @@ function AppContent() {
     </div>
   );
 }
+
 import { HelmetProvider } from 'react-helmet-async';
+
 export default function App() {
   return (
     <HelmetProvider>

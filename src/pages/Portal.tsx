@@ -401,7 +401,6 @@ export function Portal() {
                         </div>
                     </motion.div>
                 )}
-
             </main>
         </PageTransition>
     );

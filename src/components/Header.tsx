@@ -83,16 +83,21 @@ export function Header() {
     location.pathname === '/donate' ||
     location.pathname === '/auditions';
   return (
-    <> {/* Top Mask - Solid white block above the header when sticky */} <div className="fixed top-0 left-0 right-0 h-[24px] bg-white z-[45] pointer-events-none" />
-      {/* Corner Masks - Solid white blocks that extend from screen edges to cut off scrolling content behind rounded corners */}
-      <div className="sticky top-0 z-[48] pointer-events-none h-0">
-        <div className="absolute top-[24px] left-0 w-[40%] h-[16px] bg-white" />
-        <div className="absolute top-[24px] right-0 w-[40%] h-[16px] bg-white" />
+    <>
+      <div className="hidden md:block">
+        {/* Top Mask - Solid white block above the header when sticky */}
+        <div className="fixed top-0 left-0 right-0 h-[24px] bg-white z-[45] pointer-events-none" />
+        {/* Corner Masks - Solid white blocks that extend from screen edges to cut off scrolling content behind rounded corners */}
+        <div className="sticky top-0 z-[48] pointer-events-none h-0">
+          <div className="absolute top-[24px] left-0 w-[40%] h-[16px] bg-white" />
+          <div className="absolute top-[24px] right-0 w-[40%] h-[16px] bg-white" />
+        </div>
       </div>
-      <header className={`mt-[25px] px-4 md:px-8 py-4 border border-white/20 shadow-sm sticky top-6 z-50 transition-all duration-300 ${isScrolled ? 'bg-[#8FA8C8]/90 backdrop-blur-md shadow-md' : 'bg-[#8FA8C8] shadow-sm'}`} style={{ borderRadius: '16px' }}>
+
+      <header className={`hidden md:block mt-[25px] px-4 md:px-8 py-4 border border-white/20 shadow-sm sticky top-6 z-50 transition-all duration-300 ${isScrolled ? 'bg-[#8FA8C8]/90 backdrop-blur-md shadow-md' : 'bg-[#8FA8C8] shadow-sm'}`} style={{ borderRadius: '16px' }}>
         <div className="max-w-7xl mx-auto">
           {/* Desktop Layout */}
-          <div className="hidden md:flex items-center justify-between relative">
+          <div className="flex flex-col md:flex-row items-center justify-between relative">
             <Link to="/" className="flex items-center">
               <img src={logoImage} alt="Vocal U" className="h-16 w-auto hover:scale-105 transition-transform duration-200" />
             </Link>
@@ -147,72 +152,102 @@ export function Header() {
               ))}
             </div>
           </div>
-          {/* Mobile Layout */}
-          <div className="md:hidden">
-            <div className="flex items-center justify-between">
-              <Link to="/" className="flex items-center">
-                <img src={logoImage} alt="Vocal U" className="h-12 w-auto" loading="lazy" />
-              </Link>
-              <button className="text-white active:scale-90 transition-transform" onClick={() => setMobileMenuOpen((prev) => !prev)}
-              >
-                <AnimatePresence mode="wait">
-                  {mobileMenuOpen ? (
-                    <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                      <X className="w-6 h-6" />
-                    </motion.div>
-                  ) : (
-                    <motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                      <Menu className="w-6 h-6" />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </button>
-            </div>
-            <AnimatePresence>
-              {mobileMenuOpen && (
-                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
-                  <nav className="mt-4 pt-4 border-t border-white/30">
-                    {navItems.map((item) =>
-                      item.dropdown ? (
-                        <div key={item.path}>
-                          <button onClick={() => setAboutDropdownOpen((prev) => !prev)}
-                            className="w-full text-left px-4 py-3 text-white/90"
-                            style={{ ...fontYearbook, fontSize: '20px', letterSpacing: '0.05em' }}
-                          >
-                            {item.name}
-                          </button>
-                          <AnimatePresence>
-                            {aboutDropdownOpen && (
-                              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="pl-4 overflow-hidden">
-                                {item.dropdown.map((dropItem) => (
-                                  <Link key={dropItem.path} to={dropItem.path} onClick={closeMobileMenu} className="block px-4 py-2 text-white/80" style={{ ...fontYearbook, fontSize: '18px' }}>
-                                    {dropItem.name}
-                                  </Link>
-                                ))}
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      ) : (
-                        <Link key={item.path} to={item.path} onClick={closeMobileMenu} className={`block px-4 py-3 transition-all duration-200 ${location.pathname === item.path ? 'text-white' : 'text-white/90 hover:text-white'}`} style={{ ...fontYearbook, fontSize: '20px', letterSpacing: '0.05em' }}>
-                          {item.name}
-                        </Link>
-                      )
-                    )}
-                    <div className="flex items-center gap-3 px-4 py-4 mt-2">
-                      {socialLinks.map((s) => (
-                        <motion.a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-1 md:p-2.5 rounded-full hover:bg-[#8FA8C8]/20 transition-all duration-200 cursor-pointer flex items-center justify-center" aria-label={s.label}>
-                          <s.Icon className="w-3 h-3 md:w-5 md:h-5 text-white" />
-                        </motion.a>
-                      ))}
-                    </div>
-                  </nav>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
         </div>
       </header>
+
+      {/* Mobile Dynamic Island */}
+      <div className="md:hidden fixed bottom-6 left-0 right-0 z-[60] flex justify-center px-4 pointer-events-none">
+        <motion.div
+          layout
+          className={`pointer-events-auto bg-[#8FA8C8]/80 backdrop-blur-[24px] saturate-[1.5] border border-white/20 shadow-[0_12px_40px_rgba(143,168,200,0.5)] overflow-hidden rounded-[16px] ${!isScrolled || mobileMenuOpen ? 'w-full max-w-[420px]' : 'w-auto max-w-[100%]'
+            } ${mobileMenuOpen ? 'py-4' : 'py-3 px-3'}`}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        >
+          {/* Collapsed/Header state */}
+          <motion.div layout className={`flex items-center justify-between ${mobileMenuOpen ? 'px-4 pb-4 border-b border-white/20 gap-4' : 'px-2 gap-3'}`}>
+            <Link to="/" className="flex items-center shrink-0" onClick={() => setMobileMenuOpen(false)}>
+              <motion.img layout src={logoImage} alt="Vocal U" className="h-10 w-auto transition-all" loading="lazy" />
+            </Link>
+            {!mobileMenuOpen && (
+              <motion.div
+                layout
+                className="text-white/95 text-[22px] truncate cursor-pointer flex-1 text-center px-2"
+                onClick={() => setMobileMenuOpen(true)}
+                style={{ ...fontYearbook, letterSpacing: '0.05em' }}
+              >
+                {navItems.find(item => location.pathname === item.path)?.name || (isAboutActive ? 'About' : 'Menu')}
+              </motion.div>
+            )}
+            <motion.button layout className="text-white active:scale-90 transition-transform flex-shrink-0 bg-white/10 hover:bg-white/20 rounded-[12px] p-2.5" onClick={() => setMobileMenuOpen((prev) => !prev)}>
+              <AnimatePresence mode="wait">
+                {mobileMenuOpen ? (
+                  <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                    <X className="w-6 h-6" />
+                  </motion.div>
+                ) : (
+                  <motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                    <Menu className="w-6 h-6" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
+          </motion.div>
+
+          {/* Expanded Menu Content */}
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden px-4"
+              >
+                <nav className="mt-4 flex flex-col gap-1">
+                  {navItems.map((item) =>
+                    item.dropdown ? (
+                      <div key={item.path} className="bg-white/5 rounded-2xl overflow-hidden">
+                        <button onClick={() => setAboutDropdownOpen((prev) => !prev)}
+                          className="w-full text-left px-4 py-3 text-white/90 flex justify-between items-center bg-transparent transition-colors hover:bg-white/5"
+                          style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em' }}
+                        >
+                          {item.name}
+                          <motion.div animate={{ rotate: aboutDropdownOpen ? 180 : 0 }}>
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                          </motion.div>
+                        </button>
+                        <AnimatePresence>
+                          {aboutDropdownOpen && (
+                            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden bg-black/10">
+                              {item.dropdown.map((dropItem) => (
+                                <Link key={dropItem.path} to={dropItem.path} onClick={closeMobileMenu} className="block px-6 py-2.5 text-white/80 hover:text-white hover:bg-white/10 transition-colors" style={{ ...fontYearbook, fontSize: '16px' }}>
+                                  {dropItem.name}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ) : (
+                      <Link key={item.path} to={item.path} onClick={closeMobileMenu} className={`block px-4 py-3 rounded-2xl transition-colors duration-200 ${location.pathname === item.path ? 'bg-white/15 text-white' : 'text-white/90 hover:bg-white/10 hover:text-white'}`} style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em' }}>
+                        {item.name}
+                      </Link>
+                    )
+                  )}
+                  <div className="flex items-center justify-center gap-4 px-4 py-5 mt-2">
+                    {socialLinks.map((s) => (
+                      <motion.a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2.5 rounded-full hover:bg-white/20 transition-all duration-200 cursor-pointer flex items-center justify-center" aria-label={s.label}>
+                        <s.Icon className="w-5 h-5 text-white" />
+                      </motion.a>
+                    ))}
+                  </div>
+                </nav>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+
 
       {/* Member Ribbon */}
       <AnimatePresence>
