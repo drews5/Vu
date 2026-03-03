@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Calendar, MapPin, Clock, Share2, Navigation, ArrowLeft } from 'lucide-react';
+import { Calendar, MapPin, Clock, Share2, Navigation, ArrowLeft, Copy } from 'lucide-react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
@@ -9,6 +9,7 @@ import showcasePhoto from '../assets/spring-showcase.jpg';
 import icca2026Photo from '../assets/icca-2026.jpg';
 import icca2025Photo from '../assets/icca-2025.jpg';
 import winterShowcasePhoto from '../assets/winter-showcase.jpg';
+import nightSongsPhoto from '../assets/night-songs.jpg';
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 interface EventData {
@@ -53,7 +54,8 @@ export function EventDetail() {
                         data.slug === 'spring-showcase-2026' ? ichsaPhoto :
                             data.slug === 'icca-quarterfinal-2026' ? icca2026Photo :
                                 data.slug === 'icca-quarterfinal-2025' ? icca2025Photo :
-                                    data.slug === 'winter-showcase-2025' ? winterShowcasePhoto : data.image_url,
+                                    data.slug === 'winter-showcase-2025' ? winterShowcasePhoto :
+                                        data.slug === 'night-songs' ? nightSongsPhoto : data.image_url,
                     fullDate: d,
                     status: data.status,
                 });
@@ -62,6 +64,15 @@ export function EventDetail() {
         }
         fetchEventDetail();
     }, [eventId]);
+    const [copied, setCopied] = useState(false);
+    const handleCopyInfo = () => {
+        if (!event) return;
+        const eventLink = window.location.href;
+        const info = `Come see Vocal U at ${event.title} on ${event.date} at ${event.time} at ${event.location}! ${eventLink}`;
+        navigator.clipboard.writeText(info);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
     const handleShare = async () => {
         if (!event) return;
         const shareUrl = window.location.href;
@@ -124,7 +135,17 @@ export function EventDetail() {
                         <div className="flex flex-col gap-8">
                             {/* Header Info */}
                             <motion.div variants={childVariants}>
-                                <h1 className="text-[#2B4C6F] mb-4 leading-tight" style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 72px)' }}>{event.title}</h1>
+                                <div className="flex justify-start mb-2 relative">
+                                    <button onClick={handleCopyInfo} className="flex items-center gap-2 text-[#8FA8C8] hover:text-[#2B4C6F] transition-colors duration-200 text-xs tracking-widest cursor-pointer group/copy relative" style={fontInter}>
+                                        <Copy className="w-4 h-4" /> Copy Event Info
+                                        <span className={`ml-2 bg-[#2B4C6F] text-white text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none font-bold whitespace-nowrap ${copied ? 'opacity-100' : 'opacity-0'}`}>
+                                            COPIED!
+                                        </span>
+                                    </button>
+                                </div>
+                                <h1 className="text-[#2B4C6F] mb-4 leading-tight" style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 72px)' }}>
+                                    {event.title}
+                                </h1>
                                 <div className="flex flex-wrap gap-6 text-[#2B4C6F]/60" style={fontInter}>
                                     <div className="flex items-center gap-2"><Calendar className="w-5 h-5 text-[#8FA8C8]" /><span>{event.date}</span></div>
                                     <div className="flex items-center gap-2"><Clock className="w-5 h-5 text-[#8FA8C8]" /><span>{event.time}</span></div>
@@ -135,8 +156,8 @@ export function EventDetail() {
                                 {/* Left Column: Image and Description */}
                                 <div className="lg:col-span-2 space-y-8">
                                     {event.imageUrl && (
-                                        <motion.div variants={childVariants} className="relative rounded-2xl overflow-hidden border border-gray-100">
-                                            <img src={event.imageUrl} alt={event.title} className="w-full h-auto object-cover max-h-[500px]" style={{ filter: 'saturate(1.1) contrast(1.1)' }} />
+                                        <motion.div variants={childVariants} className="relative rounded-2xl overflow-hidden border border-gray-100 aspect-video">
+                                            <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover" style={{ filter: 'saturate(1.1) contrast(1.1)' }} />
                                             {isUpcoming && (
                                                 <div className="absolute top-6 left-6">
                                                     <span className="bg-[#8FA8C8] text-white px-6 py-2 rounded-full text-xs tracking-widest" style={fontYearbook}>Upcoming</span>

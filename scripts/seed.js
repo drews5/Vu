@@ -159,6 +159,19 @@ The top two finishing groups from this quarterfinal will advance to the ICHSA Gr
       image_url: 'icca-2026.jpg'
     },
     {
+      slug: 'night-songs',
+      title: 'Night Songs',
+      date: '2026-02-15T19:00:00Z',
+      display_time: '7:00 PM — 8:30 PM',
+      location: 'University Lutheran Church of Hope',
+      address: 'Minneapolis, MN',
+      description: 'An evening of music and poetry featuring the choirs of University Lutheran Church of Hope, First Congregational, University Baptist, and Vocal U. The sanctuary will have the night sky projected onto the rafters. Sit in the pews or bring pillows/blankets and lay on the floor to take in the view. This is a beautiful way to embrace winter for this family-friendly event. All are welcome.',
+      tag: 'PAST',
+      status: 'Previous',
+      is_featured: true,
+      image_url: 'night-songs.jpg'
+    },
+    {
       slug: 'icca-quarterfinal-2025',
       title: '2025 ICCA Great Lakes Quarterfinal',
       date: '2025-03-01T19:00:00Z',

@@ -6,9 +6,10 @@ import showcasePhoto from '../assets/spring-showcase.jpg';
 import icca2026Photo from '../assets/icca-2026.jpg';
 import icca2025Photo from '../assets/icca-2025.jpg';
 import winterShowcasePhoto from '../assets/winter-showcase.jpg';
+import nightSongsPhoto from '../assets/night-songs.jpg';
 import groupPhoto from '../assets/group-photo.jpg';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import { ContactForm } from '../components/ContactForm';
 import { Footer } from '../components/Footer';
@@ -22,8 +23,10 @@ const fontInter = { fontFamily: 'Inter, sans-serif' };
 interface FeaturedEvent {
   tag: string;
   date: string;
+  year?: string;
   title: string;
   location: string;
+  description?: string;
   link: string;
   image: string;
   status: 'Upcoming' | 'Previous';
@@ -31,9 +34,20 @@ interface FeaturedEvent {
 }
 
 function EventCard({ event }: { event: FeaturedEvent }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopyInfo = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const eventLink = `${window.location.origin}${event.link}`;
+    const info = `Come see Vocal U at ${event.title} on ${event.date} at ${event.location}! ${eventLink}`;
+    navigator.clipboard.writeText(info);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const content = (
     <>
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative aspect-video overflow-hidden">
         <img
           src={event.image}
           alt={event.title}
@@ -50,9 +64,23 @@ function EventCard({ event }: { event: FeaturedEvent }) {
         </div>
       </div>
       <div className="p-6 flex flex-col flex-grow">
-        <div className="flex items-center gap-2 text-[#8FA8C8] mb-2 text-xs font-bold" style={fontInter}>
-          <Calendar className="w-3.5 h-3.5" />
-          {event.date}
+        <div className="flex justify-between items-center mb-1">
+          <div className="flex items-center gap-2 text-[#8FA8C8] text-xs font-bold" style={fontInter}>
+            <Calendar className="w-3.5 h-3.5" />
+            {event.date}
+          </div>
+          {!event.isInstagram && (
+            <button
+              onClick={handleCopyInfo}
+              className="p-1.5 hover:bg-[#8FA8C8]/10 rounded-full transition-all duration-200 shrink-0 group/copy cursor-pointer -mr-1 relative"
+              title="Copy event info"
+            >
+              <span className={`absolute -top-7 right-0 bg-[#2B4C6F] text-white text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none font-bold whitespace-nowrap ${copied ? 'opacity-100' : 'opacity-0'}`}>
+                COPIED!
+              </span>
+              <Copy className="w-3.5 h-3.5 text-[#8FA8C8]/60 group-hover/copy:text-[#8FA8C8]" />
+            </button>
+          )}
         </div>
         <h3
           className="text-[#2B4C6F] mb-3 text-xl leading-tight group-hover:text-[#8FA8C8] transition-colors line-clamp-2 font-yearbook"
@@ -150,6 +178,7 @@ export function Home() {
         date: r.fullDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         title: r.title,
         location: r.location,
+        description: r.description,
         link: `/event/${r.slug}`,
         status: r.status,
         // NOTE: These photos are intentionally swapped to showcasePhoto for ICHSA slug and ichsaPhoto for Spring Showcase slug
@@ -158,7 +187,8 @@ export function Home() {
             r.slug === 'icca-quarterfinal-2026' ? icca2026Photo :
               r.slug === 'icca-quarterfinal-2025' ? icca2025Photo :
                 r.slug === 'winter-showcase-2025' ? winterShowcasePhoto :
-                  r.image_url,
+                  r.slug === 'night-songs' ? nightSongsPhoto :
+                    r.image_url,
       }));
 
       setItems(formattedEvents);

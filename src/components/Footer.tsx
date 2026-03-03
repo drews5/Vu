@@ -32,20 +32,20 @@ export const Footer = memo(function Footer() {
     setTimeout(() => setCopied(false), 2000);
   };
   return (
-    <footer className="bg-[#2B4C6F] text-white py-6 md:py-12 px-4 md:px-12 shadow-sm border border-white/5 mx-3 md:mx-0" style={{ borderRadius: '16px', marginTop: '48px' }}>
+    <footer className="bg-[#2B4C6F] text-white py-5 md:py-12 px-6 md:px-12 shadow-sm border border-white/5 mx-3 md:mx-0" style={{ borderRadius: '16px', marginTop: '48px' }}>
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-[4fr_3fr_3fr] gap-8 md:gap-12 mb-12 text-left">
+        <div className="grid grid-cols-1 md:grid-cols-[4fr_3fr_3fr] gap-4 md:gap-12 mb-6 md:mb-12 text-left">
           <div className="flex flex-col items-start pr-2 md:pr-4">
-            <img src={footerLogo} alt="Vocal U" className="h-8 md:h-16 w-auto mb-3 md:mb-4" loading="lazy" />
-            <p className="text-white/70 text-xs md:text-sm leading-relaxed max-w-sm">
+            <img src={footerLogo} alt="Vocal U" className="h-8 md:h-16 w-auto mb-2 md:mb-4" loading="lazy" />
+            <p className="text-white/70 text-[10px] md:text-sm leading-relaxed max-w-sm">
               Gender-inclusive a cappella at the University of Minnesota, established in 2011.
             </p>
           </div>
           <div className="flex flex-col items-start">
-            <h3 className="mb-2 md:mb-4" style={{ ...fontYearbook, fontSize: 'clamp(14px, 2vw, 18px)' }}>
+            <h3 className="mb-1 md:mb-4" style={{ ...fontYearbook, fontSize: 'clamp(14px, 2vw, 18px)' }}>
               RESOURCES
             </h3>
-            <ul className="space-y-1 md:space-y-2" style={{ ...fontInter, fontSize: 'clamp(13px, 1.5vw, 14px)' }}>
+            <ul className="grid grid-cols-2 md:grid-cols-1 gap-x-4 gap-y-1 md:space-y-2 w-full" style={{ ...fontInter, fontSize: 'clamp(13px, 1.5vw, 14px)' }}>
               {resourceLinks.map((link) => (
                 <li key={link.label}>
                   {link.external ? (
@@ -62,27 +62,29 @@ export const Footer = memo(function Footer() {
             </ul>
           </div>
           <div className="flex flex-col items-start overflow-hidden">
-            <h3 className="mb-2 md:mb-4" style={{ ...fontYearbook, fontSize: 'clamp(14px, 2vw, 18px)' }}>
+            <h3 className="mb-1 md:mb-4" style={{ ...fontYearbook, fontSize: 'clamp(14px, 2vw, 18px)' }}>
               CONNECT
             </h3>
-            <div className="mb-2 md:mb-4 w-full relative">
-              <button onClick={handleCopy} className="text-white/70 hover:text-white/90 transition-colors truncate block w-full text-left cursor-pointer group relative" style={{ ...fontInter, fontSize: 'clamp(13px, 1.5vw, 14px)' }}>
-                vocalu@umn.edu
-                <span className={`absolute -top-8 left-0 bg-white text-[#2B4C6F] text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none font-bold ${copied ? 'opacity-100' : 'opacity-0'}`}>
-                  COPIED!
-                </span>
-              </button>
-            </div>
-            <div className="flex gap-2">
-              {socialIcons.map((s) => (
-                <motion.a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" whileHover={{ y: -2, scale: 1.1 }} whileTap={{ scale: 0.9 }} className="bg-white/10 p-1.5 md:p-2.5 rounded-full hover:bg-[#8FA8C8]/20 hover:text-[#8FA8C8] transition-all duration-200 cursor-pointer flex items-center justify-center aspect-square" aria-label={s.label}>
-                  <s.Icon className="w-2.5 h-2.5 md:w-4.5 md:h-4.5" />
-                </motion.a>
-              ))}
+            <div className="flex flex-row md:flex-col items-center md:items-start gap-4 md:gap-0 w-full">
+              <div className="mb-1 md:mb-4 relative shrink-0">
+                <button onClick={handleCopy} className="text-white/70 hover:text-white/90 transition-colors truncate block w-full text-left cursor-pointer group relative" style={{ ...fontInter, fontSize: 'clamp(13px, 1.5vw, 14px)' }}>
+                  vocalu@umn.edu
+                  <span className={`absolute -top-8 left-0 bg-white text-[#2B4C6F] text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none font-bold ${copied ? 'opacity-100' : 'opacity-0'}`}>
+                    COPIED!
+                  </span>
+                </button>
+              </div>
+              <div className="flex gap-2">
+                {socialIcons.map((s) => (
+                  <motion.a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" whileHover={{ y: -2, scale: 1.1 }} whileTap={{ scale: 0.9 }} className="bg-white/10 p-1.5 md:p-2.5 rounded-full hover:bg-[#8FA8C8]/20 hover:text-[#8FA8C8] transition-all duration-200 cursor-pointer flex items-center justify-center aspect-square" aria-label={s.label}>
+                    <s.Icon className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
+                  </motion.a>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-        <div className="pt-6 md:pt-8 border-t border-white/10">
+        <div className="pt-4 md:pt-8 border-t border-white/10">
           <p className="text-white/50 text-[10px] md:text-sm text-center" style={fontInter}>
             &copy; {new Date().getFullYear()} Vocal U A Cappella. This group is a Registered Student Organization and is independent of the University of Minnesota.
           </p>
