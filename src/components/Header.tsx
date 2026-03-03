@@ -261,7 +261,7 @@ export function Header() {
           >
             <Link
               to="/portal"
-              className="block bg-[#2B4C6F] text-white py-1 px-4 text-center rounded-b-xl shadow-[0_0_15px_rgba(43,76,111,0.3)] animate-pulse pointer-events-auto hover:bg-[#1a3249] transition-colors border-x border-b border-white/20 max-w-fit mx-auto"
+              className="block bg-[#8FA8C8] text-white py-1 px-4 text-center rounded-b-xl shadow-[0_0_15px_rgba(143,168,200,0.3)] animate-pulse pointer-events-auto hover:bg-[#7A97B7] transition-colors border-x border-b border-white/20 max-w-fit mx-auto"
               style={{ fontSize: '11px', letterSpacing: '0.05em', fontFamily: 'Inter, sans-serif' }}
             >
               Hello, Returning Vocal U Member! <span className="underline ml-1 font-bold">Go to Portal &rarr;</span>
