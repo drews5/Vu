@@ -10,7 +10,7 @@ import nightSongsPhoto from '../assets/night-songs.jpg';
 import groupPhoto from '../assets/group-photo.jpg';
 
 import { Link } from 'react-router-dom';
-import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight, Copy, ChevronDown } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { ContactForm } from '../components/ContactForm';
 
@@ -135,16 +135,17 @@ export function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCards, setVisibleCards] = useState(1);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hasScrolledAtAll, setHasScrolledAtAll] = useState(false);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
+  const [isExtraSmall, setIsExtraSmall] = useState(typeof window !== 'undefined' && window.innerWidth <= 468);
 
   // Track scroll for full-screen hero transition
   useEffect(() => {
     const handleScroll = () => {
+      const scrollY = window.scrollY;
       // Small threshold to trigger the snap
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(scrollY > 20);
+      setHasScrolledAtAll(scrollY > 0);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // initial check
@@ -156,6 +157,8 @@ export function Home() {
       if (window.innerWidth >= 1024) setVisibleCards(3);
       else if (window.innerWidth >= 768) setVisibleCards(2);
       else setVisibleCards(1);
+      setIsMobile(window.innerWidth < 768);
+      setIsExtraSmall(window.innerWidth <= 468);
     };
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -208,9 +211,12 @@ export function Home() {
       }));
 
       setItems(formattedEvents);
-      const isMobileDevice = window.innerWidth < 768;
-      const initialIdx = isMobileDevice ? pastCount : Math.max(0, pastCount - 1);
-      setCurrentIndex(Math.min(initialIdx, Math.max(0, formattedEvents.length - 1)));
+      const vCards = window.innerWidth >= 1024 ? 3 : (window.innerWidth >= 768 ? 2 : 1);
+
+      const initialIdx = Math.max(0, pastCount - 1);
+
+      const maxIdx = Math.max(0, formattedEvents.length - vCards);
+      setCurrentIndex(Math.min(initialIdx, maxIdx));
     }
 
     fetchData();
@@ -246,8 +252,8 @@ export function Home() {
         animate={{
           marginTop: isScrolled ? 110 : 0,
           marginBottom: isScrolled ? 25 : 0,
-          marginLeft: isScrolled ? 0 : 'calc(-50vw + 50%)',
-          marginRight: isScrolled ? 0 : 'calc(-50vw + 50%)'
+          marginLeft: isScrolled ? 0 : 'calc(-50vw + 50% - 15px)',
+          marginRight: isScrolled ? 0 : 'calc(-50vw + 50% + 15px)'
         }}
         transition={{ type: 'spring', damping: 25, stiffness: 120 }}
         style={{ position: 'relative', zIndex: 1 }}
@@ -267,12 +273,12 @@ export function Home() {
             src={heroBackground}
             alt="Vocal U Group"
             className="w-full h-full object-cover"
-            style={{ filter: 'brightness(1.08) saturate(1.05)', objectPosition: 'center 20%' }}
+            style={{ filter: 'brightness(1.08) saturate(1.05)', objectPosition: 'center bottom' }}
             layout
           />
           <div className="absolute inset-0 flex flex-col items-center px-4 pointer-events-none">
             <motion.div
-              className="pt-[10vh] md:pt-[80px] flex-shrink-0 pointer-events-auto"
+              className="pt-[calc(10vh-10px)] md:pt-[70px] flex-shrink-0 pointer-events-auto"
               initial={false}
               animate={{
                 opacity: 1,
@@ -293,20 +299,23 @@ export function Home() {
             </motion.div>
 
             <motion.div
-              className="absolute bottom-[20vh] md:bottom-[130px] left-1/2 -translate-x-1/2 pointer-events-auto"
+              className="absolute bottom-[125px] left-1/2 -translate-x-1/2 pointer-events-auto"
               initial={false}
               animate={{
-                opacity: 1, scale: 1, y: 0,
+                opacity: 1,
+                scale: 1,
+                y: (isExtraSmall ? 45 : 0) + (isScrolled ? 50 : 0),
               }}
+              transition={{ type: 'spring', damping: 25, stiffness: 120 }}
             >
               <motion.div
                 initial={{ scale: 1 }}
                 animate={{
                   scale: [1, 1.02, 1],
                   boxShadow: [
-                    "0 4px 6px rgba(0,0,0,0.1)",
-                    "0 8px 12px rgba(0,0,0,0.15)",
-                    "0 4px 6px rgba(0,0,0,0.1)"
+                    "0 4px 20px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.6)",
+                    "0 8px 30px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6)",
+                    "0 4px 20px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.6)"
                   ]
                 }}
                 transition={{
@@ -319,7 +328,7 @@ export function Home() {
               >
                 <Link
                   to="/event/spring-showcase-2026"
-                  className="bg-white text-[#2B4C6F] px-6 md:px-12 py-2.5 md:py-4 border border-white hover:bg-[#8FA8C8] hover:text-white hover:border-[#8FA8C8] transition-all duration-300 flex-shrink-0 text-center block cursor-pointer font-yearbook shadow-md"
+                  className="bg-white text-[#2B4C6F] px-6 md:px-12 py-2.5 md:py-4 border border-white hover:bg-[#8FA8C8] hover:text-white hover:border-[#8FA8C8] transition-all duration-300 flex-shrink-0 text-center block cursor-pointer font-yearbook shadow-md whitespace-nowrap"
                   style={{
                     ...fontYearbook,
                     fontSize: 'clamp(14px, 4vw, 20px)',
@@ -333,23 +342,32 @@ export function Home() {
             </motion.div>
           </div>
 
-          {/* Scroll Down Arrow inside Hero */}
+          {/* Swipe Hint Animation - Mobile Only */}
           <AnimatePresence>
-            {!isScrolled && (
+            {!hasScrolledAtAll && isMobile && (
               <motion.div
-                initial={{ opacity: 0, y: -5 }}
-                animate={{ opacity: 1, y: 0, transition: { delay: 0.8, duration: 0.5 } }}
-                exit={{ opacity: 0, y: 5 }}
-                className="absolute bottom-[4vh] md:bottom-10 left-1/2 -translate-x-1/2 cursor-pointer z-10 pointer-events-auto"
-                onClick={() => window.scrollTo({ top: window.innerHeight * 0.7, behavior: 'smooth' })}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ opacity: { delay: 4 }, default: { type: 'spring', damping: 25, stiffness: 120 } }}
+                className="absolute bottom-24 right-6 z-10 pointer-events-none"
               >
-                <motion.div
-                  animate={{ y: [0, 6, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                  className=""
-                >
-                  <ChevronDown className="w-9 h-9 md:w-[58px] md:h-[58px] text-white drop-shadow-lg" strokeWidth={2.5} />
-                </motion.div>
+                <div className="relative w-14 h-28 flex justify-center overflow-hidden">
+                  <motion.div
+                    animate={{
+                      y: [90, 15, 15],
+                      opacity: [0, 0.75, 0]
+                    }}
+                    transition={{
+                      duration: 2.5,
+                      repeat: Infinity,
+                      ease: [0.45, 0.05, 0.55, 0.95]
+                    }}
+                    className="flex flex-col items-center"
+                  >
+                    <span className="text-4xl drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" role="img" aria-label="scroll" style={{ filter: 'brightness(0) invert(1)' }}>👆</span>
+                  </motion.div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -370,13 +388,13 @@ export function Home() {
           <h2 className="mb-6 md:mb-8 whitespace-nowrap">
             <span
               className="text-[#A3B8D3] font-yearbook"
-              style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 56px)' }}
+              style={{ ...fontYearbook, fontSize: 'clamp(32px, 5.2vw, 56px)' }}
             >
               We Are{' '}
             </span>
             <span
               className="text-[#2B4C6F] font-yearbook"
-              style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 56px)' }}
+              style={{ ...fontYearbook, fontSize: 'clamp(32px, 5.2vw, 56px)' }}
             >
               Vocal U
             </span>

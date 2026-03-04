@@ -111,11 +111,11 @@ export function Header() {
       />
 
       <motion.div
-        className="hidden md:block fixed top-0 left-0 right-0 z-[50] flex justify-center pointer-events-none px-4 lg:px-[50px]"
+        className="hidden md:flex fixed top-0 left-0 right-0 z-[50] justify-center pointer-events-none px-4 lg:px-[50px]"
         animate={{ paddingTop: isScrolled ? 24 : 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
       >
-        <div className="relative w-full max-w-[1340px] flex justify-center">
+        <div className="relative w-full max-w-[1340px] mx-auto flex justify-center">
           {/* Inverted Corners to frame the island perfectly */}
           <AnimatePresence>
             {isScrolledMore && (
@@ -160,17 +160,19 @@ export function Header() {
             }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
           >
-            <div className="flex items-center justify-between gap-3 lg:gap-10 relative w-full">
-              <Link to="/" className="flex items-center shrink-0">
-                <motion.img
-                  layout
-                  src={logoImage}
-                  alt="Vocal U"
-                  className={`${isScrolled ? 'h-7 lg:h-9' : 'h-10 lg:h-14'} w-auto hover:scale-105 transition-all duration-300`}
-                />
-              </Link>
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center relative w-full">
+              <div className="flex items-center min-w-0">
+                <Link to="/" className="flex items-center shrink-0">
+                  <motion.img
+                    layout
+                    src={logoImage}
+                    alt="Vocal U"
+                    className={`${isScrolled ? 'h-7 lg:h-9' : 'h-10 lg:h-14'} w-auto hover:scale-105 transition-all duration-300`}
+                  />
+                </Link>
+              </div>
 
-              <nav className="flex items-center flex-1 justify-center gap-0">
+              <nav className="flex items-center justify-center gap-0">
                 {navItems.map((item, index) => {
                   return (
                     <div key={item.path} className="flex items-center">
@@ -179,7 +181,7 @@ export function Header() {
                           <div className="relative" onMouseEnter={() => setAboutDropdownOpen(true)}
                             onMouseLeave={() => setAboutDropdownOpen(false)}
                           >
-                            <div className={`cursor-pointer transition-colors duration-200 flex items-center gap-1 font-yearbook ${location.pathname.startsWith(item.path) || isAboutActive ? 'text-white' : 'text-white/70 hover:text-white'}`} style={{ ...fontYearbook, fontSize: isScrolled ? '18px' : 'clamp(16px, 1.8vw, 22px)', letterSpacing: '0.05em' }}>
+                            <div className={`cursor-pointer transition-colors duration-200 flex items-center gap-1 font-yearbook ${location.pathname.startsWith(item.path) || isAboutActive ? 'text-white' : 'text-white/70 hover:text-white'}`} style={{ ...fontYearbook, fontSize: 'clamp(16px, 1.8vw, 22px)', letterSpacing: '0.05em' }}>
                               {item.name}
                             </div>
                             <AnimatePresence>
@@ -198,7 +200,7 @@ export function Header() {
                           </div>
                         ) : (
                           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            <Link to={item.path} className={`px-0 py-2 transition-colors duration-200 font-yearbook ${location.pathname === item.path ? 'text-white' : 'text-white/70 hover:text-white'}`} style={{ ...fontYearbook, fontSize: isScrolled ? '18px' : 'clamp(16px, 1.8vw, 22px)', letterSpacing: '0.05em' }}>
+                            <Link to={item.path} className={`px-0 py-2 transition-colors duration-200 font-yearbook ${location.pathname === item.path ? 'text-white' : 'text-white/70 hover:text-white'}`} style={{ ...fontYearbook, fontSize: 'clamp(16px, 1.8vw, 22px)', letterSpacing: '0.05em' }}>
                               {item.name}
                             </Link>
                           </motion.div>
@@ -216,7 +218,7 @@ export function Header() {
                 })}
               </nav>
 
-              <div className="flex items-center gap-1.5 lg:gap-3 shrink-0">
+              <div className="flex items-center gap-1.5 lg:gap-3 justify-end min-w-0">
                 {socialLinks.map((s) => (
                   <SocialIcon key={s.label} href={s.href} label={s.label} Icon={s.Icon} size={isScrolled ? 4 : 5} />
                 ))}
@@ -291,7 +293,7 @@ export function Header() {
                       <div key={item.path} className="bg-white/5 rounded-2xl overflow-hidden">
                         <button onClick={() => setAboutDropdownOpen((prev) => !prev)}
                           className="w-full text-left px-4 py-3 text-white/90 flex justify-between items-center bg-transparent transition-colors hover:bg-white/5"
-                          style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em' }}
+                          style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em' }}
                         >
                           {item.name}
                           <motion.div animate={{ rotate: aboutDropdownOpen ? 180 : 0 }}>
@@ -311,7 +313,7 @@ export function Header() {
                         </AnimatePresence>
                       </div>
                     ) : (
-                      <Link key={item.path} to={item.path} onClick={closeMobileMenu} className={`block px-4 py-3 rounded-2xl transition-colors duration-200 ${location.pathname === item.path ? 'bg-white/15 text-white' : 'text-white/90 hover:bg-white/10 hover:text-white'}`} style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em' }}>
+                      <Link key={item.path} to={item.path} onClick={closeMobileMenu} className={`block px-4 py-3 rounded-2xl transition-colors duration-200 ${location.pathname === item.path ? 'bg-white/15 text-white' : 'text-white/90 hover:bg-white/10 hover:text-white'}`} style={{ ...fontYearbook, fontSize: '22px', letterSpacing: '0.05em' }}>
                         {item.name}
                       </Link>
                     )

@@ -127,6 +127,7 @@ export function Portal() {
 
                 <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
                     {tabs.map((tab) => {
+                        const Icon = tab.icon;
                         const isActive = activeTab === tab.id;
                         return (
                             <button
@@ -134,7 +135,7 @@ export function Portal() {
                                 onClick={() => { setActiveTab(tab.id); setIsSidebarOpen(false); }}
                                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${isActive ? 'bg-[#2B4C6F] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'}`}
                             >
-                                <tab.icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-gray-400'}`} />
+                                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-gray-400'}`} />
                                 {tab.label}
                             </button>
                         );
