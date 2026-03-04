@@ -71,25 +71,6 @@ function GlobalHaptics() {
   return null;
 }
 
-function WidthCounter() {
-  const [width, setWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  return (
-    <div className="fixed top-0 left-0 right-0 z-[9999] pointer-events-none">
-      <div className="h-0.5 bg-red-500/50 w-full" />
-      <div className="bg-black/80 text-white px-2 py-0.5 rounded-br text-[10px] font-mono inline-block">
-        {width}px
-      </div>
-    </div>
-  );
-}
-
 function AppContent() {
   const location = useLocation();
   const isAuditionsPage = location.pathname === '/auditions';
@@ -98,7 +79,6 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-white">
-      <WidthCounter />
       <ScrollToTop />
       <GlobalHaptics />
       <Analytics />
