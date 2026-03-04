@@ -45,8 +45,8 @@ const SocialIcon = memo(function SocialIcon({
   size?: number;
 }) {
   return (
-    <motion.a href={href} target="_blank" rel="noopener noreferrer" whileHover={{ y: -2 }} whileTap={{ scale: 0.9 }} className="bg-white rounded-full p-2 flex items-center justify-center transition-colors duration-200 hover:bg-[#8FA8C8] group shadow-sm cursor-pointer" aria-label={label}>
-      <Icon className={`w-${size} h-${size} text-[#8FA8C8] group-hover:text-white transition-colors duration-200`} />
+    <motion.a href={href} target="_blank" rel="noopener noreferrer" whileHover={{ y: -2 }} whileTap={{ scale: 0.9 }} className="bg-white rounded-full p-1.5 lg:p-2 flex items-center justify-center transition-colors duration-200 hover:bg-[#8FA8C8] group shadow-sm cursor-pointer" aria-label={label}>
+      <Icon className={`w-4 h-4 lg:w-${size} lg:h-${size} text-[#8FA8C8] group-hover:text-white transition-colors duration-200`} />
     </motion.a>
   );
 });
@@ -55,18 +55,29 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolledMore, setIsScrolledMore] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAtBottom, setIsAtBottom] = useState(false);
+  const [footerOffset, setFooterOffset] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-
-      // Check if near bottom of page
-      const windowHeight = window.innerHeight;
       const scrollY = window.scrollY;
+      setIsScrolled(scrollY > 10);
+      setIsScrolledMore(scrollY > 600);
+
+      // Smarter footer avoidance
+      const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
-      setIsAtBottom(windowHeight + scrollY >= documentHeight - 100);
+      const footerElement = document.querySelector('footer');
+      const footerHeight = footerElement?.offsetHeight || 300;
+      const footerTop = documentHeight - footerHeight;
+      const navBottom = scrollY + windowHeight - 24; // 24px is the bottom-6 or similar offset
+
+      if (navBottom > footerTop) {
+        setFooterOffset(navBottom - footerTop + 10); // +10 for extra breathing room
+      } else {
+        setFooterOffset(0);
+      }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
 
@@ -95,19 +106,19 @@ export function Header() {
       <motion.div
         className="hidden md:block fixed top-0 left-0 right-0 z-[51] bg-white pointer-events-none"
         initial={{ height: 0 }}
-        animate={{ height: isScrolled ? 24 : 0 }}
+        animate={{ height: isScrolledMore ? 24 : 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
       />
 
       <motion.div
-        className="hidden md:block fixed top-0 left-0 right-0 z-[50] flex justify-center pointer-events-none px-4 md:px-[50px]"
+        className="hidden md:block fixed top-0 left-0 right-0 z-[50] flex justify-center pointer-events-none px-4 lg:px-[50px]"
         animate={{ paddingTop: isScrolled ? 24 : 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
       >
         <div className="relative w-full max-w-[1340px] flex justify-center">
           {/* Inverted Corners to frame the island perfectly */}
           <AnimatePresence>
-            {isScrolled && (
+            {isScrolledMore && (
               <>
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -135,7 +146,7 @@ export function Header() {
 
           <motion.header
             layout
-            className={`pointer-events-auto overflow-hidden w-full transition-shadow duration-300 ${isScrolled ? 'px-8 py-2.5 rounded-[20px] shadow-lg' : 'px-10 py-6 rounded-b-[24px] rounded-t-0'}`}
+            className={`pointer-events-auto transition-shadow duration-300 ${isScrolled ? 'w-auto inline-block px-5 lg:px-8 py-2 lg:py-2.5 rounded-[20px] shadow-lg' : 'w-full px-6 lg:px-10 py-4 lg:py-6 rounded-b-[24px] rounded-t-0'}`}
             style={{
               background: isScrolled
                 ? 'linear-gradient(135deg, rgba(143,168,200,0.92) 0%, rgba(163,188,220,0.88) 50%, rgba(143,168,200,0.92) 100%)'
@@ -149,13 +160,13 @@ export function Header() {
             }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
           >
-            <div className="flex items-center justify-between gap-6 lg:gap-10 relative w-full">
+            <div className="flex items-center justify-between gap-3 lg:gap-10 relative w-full">
               <Link to="/" className="flex items-center shrink-0">
                 <motion.img
                   layout
                   src={logoImage}
                   alt="Vocal U"
-                  className={`${isScrolled ? 'h-9' : 'h-14'} w-auto hover:scale-105 transition-all duration-300`}
+                  className={`${isScrolled ? 'h-7 lg:h-9' : 'h-10 lg:h-14'} w-auto hover:scale-105 transition-all duration-300`}
                 />
               </Link>
 
@@ -163,7 +174,7 @@ export function Header() {
                 {navItems.map((item, index) => {
                   return (
                     <div key={item.path} className="flex items-center">
-                      <div className="relative py-2 flex flex-col items-center group px-3 lg:px-5">
+                      <div className="relative py-2 flex flex-col items-center group px-1.5 lg:px-5">
                         {item.dropdown ? (
                           <div className="relative" onMouseEnter={() => setAboutDropdownOpen(true)}
                             onMouseLeave={() => setAboutDropdownOpen(false)}
@@ -194,7 +205,7 @@ export function Header() {
                         )}
                         {/* Active Underline */}
                         {(location.pathname === item.path || (item.dropdown && isAboutActive)) && (
-                          <motion.div layoutId="navActionIndicatorDesktop" className="absolute bottom-0 inset-x-1 lg:inset-x-2 h-[2.5px] bg-white rounded-full z-20" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+                          <motion.div layoutId="navActionIndicatorDesktop" className="absolute bottom-[5px] inset-x-1 lg:inset-x-2 h-[2.5px] bg-white rounded-full z-20" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
                         )}
                       </div>
                       {index < navItems.length - 1 && (
@@ -205,7 +216,7 @@ export function Header() {
                 })}
               </nav>
 
-              <div className="flex items-center gap-2 lg:gap-3 shrink-0">
+              <div className="flex items-center gap-1.5 lg:gap-3 shrink-0">
                 {socialLinks.map((s) => (
                   <SocialIcon key={s.label} href={s.href} label={s.label} Icon={s.Icon} size={isScrolled ? 4 : 5} />
                 ))}
@@ -216,27 +227,28 @@ export function Header() {
       </motion.div>
 
       {/* Mobile Dynamic Island */}
-      <div className="md:hidden fixed bottom-6 left-0 right-0 z-[60] flex justify-center px-4 pointer-events-none">
+      <div className={`md:hidden fixed left-0 right-0 z-[60] flex justify-center pointer-events-none transition-all duration-500 ${isScrolled ? 'bottom-3 px-4' : 'bottom-0 px-0'}`}>
         <motion.div
           layout
-          className={`pointer-events-auto overflow-hidden rounded-[16px] ${!isScrolled || mobileMenuOpen ? 'w-full max-w-[420px]' : 'w-auto max-w-[100%]'
-            } ${mobileMenuOpen ? 'py-4' : 'py-3 px-3'}`}
+          className={`pointer-events-auto overflow-hidden ${isScrolled ? 'rounded-[16px] shadow-lg' : 'rounded-t-[16px] w-full'} ${!isScrolled || mobileMenuOpen ? 'w-full' : 'w-auto'
+            } py-[6px] px-5`}
           style={{
-            background: 'linear-gradient(135deg, rgba(143,168,200,0.92) 0%, rgba(163,188,220,0.88) 50%, rgba(143,168,200,0.92) 100%)',
-            backdropFilter: 'blur(20px) saturate(1.6)',
-            WebkitBackdropFilter: 'blur(20px) saturate(1.6)',
-            border: '1px solid rgba(255,255,255,0.4)',
-            boxShadow: '0 10px 40px rgba(43,76,111,0.15), inset 0 1px 0 rgba(255,255,255,0.4)',
+            background: 'linear-gradient(135deg, rgba(143,168,200,0.95) 0%, rgba(163,188,220,0.92) 50%, rgba(143,168,200,0.95) 100%)',
+            backdropFilter: 'blur(20px) saturate(1.8)',
+            WebkitBackdropFilter: 'blur(20px) saturate(1.8)',
+            border: isScrolled ? '1px solid rgba(255,255,255,0.4)' : 'none',
+            borderTop: !isScrolled ? '1px solid rgba(255,255,255,0.4)' : (isScrolled ? '1px solid rgba(255,255,255,0.4)' : 'none'),
+            boxShadow: '0 -4px 30px rgba(43,76,111,0.1), inset 0 1px 0 rgba(255,255,255,0.4)',
           }}
           animate={{
-            y: isAtBottom ? -310 : 0
+            y: -footerOffset
           }}
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          transition={{ type: "spring", stiffness: 400, damping: 40 }}
         >
           {/* Collapsed/Header state */}
-          <motion.div layout className={`flex items-center justify-between ${mobileMenuOpen ? 'px-4 pb-4 border-b border-white/20 gap-4' : 'px-2 gap-3'}`}>
+          <motion.div layout className={`flex items-center justify-between ${mobileMenuOpen ? 'pb-4 border-b border-white/20 gap-4' : 'gap-3'}`}>
             <Link to="/" className="flex items-center shrink-0" onClick={() => setMobileMenuOpen(false)}>
-              <motion.img layout src={logoImage} alt="Vocal U" className="h-10 w-auto transition-all" loading="lazy" />
+              <motion.img layout src={logoImage} alt="Vocal U" className="h-8 w-auto transition-all duration-300" loading="lazy" />
             </Link>
             {!mobileMenuOpen && (
               <motion.div

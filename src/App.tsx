@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 import { HelmetProvider } from 'react-helmet-async';
 
@@ -81,6 +82,7 @@ function AppContent() {
       <ScrollToTop />
       <GlobalHaptics />
       <Analytics />
+      <SpeedInsights />
       <div className="max-w-[1440px] mx-auto px-3 md:px-[50px]">
         {!hideHeaderFooter && <Header />}
         <Suspense fallback={<PageLoader />}>

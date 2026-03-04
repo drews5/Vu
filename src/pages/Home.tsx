@@ -270,9 +270,9 @@ export function Home() {
             style={{ filter: 'brightness(1.08) saturate(1.05)', objectPosition: 'center 20%' }}
             layout
           />
-          <div className="absolute inset-0 flex flex-col justify-between items-center pt-8 md:pt-12 pb-24 md:pb-16 px-4">
+          <div className="absolute inset-0 flex flex-col items-center px-4 pointer-events-none">
             <motion.div
-              className="flex-shrink-0"
+              className="pt-[10vh] md:pt-[80px] flex-shrink-0 pointer-events-auto"
               initial={false}
               animate={{
                 opacity: 1,
@@ -286,19 +286,17 @@ export function Home() {
                 <img
                   src={fullLogo}
                   alt="Vocal U - University of Minnesota's A Cappella Group"
-                  className="w-full max-w-[200px] md:max-w-[330px]"
+                  className="w-[85vw] max-w-[340px] md:max-w-[280px]"
                   style={{ filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3))' }}
                 />
               </Link>
             </motion.div>
 
-            <div className="flex-grow" />
-
             <motion.div
+              className="absolute bottom-[20vh] md:bottom-[130px] left-1/2 -translate-x-1/2 pointer-events-auto"
               initial={false}
               animate={{
                 opacity: 1, scale: 1, y: 0,
-                marginBottom: isScrolled ? 0 : (window.innerWidth < 768 ? 20 : 40)
               }}
             >
               <motion.div
@@ -342,15 +340,15 @@ export function Home() {
                 initial={{ opacity: 0, y: -5 }}
                 animate={{ opacity: 1, y: 0, transition: { delay: 0.8, duration: 0.5 } }}
                 exit={{ opacity: 0, y: 5 }}
-                className="absolute bottom-[80px] md:bottom-6 left-1/2 -translate-x-1/2 cursor-pointer z-10"
+                className="absolute bottom-[4vh] md:bottom-10 left-1/2 -translate-x-1/2 cursor-pointer z-10 pointer-events-auto"
                 onClick={() => window.scrollTo({ top: window.innerHeight * 0.7, behavior: 'smooth' })}
               >
                 <motion.div
-                  animate={{ y: [0, 4, 0] }}
+                  animate={{ y: [0, 6, 0] }}
                   transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                  className="bg-black/20 backdrop-blur-sm rounded-full p-2 md:bg-transparent md:backdrop-blur-none"
+                  className=""
                 >
-                  <ChevronDown className="w-5 h-5 md:w-12 md:h-12 text-white/90 md:text-white drop-shadow-sm md:drop-shadow-md" strokeWidth={2} />
+                  <ChevronDown className="w-9 h-9 md:w-[58px] md:h-[58px] text-white drop-shadow-lg" strokeWidth={2.5} />
                 </motion.div>
               </motion.div>
             )}
