@@ -252,8 +252,10 @@ export function Home() {
         animate={{
           marginTop: isScrolled ? 110 : 0,
           marginBottom: isScrolled ? 25 : 0,
-          marginLeft: isScrolled ? 0 : 'calc(-50vw + 50% - 15px)',
-          marginRight: isScrolled ? 0 : 'calc(-50vw + 50% + 15px)'
+          marginLeft: isScrolled ? '0vw' : 'calc(50% - 50vw)',
+          marginRight: isScrolled ? '0vw' : 'calc(50% - 50vw)',
+          width: isScrolled ? '100%' : '100vw',
+          maxWidth: isScrolled ? '100%' : '100vw'
         }}
         transition={{ type: 'spring', damping: 25, stiffness: 120 }}
         style={{ position: 'relative', zIndex: 1 }}
