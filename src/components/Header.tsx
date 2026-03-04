@@ -148,13 +148,13 @@ export function Header() {
             layout
             className={`pointer-events-auto transition-shadow duration-300 ${isScrolled ? 'w-auto inline-block px-5 lg:px-8 py-2 lg:py-2.5 rounded-[20px] shadow-lg' : 'w-full px-6 lg:px-10 py-4 lg:py-6 rounded-b-[24px] rounded-t-0'}`}
             style={{
-              background: isScrolled
+              background: isScrolled || location.pathname !== '/'
                 ? 'linear-gradient(135deg, rgba(143,168,200,0.92) 0%, rgba(163,188,220,0.88) 50%, rgba(143,168,200,0.92) 100%)'
                 : 'transparent',
-              backdropFilter: isScrolled ? 'blur(20px) saturate(1.6)' : 'none',
-              WebkitBackdropFilter: isScrolled ? 'blur(20px) saturate(1.6)' : 'none',
-              border: isScrolled ? '1px solid rgba(255,255,255,0.4)' : 'none',
-              boxShadow: isScrolled
+              backdropFilter: isScrolled || location.pathname !== '/' ? 'blur(20px) saturate(1.6)' : 'none',
+              WebkitBackdropFilter: isScrolled || location.pathname !== '/' ? 'blur(20px) saturate(1.6)' : 'none',
+              border: isScrolled || location.pathname !== '/' ? '1px solid rgba(255,255,255,0.4)' : 'none',
+              boxShadow: isScrolled || location.pathname !== '/'
                 ? '0 10px 40px rgba(43,76,111,0.15), inset 0 1px 0 rgba(255,255,255,0.4)'
                 : 'none',
             }}

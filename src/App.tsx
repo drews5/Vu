@@ -85,23 +85,25 @@ function AppContent() {
       <SpeedInsights />
       <div className="max-w-[1440px] mx-auto px-3 md:px-[50px]">
         {!hideHeaderFooter && <Header />}
-        <Suspense fallback={<PageLoader />}>
-          <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/members" element={<Members />} />
-              <Route path="/media" element={<Media />} />
-              <Route path="/donate" element={<Donate />} />
-              <Route path="/events" element={<Events />} />
-              <Route path="/event/:eventId" element={<EventDetail />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/auditions" element={<Auditions />} />
-              <Route path="/portal" element={<Portal />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </AnimatePresence>
-        </Suspense>
+        <main className={location.pathname !== '/' && !isPortalPage ? 'md:pt-[110px]' : ''}>
+          <Suspense fallback={<PageLoader />}>
+            <AnimatePresence mode="wait">
+              <Routes location={location} key={location.pathname}>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/members" element={<Members />} />
+                <Route path="/media" element={<Media />} />
+                <Route path="/donate" element={<Donate />} />
+                <Route path="/events" element={<Events />} />
+                <Route path="/event/:eventId" element={<EventDetail />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/auditions" element={<Auditions />} />
+                <Route path="/portal" element={<Portal />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AnimatePresence>
+          </Suspense>
+        </main>
         {!hideHeaderFooter && <Footer />}
       </div>
     </div>
