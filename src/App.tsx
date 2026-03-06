@@ -3,6 +3,7 @@ import { AnimatePresence } from 'motion/react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
+import { GlobalHaptics } from './components/GlobalHaptics';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 
@@ -33,41 +34,6 @@ function ScrollToTop() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-  return null;
-}
-
-function GlobalHaptics() {
-  useEffect(() => {
-    const isMobile = 'ontouchstart' in window || window.matchMedia('(max-width: 768px)').matches;
-    if (!isMobile) return;
-
-    const triggerHaptic = () => {
-      try {
-        if (navigator.vibrate) {
-          navigator.vibrate(10);
-        }
-      } catch (_) { /* graceful no-op */ }
-    };
-
-    const handleClick = (e: MouseEvent) => {
-      let target = e.target as HTMLElement | null;
-      while (target && target !== document.body) {
-        if (
-          target.tagName === 'BUTTON' ||
-          target.tagName === 'A' ||
-          target.getAttribute('role') === 'button'
-        ) {
-          triggerHaptic();
-          break;
-        }
-        target = target.parentElement;
-      }
-    };
-
-    document.addEventListener('click', handleClick, true);
-    return () => document.removeEventListener('click', handleClick, true);
-  }, []);
-
   return null;
 }
 
