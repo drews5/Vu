@@ -1,7 +1,5 @@
 # Vocal U Website
 
-University of Minnesota's Premier gender-inclusive a cappella group.
-
 ## Tech Stack
 - React + TypeScript
 - Vite
