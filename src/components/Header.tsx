@@ -1,8 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Instagram, Youtube, Facebook } from 'lucide-react';
-import { memo, useState, useCallback, useEffect } from 'react';
+import { memo, useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import logoImage from 'figma:asset/d4630c01b543cc75980f0b293230859d29654fbb.png';
+
+const MOBILE_FLOATING_LANE = 96;
+const MOBILE_FULL_WIDTH_LANE = 84;
+const MOBILE_MENU_OPEN_LANE = 360;
+const MOBILE_DOCK_HYSTERESIS = 72;
+
 const TikTokIcon = memo(function TikTokIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="currentColor" viewBox="0 0 24 24">
@@ -57,29 +63,65 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isScrolledMore, setIsScrolledMore] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [footerOffset, setFooterOffset] = useState(0);
+  const [mobileDockedTop, setMobileDockedTop] = useState(false);
+  const mobileDockedTopRef = useRef(false);
 
   useEffect(() => {
-    const handleScroll = () => {
+    mobileDockedTopRef.current = mobileDockedTop;
+  }, [mobileDockedTop]);
+
+  useEffect(() => {
+    let frameId = 0;
+
+    const syncHeaderState = () => {
       const scrollY = window.scrollY;
-      setIsScrolled(scrollY > 10);
+      const nextIsScrolled = scrollY > 10;
+      setIsScrolled(nextIsScrolled);
       setIsScrolledMore(scrollY > 600);
 
-      // Smarter footer avoidance
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const footerElement = document.querySelector('footer');
-      const footerHeight = footerElement?.offsetHeight || 300;
-      const footerTop = documentHeight - footerHeight;
-      const navBottom = scrollY + windowHeight - 24; // 24px is the bottom-6 or similar offset
+      if (window.innerWidth >= 768) {
+        if (mobileDockedTopRef.current) {
+          mobileDockedTopRef.current = false;
+          setMobileDockedTop(false);
+        }
+        return;
+      }
 
-      if (navBottom > footerTop) {
-        setFooterOffset(navBottom - footerTop + 10); // +10 for extra breathing room
-      } else {
-        setFooterOffset(0);
+      const footerElement = document.querySelector('footer');
+      if (!footerElement) {
+        if (mobileDockedTopRef.current) {
+          mobileDockedTopRef.current = false;
+          setMobileDockedTop(false);
+        }
+        return;
+      }
+
+      const footerTop = footerElement.getBoundingClientRect().top;
+      const floatingLaneHeight = mobileMenuOpen
+        ? MOBILE_MENU_OPEN_LANE
+        : nextIsScrolled
+          ? MOBILE_FLOATING_LANE
+          : MOBILE_FULL_WIDTH_LANE;
+      const dockLine = window.innerHeight - floatingLaneHeight;
+      const releaseLine = dockLine + MOBILE_DOCK_HYSTERESIS;
+      const shouldDock = mobileDockedTopRef.current
+        ? footerTop <= releaseLine
+        : footerTop <= dockLine;
+
+      if (shouldDock !== mobileDockedTopRef.current) {
+        mobileDockedTopRef.current = shouldDock;
+        setMobileDockedTop(shouldDock);
       }
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    const handleViewportChange = () => {
+      cancelAnimationFrame(frameId);
+      frameId = window.requestAnimationFrame(syncHeaderState);
+    };
+
+    handleViewportChange();
+    window.addEventListener('scroll', handleViewportChange, { passive: true });
+    window.addEventListener('resize', handleViewportChange);
 
     // Check auth status
     const authStatus = localStorage.getItem('vu_portal_auth');
@@ -87,8 +129,12 @@ export function Header() {
       setIsAuthenticated(true);
     }
 
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    return () => {
+      cancelAnimationFrame(frameId);
+      window.removeEventListener('scroll', handleViewportChange);
+      window.removeEventListener('resize', handleViewportChange);
+    };
+  }, [location.pathname, mobileMenuOpen]);
 
   const closeMobileMenu = useCallback(() => {
     setMobileMenuOpen(false);
@@ -100,6 +146,7 @@ export function Header() {
     location.pathname === '/media' ||
     location.pathname === '/donate' ||
     location.pathname === '/auditions';
+  const isMobileIslandFloating = isScrolled || mobileDockedTop;
   return (
     <>
       {/* Desktop Top Mask - Hides content scrolling above the island */}
@@ -229,23 +276,19 @@ export function Header() {
       </motion.div>
 
       {/* Mobile Dynamic Island */}
-      <div className={`md:hidden fixed left-0 right-0 z-[60] flex justify-center pointer-events-none transition-all duration-500 ${isScrolled ? 'bottom-3 px-4' : 'bottom-0 px-0'}`}>
+      <div className={`md:hidden fixed left-0 right-0 z-[60] flex justify-center pointer-events-none transition-all duration-500 ${mobileDockedTop ? 'top-3 px-4' : isScrolled ? 'bottom-3 px-4' : 'bottom-0 px-0'}`}>
         <motion.div
           layout
-          className={`pointer-events-auto overflow-hidden ${isScrolled ? 'rounded-[16px] shadow-lg' : 'rounded-t-[16px] w-full'} ${!isScrolled || mobileMenuOpen ? 'w-full' : 'w-auto'
+          className={`pointer-events-auto overflow-hidden ${isMobileIslandFloating ? 'rounded-[16px] shadow-lg' : 'rounded-t-[16px] w-full'} ${!isMobileIslandFloating || mobileMenuOpen ? 'w-full' : 'w-auto'
             } py-[6px] px-5`}
           style={{
             background: 'linear-gradient(135deg, rgba(143,168,200,0.95) 0%, rgba(163,188,220,0.92) 50%, rgba(143,168,200,0.95) 100%)',
             backdropFilter: 'blur(20px) saturate(1.8)',
             WebkitBackdropFilter: 'blur(20px) saturate(1.8)',
-            border: isScrolled ? '1px solid rgba(255,255,255,0.4)' : 'none',
-            borderTop: !isScrolled ? '1px solid rgba(255,255,255,0.4)' : (isScrolled ? '1px solid rgba(255,255,255,0.4)' : 'none'),
+            border: isMobileIslandFloating ? '1px solid rgba(255,255,255,0.4)' : 'none',
+            borderTop: !isMobileIslandFloating ? '1px solid rgba(255,255,255,0.4)' : '1px solid rgba(255,255,255,0.4)',
             boxShadow: '0 -4px 30px rgba(43,76,111,0.1), inset 0 1px 0 rgba(255,255,255,0.4)',
           }}
-          animate={{
-            y: -footerOffset
-          }}
-          transition={{ type: "spring", stiffness: 400, damping: 40 }}
         >
           {/* Collapsed/Header state */}
           <motion.div layout className={`flex items-center justify-between ${mobileMenuOpen ? 'pb-4 border-b border-white/20 gap-4' : 'gap-3'}`}>
