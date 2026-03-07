@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import fullLogo from 'figma:asset/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
-import heroBackground from '../assets/home-hero.webp';
+import heroBackground from '../assets/15a7da513ab99cbb57e9735db4d4d232088838f1.png';
 import groupPhoto from '../assets/group-photo.jpg';
 
 import { Link } from 'react-router-dom';
