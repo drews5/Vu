@@ -2,6 +2,7 @@ import { memo, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { Instagram, Youtube, ExternalLink, Calendar, MessageCircle, X } from 'lucide-react';
+import { createPortal } from 'react-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
@@ -37,16 +38,47 @@ const InstagramCard = memo(function InstagramCard({ post }: { post: InstaPost })
     );
 });
 const VideoModal = ({ vId, onClose }: { vId: string; onClose: () => void }) => {
-    return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="relative w-full max-w-5xl aspect-video bg-black shadow-2xl overflow-hidden z-[101]" style={{ borderRadius: '24px' }}>
-                <button onClick={onClose} className="absolute top-4 right-4 text-white hover:text-[#8FA8C8] transition-colors z-20">
-                    <X className="w-8 h-8" />
+    useEffect(() => {
+        const originalOverflow = document.body.style.overflow;
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onClose();
+            }
+        };
+
+        document.body.style.overflow = 'hidden';
+        window.addEventListener('keydown', onKeyDown);
+
+        return () => {
+            document.body.style.overflow = originalOverflow;
+            window.removeEventListener('keydown', onKeyDown);
+        };
+    }, [onClose]);
+
+    return createPortal(
+        <div className="fixed inset-0 z-[220] flex items-center justify-center p-4 sm:p-6">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-black/85 backdrop-blur-md" />
+            <motion.div
+                initial={{ scale: 0.94, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.94, opacity: 0 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
+                className="relative z-[221] w-full overflow-hidden bg-black shadow-2xl"
+                style={{
+                    borderRadius: '24px',
+                    aspectRatio: '16 / 9',
+                    maxWidth: 'min(1100px, calc(100vw - 2rem), calc((100vh - 2rem) * 16 / 9))',
+                }}
+                role="dialog"
+                aria-modal="true"
+            >
+                <button onClick={onClose} className="absolute right-4 top-4 z-20 rounded-full bg-black/45 p-2 text-white transition-colors hover:bg-black/60 hover:text-[#8FA8C8]">
+                    <X className="w-7 h-7" />
                 </button>
-                <iframe className="w-full h-full border-0" src={`https://www.youtube.com/embed/${vId}?autoplay=1&rel=0`} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen title="Video Player" />
+                <iframe className="h-full w-full border-0" src={`https://www.youtube.com/embed/${vId}?autoplay=1&rel=0`} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen title="Video Player" />
             </motion.div>
-        </div>
+        </div>,
+        document.body
     );
 };
 const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen }: { item: any, isHighlighted?: boolean, onOpen: (vId: string) => void }) {

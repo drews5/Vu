@@ -71,7 +71,7 @@ function AppContent() {
       <ProductionInstrumentation />
       <div className="max-w-[1440px] mx-auto px-3 md:px-[50px]">
         {!hideHeaderFooter && <Header />}
-        <main className={location.pathname !== '/' ? 'md:pt-[110px]' : ''}>
+        <main className={location.pathname !== '/' && !hideHeaderFooter ? 'md:pt-[110px]' : ''}>
           <Suspense fallback={<PageLoader />}>
             <AnimatePresence mode="wait">
               <Routes location={location} key={location.pathname}>
