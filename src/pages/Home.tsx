@@ -136,6 +136,7 @@ export function Home() {
   const [visibleCards, setVisibleCards] = useState(1);
   const [isScrolled, setIsScrolled] = useState(false);
   const [hasScrolledAtAll, setHasScrolledAtAll] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
   const [isExtraSmall, setIsExtraSmall] = useState(typeof window !== 'undefined' && window.innerWidth <= 468);
 
@@ -166,6 +167,7 @@ export function Home() {
       cancelAnimationFrame(frameId);
       frameId = window.requestAnimationFrame(() => {
         const width = window.innerWidth;
+        setViewportWidth(width);
         setVisibleCards(getVisibleCardCount(width));
         setIsMobile(width < 768);
         setIsExtraSmall(width <= 468);
@@ -251,6 +253,10 @@ export function Home() {
     setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
   };
   const showArrows = items.length > visibleCards;
+  const compactHeroWidth = isMobile
+    ? Math.max(viewportWidth - 24, 0)
+    : Math.min(Math.max(viewportWidth - 100, 0), 1340);
+  const expandedHeroWidth = viewportWidth || (isMobile ? 390 : 1440);
 
   return (
     <PageTransition className="pb-0 relative" delay={0}>
@@ -267,22 +273,20 @@ export function Home() {
 
       {/* Hero Section */}
       <motion.section
+        className="relative left-1/2 w-screen -translate-x-1/2"
         initial={false}
         animate={{
           marginTop: isScrolled ? 110 : 0,
           marginBottom: isScrolled ? 25 : 0,
-          marginLeft: isScrolled ? '0vw' : 'calc(50% - 50vw)',
-          marginRight: isScrolled ? '0vw' : 'calc(50% - 50vw)',
-          width: isScrolled ? '100%' : '100vw',
-          maxWidth: isScrolled ? '100%' : '100vw'
         }}
         transition={{ type: 'spring', damping: 25, stiffness: 120 }}
         style={{ position: 'relative', zIndex: 1 }}
       >
         <motion.div
-          className="relative overflow-hidden"
+          className="relative overflow-hidden mx-auto"
           initial={false}
           animate={{
+            width: isScrolled ? compactHeroWidth : expandedHeroWidth,
             height: isScrolled ? 576 : 'min(100vh, 160vw)', // limit height slightly on mobile to prevent extreme cropping
             borderRadius: isScrolled ? 16 : 0,
             border: isScrolled ? '1px solid rgba(243, 244, 246, 1)' : '0px solid rgba(243, 244, 246, 0)',
