@@ -2,6 +2,8 @@ import { memo } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
+import { Seo, toAbsoluteUrl } from '../components/Seo';
+
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const repertoire = [
@@ -41,8 +43,31 @@ const SongCard = memo(function SongCard({
     );
 });
 export function About() {
+    const aboutDescription =
+        'Learn about Vocal U, the University of Minnesota gender-inclusive a cappella group, including our mission, repertoire, and Twin Cities performances.';
+
     return (
         <PageTransition className="pb-8 md:pb-16">
+            <Seo
+                title="About Vocal U"
+                description={aboutDescription}
+                path="/about"
+                keywords={['about Vocal U', 'UMN a cappella group', 'Minnesota student music group']}
+                breadcrumbs={[
+                    { name: 'Home', path: '/' },
+                    { name: 'About', path: '/about' },
+                ]}
+                schema={{
+                    '@context': 'https://schema.org',
+                    '@type': 'AboutPage',
+                    name: 'About Vocal U',
+                    description: aboutDescription,
+                    url: toAbsoluteUrl('/about'),
+                    about: {
+                        '@id': toAbsoluteUrl('/#organization'),
+                    },
+                }}
+            />
             {/* Hero Section */}
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
                 <div className="relative overflow-hidden h-[165px] md:h-[265px] bg-[#2B4C6F] flex items-center justify-center" style={{ borderRadius: '16px' }}>

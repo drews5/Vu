@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { Instagram, Youtube, ExternalLink, Calendar, MessageCircle, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
+import { Seo, toAbsoluteUrl } from '../components/Seo';
+
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 // Instagram Post Type from Behold
@@ -126,6 +128,8 @@ const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen 
     );
 });
 export function Media() {
+    const mediaDescription =
+        'Watch Vocal U performances on YouTube and browse recent Instagram posts from the University of Minnesota gender-inclusive a cappella group.';
     const [videos, setVideos] = useState<any[]>([]);
     const [instaPosts, setInstaPosts] = useState<InstaPost[]>([]);
     const [loading, setLoading] = useState(true);
@@ -161,8 +165,46 @@ export function Media() {
         }
         loadFeeds();
     }, []);
+    const mediaSchema = [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'Vocal U Media',
+            description: mediaDescription,
+            url: toAbsoluteUrl('/media'),
+            about: {
+                '@id': toAbsoluteUrl('/#organization'),
+            },
+        },
+    ];
+
+    if (videos.length > 0) {
+        mediaSchema.push({
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            name: 'Vocal U Videos',
+            itemListElement: videos.map((video, index) => ({
+                '@type': 'ListItem',
+                position: index + 1,
+                name: video.snippet?.title || `Vocal U video ${index + 1}`,
+                url: `https://www.youtube.com/watch?v=${video.snippet?.resourceId?.videoId}`,
+            })),
+        });
+    }
+
     return (
         <PageTransition className="pb-8 md:pb-16">
+            <Seo
+                title="Vocal U Media"
+                description={mediaDescription}
+                path="/media"
+                keywords={['Vocal U videos', 'Vocal U Instagram', 'UMN a cappella media']}
+                breadcrumbs={[
+                    { name: 'Home', path: '/' },
+                    { name: 'Media', path: '/media' },
+                ]}
+                schema={mediaSchema}
+            />
             <AnimatePresence>
                 {activeVideo && <VideoModal vId={activeVideo} onClose={() => setActiveVideo(null)} />}
             </AnimatePresence>

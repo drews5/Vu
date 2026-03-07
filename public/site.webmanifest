@@ -1,0 +1,18 @@
+{
+  "name": "Vocal U A Cappella",
+  "short_name": "Vocal U",
+  "description": "Gender-inclusive a cappella group at the University of Minnesota performing throughout Minneapolis and the Twin Cities.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#8FA8C8",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "1555x1509",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

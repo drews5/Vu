@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
 import { getEventImage } from '../utils/eventImages';
+import { Seo, toAbsoluteUrl } from '../components/Seo';
+
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 interface Event {
@@ -179,6 +181,8 @@ const PastEventCard = memo(function PastEventCard({ event }: { event: Event }) {
     );
 });
 export function Events() {
+    const eventsDescription =
+        'See upcoming Vocal U performances, showcases, competitions, and past events from the University of Minnesota a cappella group.';
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);
     const [pastIndex, setPastIndex] = useState(0);
@@ -195,6 +199,9 @@ export function Events() {
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
     const isTablet = typeof window !== 'undefined' && window.innerWidth >= 768 && window.innerWidth < 1024;
     const pastEvents = events.filter(e => e.status === 'Previous');
+    const upcomingEvents = events
+        .filter((e) => e.status === 'Upcoming')
+        .sort((a, b) => (a.fullDate?.getTime() || 0) - (b.fullDate?.getTime() || 0));
     const showPastArrows = pastEvents.length > (isMobile ? 1 : isTablet ? 2 : 3);
     const translatePercent = isMobile ? 100 : isTablet ? 50 : 33.333;
     useEffect(() => {
@@ -240,8 +247,46 @@ export function Events() {
             cancelled = true;
         };
     }, []);
+    const eventsSchema = [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'Vocal U Events',
+            description: eventsDescription,
+            url: toAbsoluteUrl('/events'),
+            about: {
+                '@id': toAbsoluteUrl('/#organization'),
+            },
+        },
+    ];
+
+    if (events.length > 0) {
+        eventsSchema.push({
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            name: 'Vocal U Events',
+            itemListElement: events.map((event, index) => ({
+                '@type': 'ListItem',
+                position: index + 1,
+                url: toAbsoluteUrl(`/event/${event.slug}`),
+                name: event.title,
+            })),
+        });
+    }
+
     return (
         <PageTransition className="pb-8 md:pb-16 min-h-screen">
+            <Seo
+                title="Vocal U Events"
+                description={eventsDescription}
+                path="/events"
+                keywords={['Vocal U events', 'UMN a cappella performances', 'Minneapolis a cappella events']}
+                breadcrumbs={[
+                    { name: 'Home', path: '/' },
+                    { name: 'Events', path: '/events' },
+                ]}
+                schema={eventsSchema}
+            />
             {/* Header Section */}
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
                 <div className="bg-[#91a8c6] py-10 md:py-16 px-4 text-center border border-gray-100 shadow-sm relative overflow-hidden" style={{ borderRadius: '16px' }}>
@@ -261,7 +306,7 @@ export function Events() {
                         <div className="w-10 h-10 border-4 border-[#8FA8C8]/30 border-t-[#8FA8C8] rounded-full animate-spin" />
                     </div>
                 ) : (
-                    <> {events.some(e => e.status === 'Upcoming') && (
+                    <> {upcomingEvents.length > 0 && (
                         <motion.section variants={childVariants}>
                             <div className="flex items-center gap-4 mb-8">
                                 <h2 className="text-[#2B4C6F] text-2xl md:text-3xl font-yearbook whitespace-nowrap" style={fontYearbook}>
@@ -270,12 +315,9 @@ export function Events() {
                                 <div className="h-[1px] bg-[#8FA8C8]/20 flex-grow" />
                             </div>
                             <div className="grid grid-cols-1 gap-8">
-                                {events
-                                    .filter((e) => e.status === 'Upcoming')
-                                    .sort((a, b) => (a.fullDate?.getTime() || 0) - (b.fullDate?.getTime() || 0))
-                                    .map((event) => (
-                                        <UnifiedEventCard key={event.id} event={event} />
-                                    ))}
+                                {upcomingEvents.map((event) => (
+                                    <UnifiedEventCard key={event.id} event={event} />
+                                ))}
                             </div>
                         </motion.section>
                     )}

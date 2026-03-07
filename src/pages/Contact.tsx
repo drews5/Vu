@@ -3,6 +3,8 @@ import { useState, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
+import { Seo, toAbsoluteUrl } from '../components/Seo';
+
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const TikTokIcon = ({ className }: { className?: string }) => {
@@ -13,6 +15,8 @@ const TikTokIcon = ({ className }: { className?: string }) => {
     );
 };
 export function Contact() {
+    const contactDescription =
+        'Contact Vocal U for bookings, collaboration requests, general questions, or audition information through email, social media, or the site contact form.';
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -52,6 +56,32 @@ export function Contact() {
     const inputStyle = { borderRadius: '12px', ...fontInter, fontSize: '16px' };
     return (
         <PageTransition className="pb-8 md:pb-16">
+            <Seo
+                title="Contact Vocal U"
+                description={contactDescription}
+                path="/contact"
+                keywords={['contact Vocal U', 'book Vocal U', 'Vocal U email', 'UMN a cappella booking']}
+                breadcrumbs={[
+                    { name: 'Home', path: '/' },
+                    { name: 'Contact', path: '/contact' },
+                ]}
+                schema={{
+                    '@context': 'https://schema.org',
+                    '@type': 'ContactPage',
+                    name: 'Contact Vocal U',
+                    description: contactDescription,
+                    url: toAbsoluteUrl('/contact'),
+                    about: {
+                        '@id': toAbsoluteUrl('/#organization'),
+                    },
+                    mainEntity: {
+                        '@type': 'ContactPoint',
+                        email: 'mailto:vocalu@umn.edu',
+                        contactType: 'bookings and general inquiries',
+                        availableLanguage: 'English',
+                    },
+                }}
+            />
             {/* Hero Section */}
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
                 <div className="bg-[#8FA8C8] py-10 md:py-16 px-4 md:px-8 shadow-sm" style={{ borderRadius: '16px' }}>

@@ -5,6 +5,8 @@ import { motion } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
 import { getEventImage } from '../utils/eventImages';
+import { Seo, toAbsoluteUrl } from '../components/Seo';
+
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 interface EventData {
@@ -22,6 +24,9 @@ interface EventData {
 }
 export function EventDetail() {
     const { eventId } = useParams();
+    const detailPath = eventId ? `/event/${eventId}` : '/events';
+    const fallbackDescription =
+        'View details for an upcoming Vocal U performance, showcase, or appearance in Minneapolis and around the University of Minnesota.';
     const [event, setEvent] = useState<EventData | null>(null);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -117,11 +122,102 @@ export function EventDetail() {
         const query = encodeURIComponent(`${event.location} ${event.address}`);
         return `https://www.google.com/maps/search/?api=1&query=${query}`;
     };
-    if (loading) return <div className="flex justify-center py-24"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8FA8C8]" /></div>;
-    if (!event) return <div className="text-center py-24"><h1 style={fontYearbook}>Event Not Found</h1><Link to="/events" className="text-[#8FA8C8]">Back to Events</Link></div>;
+    if (loading) {
+        return (
+            <>
+                <Seo
+                    title="Event Details"
+                    description={fallbackDescription}
+                    path={detailPath}
+                    keywords={['Vocal U event details', 'UMN a cappella event']}
+                    breadcrumbs={[
+                        { name: 'Home', path: '/' },
+                        { name: 'Events', path: '/events' },
+                    ]}
+                />
+                <div className="flex justify-center py-24"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8FA8C8]" /></div>
+            </>
+        );
+    }
+    if (!event) {
+        return (
+            <>
+                <Seo
+                    title="Event Not Found"
+                    description="The requested Vocal U event could not be found."
+                    path={detailPath}
+                    noindex
+                    breadcrumbs={[
+                        { name: 'Home', path: '/' },
+                        { name: 'Events', path: '/events' },
+                    ]}
+                />
+                <div className="text-center py-24"><h1 style={fontYearbook}>Event Not Found</h1><Link to="/events" className="text-[#8FA8C8]">Back to Events</Link></div>
+            </>
+        );
+    }
     const isUpcoming = event.status === 'Upcoming';
+    const locationAddress = event.address
+        ? {
+            '@type': 'PostalAddress',
+            streetAddress: event.address,
+            addressLocality: 'Minneapolis',
+            addressRegion: 'MN',
+            addressCountry: 'US',
+        }
+        : undefined;
+    const eventDescription =
+        event.description.length > 160
+            ? `${event.description.slice(0, 157).trimEnd()}...`
+            : event.description;
+    const eventSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'MusicEvent',
+        name: event.title,
+        description: event.description,
+        url: toAbsoluteUrl(detailPath),
+        image: event.imageUrl ? [toAbsoluteUrl(event.imageUrl)] : undefined,
+        startDate: event.fullDate?.toISOString(),
+        eventStatus: isUpcoming
+            ? 'https://schema.org/EventScheduled'
+            : 'https://schema.org/EventCompleted',
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        location: {
+            '@type': 'Place',
+            name: event.location,
+            address: locationAddress,
+        },
+        performer: {
+            '@id': toAbsoluteUrl('/#organization'),
+        },
+        organizer: {
+            '@id': toAbsoluteUrl('/#organization'),
+        },
+        offers: event.ticketLink
+            ? {
+                '@type': 'Offer',
+                url: event.ticketLink,
+                availability: isUpcoming
+                    ? 'https://schema.org/InStock'
+                    : 'https://schema.org/SoldOut',
+            }
+            : undefined,
+    };
+
     return (
         <PageTransition className="pb-16 md:pb-24">
+            <Seo
+                title={`${event.title} | Vocal U Events`}
+                description={eventDescription}
+                path={detailPath}
+                keywords={[event.title, 'Vocal U event', 'UMN performance']}
+                breadcrumbs={[
+                    { name: 'Home', path: '/' },
+                    { name: 'Events', path: '/events' },
+                    { name: event.title, path: detailPath },
+                ]}
+                schema={eventSchema}
+            />
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
                 <div className="bg-white border border-gray-100 shadow-sm overflow-hidden" style={{ borderRadius: '16px' }}>
                     {/* Back Button */}

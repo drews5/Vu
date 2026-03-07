@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
+Host: vocalu.org
 Sitemap: https://vocalu.org/sitemap.xml

@@ -1,11 +1,12 @@
 /// <reference types="vite/client" />
 import { memo, useEffect, useState, useMemo } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { Instagram, Music } from 'lucide-react';
 import { motion } from 'motion/react';
 import { loadSupabase } from '../utils/loadSupabase';
+import { Seo, toAbsoluteUrl } from '../components/Seo';
+
 const memberPhotos = import.meta.glob('../assets/members/*.jpg', { eager: true, import: 'default' }) as Record<string, string>;
 const heroPhotos = import.meta.glob('../assets/group_photos/*.jpg', { eager: true, import: 'default' });
 const heroImageUrls = Object.values(heroPhotos) as string[];
@@ -71,6 +72,8 @@ const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
 });
 const PART_ORDER = ['Soprano', 'Mezzo', 'Alto', 'Tenor', 'Bass/Bari', 'Vocal Percussionist', 'Member'];
 export function Members() {
+    const membersDescription =
+        'Meet the current singers of Vocal U, the University of Minnesota gender-inclusive a cappella group, and get to know the voices behind the performances.';
     const [members, setMembers] = useState<Member[]>([]);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -132,13 +135,49 @@ export function Members() {
             members: groups[part]
         }));
     }, [members]);
+    const membersSchema = [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'Vocal U Members',
+            description: membersDescription,
+            url: toAbsoluteUrl('/members'),
+            about: {
+                '@id': toAbsoluteUrl('/#organization'),
+            },
+        },
+    ];
+
+    if (members.length > 0) {
+        membersSchema.push({
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            name: 'Vocal U Members',
+            itemListElement: members.map((member, index) => ({
+                '@type': 'ListItem',
+                position: index + 1,
+                item: {
+                    '@type': 'Person',
+                    name: member.name,
+                    jobTitle: member.role,
+                },
+            })),
+        });
+    }
+
     return (
         <PageTransition className="pb-8 md:pb-16 px-4 md:px-0">
-            <Helmet>
-                <title>Vocal U Members | Meet the Voices | UMN A Cappella</title>
-                <meta name="description" content="Meet the members of Vocal U, the University of Minnesota's gender-inclusive a cappella group. Our diverse group of talented singers perform throughout Minneapolis." />
-                <link rel="canonical" href="https://vocalu.org/members" />
-            </Helmet>
+            <Seo
+                title="Vocal U Members"
+                description={membersDescription}
+                path="/members"
+                keywords={['Vocal U members', 'UMN a cappella members', 'Minnesota student singers']}
+                breadcrumbs={[
+                    { name: 'Home', path: '/' },
+                    { name: 'Members', path: '/members' },
+                ]}
+                schema={membersSchema}
+            />
             {/* Hero Section */}
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '40px' }}>
                 <div className="bg-[#2B4C6F] relative overflow-hidden flex items-center justify-center text-center py-12 md:py-20" style={{ borderRadius: '16px', minHeight: '300px' }}>

@@ -2,13 +2,48 @@ import { memo } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
-import { Heart, DollarSign, Star, Check } from 'lucide-react';
+import { Heart, Star, Check } from 'lucide-react';
 import logoImage from 'figma:asset/d4630c01b543cc75980f0b293230859d29654fbb.png';
+import { Seo, toAbsoluteUrl } from '../components/Seo';
+
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 export function Donate() {
+    const donateDescription =
+        'Support Vocal U with a secure donation to help cover travel, showcase costs, and competition fees for the University of Minnesota a cappella group.';
+
     return (
         <PageTransition className="pb-8 md:pb-16 min-h-screen">
+            <Seo
+                title="Support Vocal U"
+                description={donateDescription}
+                path="/donate"
+                keywords={['donate to Vocal U', 'support Vocal U', 'UMN a cappella donation', 'Vocal U fundraiser']}
+                breadcrumbs={[
+                    { name: 'Home', path: '/' },
+                    { name: 'Donate', path: '/donate' },
+                ]}
+                schema={{
+                    '@context': 'https://schema.org',
+                    '@type': 'WebPage',
+                    name: 'Support Vocal U',
+                    description: donateDescription,
+                    url: toAbsoluteUrl('/donate'),
+                    about: {
+                        '@id': toAbsoluteUrl('/#organization'),
+                    },
+                    potentialAction: [
+                        {
+                            '@type': 'DonateAction',
+                            target: 'https://givebutter.com/vu',
+                        },
+                        {
+                            '@type': 'DonateAction',
+                            target: 'https://venmo.com/u/vocalu',
+                        },
+                    ],
+                }}
+            />
             {/* Hero Section */}
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
                 <div className="bg-[#91a8c6] py-8 md:py-12 px-4 text-center text-white border border-gray-100 shadow-sm" style={{ borderRadius: '16px' }}>

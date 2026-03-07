@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import {
@@ -16,6 +15,8 @@ import { Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import logoImage from 'figma:asset/d4630c01b543cc75980f0b293230859d29654fbb.png';
 import { loadSupabase } from '../utils/loadSupabase';
+import { Seo, toAbsoluteUrl } from '../components/Seo';
+
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 interface AuditionSlot {
@@ -27,6 +28,8 @@ interface AuditionSlot {
   email?: string;
 }
 export function Auditions() {
+  const auditionsDescription =
+    'Audition for Vocal U at the University of Minnesota. View audition timing, sign-up details, preparation tips, and callback information for the group.';
   const [slots, setSlots] = useState<AuditionSlot[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingSlotId] = useState<string | null>(null);
@@ -342,11 +345,30 @@ export function Auditions() {
   };
   return (
     <PageTransition className="pb-20 md:pb-24">
-      <Helmet>
-        <title>Auditions | Join Vocal U A Cappella | UMN Recruitment</title>
-        <meta name="description" content="Audition for Vocal U A Cappella at the University of Minnesota. View the current audition schedule, sign up for a slot, and join our gender-inclusive vocal community." />
-        <link rel="canonical" href="https://vocalu.org/auditions" />
-      </Helmet>
+      <Seo
+        title="Audition for Vocal U"
+        description={auditionsDescription}
+        path="/auditions"
+        keywords={['Vocal U auditions', 'UMN a cappella auditions', 'Minnesota student singing auditions']}
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Auditions', path: '/auditions' },
+        ]}
+        schema={{
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          name: 'Vocal U Auditions',
+          description: auditionsDescription,
+          url: toAbsoluteUrl('/auditions'),
+          about: {
+            '@id': toAbsoluteUrl('/#organization'),
+          },
+          audience: {
+            '@type': 'Audience',
+            audienceType: 'University of Minnesota students',
+          },
+        }}
+      />
       <motion.section variants={childVariants} className="relative mb-4 flex items-center justify-center overflow-hidden border border-gray-100 px-4 py-5 shadow-sm md:mb-6 md:px-6 md:py-8" style={{ borderRadius: '18px', background: 'linear-gradient(135deg, #8FA8C8 0%, #7F99B8 100%)' }}>
         <div className="relative z-10 flex w-full items-center justify-center gap-6 px-2 text-center md:gap-10">
           <div className="shrink-0 hover:-translate-y-0.5 transition-transform duration-200">

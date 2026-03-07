@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import fullLogo from 'figma:asset/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
 import heroBackground from '../assets/15a7da513ab99cbb57e9735db4d4d232088838f1.png';
@@ -10,6 +9,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
 import { getEventImage } from '../utils/eventImages';
+import { Seo, toAbsoluteUrl } from '../components/Seo';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
@@ -131,6 +131,8 @@ function EventCard({ event }: { event: FeaturedEvent }) {
 }
 
 export function Home() {
+  const homeDescription =
+    'Official site for Vocal U, the University of Minnesota gender-inclusive a cappella group. Explore performances, members, media, auditions, and ways to support the group.';
   const [items, setItems] = useState<FeaturedEvent[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCards, setVisibleCards] = useState(1);
@@ -260,19 +262,28 @@ export function Home() {
     ? Math.max(viewportWidth - 24, 0)
     : Math.min(Math.max(viewportWidth - 100, 0), 1340);
   const expandedHeroWidth = viewportWidth || (isMobile ? 390 : 1440);
+  const homeSchema = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: 'Vocal U Home',
+      description: homeDescription,
+      url: toAbsoluteUrl('/'),
+      about: {
+        '@id': toAbsoluteUrl('/#organization'),
+      },
+    },
+  ];
 
   return (
     <PageTransition className="pb-0 relative" delay={0}>
-      <Helmet>
-        <title>Vocal U A Cappella | Home | UMN Minneapolis</title>
-        <meta name="description" content="Official home of Vocal U A Cappella at the University of Minnesota. Explore our music, meet our members, and find upcoming performances in Minneapolis." />
-        <link rel="canonical" href="https://vocalu.org/" />
-        <style type="text/css">{`
-          body {
-            overflow-x: hidden;
-          }
-        `}</style>
-      </Helmet>
+      <Seo
+        title="Vocal U A Cappella | University of Minnesota A Cappella Group"
+        description={homeDescription}
+        path="/"
+        keywords={['Vocal U Minneapolis', 'UMN gender-inclusive a cappella', 'Twin Cities vocal group']}
+        schema={homeSchema}
+      />
 
       {/* Hero Section */}
       <motion.section

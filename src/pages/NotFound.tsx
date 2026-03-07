@@ -1,18 +1,23 @@
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { Home, Search, Music, ArrowLeft } from 'lucide-react';
+import { Seo } from '../components/Seo';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 
 export function NotFound() {
+    const missingPath = typeof window !== 'undefined' ? window.location.pathname : '/404';
+
     return (
         <PageTransition className="min-h-[80vh] flex items-center justify-center px-4 overflow-hidden relative">
-            <Helmet>
-                <title>404 - Page Not Found | Vocal U A Cappella</title>
-            </Helmet>
+            <Seo
+                title="Page Not Found"
+                description="The page you requested could not be found on the Vocal U website."
+                path={missingPath}
+                noindex
+            />
 
             {/* Background Decorative Elements */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
