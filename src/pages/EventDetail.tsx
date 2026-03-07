@@ -3,13 +3,8 @@ import { Calendar, MapPin, Clock, Share2, Navigation, ArrowLeft, Copy } from 'lu
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
-import { supabase } from '../utils/supabase';
-import ichsaPhoto from '../assets/ichsa-quarterfinal.jpg';
-import showcasePhoto from '../assets/spring-showcase.jpg';
-import icca2026Photo from '../assets/icca-2026.jpg';
-import icca2025Photo from '../assets/icca-2025.jpg';
-import winterShowcasePhoto from '../assets/winter-showcase.jpg';
-import nightSongsPhoto from '../assets/night-songs.jpg';
+import { loadSupabase } from '../utils/loadSupabase';
+import { getEventImage } from '../utils/eventImages';
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 interface EventData {
@@ -31,7 +26,9 @@ export function EventDetail() {
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         if (!eventId) return;
+        let cancelled = false;
         async function fetchEventDetail() {
+            const supabase = await loadSupabase();
             const { data, error } = await supabase
                 .from('events')
                 .select('*')
@@ -41,6 +38,10 @@ export function EventDetail() {
                 console.error('Error fetching event detail:', error);
             } else if (data) {
                 const d = new Date(data.date);
+                if (cancelled) {
+                    return;
+                }
+
                 setEvent({
                     slug: data.slug,
                     title: data.title,
@@ -50,19 +51,19 @@ export function EventDetail() {
                     address: data.address,
                     description: data.description,
                     ticketLink: data.ticket_link,
-                    imageUrl: data.slug === 'ichsa-quarterfinal-4-2026' ? showcasePhoto :
-                        data.slug === 'spring-showcase-2026' ? ichsaPhoto :
-                            data.slug === 'icca-quarterfinal-2026' ? icca2026Photo :
-                                data.slug === 'icca-quarterfinal-2025' ? icca2025Photo :
-                                    data.slug === 'winter-showcase-2025' ? winterShowcasePhoto :
-                                        data.slug === 'night-songs' ? nightSongsPhoto : data.image_url,
+                    imageUrl: getEventImage(data.slug, data.image_url),
                     fullDate: d,
                     status: data.status,
                 });
             }
-            setLoading(false);
+            if (!cancelled) {
+                setLoading(false);
+            }
         }
-        fetchEventDetail();
+        void fetchEventDetail();
+        return () => {
+            cancelled = true;
+        };
     }, [eventId]);
     const [copied, setCopied] = useState(false);
     const handleCopyInfo = () => {

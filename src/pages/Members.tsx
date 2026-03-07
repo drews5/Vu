@@ -4,8 +4,8 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { Instagram, Music } from 'lucide-react';
-import { supabase } from '../utils/supabase';
 import { motion } from 'motion/react';
+import { loadSupabase } from '../utils/loadSupabase';
 const memberPhotos = import.meta.glob('../assets/members/*.jpg', { eager: true, import: 'default' }) as Record<string, string>;
 const heroPhotos = import.meta.glob('../assets/group_photos/*.jpg', { eager: true, import: 'default' });
 const heroImageUrls = Object.values(heroPhotos) as string[];
@@ -74,7 +74,9 @@ export function Members() {
     const [members, setMembers] = useState<Member[]>([]);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
+        let cancelled = false;
         async function fetchMembers() {
+            const supabase = await loadSupabase();
             const { data, error } = await supabase
                 .from('members')
                 .select('*')
@@ -82,6 +84,10 @@ export function Members() {
             if (error) {
                 console.error('Error fetching members:', error);
             } else {
+                if (cancelled) {
+                    return;
+                }
+
                 setMembers(data.map((m: any) => {
                     const localPhotoKey = `../assets/members/${m.name}.jpg`;
                     return {
@@ -96,9 +102,14 @@ export function Members() {
                     };
                 }));
             }
-            setLoading(false);
+            if (!cancelled) {
+                setLoading(false);
+            }
         }
-        fetchMembers();
+        void fetchMembers();
+        return () => {
+            cancelled = true;
+        };
     }, []);
     const groupedMembers = useMemo(() => {
         const groups: Record<string, Member[]> = {};

@@ -1,15 +1,10 @@
 import { useEffect, useState, memo } from 'react';
 import { Calendar, MapPin, ArrowRight, Clock, Share2, Navigation, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
-import { supabase } from '../utils/supabase';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
-import ichsaPhoto from '../assets/ichsa-quarterfinal.jpg';
-import showcasePhoto from '../assets/spring-showcase.jpg';
-import icca2026Photo from '../assets/icca-2026.jpg';
-import icca2025Photo from '../assets/icca-2025.jpg';
-import winterShowcasePhoto from '../assets/winter-showcase.jpg';
-import nightSongsPhoto from '../assets/night-songs.jpg';
+import { loadSupabase } from '../utils/loadSupabase';
+import { getEventImage } from '../utils/eventImages';
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 interface Event {
@@ -203,7 +198,9 @@ export function Events() {
     const showPastArrows = pastEvents.length > (isMobile ? 1 : isTablet ? 2 : 3);
     const translatePercent = isMobile ? 100 : isTablet ? 50 : 33.333;
     useEffect(() => {
+        let cancelled = false;
         async function fetchEvents() {
+            const supabase = await loadSupabase();
             const { data, error } = await supabase
                 .from('events')
                 .select('*')
@@ -211,6 +208,10 @@ export function Events() {
             if (error) {
                 console.error('Error fetching events:', error);
             } else {
+                if (cancelled) {
+                    return;
+                }
+
                 const formatted = data.map((r: any) => {
                     const d = new Date(r.date);
                     return {
@@ -223,22 +224,21 @@ export function Events() {
                         location: r.location,
                         address: r.address,
                         description: r.description,
-                        // NOTE: These photos are intentionally swapped (ichsa slug -> showcasePhoto, showcase slug -> ichsaPhoto)
-                        image: r.slug === 'ichsa-quarterfinal-4-2026' ? showcasePhoto :
-                            r.slug === 'spring-showcase-2026' ? ichsaPhoto :
-                                r.slug === 'icca-quarterfinal-2026' ? icca2026Photo :
-                                    r.slug === 'icca-quarterfinal-2025' ? icca2025Photo :
-                                        r.slug === 'winter-showcase-2025' ? winterShowcasePhoto :
-                                            r.slug === 'night-songs' ? nightSongsPhoto : r.image_url,
+                        image: getEventImage(r.slug, r.image_url),
                         status: new Date(d.setHours(23, 59, 59, 999)) >= new Date() ? 'Upcoming' : 'Previous',
                         fullDate: d
                     };
                 });
                 setEvents(formatted as Event[]);
             }
-            setLoading(false);
+            if (!cancelled) {
+                setLoading(false);
+            }
         }
-        fetchEvents();
+        void fetchEvents();
+        return () => {
+            cancelled = true;
+        };
     }, []);
     return (
         <PageTransition className="pb-8 md:pb-16 min-h-screen">

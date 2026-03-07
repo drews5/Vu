@@ -4,11 +4,10 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { GlobalHaptics } from './components/GlobalHaptics';
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/react';
-
 import { HelmetProvider } from 'react-helmet-async';
 
+const Analytics = lazy(() => import('@vercel/analytics/react').then((m) => ({ default: m.Analytics })));
+const SpeedInsights = lazy(() => import('@vercel/speed-insights/react').then((m) => ({ default: m.SpeedInsights })));
 const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
 const About = lazy(() => import('./pages/About').then(m => ({ default: m.About })));
 const Members = lazy(() => import('./pages/Members').then(m => ({ default: m.Members })));
@@ -37,6 +36,30 @@ function ScrollToTop() {
   return null;
 }
 
+function ProductionInstrumentation() {
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    if (!import.meta.env.PROD) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => setShouldLoad(true), 1200);
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  if (!import.meta.env.PROD || !shouldLoad) {
+    return null;
+  }
+
+  return (
+    <Suspense fallback={null}>
+      <Analytics />
+      <SpeedInsights />
+    </Suspense>
+  );
+}
+
 function AppContent() {
   const location = useLocation();
   const isAuditionsPage = location.pathname === '/auditions';
@@ -47,8 +70,7 @@ function AppContent() {
     <div className="min-h-screen bg-white">
       <ScrollToTop />
       <GlobalHaptics />
-      <Analytics />
-      <SpeedInsights />
+      <ProductionInstrumentation />
       <div className="max-w-[1440px] mx-auto px-3 md:px-[50px]">
         {!hideHeaderFooter && <Header />}
         <main className={location.pathname !== '/' && !isPortalPage ? 'md:pt-[110px]' : ''}>

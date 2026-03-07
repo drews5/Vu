@@ -13,9 +13,9 @@ import {
   Music
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../utils/supabase';
 import confetti from 'canvas-confetti';
 import logoImage from 'figma:asset/d4630c01b543cc75980f0b293230859d29654fbb.png';
+import { loadSupabase } from '../utils/loadSupabase';
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 interface AuditionSlot {
@@ -65,6 +65,7 @@ export function Auditions() {
   }, []);
 
   const fetchSlots = useCallback(async () => {
+    const supabase = await loadSupabase();
     const { data, error } = await supabase
       .from('auditions')
       .select('*')
@@ -84,15 +85,32 @@ export function Auditions() {
     setLoading(false);
   }, []);
   useEffect(() => {
-    fetchSlots();
-    const channel = supabase
-      .channel('audition-updates')
-      .on('postgres_changes', { event: '*', table: 'auditions', schema: 'public' }, () => {
-        fetchSlots();
-      })
-      .subscribe();
+    let isActive = true;
+    let removeRealtimeChannel: (() => void) | undefined;
+
+    const initializeSlots = async () => {
+      const supabase = await loadSupabase();
+      if (!isActive) {
+        return;
+      }
+
+      await fetchSlots();
+      const channel = supabase
+        .channel('audition-updates')
+        .on('postgres_changes', { event: '*', table: 'auditions', schema: 'public' }, () => {
+          void fetchSlots();
+        })
+        .subscribe();
+
+      removeRealtimeChannel = () => {
+        void supabase.removeChannel(channel);
+      };
+    };
+
+    void initializeSlots();
     return () => {
-      supabase.removeChannel(channel);
+      isActive = false;
+      removeRealtimeChannel?.();
     };
   }, [fetchSlots]);
   const triggerConfetti = () => {
@@ -123,6 +141,7 @@ export function Auditions() {
       return;
     }
     try {
+      const supabase = await loadSupabase();
       if (mode === 'save') {
         const nameToSave = tempNames[id]?.trim();
         if (!nameToSave) return;
@@ -164,6 +183,7 @@ export function Auditions() {
     if (!showDeleteWarning) return;
     setIsSubmitting(true);
     try {
+      const supabase = await loadSupabase();
       const { error } = await supabase
         .from('auditions')
         .update({

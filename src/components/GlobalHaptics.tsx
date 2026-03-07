@@ -16,10 +16,14 @@ const INTERACTIVE_SELECTOR = [
 ].join(',');
 
 export function GlobalHaptics() {
-  const { trigger } = useWebHaptics();
+  const { trigger, isSupported } = useWebHaptics();
   const lastScrollFeedbackAt = useRef(0);
 
   useEffect(() => {
+    if (!isSupported || !window.matchMedia('(pointer: coarse)').matches) {
+      return;
+    }
+
     const triggerPattern = (pattern: 'selection' | 'light' | 'medium') => {
       void trigger(pattern);
     };
@@ -45,15 +49,13 @@ export function GlobalHaptics() {
     };
 
     document.addEventListener('click', handleClick, true);
-    window.addEventListener('wheel', handleScrollGesture, { passive: true });
     window.addEventListener('touchmove', handleScrollGesture, { passive: true });
 
     return () => {
       document.removeEventListener('click', handleClick, true);
-      window.removeEventListener('wheel', handleScrollGesture);
       window.removeEventListener('touchmove', handleScrollGesture);
     };
-  }, [trigger]);
+  }, [isSupported, trigger]);
 
   return null;
 }

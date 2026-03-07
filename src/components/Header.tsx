@@ -62,7 +62,6 @@ export function Header() {
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isScrolledMore, setIsScrolledMore] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [mobileDockedTop, setMobileDockedTop] = useState(false);
   const mobileDockedTopRef = useRef(false);
 
@@ -122,12 +121,6 @@ export function Header() {
     handleViewportChange();
     window.addEventListener('scroll', handleViewportChange, { passive: true });
     window.addEventListener('resize', handleViewportChange);
-
-    // Check auth status
-    const authStatus = localStorage.getItem('vu_portal_auth');
-    if (authStatus === 'true') {
-      setIsAuthenticated(true);
-    }
 
     return () => {
       cancelAnimationFrame(frameId);

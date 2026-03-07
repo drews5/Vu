@@ -1,25 +1,19 @@
 import { Helmet } from 'react-helmet-async';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import fullLogo from 'figma:asset/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
-import heroBackground from 'figma:asset/15a7da513ab99cbb57e9735db4d4d232088838f1.png';
-import ichsaPhoto from '../assets/ichsa-quarterfinal.jpg';
-import showcasePhoto from '../assets/spring-showcase.jpg';
-import icca2026Photo from '../assets/icca-2026.jpg';
-import icca2025Photo from '../assets/icca-2025.jpg';
-import winterShowcasePhoto from '../assets/winter-showcase.jpg';
-import nightSongsPhoto from '../assets/night-songs.jpg';
+import heroBackground from '../assets/home-hero.webp';
 import groupPhoto from '../assets/group-photo.jpg';
 
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
-import { useEffect, useState, useRef, useCallback } from 'react';
-import { ContactForm } from '../components/ContactForm';
-
-import { supabase } from '../utils/supabase';
 import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
+import { loadSupabase } from '../utils/loadSupabase';
+import { getEventImage } from '../utils/eventImages';
 
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
+const LazyContactForm = lazy(() => import('../components/ContactForm').then((m) => ({ default: m.ContactForm })));
 
 interface FeaturedEvent {
   tag: string;
@@ -32,6 +26,12 @@ interface FeaturedEvent {
   image: string;
   status: 'Upcoming' | 'Previous';
   isInstagram?: boolean;
+}
+
+function getVisibleCardCount(width: number) {
+  if (width >= 1024) return 3;
+  if (width >= 768) return 2;
+  return 1;
 }
 
 function EventCard({ event }: { event: FeaturedEvent }) {
@@ -141,32 +141,49 @@ export function Home() {
 
   // Track scroll for full-screen hero transition
   useEffect(() => {
+    let frameId = 0;
+
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      // Small threshold to trigger the snap
-      setIsScrolled(scrollY > 20);
-      setHasScrolledAtAll(scrollY > 0);
+      cancelAnimationFrame(frameId);
+      frameId = window.requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        setIsScrolled(scrollY > 20);
+        setHasScrolledAtAll(scrollY > 0);
+      });
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // initial check
-    return () => window.removeEventListener('scroll', handleScroll);
+    handleScroll();
+    return () => {
+      cancelAnimationFrame(frameId);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   useEffect(() => {
+    let frameId = 0;
+
     const handleResize = () => {
-      if (window.innerWidth >= 1024) setVisibleCards(3);
-      else if (window.innerWidth >= 768) setVisibleCards(2);
-      else setVisibleCards(1);
-      setIsMobile(window.innerWidth < 768);
-      setIsExtraSmall(window.innerWidth <= 468);
+      cancelAnimationFrame(frameId);
+      frameId = window.requestAnimationFrame(() => {
+        const width = window.innerWidth;
+        setVisibleCards(getVisibleCardCount(width));
+        setIsMobile(width < 768);
+        setIsExtraSmall(width <= 468);
+      });
     };
     handleResize();
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      cancelAnimationFrame(frameId);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function fetchData() {
+      const supabase = await loadSupabase();
       const { data: eventsData, error: eventsError } = await supabase
         .from('events')
         .select('*')
@@ -174,6 +191,10 @@ export function Home() {
 
       if (eventsError) {
         console.error('Error fetching events:', eventsError);
+        return;
+      }
+
+      if (cancelled) {
         return;
       }
 
@@ -200,26 +221,24 @@ export function Home() {
         description: r.description,
         link: `/event/${r.slug}`,
         status: r.status,
-        // NOTE: These photos are intentionally swapped to showcasePhoto for ICHSA slug and ichsaPhoto for Spring Showcase slug
-        image: r.slug === 'ichsa-quarterfinal-4-2026' ? showcasePhoto :
-          r.slug === 'spring-showcase-2026' ? ichsaPhoto :
-            r.slug === 'icca-quarterfinal-2026' ? icca2026Photo :
-              r.slug === 'icca-quarterfinal-2025' ? icca2025Photo :
-                r.slug === 'winter-showcase-2025' ? winterShowcasePhoto :
-                  r.slug === 'night-songs' ? nightSongsPhoto :
-                    r.image_url,
+        image: getEventImage(r.slug, r.image_url),
       }));
 
+      if (cancelled) {
+        return;
+      }
+
       setItems(formattedEvents);
-      const vCards = window.innerWidth >= 1024 ? 3 : (window.innerWidth >= 768 ? 2 : 1);
-
+      const vCards = getVisibleCardCount(window.innerWidth);
       const initialIdx = Math.max(0, pastCount - 1);
-
       const maxIdx = Math.max(0, formattedEvents.length - vCards);
       setCurrentIndex(Math.min(initialIdx, maxIdx));
     }
 
-    fetchData();
+    void fetchData();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const nextSlide = () => {
@@ -277,6 +296,8 @@ export function Home() {
             className="w-full h-full object-cover"
             style={{ filter: 'brightness(1.08) saturate(1.05)', objectPosition: 'center bottom' }}
             layout
+            fetchPriority="high"
+            decoding="async"
           />
           <div className="absolute inset-0 flex flex-col items-center px-4 pointer-events-none">
             <motion.div
@@ -284,8 +305,8 @@ export function Home() {
               initial={false}
               animate={{
                 opacity: 1,
-                scale: isScrolled ? (window.innerWidth < 768 ? 0.85 : 1) : (window.innerWidth < 768 ? 1 : 1.25),
-                y: isScrolled ? 0 : (window.innerWidth < 768 ? 10 : 20)
+                scale: isScrolled ? (isMobile ? 0.85 : 1) : (isMobile ? 1 : 1.25),
+                y: isScrolled ? 0 : (isMobile ? 10 : 20)
               }}
               transition={{ type: 'spring', damping: 25, stiffness: 120 }}
               style={{ originY: 0 }}
@@ -551,7 +572,9 @@ export function Home() {
 
       {/* Contact Form Section */}
       <motion.section variants={childVariants} style={{ marginBottom: '25px', position: 'relative', zIndex: 1 }}>
-        <ContactForm />
+        <Suspense fallback={null}>
+          <LazyContactForm />
+        </Suspense>
       </motion.section>
     </PageTransition>
   );

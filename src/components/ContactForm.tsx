@@ -1,5 +1,5 @@
 import { useState, useCallback, memo } from 'react';
-import { Mail, Instagram, MessageCircle } from 'lucide-react';
+import { Mail, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
