@@ -318,14 +318,14 @@ export function Home() {
               transition={{ type: 'spring', damping: 25, stiffness: 120 }}
               style={{ originY: 0 }}
             >
-              <Link to="/portal" className="cursor-default outline-none" draggable={false}>
+              <div className="cursor-default outline-none select-none">
                 <img
                   src={fullLogo}
                   alt="Vocal U - University of Minnesota's A Cappella Group"
                   className="w-[85vw] max-w-[340px] md:max-w-[280px]"
                   style={{ filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3))' }}
                 />
-              </Link>
+              </div>
             </motion.div>
 
             <motion.div

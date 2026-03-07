@@ -50,9 +50,11 @@ const SocialIcon = memo(function SocialIcon({
   Icon: React.ComponentType<{ className?: string }>;
   size?: number;
 }) {
+  const iconSizeClass = size === 4 ? 'lg:w-4 lg:h-4' : 'lg:w-5 lg:h-5';
+
   return (
-    <motion.a href={href} target="_blank" rel="noopener noreferrer" whileHover={{ y: -2 }} whileTap={{ scale: 0.9 }} className="bg-white rounded-full p-1.5 lg:p-2 flex items-center justify-center transition-colors duration-200 hover:bg-[#8FA8C8] group shadow-sm cursor-pointer" aria-label={label}>
-      <Icon className={`w-4 h-4 lg:w-${size} lg:h-${size} text-[#8FA8C8] group-hover:text-white transition-colors duration-200`} />
+    <motion.a href={href} target="_blank" rel="noopener noreferrer" whileHover={{ y: -2 }} whileTap={{ scale: 0.9 }} className="flex items-center justify-center rounded-full bg-white p-1.5 lg:p-2 shadow-sm transition-colors duration-200 hover:bg-[#8FA8C8] group cursor-pointer" aria-label={label}>
+      <Icon className={`h-4 w-4 ${iconSizeClass} text-[#8FA8C8] transition-colors duration-200 group-hover:text-white`} />
     </motion.a>
   );
 });
@@ -200,8 +202,8 @@ export function Header() {
             }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
           >
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center relative w-full">
-              <div className="flex items-center min-w-0">
+            <div className="grid w-full items-center gap-4 md:grid-cols-[9.5rem_minmax(0,1fr)_9.5rem] lg:grid-cols-[10.5rem_minmax(0,1fr)_10.5rem]">
+              <div className="flex min-w-0 items-center justify-start">
                 <Link to="/" className="flex items-center shrink-0">
                   <motion.img
                     layout
@@ -212,16 +214,16 @@ export function Header() {
                 </Link>
               </div>
 
-              <nav className="flex items-center justify-center gap-0">
+              <nav className="flex items-center justify-center">
                 {navItems.map((item, index) => {
                   return (
                     <div key={item.path} className="flex items-center">
-                      <div className="relative py-2 flex flex-col items-center group px-1.5 lg:px-5">
+                      <div className="group relative flex flex-col items-center px-3 py-2 lg:px-4 xl:px-5">
                         {item.dropdown ? (
-                          <div className="relative" onMouseEnter={() => setAboutDropdownOpen(true)}
+                          <div className="relative flex items-center" onMouseEnter={() => setAboutDropdownOpen(true)}
                             onMouseLeave={() => setAboutDropdownOpen(false)}
                           >
-                            <div className={`cursor-pointer transition-colors duration-200 flex items-center gap-1 font-yearbook ${location.pathname.startsWith(item.path) || isAboutActive ? 'text-white' : 'text-white/70 hover:text-white'}`} style={{ ...fontYearbook, fontSize: 'clamp(16px, 1.8vw, 22px)', letterSpacing: '0.05em' }}>
+                            <div className={`cursor-pointer whitespace-nowrap transition-colors duration-200 flex items-center gap-1 font-yearbook ${location.pathname.startsWith(item.path) || isAboutActive ? 'text-white' : 'text-white/70 hover:text-white'}`} style={{ ...fontYearbook, fontSize: 'clamp(17px, 1.8vw, 22px)', letterSpacing: '0.05em' }}>
                               {item.name}
                             </div>
                             <AnimatePresence>
@@ -240,25 +242,25 @@ export function Header() {
                           </div>
                         ) : (
                           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            <Link to={item.path} className={`px-0 py-2 transition-colors duration-200 font-yearbook ${location.pathname === item.path ? 'text-white' : 'text-white/70 hover:text-white'}`} style={{ ...fontYearbook, fontSize: 'clamp(16px, 1.8vw, 22px)', letterSpacing: '0.05em' }}>
+                            <Link to={item.path} className={`block whitespace-nowrap px-0 py-2 transition-colors duration-200 font-yearbook ${location.pathname === item.path ? 'text-white' : 'text-white/70 hover:text-white'}`} style={{ ...fontYearbook, fontSize: 'clamp(17px, 1.8vw, 22px)', letterSpacing: '0.05em' }}>
                               {item.name}
                             </Link>
                           </motion.div>
                         )}
                         {/* Active Underline */}
                         {(location.pathname === item.path || (item.dropdown && isAboutActive)) && (
-                          <motion.div layoutId="navActionIndicatorDesktop" className="absolute bottom-[5px] inset-x-1 lg:inset-x-2 h-[2.5px] bg-white rounded-full z-20" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+                          <motion.div layoutId="navActionIndicatorDesktop" className="absolute bottom-[5px] inset-x-2 lg:inset-x-3 h-[2.5px] bg-white rounded-full z-20" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
                         )}
                       </div>
                       {index < navItems.length - 1 && (
-                        <div className="h-4 w-[1px] bg-white/40 mx-1 lg:mx-2" />
+                        <div className="mx-1 h-5 w-px bg-white/35 lg:mx-1.5" />
                       )}
                     </div>
                   );
                 })}
               </nav>
 
-              <div className="flex items-center gap-1.5 lg:gap-3 justify-end min-w-0">
+              <div className="flex min-w-0 items-center justify-end gap-2 lg:gap-2.5">
                 {socialLinks.map((s) => (
                   <SocialIcon key={s.label} href={s.href} label={s.label} Icon={s.Icon} size={isScrolled ? 4 : 5} />
                 ))}

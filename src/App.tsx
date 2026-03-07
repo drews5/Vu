@@ -17,7 +17,6 @@ const Events = lazy(() => import('./pages/Events').then(m => ({ default: m.Event
 const EventDetail = lazy(() => import('./pages/EventDetail').then(m => ({ default: m.EventDetail })));
 const Contact = lazy(() => import('./pages/Contact').then(m => ({ default: m.Contact })));
 const Auditions = lazy(() => import('./pages/Auditions').then(m => ({ default: m.Auditions })));
-const Portal = lazy(() => import('./pages/Portal').then(m => ({ default: m.Portal })));
 const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
 
 function PageLoader() {
@@ -63,8 +62,7 @@ function ProductionInstrumentation() {
 function AppContent() {
   const location = useLocation();
   const isAuditionsPage = location.pathname === '/auditions';
-  const isPortalPage = location.pathname === '/portal';
-  const hideHeaderFooter = isAuditionsPage || isPortalPage;
+  const hideHeaderFooter = isAuditionsPage;
 
   return (
     <div className="min-h-screen bg-white">
@@ -73,7 +71,7 @@ function AppContent() {
       <ProductionInstrumentation />
       <div className="max-w-[1440px] mx-auto px-3 md:px-[50px]">
         {!hideHeaderFooter && <Header />}
-        <main className={location.pathname !== '/' && !isPortalPage ? 'md:pt-[110px]' : ''}>
+        <main className={location.pathname !== '/' ? 'md:pt-[110px]' : ''}>
           <Suspense fallback={<PageLoader />}>
             <AnimatePresence mode="wait">
               <Routes location={location} key={location.pathname}>
@@ -86,7 +84,6 @@ function AppContent() {
                 <Route path="/event/:eventId" element={<EventDetail />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/auditions" element={<Auditions />} />
-                <Route path="/portal" element={<Portal />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </AnimatePresence>
