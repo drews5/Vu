@@ -232,7 +232,10 @@ export function Home() {
 
       setItems(formattedEvents);
       const vCards = getVisibleCardCount(window.innerWidth);
-      const initialIdx = Math.max(0, pastCount - 1);
+      const firstUpcomingIdx = formattedEvents.findIndex((event) => event.status === 'Upcoming');
+      const initialIdx = vCards === 1 && firstUpcomingIdx !== -1
+        ? firstUpcomingIdx
+        : Math.max(0, pastCount - 1);
       const maxIdx = Math.max(0, formattedEvents.length - vCards);
       setCurrentIndex(Math.min(initialIdx, maxIdx));
     }
@@ -336,34 +339,28 @@ export function Home() {
               transition={{ type: 'spring', damping: 25, stiffness: 120 }}
             >
               <motion.div
-                initial={{ scale: 1 }}
-                animate={{
-                  scale: [1, 1.02, 1],
-                  boxShadow: [
-                    "0 4px 20px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.6)",
-                    "0 8px 30px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6)",
-                    "0 4px 20px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.6)"
-                  ]
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                whileHover={{ scale: 1.05 }}
+                initial={false}
+                animate={{ y: isScrolled ? 4 : 0 }}
+                transition={{ type: 'spring', damping: 24, stiffness: 180 }}
+                whileHover={{ scale: 1.04, y: -2 }}
                 whileTap={{ scale: 0.97 }}
+                className="rounded-[16px] shadow-[0_18px_45px_rgba(43,76,111,0.22)]"
               >
                 <Link
                   to="/event/spring-showcase-2026"
-                  className="bg-white text-[#2B4C6F] px-6 md:px-12 py-2.5 md:py-4 border border-white hover:bg-[#8FA8C8] hover:text-white hover:border-[#8FA8C8] transition-all duration-300 flex-shrink-0 text-center block cursor-pointer font-yearbook shadow-md whitespace-nowrap"
+                  className="group relative block overflow-hidden border border-white/80 bg-white/95 px-6 md:px-12 py-2.5 md:py-4 text-center text-[#2B4C6F] transition-all duration-300 hover:border-[#8FA8C8] hover:bg-[#8FA8C8] hover:text-white whitespace-nowrap"
                   style={{
                     ...fontYearbook,
                     fontSize: 'clamp(14px, 4vw, 20px)',
                     letterSpacing: '0.05em',
-                    borderRadius: '12px',
+                    borderRadius: '16px',
                   }}
                 >
-                  Spring Showcase
+                  <span className="absolute inset-0 bg-gradient-to-r from-white via-[#f8fbff] to-white transition-opacity duration-300 group-hover:opacity-0" />
+                  <span className="relative flex items-center justify-center gap-2">
+                    Spring Showcase
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
                 </Link>
               </motion.div>
             </motion.div>
