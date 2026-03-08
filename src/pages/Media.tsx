@@ -5,8 +5,8 @@ import { Instagram, Youtube, ExternalLink, Calendar, MessageCircle, X } from 'lu
 import { createPortal } from 'react-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
+import { fontYearbook } from '../styles/fonts';
 
-const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 // Instagram Post Type from Behold
 type InstaPost = {
@@ -211,7 +211,7 @@ export function Media() {
             {/* Header Section */}
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
                 <div className="bg-[#8FA8C8] py-10 md:py-16 px-4 text-center" style={{ borderRadius: '16px' }}>
-                    <h1 className="text-white font-yearbook" style={{ fontFamily: "'Yearbook Solid', sans-serif", fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}>
+                    <h1 className="text-white font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}>
                         Media
                     </h1>
                     <p className="text-white/90 mt-2 max-w-2xl mx-auto text-sm md:text-base" style={{ fontFamily: 'Inter, sans-serif' }}>

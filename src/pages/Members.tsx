@@ -6,11 +6,11 @@ import { Instagram, Music } from 'lucide-react';
 import { motion } from 'motion/react';
 import { loadSupabase } from '../utils/loadSupabase';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
+import { fontYearbook } from '../styles/fonts';
 
 const memberPhotos = import.meta.glob('../assets/members/*.jpg', { eager: true, import: 'default' }) as Record<string, string>;
 const heroPhotos = import.meta.glob('../assets/group_photos/*.jpg', { eager: true, import: 'default' });
 const heroImageUrls = Object.values(heroPhotos) as string[];
-const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 interface Member {
     name: string;
     role: string;

@@ -3,8 +3,8 @@ import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
+import { fontYearbook } from '../styles/fonts';
 
-const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const repertoire = [
     { title: 'Back to Black', artist: 'Amy Winehouse' },

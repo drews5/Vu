@@ -5,8 +5,8 @@ import { PageTransition, childVariants } from '../components/PageTransition';
 import { Heart, Star, Check } from 'lucide-react';
 import logoImage from 'figma:asset/d4630c01b543cc75980f0b293230859d29654fbb.png';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
+import { fontYearbook } from '../styles/fonts';
 
-const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 export function Donate() {
     const donateDescription =

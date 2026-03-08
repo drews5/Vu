@@ -5,13 +5,29 @@
 
 @font-face {
     font-family: 'Yearbook Solid';
-    src: url('https://github.com/drews5/vocalu/raw/f5edd94c9bc2ec264c910436949b0eb7d470c5fb/Yearbook%20Solid.woff') format('woff');
-    font-weight: normal;
+    src:
+        local('Yearbook Solid'),
+        local('YearbookSolid'),
+        url('/fonts/yearbook-solid.woff') format('woff'),
+        url('/fonts/yearbook-solid.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap
+}
+
+@font-face {
+    font-family: 'Graduate';
+    src:
+        local('Graduate'),
+        local('Graduate Regular'),
+        url('/fonts/graduate-regular.ttf') format('truetype');
+    font-weight: 400;
     font-style: normal;
     font-display: swap
 }
 
 :root {
+    --font-yearbook-stack: "Yearbook Solid", "Graduate", "Rockwell Extra Bold", "Bookman Old Style", Georgia, serif;
     --font-size: 16px;
     --background: #fff;
     --foreground: oklch(0.145 0 0);
@@ -200,6 +216,7 @@ h2,
 h3,
 button,
 .font-yearbook {
+    font-family: var(--font-yearbook-stack);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;

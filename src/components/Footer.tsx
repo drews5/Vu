@@ -3,7 +3,8 @@ import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook, Youtube } from 'lucide-react';
 import footerLogo from 'figma:asset/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
-const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
+import { fontYearbook } from '../styles/fonts';
+
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const TikTokIcon = memo(function TikTokIcon({ className }: { className?: string }) {
   return (

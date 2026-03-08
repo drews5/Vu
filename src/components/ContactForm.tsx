@@ -1,7 +1,8 @@
 import { useState, useCallback, memo } from 'react';
 import { Mail, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
+import { fontYearbook } from '../styles/fonts';
+
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const ContactInfo = memo(function ContactInfo() {
   return (

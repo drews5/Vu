@@ -16,8 +16,8 @@ import confetti from 'canvas-confetti';
 import logoImage from 'figma:asset/d4630c01b543cc75980f0b293230859d29654fbb.png';
 import { loadSupabase } from '../utils/loadSupabase';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
+import { fontYearbook } from '../styles/fonts';
 
-const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 interface AuditionSlot {
   id: string;

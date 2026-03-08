@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { Home, Search, Music, ArrowLeft } from 'lucide-react';
 import { Seo } from '../components/Seo';
+import { fontYearbook } from '../styles/fonts';
 
-const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 
 export function NotFound() {

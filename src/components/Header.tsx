@@ -3,6 +3,7 @@ import { Menu, X, Instagram, Youtube, Facebook } from 'lucide-react';
 import { memo, useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import logoImage from 'figma:asset/d4630c01b543cc75980f0b293230859d29654fbb.png';
+import { fontYearbook } from '../styles/fonts';
 
 const MOBILE_FLOATING_LANE = 96;
 const MOBILE_FULL_WIDTH_LANE = 84;
@@ -38,7 +39,6 @@ const socialLinks = [
   { href: 'https://www.tiktok.com/@vocalumn', label: 'TikTok', Icon: TikTokIcon },
   { href: 'https://www.youtube.com/@vocal-u', label: 'YouTube', Icon: Youtube },
 ];
-const fontYearbook = { fontFamily: "'Yearbook Solid', sans-serif" };
 const SocialIcon = memo(function SocialIcon({
   href,
   label,
