@@ -66,10 +66,17 @@ export function Header() {
   const [isScrolledMore, setIsScrolledMore] = useState(false);
   const [mobileDockedTop, setMobileDockedTop] = useState(false);
   const mobileDockedTopRef = useRef(false);
+  const hasUserScrolledRef = useRef(false);
 
   useEffect(() => {
     mobileDockedTopRef.current = mobileDockedTop;
   }, [mobileDockedTop]);
+
+  useEffect(() => {
+    hasUserScrolledRef.current = false;
+    mobileDockedTopRef.current = false;
+    setMobileDockedTop(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     let frameId = 0;
@@ -81,6 +88,14 @@ export function Header() {
       setIsScrolledMore(scrollY > 600);
 
       if (window.innerWidth >= 768) {
+        if (mobileDockedTopRef.current) {
+          mobileDockedTopRef.current = false;
+          setMobileDockedTop(false);
+        }
+        return;
+      }
+
+      if (!hasUserScrolledRef.current || scrollY <= 0) {
         if (mobileDockedTopRef.current) {
           mobileDockedTopRef.current = false;
           setMobileDockedTop(false);
@@ -115,21 +130,26 @@ export function Header() {
       }
     };
 
-    const handleViewportChange = () => {
+    const queueSync = () => {
       cancelAnimationFrame(frameId);
       frameId = window.requestAnimationFrame(syncHeaderState);
     };
 
-    handleViewportChange();
-    window.addEventListener('scroll', handleViewportChange, { passive: true });
-    window.addEventListener('resize', handleViewportChange);
+    const handleScroll = () => {
+      hasUserScrolledRef.current = window.scrollY > 0;
+      queueSync();
+    };
+
+    queueSync();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', queueSync);
 
     return () => {
       cancelAnimationFrame(frameId);
-      window.removeEventListener('scroll', handleViewportChange);
-      window.removeEventListener('resize', handleViewportChange);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', queueSync);
     };
-  }, [location.pathname, mobileMenuOpen]);
+  }, [mobileMenuOpen]);
 
   const closeMobileMenu = useCallback(() => {
     setMobileMenuOpen(false);
