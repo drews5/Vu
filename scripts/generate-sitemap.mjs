@@ -17,6 +17,14 @@ const staticRoutes = [
   { path: '/members', changefreq: 'monthly', priority: '0.8', lastmod: buildDate },
 ];
 
+function getEventPath(slug) {
+  if (slug === 'spring-showcase-2026') {
+    return '/events/showcase';
+  }
+
+  return `/event/${slug}`;
+}
+
 function formatDate(dateValue) {
   const parsedDate = new Date(dateValue);
   return Number.isNaN(parsedDate.getTime()) ? buildDate : parsedDate.toISOString().split('T')[0];
@@ -51,7 +59,7 @@ async function fetchEventRoutes() {
     return events
       .filter((event) => typeof event.slug === 'string' && event.slug.trim().length > 0)
       .map((event) => ({
-        path: `/event/${event.slug}`,
+        path: getEventPath(event.slug),
         changefreq: 'weekly',
         priority: '0.8',
         lastmod: formatDate(event.date),

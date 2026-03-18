@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
 import { getEventImage } from '../utils/eventImages';
+import { getEventDisplayTitle, getEventPath, springShowcasePath } from '../utils/eventRoutes';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
@@ -220,10 +221,10 @@ export function Home() {
         // Always override tag from DB — past events must show "PAST"
         tag: r.status === 'Previous' ? 'PAST' : 'UPCOMING',
         date: r.fullDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        title: r.title,
+        title: getEventDisplayTitle(r.slug, r.title),
         location: r.location,
         description: r.description,
-        link: `/event/${r.slug}`,
+        link: getEventPath(r.slug),
         status: r.status,
         image: getEventImage(r.slug, r.image_url),
       }));
@@ -358,7 +359,7 @@ export function Home() {
                 className="rounded-[16px] shadow-[0_18px_45px_rgba(43,76,111,0.22)]"
               >
                 <Link
-                  to="/event/spring-showcase-2026"
+                  to={springShowcasePath}
                   className="group relative block overflow-hidden border border-white/80 bg-white/95 px-6 md:px-12 py-2.5 md:py-4 text-center text-[#2B4C6F] transition-all duration-300 hover:border-[#8FA8C8] hover:bg-[#8FA8C8] hover:text-white whitespace-nowrap"
                   style={{
                     ...fontYearbook,

@@ -18,9 +18,15 @@ export default defineConfig({
   build: {
     target: 'esnext',
     outDir: 'build',
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        showcase: path.resolve(__dirname, 'events/showcase/index.html'),
+      },
+    },
   },
   server: {
     port: 3000,
-    open: true,
+    open: process.env.VITE_OPEN === 'true',
   },
 });

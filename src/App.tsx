@@ -1,10 +1,11 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { GlobalHaptics } from './components/GlobalHaptics';
 import { HelmetProvider } from 'react-helmet-async';
+import { springShowcasePath } from './utils/eventRoutes';
 
 const Analytics = lazy(() => import('@vercel/analytics/react').then((m) => ({ default: m.Analytics })));
 const SpeedInsights = lazy(() => import('@vercel/speed-insights/react').then((m) => ({ default: m.SpeedInsights })));
@@ -15,6 +16,7 @@ const Media = lazy(() => import('./pages/Media').then(m => ({ default: m.Media }
 const Donate = lazy(() => import('./pages/Donate').then(m => ({ default: m.Donate })));
 const Events = lazy(() => import('./pages/Events').then(m => ({ default: m.Events })));
 const EventDetail = lazy(() => import('./pages/EventDetail').then(m => ({ default: m.EventDetail })));
+const SpringShowcase = lazy(() => import('./pages/SpringShowcase').then(m => ({ default: m.SpringShowcase })));
 const Contact = lazy(() => import('./pages/Contact').then(m => ({ default: m.Contact })));
 const Auditions = lazy(() => import('./pages/Auditions').then(m => ({ default: m.Auditions })));
 const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
@@ -80,7 +82,9 @@ function AppContent() {
                 <Route path="/members" element={<Members />} />
                 <Route path="/media" element={<Media />} />
                 <Route path="/donate" element={<Donate />} />
+                <Route path="/events/showcase" element={<SpringShowcase />} />
                 <Route path="/events" element={<Events />} />
+                <Route path="/event/spring-showcase-2026" element={<Navigate to={springShowcasePath} replace />} />
                 <Route path="/event/:eventId" element={<EventDetail />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/auditions" element={<Auditions />} />

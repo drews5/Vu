@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/events/showcase", "destination": "/events/showcase/index.html" },
+    { "source": "/events/showcase/", "destination": "/events/showcase/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

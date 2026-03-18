@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
 import { getEventImage } from '../utils/eventImages';
+import { getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
@@ -25,11 +26,12 @@ interface Event {
 }
 const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Event }) {
     const isUpcoming = event.status === 'Upcoming';
+    const eventPath = getEventPath(event.slug);
     const [copied, setCopied] = useState(false);
     const handleCopyInfo = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        const eventLink = `${window.location.origin}/event/${event.slug}`;
+        const eventLink = `${window.location.origin}${eventPath}`;
         const info = `Come see Vocal U at ${event.title} on ${event.date}, ${event.year} at ${event.time} at ${event.location}! ${eventLink}`;
         navigator.clipboard.writeText(info);
         setCopied(true);
@@ -38,7 +40,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
     const handleShare = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        const shareUrl = `${window.location.origin}/event/${event.slug}`;
+        const shareUrl = `${window.location.origin}${eventPath}`;
         const shareTitle = event.title;
         const shareText = `Check out ${event.title} by Vocal U!`;
         if (navigator.share) {
@@ -83,7 +85,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
     };
     return (
         <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.99 }} className="relative h-full">
-            <Link to={`/event/${event.slug}`} className={`group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-2xl flex flex-col md:flex-row h-full md:min-h-64 cursor-pointer ${isUpcoming ? 'ring-1 ring-[#8FA8C8]/30 shadow-md' : 'shadow-sm'}`} style={{ borderRadius: '16px' }}>
+            <Link to={eventPath} className={`group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-2xl flex flex-col md:flex-row h-full md:min-h-64 cursor-pointer ${isUpcoming ? 'ring-1 ring-[#8FA8C8]/30 shadow-md' : 'shadow-sm'}`} style={{ borderRadius: '16px' }}>
                 {/* Image Section */}
                 <div className="relative w-full md:w-80 aspect-video md:aspect-auto md:h-auto overflow-hidden shrink-0">
                     <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" style={{ filter: 'saturate(1.1) contrast(1.1)' }} loading="lazy" />
@@ -162,9 +164,10 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
     );
 });
 const PastEventCard = memo(function PastEventCard({ event }: { event: Event }) {
+    const eventPath = getEventPath(event.slug);
     return (
         <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.98 }} className="h-full">
-            <Link to={`/event/${event.slug}`} className="flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full group">
+            <Link to={eventPath} className="flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full group">
                 <div className="relative aspect-video overflow-hidden">
                     <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-all duration-500 transform group-hover:scale-110" style={{ filter: 'saturate(1.1) contrast(1.1)' }} loading="lazy" />
                 </div>
@@ -226,7 +229,7 @@ export function Events() {
                         slug: r.slug,
                         date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
                         year: d.getFullYear().toString(),
-                        title: r.title,
+                        title: getEventDisplayTitle(r.slug, r.title),
                         time: r.display_time || d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                         location: r.location,
                         address: r.address,
@@ -268,7 +271,7 @@ export function Events() {
             itemListElement: events.map((event, index) => ({
                 '@type': 'ListItem',
                 position: index + 1,
-                url: toAbsoluteUrl(`/event/${event.slug}`),
+                url: toAbsoluteUrl(getEventPath(event.slug)),
                 name: event.title,
             })),
         });

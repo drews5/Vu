@@ -6,8 +6,8 @@ import winterShowcasePhoto from '../assets/winter-showcase.jpg';
 import nightSongsPhoto from '../assets/night-songs.jpg';
 
 const eventImageBySlug: Record<string, string> = {
-  'ichsa-quarterfinal-4-2026': showcasePhoto,
-  'spring-showcase-2026': ichsaPhoto,
+  'ichsa-quarterfinal-4-2026': ichsaPhoto,
+  'spring-showcase-2026': showcasePhoto,
   'icca-quarterfinal-2026': icca2026Photo,
   'icca-quarterfinal-2025': icca2025Photo,
   'winter-showcase-2025': winterShowcasePhoto,
