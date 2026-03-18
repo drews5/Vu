@@ -290,84 +290,86 @@ export function SpringShowcase() {
             Back to Events
           </Link>
 
-          <div className="overflow-hidden rounded-[24px] border border-[#E6EDF5] bg-white shadow-sm">
-            <img
-              src={event.imageUrl}
-              alt={event.title}
-              className="h-[190px] w-full object-cover sm:h-[280px] lg:h-[390px]"
-              style={{ objectPosition: 'center 42%' }}
-            />
-          </div>
-
-          <div className="mt-8 flex flex-col md:mt-10">
-            <div
-              className="mb-4 inline-flex w-fit items-center rounded-full border border-[#D7E1EC] bg-white px-3 py-1.5 text-[#6F8BA8] shadow-sm md:mb-5"
-              style={{ ...fontInter, fontSize: '11px', fontWeight: 700, letterSpacing: '0.18em' }}
-            >
-              YOU&apos;RE INVITED!
+          <div className="lg:grid lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1fr)] lg:items-stretch lg:gap-8">
+            <div className="overflow-hidden rounded-[24px] border border-[#E6EDF5] bg-white shadow-sm">
+              <img
+                src={event.imageUrl}
+                alt={event.title}
+                className="h-[190px] w-full object-cover sm:h-[280px] lg:h-full lg:min-h-[560px]"
+                style={{ objectPosition: 'center 42%' }}
+              />
             </div>
 
-            <div className="flex items-start justify-between gap-3">
-              <h1
-                className="text-[#2B4C6F]"
-                style={{ ...fontYearbook, fontSize: 'clamp(28px, 6vw, 72px)', lineHeight: '1', letterSpacing: '0.04em' }}
+            <div className="mt-8 flex flex-col md:mt-10 lg:mt-0 lg:justify-center">
+              <div
+                className="mb-4 inline-flex w-fit items-center rounded-full border border-[#D7E1EC] bg-white px-3 py-1.5 text-[#6F8BA8] shadow-sm md:mb-5"
+                style={{ ...fontInter, fontSize: '11px', fontWeight: 700, letterSpacing: '0.18em' }}
               >
-                <span className="block">Vocal U</span>
-                <span className="mt-1 block sm:mt-2">Spring Showcase</span>
-              </h1>
-              <button
-                type="button"
-                onClick={handleCopyInvite}
-                className="mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center text-[#6F8BA8] transition-colors hover:text-[#2B4C6F]"
-                aria-label={copiedState === 'invite' ? 'Invite copied' : 'Copy invite'}
-              >
-                <Copy className="h-4 w-4" />
-              </button>
-            </div>
-
-            <div className="mt-6 space-y-2.5 text-[#2B4C6F]/78 md:mt-7" style={{ ...fontInter, fontSize: '14px', lineHeight: '1.45' }}>
-              <div className="flex items-start gap-2">
-                <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-[#8FA8C8]" />
-                <span>
-                  {event.dateLabel}
-                  <br />
-                  {event.time}
-                </span>
+                YOU&apos;RE INVITED!
               </div>
-              <div className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#8FA8C8]" />
-                <span>
-                  {event.location}
-                  <br />
-                  {event.address}
-                </span>
+
+              <div className="flex items-start justify-between gap-3">
+                <h1
+                  className="text-[#2B4C6F]"
+                  style={{ ...fontYearbook, fontSize: 'clamp(28px, 6vw, 72px)', lineHeight: '1', letterSpacing: '0.04em' }}
+                >
+                  <span className="block">Vocal U</span>
+                  <span className="mt-1 block sm:mt-2">Spring Showcase</span>
+                </h1>
+                <button
+                  type="button"
+                  onClick={handleCopyInvite}
+                  className="mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center text-[#6F8BA8] transition-colors hover:text-[#2B4C6F]"
+                  aria-label={copiedState === 'invite' ? 'Invite copied' : 'Copy invite'}
+                >
+                  <Copy className="h-4 w-4" />
+                </button>
               </div>
-            </div>
 
-            <div className="mt-5 grid grid-cols-3 gap-3">
-              <ActionButton
-                href={calendarUrl}
-                title="Add to Calendar"
-                icon={<Calendar className="h-4 w-4" />}
-              />
-              <ActionButton
-                href={navigationUrl}
-                title="Navigate"
-                icon={<Navigation className="h-4 w-4" />}
-              />
-              <ActionButton
-                onClick={handleShare}
-                title={copiedState === 'link' ? 'Link Copied' : 'Share'}
-                icon={<Share2 className="h-4 w-4" />}
-              />
-            </div>
+              <div className="mt-6 space-y-2.5 text-[#2B4C6F]/78 md:mt-7" style={{ ...fontInter, fontSize: '14px', lineHeight: '1.45' }}>
+                <div className="flex items-start gap-2">
+                  <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-[#8FA8C8]" />
+                  <span>
+                    {event.dateLabel}
+                    <br />
+                    {event.time}
+                  </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#8FA8C8]" />
+                  <span>
+                    {event.location}
+                    <br />
+                    {event.address}
+                  </span>
+                </div>
+              </div>
 
-            <p className="mt-6 max-w-2xl text-[#2B4C6F]/80" style={{ ...fontInter, fontSize: '15px', lineHeight: '1.65' }}>
-              {event.description}
-            </p>
-            <p className="mt-2 text-[#2B4C6F]" style={{ ...fontInter, fontSize: '15px', fontWeight: 600, lineHeight: '1.5' }}>
-              {welcomeLine}
-            </p>
+              <div className="mt-5 grid grid-cols-3 gap-3">
+                <ActionButton
+                  href={calendarUrl}
+                  title="Add to Calendar"
+                  icon={<Calendar className="h-4 w-4" />}
+                />
+                <ActionButton
+                  href={navigationUrl}
+                  title="Navigate"
+                  icon={<Navigation className="h-4 w-4" />}
+                />
+                <ActionButton
+                  onClick={handleShare}
+                  title={copiedState === 'link' ? 'Link Copied' : 'Share'}
+                  icon={<Share2 className="h-4 w-4" />}
+                />
+              </div>
+
+              <p className="mt-6 max-w-2xl text-[#2B4C6F]/80" style={{ ...fontInter, fontSize: '15px', lineHeight: '1.65' }}>
+                {event.description}
+              </p>
+              <p className="mt-2 text-[#2B4C6F]" style={{ ...fontInter, fontSize: '15px', fontWeight: 600, lineHeight: '1.5' }}>
+                {welcomeLine}
+              </p>
+            </div>
           </div>
         </div>
       </motion.section>
