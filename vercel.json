@@ -1,4 +1,8 @@
 {
+  "redirects": [
+    { "source": "/program", "destination": "/program.pdf", "permanent": false },
+    { "source": "/program/", "destination": "/program.pdf", "permanent": false }
+  ],
   "rewrites": [
     { "source": "/events/showcase", "destination": "/events/showcase/index.html" },
     { "source": "/events/showcase/", "destination": "/events/showcase/index.html" },
