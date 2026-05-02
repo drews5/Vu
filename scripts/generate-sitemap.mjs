@@ -15,6 +15,7 @@ const staticRoutes = [
   { path: '/events', changefreq: 'weekly', priority: '0.9', lastmod: buildDate },
   { path: '/media', changefreq: 'weekly', priority: '0.8', lastmod: buildDate },
   { path: '/members', changefreq: 'monthly', priority: '0.8', lastmod: buildDate },
+  { path: '/program', changefreq: 'monthly', priority: '0.8', lastmod: buildDate },
 ];
 
 function getEventPath(slug) {

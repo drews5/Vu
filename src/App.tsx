@@ -17,6 +17,7 @@ const Donate = lazy(() => import('./pages/Donate').then(m => ({ default: m.Donat
 const Events = lazy(() => import('./pages/Events').then(m => ({ default: m.Events })));
 const EventDetail = lazy(() => import('./pages/EventDetail').then(m => ({ default: m.EventDetail })));
 const SpringShowcase = lazy(() => import('./pages/SpringShowcase').then(m => ({ default: m.SpringShowcase })));
+const Program = lazy(() => import('./pages/Program').then(m => ({ default: m.Program })));
 const Contact = lazy(() => import('./pages/Contact').then(m => ({ default: m.Contact })));
 const Auditions = lazy(() => import('./pages/Auditions').then(m => ({ default: m.Auditions })));
 const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
@@ -83,6 +84,7 @@ function AppContent() {
                 <Route path="/media" element={<Media />} />
                 <Route path="/donate" element={<Donate />} />
                 <Route path="/events/showcase" element={<SpringShowcase />} />
+                <Route path="/program" element={<Program />} />
                 <Route path="/events" element={<Events />} />
                 <Route path="/event/spring-showcase-2026" element={<Navigate to={springShowcasePath} replace />} />
                 <Route path="/event/:eventId" element={<EventDetail />} />
