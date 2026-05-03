@@ -286,33 +286,42 @@ export function Home() {
         schema={homeSchema}
       />
 
-      <motion.section
-        variants={childVariants}
-        className="relative z-20 mx-auto mb-3 mt-3 flex max-w-5xl flex-col items-center justify-between gap-3 overflow-hidden border border-[#8FA8C8]/30 bg-[#2B4C6F] px-4 py-3 text-center shadow-sm sm:flex-row sm:px-5 sm:text-left md:mb-4 md:mt-4"
-        style={{ borderRadius: '14px' }}
+      <motion.div
+        className="pointer-events-none fixed left-0 right-0 top-0 z-[49] hidden justify-center px-4 md:flex lg:px-[50px]"
+        initial={false}
+        animate={{ paddingTop: isScrolled ? 86 : 94 }}
+        transition={{ type: 'spring', damping: 26, stiffness: 140 }}
       >
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white sm:flex">
-            <Music className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="text-sm font-bold uppercase tracking-[0.18em] text-white/70" style={fontInter}>
-              Auditions are open
-            </p>
-            <p className="text-base font-semibold leading-snug text-white md:text-lg" style={fontInter}>
-              Sign up for a Vocal U audition slot now.
-            </p>
-          </div>
-        </div>
-        <Link
-          to="/auditions"
-          className="inline-flex w-full shrink-0 items-center justify-center gap-2 bg-white px-4 py-2.5 text-sm font-bold text-[#2B4C6F] transition-all duration-300 hover:bg-[#8FA8C8] hover:text-white sm:w-auto"
-          style={{ ...fontInter, borderRadius: '10px' }}
+        <motion.div
+          initial={false}
+          animate={{
+            width: isScrolled ? 520 : 620,
+            y: isScrolled ? -2 : 0,
+            opacity: 1,
+          }}
+          transition={{ type: 'spring', damping: 26, stiffness: 140 }}
+          className="pointer-events-auto overflow-hidden border border-white/50 bg-white/95 shadow-[0_18px_45px_rgba(43,76,111,0.16)] backdrop-blur-md"
+          style={{ borderRadius: '0 0 18px 18px' }}
         >
-          Sign Up
-          <ArrowRight className="h-4 w-4" />
-        </Link>
-      </motion.section>
+          <Link
+            to="/auditions"
+            className="group flex items-center justify-center gap-3 px-5 py-2.5 text-center text-[#2B4C6F] transition-colors duration-300 hover:bg-[#2B4C6F] hover:text-white"
+            style={fontInter}
+          >
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#8FA8C8]/15 text-[#2B4C6F] transition-colors duration-300 group-hover:bg-white/15 group-hover:text-white">
+              <Music className="h-4 w-4" />
+            </span>
+            <span className="min-w-0 text-sm font-bold uppercase tracking-[0.14em]">
+              Auditions are open
+            </span>
+            <span className="h-4 w-px bg-[#8FA8C8]/40 transition-colors duration-300 group-hover:bg-white/40" />
+            <span className="flex items-center gap-1 text-sm font-semibold">
+              Sign up
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </span>
+          </Link>
+        </motion.div>
+      </motion.div>
 
       {/* Hero Section */}
       <motion.section
