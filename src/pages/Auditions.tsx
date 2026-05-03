@@ -39,34 +39,6 @@ export function Auditions() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDeleteWarning, setShowDeleteWarning] = useState<{ id: string, name: string } | null>(null);
 
-  const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [isAuditionsOpen, setIsAuditionsOpen] = useState(false);
-
-  useEffect(() => {
-    const targetDate = new Date('2026-08-01T00:00:00').getTime();
-
-    const updateCountdown = () => {
-      const distance = targetDate - Date.now();
-
-      if (distance <= 0) {
-        setIsAuditionsOpen(true);
-        setTimeRemaining({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        return;
-      }
-
-      setTimeRemaining({
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((distance % (1000 * 60)) / 1000),
-      });
-    };
-
-    updateCountdown();
-    const intervalId = window.setInterval(updateCountdown, 1000);
-    return () => window.clearInterval(intervalId);
-  }, []);
-
   const fetchSlots = useCallback(async () => {
     const supabase = await loadSupabase();
     const { data, error } = await supabase
@@ -219,13 +191,6 @@ export function Auditions() {
     { day: 'Wednesday', date: 'September 18' },
     { day: 'Thursday', date: 'September 19' }
   ];
-  const countdownItems = [
-    { label: 'DAYS', value: String(timeRemaining.days).padStart(2, '0') },
-    { label: 'HRS', value: String(timeRemaining.hours).padStart(2, '0') },
-    { label: 'MINS', value: String(timeRemaining.minutes).padStart(2, '0') },
-    { label: 'SECS', value: String(timeRemaining.seconds).padStart(2, '0') },
-  ];
-
   const renderSlots = (daySlots: AuditionSlot[]) => {
     const half = Math.ceil(daySlots.length / 2);
     const col1 = daySlots.slice(0, half);
@@ -390,59 +355,33 @@ export function Auditions() {
         </div>
       </motion.section>
       <div className="px-0">
-        {/* Sign Up Section / Countdown Timer */}
-        {isAuditionsOpen ? (
-          <motion.section variants={childVariants} className="bg-white rounded-2xl shadow-sm overflow-hidden mb-4 md:mb-[25px] border border-gray-100">
-            <div className="px-4 py-2 md:px-6 md:py-3 border-b border-gray-50 flex justify-center items-center">
-              <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: '18px' }}>
-                SIGN UP
-              </h2>
-            </div>
-            <div className="p-3 md:p-4">
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 xl:gap-6">
-                {daysData.map((dayInfo) => (
-                  <div key={dayInfo.day} className="rounded-[22px] border border-gray-100 bg-[#fcfdff] p-3 md:p-4">
-                    <div className="flex flex-col items-center mb-3">
-                      <h3 className="text-[#2B4C6F] font-bold text-center whitespace-nowrap" style={{ ...fontInter, fontSize: 'clamp(11px, 1.4vw, 15px)' }}>
-                        {dayInfo.day}, {dayInfo.date}
-                      </h3>
-                      <div className="w-full h-[1px] bg-[#8FA8C8] mt-1.5" />
-                    </div>
-                    {loading ? (
-                      <div className="py-12 flex justify-center"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#8FA8C8]" /></div>
-                    ) : (
-                      renderSlots(slots.filter(s => s.day === dayInfo.day))
-                    )}
+        {/* Sign Up Section */}
+        <motion.section variants={childVariants} className="bg-white rounded-2xl shadow-sm overflow-hidden mb-4 md:mb-[25px] border border-gray-100">
+          <div className="px-4 py-2 md:px-6 md:py-3 border-b border-gray-50 flex justify-center items-center">
+            <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: '18px' }}>
+              SIGN UP
+            </h2>
+          </div>
+          <div className="p-3 md:p-4">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 xl:gap-6">
+              {daysData.map((dayInfo) => (
+                <div key={dayInfo.day} className="rounded-[22px] border border-gray-100 bg-[#fcfdff] p-3 md:p-4">
+                  <div className="flex flex-col items-center mb-3">
+                    <h3 className="text-[#2B4C6F] font-bold text-center whitespace-nowrap" style={{ ...fontInter, fontSize: 'clamp(11px, 1.4vw, 15px)' }}>
+                      {dayInfo.day}, {dayInfo.date}
+                    </h3>
+                    <div className="w-full h-[1px] bg-[#8FA8C8] mt-1.5" />
                   </div>
-                ))}
-              </div>
+                  {loading ? (
+                    <div className="py-12 flex justify-center"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#8FA8C8]" /></div>
+                  ) : (
+                    renderSlots(slots.filter(s => s.day === dayInfo.day))
+                  )}
+                </div>
+              ))}
             </div>
-          </motion.section>
-        ) : (
-          <motion.section variants={childVariants} className="bg-white rounded-3xl shadow-xl overflow-hidden mb-12 border border-gray-100 relative mt-4 md:mt-5">
-            <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(#2B4C6F 1px, transparent 1px)`, backgroundSize: '20px 20px' }}></div>
-            <div className="p-6 md:p-12 text-center text-[#2B4C6F] relative z-10">
-              <h2 className="text-[#2B4C6F] drop-shadow-sm mb-10" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 42px)', letterSpacing: '0.05em' }}>
-                FALL AUDITIONS OPEN IN
-              </h2>
-              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-3 rounded-3xl border border-gray-100 bg-gray-50/80 p-4 shadow-inner backdrop-blur-md md:grid-cols-4 md:gap-4 md:p-6">
-                {countdownItems.map((item) => (
-                  <div key={item.label} className="rounded-2xl bg-white/80 px-3 py-4 shadow-sm md:px-4 md:py-6">
-                    <span className="text-[#8FA8C8] drop-shadow-sm leading-none" style={{ ...fontYearbook, fontSize: 'clamp(36px, 8vw, 84px)' }}>
-                      {item.value}
-                    </span>
-                    <span className="mt-3 block text-[#2B4C6F] tracking-[0.2em] text-xs md:text-sm font-bold opacity-80" style={fontInter}>
-                      {item.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-8 text-gray-600 max-w-2xl mx-auto text-base md:text-lg font-medium tracking-wide" style={fontInter}>
-                Sign-ups will be available on <span className="text-[#2B4C6F] font-bold">August 1st, 2026</span>. Scroll down to prepare for your audition!
-              </p>
-            </div>
-          </motion.section>
-        )}
+          </div>
+        </motion.section>
         {/* Detailed Info Grid */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 md:gap-8">
           <motion.div variants={childVariants} className="relative h-full overflow-hidden rounded-[28px] border border-gray-100 bg-white p-7 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl md:p-8 group">

@@ -4,12 +4,12 @@ import heroBackground from '../assets/15a7da513ab99cbb57e9735db4d4d232088838f1.p
 import groupPhoto from '../assets/group-photo.jpg';
 
 import { Link } from 'react-router-dom';
-import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight, Copy, Music } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
 import { getEventImage } from '../utils/eventImages';
-import { getEventDisplayTitle, getEventPath, springShowcasePath } from '../utils/eventRoutes';
+import { getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
@@ -286,6 +286,34 @@ export function Home() {
         schema={homeSchema}
       />
 
+      <motion.section
+        variants={childVariants}
+        className="relative z-20 mx-auto mb-3 mt-3 flex max-w-5xl flex-col items-center justify-between gap-3 overflow-hidden border border-[#8FA8C8]/30 bg-[#2B4C6F] px-4 py-3 text-center shadow-sm sm:flex-row sm:px-5 sm:text-left md:mb-4 md:mt-4"
+        style={{ borderRadius: '14px' }}
+      >
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white sm:flex">
+            <Music className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-white/70" style={fontInter}>
+              Auditions are open
+            </p>
+            <p className="text-base font-semibold leading-snug text-white md:text-lg" style={fontInter}>
+              Sign up for a Vocal U audition slot now.
+            </p>
+          </div>
+        </div>
+        <Link
+          to="/auditions"
+          className="inline-flex w-full shrink-0 items-center justify-center gap-2 bg-white px-4 py-2.5 text-sm font-bold text-[#2B4C6F] transition-all duration-300 hover:bg-[#8FA8C8] hover:text-white sm:w-auto"
+          style={{ ...fontInter, borderRadius: '10px' }}
+        >
+          Sign Up
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+      </motion.section>
+
       {/* Hero Section */}
       <motion.section
         className="relative left-1/2 w-screen -translate-x-1/2"
@@ -359,7 +387,7 @@ export function Home() {
                 className="rounded-[16px] shadow-[0_18px_45px_rgba(43,76,111,0.22)]"
               >
                 <Link
-                  to={springShowcasePath}
+                  to="/auditions"
                   className="group relative block overflow-hidden border border-white/80 bg-white/95 px-6 md:px-12 py-2.5 md:py-4 text-center text-[#2B4C6F] transition-all duration-300 hover:border-[#8FA8C8] hover:bg-[#8FA8C8] hover:text-white whitespace-nowrap"
                   style={{
                     ...fontYearbook,
@@ -370,7 +398,7 @@ export function Home() {
                 >
                   <span className="absolute inset-0 bg-gradient-to-r from-white via-[#f8fbff] to-white transition-opacity duration-300 group-hover:opacity-0" />
                   <span className="relative flex items-center justify-center gap-2">
-                    Spring Showcase
+                    Sign Up for Auditions
                     <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
                 </Link>
