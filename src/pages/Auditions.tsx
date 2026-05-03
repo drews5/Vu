@@ -192,56 +192,51 @@ export function Auditions() {
     { day: 'Thursday', date: 'September 19' }
   ];
   const renderSlots = (daySlots: AuditionSlot[]) => {
-    const half = Math.ceil(daySlots.length / 2);
-    const col1 = daySlots.slice(0, half);
-    const col2 = daySlots.slice(half);
     return (
-      <div className="grid min-w-0 grid-cols-1 gap-x-2 gap-y-3 lg:grid-cols-2">
-        {[col1, col2].map((column, colIdx) => (
-          <div key={colIdx} className="space-y-1.5">
-            <div className="grid grid-cols-12 gap-1 rounded-xl bg-gray-50 px-2 py-2 text-[10px] font-bold uppercase tracking-[0.22em] text-gray-400 md:text-[11px]" style={fontInter}>
-              <div className="col-span-2">Time</div>
-              <div className="col-span-10 pl-1">Name</div>
-            </div>
-            {column.map((slot) => {
+      <div className="min-w-0 space-y-1 md:space-y-1.5">
+        <div className="grid grid-cols-[2.15rem_minmax(0,1fr)] gap-1 rounded-lg bg-gray-50 px-1.5 py-1 text-[8px] font-bold uppercase tracking-[0.12em] text-gray-400 md:grid-cols-[3rem_minmax(0,1fr)] md:px-2 md:py-1.5 md:text-[10px]" style={fontInter}>
+          <div>Time</div>
+          <div>Name</div>
+        </div>
+            {daySlots.map((slot) => {
               const isConfirming = confirmingId?.id === slot.id;
               const isBooked = slot.status === 'Booked';
               const isBreak = slot.status === 'Break';
               const hasText = (tempNames[slot.id] || '').trim().length > 0;
               const displayTime = slot.time.replace(' PM', '');
               return (
-                <div key={slot.id} className={`grid grid-cols-12 gap-1 items-center rounded-2xl border p-1.5 transition-all ${isConfirming ? 'border-[#8FA8C8] bg-[#8FA8C8]/5' : isBooked ? 'border-transparent bg-gray-50/60 opacity-80' : isBreak ? 'border-transparent bg-gray-100' : 'border-transparent hover:border-gray-100 hover:bg-gray-50'}`}>
-                  <div className="col-span-2 px-1 text-left">
-                    <span className={`font-bold text-[10px] md:text-[12px] tracking-tight ${isBooked ? 'text-gray-400' : 'text-[#2B4C6F]'}`} style={{ ...fontInter, letterSpacing: '-0.02em' }}>{displayTime}</span>
+                <div key={slot.id} className={`grid grid-cols-[2.15rem_minmax(0,1fr)] md:grid-cols-[3rem_minmax(0,1fr)] gap-1 items-center rounded-lg border p-0.5 md:rounded-xl md:p-1 transition-all ${isConfirming ? 'border-[#8FA8C8] bg-[#8FA8C8]/5' : isBooked ? 'border-transparent bg-gray-50/60 opacity-80' : isBreak ? 'border-transparent bg-gray-100' : 'border-transparent hover:border-gray-100 hover:bg-gray-50'}`}>
+                  <div className="px-0.5 text-left">
+                    <span className={`font-bold text-[9px] tracking-tight md:text-[11px] ${isBooked ? 'text-gray-400' : 'text-[#2B4C6F]'}`} style={{ ...fontInter, letterSpacing: '-0.02em' }}>{displayTime}</span>
                   </div>
-                  <div className="col-span-10 relative group">
+                  <div className="relative group min-w-0">
                     {isBreak ? (
-                      <span className="italic text-gray-400 font-medium px-1 md:px-1.5 text-[8px] md:text-[9px] tracking-tighter" style={fontInter}>---</span>
+                      <span className="italic text-gray-400 font-medium px-1 text-[8px] md:text-[9px] tracking-tighter" style={fontInter}>---</span>
                     ) : isBooked ? (
-                      <div className="flex items-center justify-between gap-0.5 md:gap-1 px-1 md:px-1.5 py-0.5 bg-white rounded shadow-sm border border-gray-100 h-full relative overflow-hidden">
+                      <div className="flex min-h-[22px] items-center justify-between gap-0.5 px-1 py-0.5 bg-white rounded border border-gray-100 h-full relative overflow-hidden md:min-h-[28px] md:rounded-md md:px-1.5">
                         <AnimatePresence mode="wait">
                           {isConfirming ? (
                             <motion.div key="cancel-input" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="w-full relative flex items-center">
-                              <input autoFocus type="text" placeholder="ID to Cancel" className="w-full bg-red-50/50 border border-red-200 px-2 py-1 md:py-1.5 rounded-md text-[10px] md:text-[12px] outline-none font-bold pr-[56px] md:pr-[64px]" style={fontInter} value={emailInput} onChange={(e) => setEmailInput(e.target.value)}
+                              <input autoFocus type="text" placeholder="ID" className="w-full bg-red-50/50 border border-red-200 px-1.5 py-0.5 md:px-2 md:py-1 rounded-md text-[9px] md:text-[12px] outline-none font-bold pr-[42px] md:pr-[64px]" style={fontInter} value={emailInput} onChange={(e) => setEmailInput(e.target.value)}
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter') processAction();
                                   if (e.key === 'Escape') setConfirmingId(null);
                                 }}
                               />
-                              <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                                <button onClick={processAction} className="p-1 md:p-1.5 bg-red-500 text-white rounded hover:bg-red-600 transition-colors active:scale-95 flex items-center justify-center">
+                              <div className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5 md:right-1 md:gap-1">
+                                <button onClick={processAction} className="p-0.5 md:p-1.5 bg-red-500 text-white rounded hover:bg-red-600 transition-colors active:scale-95 flex items-center justify-center">
                                   {isSubmitting ? <div className="w-3 h-3 md:w-3.5 md:h-3.5 border-2 border-white border-t-transparent animate-spin rounded-full" /> : <Check className="w-3 h-3 md:w-3.5 md:h-3.5" />}
                                 </button>
-                                <button onClick={() => setConfirmingId(null)} className="p-1 md:p-1.5 bg-white border border-gray-200 text-gray-400 rounded hover:bg-gray-50 transition-colors active:scale-95 flex items-center justify-center">
+                                <button onClick={() => setConfirmingId(null)} className="p-0.5 md:p-1.5 bg-white border border-gray-200 text-gray-400 rounded hover:bg-gray-50 transition-colors active:scale-95 flex items-center justify-center">
                                   <X className="w-3 h-3 md:w-3.5 md:h-3.5" />
                                 </button>
                               </div>
                             </motion.div>
                           ) : (
                             <motion.div key="booked-info" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex items-center justify-between w-full">
-                              <span className="font-bold text-[#2B4C6F] text-[10px] md:text-[12px] truncate" style={fontInter}>{slot.name}</span>
+                              <span className="font-bold text-[#2B4C6F] text-[9px] md:text-[12px] truncate" style={fontInter}>{slot.name}</span>
                               <button onClick={() => startConfirmation(slot.id, 'delete')}
-                                className="text-gray-300 hover:text-red-500 transition-colors p-0.5 md:p-1"
+                                className="text-gray-300 hover:text-red-500 transition-colors p-0.5"
                               >
                                 <Trash2 className="w-3 h-3 md:w-3.5 md:h-3.5" />
                               </button>
@@ -254,32 +249,32 @@ export function Auditions() {
                         <AnimatePresence mode="wait">
                           {isConfirming ? (
                             <motion.div key="id-input" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="w-full relative flex items-center">
-                              <input autoFocus type="text" placeholder="Student ID (x500)" className="w-full px-2 py-1 md:py-1.5 bg-green-50/50 border-2 border-green-200 rounded-lg outline-none text-[11px] md:text-[13px] font-bold pr-[64px] md:pr-[72px]" style={fontInter} value={emailInput} onChange={(e) => setEmailInput(e.target.value)}
+                              <input autoFocus type="text" placeholder="x500" className="w-full px-1.5 py-0.5 md:px-2 md:py-1.5 bg-green-50/50 border border-green-200 md:border-2 rounded-md md:rounded-lg outline-none text-[9px] md:text-[13px] font-bold pr-[42px] md:pr-[72px]" style={fontInter} value={emailInput} onChange={(e) => setEmailInput(e.target.value)}
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter' && emailInput.trim()) processAction();
                                   if (e.key === 'Escape') setConfirmingId(null);
                                 }}
                               />
-                              <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                              <div className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5 md:right-1 md:gap-1">
                                 {emailInput.trim() && (
-                                  <button onClick={processAction} disabled={isSubmitting} className="p-1 md:p-1.5 bg-green-500 text-white rounded md:rounded-md shadow-sm hover:bg-green-600 transition-all active:scale-90 flex items-center justify-center">
+                                  <button onClick={processAction} disabled={isSubmitting} className="p-0.5 md:p-1.5 bg-green-500 text-white rounded md:rounded-md shadow-sm hover:bg-green-600 transition-all active:scale-90 flex items-center justify-center">
                                     {isSubmitting ? (
-                                      <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-white border-t-transparent animate-spin rounded-full" />
+                                      <div className="w-3 h-3 md:w-5 md:h-5 border-2 border-white border-t-transparent animate-spin rounded-full" />
                                     ) : (
-                                      <Check className="w-4 h-4 md:w-5 md:h-5 stroke-[3px]" />
+                                      <Check className="w-3 h-3 md:w-5 md:h-5 stroke-[3px]" />
                                     )}
                                   </button>
                                 )}
                                 <button onClick={() => setConfirmingId(null)}
-                                  className="p-1 md:p-1.5 bg-white border border-gray-200 text-gray-400 rounded md:rounded-md hover:bg-gray-50 flex items-center justify-center transition-colors"
+                                  className="p-0.5 md:p-1.5 bg-white border border-gray-200 text-gray-400 rounded md:rounded-md hover:bg-gray-50 flex items-center justify-center transition-colors"
                                 >
-                                  <X className="w-4 h-4 md:w-5 md:h-5" />
+                                  <X className="w-3 h-3 md:w-5 md:h-5" />
                                 </button>
                               </div>
                             </motion.div>
                           ) : (
                             <motion.div key="name-input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="relative w-full">
-                              <input type="text" placeholder="Name" className={`w-full px-1.5 md:px-2 py-1 md:py-1.5 bg-white border-2 rounded-lg outline-none transition-all text-[11px] md:text-[13px] font-bold pr-[32px] md:pr-[40px] ${editingId === slot.id ? 'border-[#8FA8C8]' : 'border-gray-100'}`} style={fontInter} value={tempNames[slot.id] || ''} onFocus={() => setEditingSlotId(slot.id)}
+                              <input type="text" placeholder="Name" className={`w-full px-1.5 py-0.5 md:px-2 md:py-1.5 bg-white border rounded-md md:border-2 md:rounded-lg outline-none transition-all text-[9px] md:text-[13px] font-bold pr-[24px] md:pr-[40px] ${editingId === slot.id ? 'border-[#8FA8C8]' : 'border-gray-100'}`} style={fontInter} value={tempNames[slot.id] || ''} onFocus={() => setEditingSlotId(slot.id)}
                                 onChange={(e) => handleNameChange(slot.id, e.target.value)}
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter' && hasText) startConfirmation(slot.id, 'save');
@@ -288,9 +283,9 @@ export function Auditions() {
                               <AnimatePresence>
                                 {hasText && (
                                   <motion.button initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.5 }} onClick={() => startConfirmation(slot.id, 'save')}
-                                    className="absolute right-1 top-1/2 -translate-y-1/2 p-1.5 md:p-2 bg-green-500 text-white rounded-md hover:bg-green-600 shadow-md active:scale-95 flex items-center justify-center min-w-[24px] min-h-[24px] md:min-w-[28px] md:min-h-[28px]"
+                                    className="absolute right-0.5 top-1/2 -translate-y-1/2 p-0.5 md:right-1 md:p-2 bg-green-500 text-white rounded hover:bg-green-600 shadow-md active:scale-95 flex items-center justify-center min-w-[18px] min-h-[18px] md:min-w-[28px] md:min-h-[28px]"
                                   >
-                                    <Check className="w-4 h-4 md:w-5 md:h-5 stroke-[3px]" />
+                                    <Check className="w-3 h-3 md:w-5 md:h-5 stroke-[3px]" />
                                   </motion.button>
                                 )}
                               </AnimatePresence>
@@ -303,8 +298,6 @@ export function Auditions() {
                 </div>
               );
             })}
-          </div>
-        ))}
       </div>
     );
   };
@@ -334,11 +327,11 @@ export function Auditions() {
           },
         }}
       />
-      <motion.section variants={childVariants} className="relative mb-4 flex items-center justify-center overflow-hidden border border-gray-100 px-4 py-5 shadow-sm md:mb-6 md:px-6 md:py-8" style={{ borderRadius: '18px', background: 'linear-gradient(135deg, #8FA8C8 0%, #7F99B8 100%)' }}>
-        <div className="relative z-10 flex w-full items-center justify-center gap-6 px-2 text-center md:gap-10">
+      <motion.section variants={childVariants} className="relative mb-2 flex items-center justify-center overflow-hidden border border-gray-100 px-3 py-2.5 shadow-sm md:mb-6 md:px-6 md:py-8" style={{ borderRadius: '18px', background: 'linear-gradient(135deg, #8FA8C8 0%, #7F99B8 100%)' }}>
+        <div className="relative z-10 flex w-full items-center justify-center gap-3 px-1 text-center md:gap-10">
           <div className="shrink-0 hover:-translate-y-0.5 transition-transform duration-200">
             <Link to="/" className="group cursor-pointer">
-              <img src={logoImage} alt="Vocal U Logo" className="h-14 md:h-20 w-auto" />
+              <img src={logoImage} alt="Vocal U Logo" className="h-10 md:h-20 w-auto" />
             </Link>
           </div>
           <div className="text-left">
@@ -346,9 +339,9 @@ export function Auditions() {
               <h1 className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '0.05em', lineHeight: '1' }}>
                 AUDITIONS
               </h1>
-              <div className="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-bold tracking-widest text-white/90 md:text-[14px]" style={fontInter}>
-                <div className="flex items-center gap-2"><Calendar className="w-4 h-4 md:w-5 md:h-5" /> Sep 18/19</div>
-                <div className="flex items-center gap-2"><Clock className="w-4 h-4 md:w-5 md:h-5" /> 6-9 PM</div>
+              <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[9px] font-bold tracking-widest text-white/90 md:mt-2 md:gap-x-5 md:gap-y-2 md:text-[14px]" style={fontInter}>
+                <div className="flex items-center gap-1 md:gap-2"><Calendar className="w-3 h-3 md:w-5 md:h-5" /> Sep 18/19</div>
+                <div className="flex items-center gap-1 md:gap-2"><Clock className="w-3 h-3 md:w-5 md:h-5" /> 6-9 PM</div>
               </div>
             </div>
           </div>
@@ -356,21 +349,21 @@ export function Auditions() {
       </motion.section>
       <div className="px-0">
         {/* Sign Up Section */}
-        <motion.section variants={childVariants} className="bg-white rounded-2xl shadow-sm overflow-hidden mb-4 md:mb-[25px] border border-gray-100">
-          <div className="px-4 py-2 md:px-6 md:py-3 border-b border-gray-50 flex justify-center items-center">
-            <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: '18px' }}>
+        <motion.section variants={childVariants} className="bg-white rounded-xl md:rounded-2xl shadow-sm overflow-hidden mb-4 md:mb-[25px] border border-gray-100">
+          <div className="px-2 py-1 md:px-6 md:py-3 border-b border-gray-50 flex justify-center items-center">
+            <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: 'clamp(13px, 3vw, 18px)' }}>
               SIGN UP
             </h2>
           </div>
-          <div className="p-3 md:p-4">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 xl:gap-6">
+          <div className="p-1 md:p-4">
+            <div className="grid grid-cols-2 gap-1 md:gap-4 xl:gap-6">
               {daysData.map((dayInfo) => (
-                <div key={dayInfo.day} className="rounded-[22px] border border-gray-100 bg-[#fcfdff] p-3 md:p-4">
-                  <div className="flex flex-col items-center mb-3">
-                    <h3 className="text-[#2B4C6F] font-bold text-center whitespace-nowrap" style={{ ...fontInter, fontSize: 'clamp(11px, 1.4vw, 15px)' }}>
+                <div key={dayInfo.day} className="rounded-lg border border-gray-100 bg-[#fcfdff] p-1 md:rounded-[22px] md:p-4 min-w-0">
+                  <div className="flex flex-col items-center mb-1 md:mb-3">
+                    <h3 className="text-[#2B4C6F] font-bold text-center whitespace-nowrap" style={{ ...fontInter, fontSize: 'clamp(9px, 2.3vw, 15px)' }}>
                       {dayInfo.day}, {dayInfo.date}
                     </h3>
-                    <div className="w-full h-[1px] bg-[#8FA8C8] mt-1.5" />
+                    <div className="w-full h-[1px] bg-[#8FA8C8] mt-1 md:mt-1.5" />
                   </div>
                   {loading ? (
                     <div className="py-12 flex justify-center"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#8FA8C8]" /></div>
