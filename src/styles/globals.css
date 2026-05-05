@@ -233,6 +233,51 @@ button,
     }
 }
 
+@keyframes hero-audition-orbit {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg) scaleX(1.35) scaleY(.68)
+    }
+
+    50% {
+        transform: translate(-50%, -50%) rotate(180deg) scaleX(1.22) scaleY(.76)
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg) scaleX(1.35) scaleY(.68)
+    }
+}
+
+.hero-audition-orbit {
+    pointer-events: none;
+    z-index: -1;
+    background:
+        conic-gradient(from 20deg,
+            transparent 0deg,
+            rgba(194, 227, 255, .08) 42deg,
+            rgba(147, 210, 255, .95) 82deg,
+            rgba(255, 255, 255, .95) 104deg,
+            rgba(147, 210, 255, .9) 128deg,
+            transparent 174deg,
+            transparent 360deg);
+    filter: blur(.2px) drop-shadow(0 0 12px rgba(147, 210, 255, .85));
+    animation: hero-audition-orbit 6s linear infinite;
+}
+
+.hero-audition-orbit::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border-radius: inherit;
+    background: rgba(255, 255, 255, .55)
+}
+
+.hero-audition-orbit-soft {
+    opacity: .42;
+    filter: blur(5px) drop-shadow(0 0 18px rgba(163, 218, 255, .9));
+    animation-duration: 9s;
+    animation-direction: reverse
+}
+
 .animate-gradient {
     background-size: 200% 100% !important;
     animation: gradient-shift 15s linear infinite !important

@@ -286,42 +286,38 @@ export function Home() {
         schema={homeSchema}
       />
 
-      <motion.div
-        className="pointer-events-none fixed left-0 right-0 top-0 z-[49] hidden justify-center px-4 md:flex lg:px-[50px]"
-        initial={false}
-        animate={{ paddingTop: isScrolled ? 86 : 94 }}
-        transition={{ type: 'spring', damping: 26, stiffness: 140 }}
-      >
-        <motion.div
-          initial={false}
-          animate={{
-            width: isScrolled ? 520 : 620,
-            y: isScrolled ? -2 : 0,
-            opacity: 1,
-          }}
-          transition={{ type: 'spring', damping: 26, stiffness: 140 }}
-          className="pointer-events-auto overflow-hidden border border-white/50 bg-white/95 shadow-[0_18px_45px_rgba(43,76,111,0.16)] backdrop-blur-md"
-          style={{ borderRadius: '0 0 18px 18px' }}
-        >
-          <Link
-            to="/auditions"
-            className="group flex items-center justify-center gap-3 px-5 py-2.5 text-center text-[#2B4C6F] transition-colors duration-300 hover:bg-[#2B4C6F] hover:text-white"
-            style={fontInter}
+      <AnimatePresence>
+        {isScrolled && (
+          <motion.div
+            className="pointer-events-none fixed left-0 right-0 top-0 z-[49] hidden justify-center px-4 md:flex lg:px-[50px]"
+            initial={{ opacity: 0, paddingTop: 72 }}
+            animate={{ opacity: 1, paddingTop: 82 }}
+            exit={{ opacity: 0, paddingTop: 72 }}
+            transition={{ type: 'spring', damping: 28, stiffness: 150 }}
           >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#8FA8C8]/15 text-[#2B4C6F] transition-colors duration-300 group-hover:bg-white/15 group-hover:text-white">
-              <Music className="h-4 w-4" />
-            </span>
-            <span className="min-w-0 text-sm font-bold uppercase tracking-[0.14em]">
-              Auditions are open
-            </span>
-            <span className="h-4 w-px bg-[#8FA8C8]/40 transition-colors duration-300 group-hover:bg-white/40" />
-            <span className="flex items-center gap-1 text-sm font-semibold">
-              Sign up
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </span>
-          </Link>
-        </motion.div>
-      </motion.div>
+            <motion.div
+              initial={{ width: 260, y: -10, scaleX: 0.94 }}
+              animate={{ width: 360, y: -3, scaleX: 1 }}
+              exit={{ width: 260, y: -10, scaleX: 0.94 }}
+              transition={{ type: 'spring', damping: 28, stiffness: 150 }}
+              className="pointer-events-auto overflow-hidden border border-white/60 bg-white/90 shadow-[0_0_24px_rgba(145,190,240,0.42),0_10px_28px_rgba(43,76,111,0.12)] backdrop-blur-md"
+              style={{ borderRadius: '0 0 999px 999px' }}
+            >
+              <Link
+                to="/auditions"
+                className="group flex h-8 items-center justify-center gap-2 px-4 text-center text-[#2B4C6F] transition-colors duration-300 hover:bg-[#2B4C6F] hover:text-white"
+                style={fontInter}
+              >
+                <Music className="h-3.5 w-3.5 shrink-0 text-[#8FA8C8] transition-colors duration-300 group-hover:text-white" />
+                <span className="min-w-0 text-[11px] font-bold uppercase tracking-[0.16em]">
+                  Auditions are open
+                </span>
+                <ArrowRight className="h-3.5 w-3.5 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5" />
+              </Link>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Hero Section */}
       <motion.section
@@ -393,8 +389,17 @@ export function Home() {
                 transition={{ type: 'spring', damping: 24, stiffness: 180 }}
                 whileHover={{ scale: 1.04, y: -2 }}
                 whileTap={{ scale: 0.97 }}
-                className="rounded-[16px] shadow-[0_18px_45px_rgba(43,76,111,0.22)]"
+                className="relative rounded-[16px] shadow-[0_18px_45px_rgba(43,76,111,0.22)]"
+                style={{ isolation: 'isolate' }}
               >
+                <span
+                  className="hero-audition-orbit absolute left-1/2 top-1/2 h-[116px] w-[116px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+                  aria-hidden="true"
+                />
+                <span
+                  className="hero-audition-orbit hero-audition-orbit-soft absolute left-1/2 top-1/2 h-[142px] w-[142px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+                  aria-hidden="true"
+                />
                 <Link
                   to="/auditions"
                   className="group relative block overflow-hidden border border-white/80 bg-white/95 px-6 md:px-12 py-2.5 md:py-4 text-center text-[#2B4C6F] transition-all duration-300 hover:border-[#8FA8C8] hover:bg-[#8FA8C8] hover:text-white whitespace-nowrap"
@@ -407,7 +412,7 @@ export function Home() {
                 >
                   <span className="absolute inset-0 bg-gradient-to-r from-white via-[#f8fbff] to-white transition-opacity duration-300 group-hover:opacity-0" />
                   <span className="relative flex items-center justify-center gap-2">
-                    Sign Up for Auditions
+                    AUDITION SIGN UP
                     <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
                 </Link>
