@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Instagram, Youtube, Facebook } from 'lucide-react';
+import { Menu, X, Instagram, Youtube, Facebook, Music } from 'lucide-react';
 import { memo, useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import logoImage from 'figma:asset/d4630c01b543cc75980f0b293230859d29654fbb.png';
@@ -7,8 +7,6 @@ import { fontYearbook } from '../styles/fonts';
 
 const MOBILE_FLOATING_LANE = 96;
 const MOBILE_FULL_WIDTH_LANE = 84;
-const MOBILE_MENU_OPEN_LANE = 360;
-const MOBILE_DOCK_HYSTERESIS = 72;
 
 const TikTokIcon = memo(function TikTokIcon({ className }: { className?: string }) {
   return (
@@ -64,18 +62,19 @@ export function Header() {
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isScrolledMore, setIsScrolledMore] = useState(false);
-  const [mobileDockedTop, setMobileDockedTop] = useState(false);
-  const mobileDockedTopRef = useRef(false);
-  const hasUserScrolledRef = useRef(false);
+
+  const isScrolledRef = useRef(false);
+  const isScrolledMoreRef = useRef(false);
+  const mobileNavRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    mobileDockedTopRef.current = mobileDockedTop;
-  }, [mobileDockedTop]);
-
-  useEffect(() => {
-    hasUserScrolledRef.current = false;
-    mobileDockedTopRef.current = false;
-    setMobileDockedTop(false);
+    isScrolledRef.current = false;
+    isScrolledMoreRef.current = false;
+    setIsScrolled(false);
+    setIsScrolledMore(false);
+    if (mobileNavRef.current) {
+        mobileNavRef.current.style.transform = `translateY(0px)`;
+    }
   }, [location.pathname]);
 
   useEffect(() => {
@@ -83,50 +82,34 @@ export function Header() {
 
     const syncHeaderState = () => {
       const scrollY = window.scrollY;
+      
       const nextIsScrolled = scrollY > 10;
-      setIsScrolled(nextIsScrolled);
-      setIsScrolledMore(scrollY > 600);
-
-      if (window.innerWidth >= 768) {
-        if (mobileDockedTopRef.current) {
-          mobileDockedTopRef.current = false;
-          setMobileDockedTop(false);
-        }
-        return;
+      if (nextIsScrolled !== isScrolledRef.current) {
+         isScrolledRef.current = nextIsScrolled;
+         setIsScrolled(nextIsScrolled);
+      }
+      
+      const nextIsScrolledMore = scrollY > 600;
+      if (nextIsScrolledMore !== isScrolledMoreRef.current) {
+         isScrolledMoreRef.current = nextIsScrolledMore;
+         setIsScrolledMore(nextIsScrolledMore);
       }
 
-      if (!hasUserScrolledRef.current || scrollY <= 0) {
-        if (mobileDockedTopRef.current) {
-          mobileDockedTopRef.current = false;
-          setMobileDockedTop(false);
+      // Flawless pinning above the footer
+      if (window.innerWidth < 768 && mobileNavRef.current) {
+        const footerElement = document.querySelector('footer');
+        if (footerElement) {
+          const footerTop = footerElement.getBoundingClientRect().top;
+          const windowHeight = window.innerHeight;
+          if (footerTop < windowHeight) {
+            // Footer is pushing into the view, push the nav up seamlessly
+            const overlap = windowHeight - footerTop;
+            mobileNavRef.current.style.transform = `translateY(-${overlap}px)`;
+          } else {
+            // Footer not in view, reset translation
+            mobileNavRef.current.style.transform = `translateY(0px)`;
+          }
         }
-        return;
-      }
-
-      const footerElement = document.querySelector('footer');
-      if (!footerElement) {
-        if (mobileDockedTopRef.current) {
-          mobileDockedTopRef.current = false;
-          setMobileDockedTop(false);
-        }
-        return;
-      }
-
-      const footerTop = footerElement.getBoundingClientRect().top;
-      const floatingLaneHeight = mobileMenuOpen
-        ? MOBILE_MENU_OPEN_LANE
-        : nextIsScrolled
-          ? MOBILE_FLOATING_LANE
-          : MOBILE_FULL_WIDTH_LANE;
-      const dockLine = window.innerHeight - floatingLaneHeight;
-      const releaseLine = dockLine + MOBILE_DOCK_HYSTERESIS;
-      const shouldDock = mobileDockedTopRef.current
-        ? footerTop <= releaseLine
-        : footerTop <= dockLine;
-
-      if (shouldDock !== mobileDockedTopRef.current) {
-        mobileDockedTopRef.current = shouldDock;
-        setMobileDockedTop(shouldDock);
       }
     };
 
@@ -135,12 +118,9 @@ export function Header() {
       frameId = window.requestAnimationFrame(syncHeaderState);
     };
 
-    const handleScroll = () => {
-      hasUserScrolledRef.current = window.scrollY > 0;
-      queueSync();
-    };
+    const handleScroll = () => queueSync();
 
-    queueSync();
+    queueSync(); // Initial sync
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', queueSync);
 
@@ -149,7 +129,7 @@ export function Header() {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', queueSync);
     };
-  }, [mobileMenuOpen]);
+  }, []);
 
   const closeMobileMenu = useCallback(() => {
     setMobileMenuOpen(false);
@@ -161,7 +141,6 @@ export function Header() {
     location.pathname === '/media' ||
     location.pathname === '/donate' ||
     location.pathname === '/auditions';
-  const isMobileIslandFloating = isScrolled || mobileDockedTop;
   return (
     <>
       {/* Desktop Top Mask - Hides content scrolling above the island */}
@@ -287,24 +266,73 @@ export function Header() {
               </div>
             </div>
           </motion.header>
+          <AnimatePresence>
+            {isScrolled && (
+              <motion.div
+                initial={{ opacity: 0, y: -8, scaleX: 0.9 }}
+                animate={{ opacity: 1, y: -1, scaleX: 1 }}
+                exit={{ opacity: 0, y: -8, scaleX: 0.9 }}
+                transition={{ type: "spring", stiffness: 360, damping: 28 }}
+                className="absolute left-1/2 top-full z-[49] -translate-x-1/2 pointer-events-auto"
+              >
+                <Link
+                  to="/auditions"
+                  className="group flex h-8 w-[350px] items-center justify-center gap-2 rounded-b-full border border-t-0 border-white/65 bg-white/90 px-4 text-[#2B4C6F] shadow-[0_0_20px_rgba(145,190,240,0.42),0_8px_20px_rgba(43,76,111,0.1)] backdrop-blur-md transition-colors duration-300 hover:bg-[#2B4C6F] hover:text-white"
+                  style={{ fontFamily: 'Inter, sans-serif' }}
+                >
+                  <Music className="h-3.5 w-3.5 shrink-0 text-[#8FA8C8] transition-colors duration-300 group-hover:text-white" />
+                  <span className="text-[11px] font-bold uppercase tracking-[0.16em]">
+                    Auditions are open
+                  </span>
+                </Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.div>
 
       {/* Mobile Dynamic Island */}
-      <div className={`md:hidden fixed left-0 right-0 z-[60] flex justify-center pointer-events-none transition-all duration-500 ${mobileDockedTop ? 'top-3 px-4' : isScrolled ? 'bottom-3 px-4' : 'bottom-0 px-0'}`}>
-        <motion.div
-          layout
-          className={`pointer-events-auto overflow-hidden ${isMobileIslandFloating ? 'rounded-[16px] shadow-lg' : 'rounded-t-[16px] w-full'} ${!isMobileIslandFloating || mobileMenuOpen ? 'w-full' : 'w-auto'
-            } py-[6px] px-5`}
-          style={{
-            background: 'linear-gradient(135deg, rgba(143,168,200,0.95) 0%, rgba(163,188,220,0.92) 50%, rgba(143,168,200,0.95) 100%)',
-            backdropFilter: 'blur(20px) saturate(1.8)',
-            WebkitBackdropFilter: 'blur(20px) saturate(1.8)',
-            border: isMobileIslandFloating ? '1px solid rgba(255,255,255,0.4)' : 'none',
-            borderTop: !isMobileIslandFloating ? '1px solid rgba(255,255,255,0.4)' : '1px solid rgba(255,255,255,0.4)',
-            boxShadow: '0 -4px 30px rgba(43,76,111,0.1), inset 0 1px 0 rgba(255,255,255,0.4)',
-          }}
-        >
+      <div 
+        ref={mobileNavRef}
+        className={`md:hidden fixed left-0 right-0 z-[60] flex justify-center pointer-events-none ${isScrolled ? 'bottom-3 px-4' : 'bottom-0 px-0'}`}
+        style={{ transition: 'bottom 0.5s ease-out, padding 0.5s ease-out', willChange: 'transform' }}
+      >
+        <div className="relative flex justify-center pointer-events-none">
+          <AnimatePresence>
+            {isScrolled && !mobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 8, scaleX: 0.9 }}
+                animate={{ opacity: 1, y: 1, scaleX: 1 }}
+                exit={{ opacity: 0, y: 8, scaleX: 0.9 }}
+                transition={{ type: "spring", stiffness: 360, damping: 28 }}
+                className="absolute bottom-full left-1/2 z-[61] -translate-x-1/2 pointer-events-auto"
+              >
+                <Link
+                  to="/auditions"
+                  className="group flex h-7 w-[238px] items-center justify-center gap-1.5 rounded-t-full border border-b-0 border-white/65 bg-white/92 px-3 text-[#2B4C6F] shadow-[0_0_18px_rgba(145,190,240,0.45),0_-6px_18px_rgba(43,76,111,0.08)] backdrop-blur-md transition-colors duration-300 hover:bg-[#2B4C6F] hover:text-white"
+                  style={{ fontFamily: 'Inter, sans-serif' }}
+                >
+                  <Music className="h-3 w-3 shrink-0 text-[#8FA8C8] transition-colors duration-300 group-hover:text-white" />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.13em]">
+                    Auditions are open
+                  </span>
+                </Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <motion.div
+            layout
+            className={`pointer-events-auto overflow-hidden ${isScrolled ? 'rounded-[16px] shadow-lg' : 'rounded-t-[16px] w-full'} ${!isScrolled || mobileMenuOpen ? 'w-full' : 'w-auto'
+              } py-[6px] px-5`}
+            style={{
+              background: 'linear-gradient(135deg, rgba(143,168,200,0.95) 0%, rgba(163,188,220,0.92) 50%, rgba(143,168,200,0.95) 100%)',
+              backdropFilter: 'blur(20px) saturate(1.8)',
+              WebkitBackdropFilter: 'blur(20px) saturate(1.8)',
+              border: isScrolled ? '1px solid rgba(255,255,255,0.4)' : 'none',
+              borderTop: '1px solid rgba(255,255,255,0.4)',
+              boxShadow: '0 -4px 30px rgba(43,76,111,0.1), inset 0 1px 0 rgba(255,255,255,0.4)',
+            }}
+          >
           {/* Collapsed/Header state */}
           <motion.div layout className={`flex items-center justify-between ${mobileMenuOpen ? 'pb-4 border-b border-white/20 gap-4' : 'gap-3'}`}>
             <Link to="/" className="flex items-center shrink-0" onClick={() => setMobileMenuOpen(false)}>
@@ -387,7 +415,8 @@ export function Header() {
               </motion.div>
             )}
           </AnimatePresence>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
 
 

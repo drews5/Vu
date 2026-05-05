@@ -233,49 +233,31 @@ button,
     }
 }
 
-@keyframes hero-audition-orbit {
+@keyframes hero-audition-stroke {
     0% {
-        transform: translate(-50%, -50%) rotate(0deg) scaleX(1.35) scaleY(.68)
+        box-shadow:
+            0 0 0 1px rgba(168, 220, 255, .95),
+            0 0 12px rgba(145, 205, 255, .5),
+            0 18px 45px rgba(43, 76, 111, .22)
     }
 
     50% {
-        transform: translate(-50%, -50%) rotate(180deg) scaleX(1.22) scaleY(.76)
+        box-shadow:
+            0 0 0 2px rgba(205, 235, 255, 1),
+            0 0 20px rgba(145, 205, 255, .78),
+            0 18px 45px rgba(43, 76, 111, .22)
     }
 
     100% {
-        transform: translate(-50%, -50%) rotate(360deg) scaleX(1.35) scaleY(.68)
+        box-shadow:
+            0 0 0 1px rgba(168, 220, 255, .95),
+            0 0 12px rgba(145, 205, 255, .5),
+            0 18px 45px rgba(43, 76, 111, .22)
     }
 }
 
-.hero-audition-orbit {
-    pointer-events: none;
-    z-index: -1;
-    background:
-        conic-gradient(from 20deg,
-            transparent 0deg,
-            rgba(194, 227, 255, .08) 42deg,
-            rgba(147, 210, 255, .95) 82deg,
-            rgba(255, 255, 255, .95) 104deg,
-            rgba(147, 210, 255, .9) 128deg,
-            transparent 174deg,
-            transparent 360deg);
-    filter: blur(.2px) drop-shadow(0 0 12px rgba(147, 210, 255, .85));
-    animation: hero-audition-orbit 6s linear infinite;
-}
-
-.hero-audition-orbit::after {
-    content: "";
-    position: absolute;
-    inset: 5px;
-    border-radius: inherit;
-    background: rgba(255, 255, 255, .55)
-}
-
-.hero-audition-orbit-soft {
-    opacity: .42;
-    filter: blur(5px) drop-shadow(0 0 18px rgba(163, 218, 255, .9));
-    animation-duration: 9s;
-    animation-direction: reverse
+.hero-audition-stroke {
+    animation: hero-audition-stroke 2.8s ease-in-out infinite;
 }
 
 .animate-gradient {
