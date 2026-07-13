@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, type CSSProperties } from 'react';
 import { PageShell } from '../components/PageShell';
 import {
   Clock,
@@ -17,6 +17,26 @@ import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
+const confettiColors = ['#91a8c6', '#2e4c6d', '#ffffff', '#f3c969', '#d9a7c7'];
+
+function AuditionCelebration() {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-[200] overflow-hidden" aria-hidden="true">
+      {Array.from({ length: 34 }, (_, index) => {
+        const style = {
+          left: `${(index * 29) % 100}%`,
+          backgroundColor: confettiColors[index % confettiColors.length],
+          animationDelay: `${(index % 8) * 45}ms`,
+          animationDuration: `${1050 + (index % 6) * 120}ms`,
+          '--confetti-drift': `${((index * 17) % 160) - 80}px`,
+        } as CSSProperties;
+
+        return <span key={index} className="confetti-piece" style={style} />;
+      })}
+    </div>
+  );
+}
+
 interface AuditionSlot {
   id: string;
   time: string;
@@ -36,6 +56,7 @@ export function Auditions() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDeleteWarning, setShowDeleteWarning] = useState<{ id: string, name: string, studentId: string } | null>(null);
   const [notice, setNotice] = useState('');
+  const [celebrating, setCelebrating] = useState(false);
 
   const fetchSlots = useCallback(async () => {
     const supabase = await loadSupabase();
@@ -137,6 +158,10 @@ export function Auditions() {
         if (error) throw error;
         if (!data) throw new Error('Slot is no longer available');
         setNotice(`You’re signed up for ${slot.day} at ${slot.time}.`);
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          setCelebrating(true);
+          window.setTimeout(() => setCelebrating(false), 1900);
+        }
       } else {
         setShowDeleteWarning({ id: slot.id, name: slot.name || 'Singer', studentId: studentIdInput.trim().toLowerCase() });
         setConfirmingId(null);
@@ -320,7 +345,10 @@ export function Auditions() {
           },
         }}
       />
-      <section className="relative mb-3 flex items-center justify-center overflow-hidden rounded-2xl bg-[#91a8c6] px-4 py-4 md:mb-6 md:px-6 md:py-7">
+      {celebrating && <AuditionCelebration />}
+      <section className="relative mb-3 flex items-center justify-center overflow-hidden rounded-[26px] bg-gradient-to-br from-[#7895b7] via-[#91a8c6] to-[#abc0d9] px-4 py-4 shadow-[0_16px_42px_rgba(35,61,85,0.14)] md:mb-6 md:px-6 md:py-7">
+        <div className="absolute -left-10 -top-12 h-32 w-32 rounded-full border-[24px] border-white/8" aria-hidden="true" />
+        <Music className="absolute bottom-3 right-5 h-14 w-14 -rotate-12 text-white/10" aria-hidden="true" />
         <div className="relative z-10 flex w-full items-center justify-center gap-3 px-1 text-center md:gap-10">
           <div className="shrink-0 hover:-translate-y-0.5 transition-transform duration-200">
             <Link to="/" className="group cursor-pointer">
@@ -342,7 +370,7 @@ export function Auditions() {
       </section>
       <div className="px-0">
         {/* Sign Up Section */}
-        <section className="bg-white rounded-xl md:rounded-2xl shadow-sm overflow-hidden mb-4 md:mb-[25px] border border-gray-100">
+        <section className="mb-4 overflow-hidden rounded-[26px] border border-[#dce5ed] bg-white shadow-[0_16px_42px_rgba(35,61,85,0.09)] md:mb-[25px]">
           <div className="px-2 py-1 md:px-6 md:py-3 border-b border-gray-50 flex justify-center items-center">
             <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: 'clamp(18px, 3vw, 24px)' }}>
               Sign up
@@ -371,7 +399,8 @@ export function Auditions() {
         </section>
         {/* Detailed Info Grid */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 md:gap-8">
-          <div className="h-full rounded-2xl border border-[#dce5ed] bg-white p-7 md:p-8">
+          <div className="group relative h-full overflow-hidden rounded-[24px] border border-[#dce5ed] bg-white p-7 shadow-[0_10px_28px_rgba(35,61,85,0.06)] transition-[transform,box-shadow] hover:-translate-y-1 hover:-rotate-[0.35deg] hover:shadow-[0_18px_38px_rgba(35,61,85,0.12)] md:p-8">
+            <div className="absolute right-0 top-0 h-2 w-20 rounded-bl-full bg-[#91a8c6]" aria-hidden="true" />
             <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#91a8c6]/14">
               <Users className="h-6 w-6 text-[#2B4C6F]" />
             </div>
@@ -381,7 +410,8 @@ export function Auditions() {
             </p>
           </div>
 
-          <div className="h-full rounded-2xl border border-[#dce5ed] bg-white p-7 md:p-8">
+          <div className="group relative h-full overflow-hidden rounded-[24px] border border-[#dce5ed] bg-white p-7 shadow-[0_10px_28px_rgba(35,61,85,0.06)] transition-[transform,box-shadow] hover:-translate-y-1 hover:rotate-[0.35deg] hover:shadow-[0_18px_38px_rgba(35,61,85,0.12)] md:p-8">
+            <div className="absolute right-0 top-0 h-2 w-20 rounded-bl-full bg-[#2e4c6d]" aria-hidden="true" />
             <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#2e4c6d]/10">
               <Music className="h-6 w-6 text-[#2B4C6F]" />
             </div>
@@ -391,7 +421,8 @@ export function Auditions() {
             </p>
           </div>
 
-          <div className="h-full rounded-2xl border border-[#dce5ed] bg-white p-7 md:p-8">
+          <div className="group relative h-full overflow-hidden rounded-[24px] border border-[#dce5ed] bg-white p-7 shadow-[0_10px_28px_rgba(35,61,85,0.06)] transition-[transform,box-shadow] hover:-translate-y-1 hover:-rotate-[0.35deg] hover:shadow-[0_18px_38px_rgba(35,61,85,0.12)] md:p-8">
+            <div className="absolute right-0 top-0 h-2 w-20 rounded-bl-full bg-[#91a8c6]" aria-hidden="true" />
             <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#91a8c6]/14">
               <Clock className="h-6 w-6 text-[#2B4C6F]" />
             </div>

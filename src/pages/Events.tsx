@@ -1,6 +1,8 @@
 import { memo, useEffect, useState } from 'react';
+import { motion } from 'motion/react';
 import { Calendar, Clock, Copy, MapPin, Navigation, Share2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { PageHero } from '../components/PageHero';
 import { PageShell } from '../components/PageShell';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { getGoogleCalendarUrl, isEventUpcoming, parseEventDate } from '../utils/eventDate';
@@ -114,7 +116,7 @@ const UpcomingEventCard = memo(function UpcomingEventCard({ event }: { event: Ev
   const eventPath = getEventPath(event.slug);
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-[#dce5ed] bg-white md:grid md:grid-cols-[320px_minmax(0,1fr)]">
+    <motion.article whileHover={{ y: -4, rotate: 0.15 }} className="overflow-hidden rounded-[24px] border border-[#dce5ed] bg-white shadow-[0_12px_32px_rgba(35,61,85,0.08)] md:grid md:grid-cols-[320px_minmax(0,1fr)]">
       <Link to={eventPath} className="group relative block min-h-[220px] overflow-hidden bg-[#eef3f7] md:min-h-full">
         <img
           src={event.image}
@@ -154,13 +156,13 @@ const UpcomingEventCard = memo(function UpcomingEventCard({ event }: { event: Ev
           <EventActions event={event} />
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 });
 
 const PastEventCard = memo(function PastEventCard({ event }: { event: Event }) {
   return (
-    <article className="group h-full overflow-hidden rounded-2xl border border-[#dce5ed] bg-white transition-[border-color,box-shadow] hover:border-[#91a8c6] hover:shadow-[0_12px_28px_rgba(35,61,85,0.1)]">
+    <motion.article whileHover={{ y: -7, rotate: 0.45 }} whileTap={{ scale: 0.985 }} className="group h-full overflow-hidden rounded-[22px] border border-[#dce5ed] bg-white shadow-[0_8px_24px_rgba(35,61,85,0.07)] transition-[border-color,box-shadow] hover:border-[#91a8c6] hover:shadow-[0_18px_36px_rgba(35,61,85,0.14)]">
       <Link to={getEventPath(event.slug)} className="flex h-full flex-col">
         <div className="aspect-video overflow-hidden bg-[#eef3f7]">
           <img src={event.image} alt="" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" decoding="async" />
@@ -171,7 +173,7 @@ const PastEventCard = memo(function PastEventCard({ event }: { event: Event }) {
           <p className="mt-auto pt-4 text-sm text-[#2e4c6d]/60">{event.location}</p>
         </div>
       </Link>
-    </article>
+    </motion.article>
   );
 });
 
@@ -268,14 +270,12 @@ export function Events() {
         schema={eventsSchema}
       />
 
-      <section className="my-[25px]">
-        <div className="rounded-2xl bg-[#91a8c6] px-5 py-12 text-center md:py-16">
-          <h1 className="text-[clamp(2.8rem,8vw,5rem)] leading-none text-white">Events</h1>
-          <p className="mx-auto mt-3 max-w-2xl text-sm text-white/88 md:text-base">
-            Live performances, competitions, campus events, and showcases.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        title="Events"
+        eyebrow="Come hear us live"
+        description="Competitions, campus gigs, showcases, and the occasional delightfully unexpected performance."
+        stamp="On stage"
+      />
 
       <div className="mx-auto max-w-6xl space-y-14">
         {loading ? (

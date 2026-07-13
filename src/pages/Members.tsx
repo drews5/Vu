@@ -1,4 +1,5 @@
 import { memo, useEffect, useState, useMemo } from 'react';
+import { motion } from 'motion/react';
 import { PageShell } from '../components/PageShell';
 import { Instagram, Music } from 'lucide-react';
 import { loadSupabase } from '../utils/loadSupabase';
@@ -32,10 +33,10 @@ const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
     const firstName = nameParts[0];
     const lastName = nameParts.slice(1).join(' ');
     return (
-        <article className="relative flex w-full flex-col items-center overflow-hidden rounded-xl border border-[#dce5ed] bg-white p-3 text-center">
+        <motion.article whileHover={{ y: -7, rotate: 0.55 }} whileTap={{ scale: 0.985 }} className="group relative flex w-full flex-col items-center overflow-hidden rounded-2xl border border-[#dce5ed] bg-white p-3 text-center shadow-[0_8px_22px_rgba(35,61,85,0.07)] transition-[border-color,box-shadow] hover:border-[#91a8c6] hover:shadow-[0_18px_36px_rgba(35,61,85,0.14)]">
             <div className="relative mb-3 aspect-[4/5] w-full overflow-hidden rounded-lg bg-[#eef3f7]">
                 {member.photo ? (
-                    <img src={member.photo} alt={`${member.name}, Vocal U member`} className="h-full w-full object-cover" loading="lazy" decoding="async" />
+                    <img src={member.photo} alt={`${member.name}, Vocal U member`} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.035]" loading="lazy" decoding="async" />
                 ) : (
                     <div className="w-full h-full flex items-center justify-center">
                         <Music className="w-10 h-10 text-[#91a8c6]/40" />
@@ -65,7 +66,7 @@ const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
                     </div>
                 )}
             </div>
-        </article>
+        </motion.article>
     );
 });
 const PART_ORDER = ['Soprano', 'Mezzo', 'Alto', 'Tenor', 'Bass/Bari', 'Vocal Percussionist', 'Member'];
@@ -178,9 +179,10 @@ export function Members() {
             />
             {/* Hero Section */}
             <section style={{ marginTop: '25px', marginBottom: '40px' }}>
-                <div className="relative flex min-h-[280px] items-center justify-center overflow-hidden rounded-2xl py-12 text-center md:min-h-[320px] md:py-20">
+                <div className="relative flex min-h-[280px] items-center justify-center overflow-hidden rounded-[30px] py-12 text-center shadow-[0_18px_50px_rgba(35,61,85,0.14)] md:min-h-[320px] md:py-20">
                     <img src={groupPhoto} alt="" className="absolute inset-0 h-full w-full object-cover object-center" />
                     <div className="absolute inset-0 bg-[#2e4c6d]/82" />
+                    <div className="absolute left-5 top-5 -rotate-3 rounded-xl border border-white/24 bg-white/12 px-3 py-1.5 text-[10px] font-bold tracking-[0.14em] text-white backdrop-blur-sm">THE PEOPLE PART</div>
                     <div className="relative z-10 px-4">
                         <h1 className="text-white relative font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}>
                             Our Members
@@ -204,7 +206,7 @@ export function Members() {
                 <div className="space-y-12">
                     {groupedMembers.map(({ part, members }) => (
                             <section key={part}>
-                                <h2 className="text-[#2B4C6F] mb-6 tracking-widest border-b-2 border-[#8FA8C8]/20 pb-2 text-center w-full font-yearbook" style={{ ...fontYearbook, fontSize: '18px' }}>
+                                <h2 className="mx-auto mb-6 w-fit -rotate-1 rounded-full border border-[#91a8c6]/35 bg-[#eef3f7] px-5 py-2 text-center tracking-widest text-[#2B4C6F] shadow-sm font-yearbook" style={{ ...fontYearbook, fontSize: '18px' }}>
                                     {part === 'Bass/Bari' ? 'Bass / Bari' :
                                         part === 'Vocal Percussionist' ? 'Percussion' :
                                             part === 'Member' ? 'Members' :

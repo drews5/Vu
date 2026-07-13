@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight, Calendar, MapPin } from 'lucide-react';
+import { motion } from 'motion/react';
+import { ArrowDown, ArrowRight, Calendar, MapPin, Music2, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import fullLogo from '../assets/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
 import heroBackground from '../assets/hero-group.webp';
@@ -32,7 +33,7 @@ type EventRow = {
 
 function EventCard({ event }: { event: FeaturedEvent }) {
   return (
-    <article className="group h-full overflow-hidden rounded-2xl border border-[#dce5ed] bg-white transition-[border-color,box-shadow] duration-200 hover:border-[#91a8c6] hover:shadow-[0_14px_35px_rgba(35,61,85,0.12)]">
+    <motion.article whileHover={{ y: -8, rotate: 0.45 }} whileTap={{ scale: 0.985 }} className="group h-full overflow-hidden rounded-[22px] border border-white/70 bg-white shadow-[0_12px_30px_rgba(35,61,85,0.12)] transition-[border-color,box-shadow] duration-200 hover:border-[#91a8c6] hover:shadow-[0_20px_42px_rgba(35,61,85,0.18)]">
       <Link to={getEventPath(event.slug)} className="flex h-full flex-col">
         <div className="relative aspect-[16/10] overflow-hidden bg-[#eef3f7]">
           <img
@@ -42,7 +43,7 @@ function EventCard({ event }: { event: FeaturedEvent }) {
             loading="lazy"
             decoding="async"
           />
-          <span className="absolute left-4 top-4 rounded-lg bg-[#2e4c6d] px-2.5 py-1 text-xs font-semibold text-white">
+          <span className="absolute left-4 top-4 -rotate-2 rounded-lg bg-[#2e4c6d] px-2.5 py-1 text-xs font-semibold text-white shadow-md">
             {event.status === 'Upcoming' ? 'Upcoming' : 'Past event'}
           </span>
         </div>
@@ -60,7 +61,7 @@ function EventCard({ event }: { event: FeaturedEvent }) {
           </div>
         </div>
       </Link>
-    </article>
+    </motion.article>
   );
 }
 
@@ -151,36 +152,52 @@ export function Home() {
           decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#182d41]/25 via-transparent to-[#182d41]/82" />
+        <motion.div
+          initial={{ opacity: 0, rotate: -10, scale: 0.8 }}
+          animate={{ opacity: 1, rotate: -4, scale: 1 }}
+          transition={{ delay: 0.5, type: 'spring', stiffness: 260, damping: 18 }}
+          className="absolute right-[7%] top-[24%] hidden rounded-2xl border border-white/32 bg-white/15 px-4 py-3 text-white shadow-xl backdrop-blur-md md:block"
+        >
+          <div className="flex items-center gap-2 text-sm font-bold tracking-wide"><Sparkles className="h-4 w-4" /> Minnesota made</div>
+        </motion.div>
         <div className="relative mx-auto flex h-full min-h-[640px] max-w-[1440px] flex-col items-center justify-end px-5 pb-12 pt-28 text-center text-white md:min-h-[720px] md:items-start md:px-[50px] md:pb-16 md:text-left">
-          <img
+          <motion.img
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
             src={fullLogo}
             alt="Vocal U, University of Minnesota"
             className="w-[min(82vw,390px)] drop-shadow-[0_3px_14px_rgba(0,0,0,0.28)] md:w-[410px]"
           />
-          <p className="mt-5 max-w-xl text-base leading-7 text-white/88 md:text-lg">
-            Gender-inclusive a cappella at the University of Minnesota. We sing, compete, and build community across the Twin Cities.
+          <p className="mt-5 max-w-xl text-base leading-7 text-white/90 md:text-lg">
+            Big harmonies, good people, and a lot of joy. We’re Vocal U, a gender-inclusive a cappella group at the University of Minnesota.
           </p>
           <div className="mt-7 flex w-full max-w-sm flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row">
             <Link
               to="/auditions"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-[#2e4c6d] transition-colors hover:bg-[#eaf1f7]"
             >
-              Audition sign-up
+              Come sing with us
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <Link
               to="/about"
               className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/55 bg-[#2e4c6d]/20 px-6 py-3 font-semibold text-white backdrop-blur-[2px] transition-colors hover:bg-white/12"
             >
-              Meet Vocal U
+              Meet the group
             </Link>
           </div>
+          <a href="#meet-vocal-u" className="mt-7 inline-flex items-center gap-2 text-xs font-bold tracking-[0.14em] text-white/72 transition-colors hover:text-white">
+            Keep scrolling <ArrowDown className="h-3.5 w-3.5 animate-bounce" />
+          </a>
         </div>
       </section>
 
       <section
-        className="my-6 grid overflow-hidden rounded-2xl border border-[#dce5ed] bg-white lg:grid-cols-[0.95fr_1.05fr]"
+        id="meet-vocal-u"
+        className="relative my-7 grid overflow-hidden rounded-[30px] border border-[#dce5ed] bg-white shadow-[0_18px_50px_rgba(35,61,85,0.1)] lg:grid-cols-[0.95fr_1.05fr]"
       >
+        <div className="absolute left-6 top-0 h-2 w-28 rounded-b-full bg-[#91a8c6]" aria-hidden="true" />
         <div className="flex flex-col justify-center p-7 md:p-11 lg:p-12">
           <p className="text-sm font-semibold tracking-wide text-[#7895b7]">Since 2011</p>
           <h2 className="mt-2 text-[clamp(2.4rem,5vw,4rem)] leading-none text-[#2e4c6d]">We are Vocal U</h2>
@@ -197,16 +214,21 @@ export function Home() {
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
-        <img
-          src={groupPhoto}
-          alt="Vocal U group members"
-          className="h-[340px] w-full object-cover md:h-[480px] lg:h-full lg:min-h-[520px]"
-          loading="lazy"
-          decoding="async"
-        />
+        <div className="relative overflow-hidden bg-[#91a8c6]/15 p-3 lg:p-4">
+          <div className="absolute -bottom-8 -right-8 h-32 w-32 rounded-full bg-[#2e4c6d]/10" aria-hidden="true" />
+          <img
+            src={groupPhoto}
+            alt="Vocal U group members"
+            className="relative h-[340px] w-full rotate-[0.7deg] rounded-[22px] object-cover shadow-lg transition-transform duration-300 hover:rotate-0 md:h-[480px] lg:h-full lg:min-h-[500px]"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </section>
 
-      <section className="rounded-2xl bg-[#91a8c6] px-5 py-10 md:px-10 md:py-13">
+      <section className="relative isolate overflow-hidden rounded-[30px] bg-gradient-to-br from-[#7895b7] via-[#91a8c6] to-[#afc3da] px-5 py-10 shadow-[0_18px_50px_rgba(35,61,85,0.13)] md:px-10 md:py-13">
+        <div className="absolute -right-10 -top-14 -z-10 select-none text-[12rem] leading-none text-white/[0.075]" style={{ fontFamily: 'var(--font-yearbook-stack)' }} aria-hidden="true">VU</div>
+        <Music2 className="absolute bottom-5 left-5 -z-10 h-14 w-14 -rotate-12 text-white/10" aria-hidden="true" />
         <div className="flex flex-col gap-3 text-white md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-sm font-semibold text-white/76">On stage</p>
@@ -235,17 +257,18 @@ export function Home() {
       </section>
 
       <section
-        className="mt-6 flex flex-col gap-6 rounded-2xl border border-[#dce5ed] bg-[#f4f7fa] p-7 md:flex-row md:items-center md:justify-between md:p-10"
+        className="relative mt-7 flex flex-col gap-6 overflow-hidden rounded-[28px] border border-[#dce5ed] bg-[#2e4c6d] p-7 text-white shadow-[0_16px_42px_rgba(35,61,85,0.12)] md:flex-row md:items-center md:justify-between md:p-10"
       >
+        <Sparkles className="absolute -right-3 -top-4 h-24 w-24 rotate-12 text-white/[0.06]" aria-hidden="true" />
         <div>
-          <h2 className="text-3xl text-[#2e4c6d] md:text-4xl">Bring Vocal U to your event</h2>
-          <p className="mt-2 max-w-2xl leading-7 text-[#2e4c6d]/72">
+          <h2 className="text-3xl text-white md:text-4xl">Bring Vocal U to your event</h2>
+          <p className="mt-2 max-w-2xl leading-7 text-white/72">
             Planning a campus event, fundraiser, celebration, or collaboration? Tell us what you have in mind.
           </p>
         </div>
         <Link
           to="/contact"
-          className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#2e4c6d] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#7895b7]"
+          className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-[#2e4c6d] shadow-lg transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-[#eaf1f7]"
         >
           Contact us
           <ArrowRight className="h-4 w-4" aria-hidden="true" />

@@ -2,6 +2,7 @@ import { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Instagram, Youtube, ExternalLink, Calendar, MessageCircle, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
+import { PageHero } from '../components/PageHero';
 import { PageShell } from '../components/PageShell';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
@@ -228,17 +229,13 @@ export function Media() {
                 schema={mediaSchema}
             />
             {activeVideo && <VideoModal vId={activeVideo} onClose={() => setActiveVideo(null)} />}
-            {/* Header Section */}
-            <section style={{ marginTop: '25px', marginBottom: '25px' }}>
-                <div className="bg-[#8FA8C8] py-10 md:py-16 px-4 text-center" style={{ borderRadius: '16px' }}>
-                    <h1 className="text-white font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}>
-                        Media
-                    </h1>
-                    <p className="text-white/90 mt-2 max-w-2xl mx-auto text-sm md:text-base" style={{ fontFamily: 'Inter, sans-serif' }}>
-                        Catch our latest performances and keep up with us on social media.
-                    </p>
-                </div>
-            </section>
+            <PageHero
+                title="Media"
+                eyebrow="Watch, listen, repeat"
+                description="Full performances, rehearsal-room moments, and whatever we have been up to lately."
+                tone="navy"
+                stamp="Turn it up"
+            />
             {/* Main Feeds Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-16">
                 {/* YouTube Column */}

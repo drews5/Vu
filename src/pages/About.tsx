@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { PageHero } from '../components/PageHero';
 import { PageShell } from '../components/PageShell';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
@@ -25,7 +26,8 @@ const SongCard = memo(function SongCard({
     song: { title: string; artist: string; note?: string };
 }) {
     return (
-        <article className="rounded-2xl border border-[#dce5ed] bg-white p-5 md:p-6">
+        <article className="group relative overflow-hidden rounded-2xl border border-[#dce5ed] bg-white p-5 shadow-[0_8px_24px_rgba(35,61,85,0.06)] transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-1 hover:rotate-[0.35deg] hover:border-[#91a8c6] hover:shadow-[0_16px_34px_rgba(35,61,85,0.12)] md:p-6">
+            <span className="absolute -right-5 -top-5 h-14 w-14 rounded-full bg-[#91a8c6]/10 transition-transform duration-300 group-hover:scale-125" aria-hidden="true" />
             <h3 className="mb-2 text-xl text-[#2e4c6d]" style={fontYearbook}>
                 {song.title}
             </h3>
@@ -66,20 +68,20 @@ export function About() {
                     },
                 }}
             />
-            {/* Hero Section */}
-            <section style={{ marginTop: '25px', marginBottom: '25px' }}>
-                <div className="flex h-[190px] items-center justify-center overflow-hidden rounded-2xl bg-[#2e4c6d] md:h-[280px]">
-                    <h1 className="px-4 text-[clamp(2.8rem,8vw,5rem)] text-white" style={fontYearbook}>
-                        About Us
-                    </h1>
-                </div>
-            </section>
+            <PageHero
+                title="About us"
+                eyebrow="Singing together since 2011"
+                description="Different majors, different voices, one group that genuinely likes making music together."
+                tone="navy"
+                stamp="Minnesota made"
+            />
             {/* Our Mission */}
             <section style={{ marginBottom: '25px' }}>
                 <h2 className="text-[#2B4C6F] mb-4 md:mb-6 px-4 md:px-0 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 48px)' }}>
                     Our Mission
                 </h2>
-                <div className="space-y-4 rounded-2xl border border-[#dce5ed] bg-white p-6 leading-relaxed text-[#2e4c6d] md:p-8" style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7' }}>
+                <div className="relative space-y-4 overflow-hidden rounded-[26px] border border-[#dce5ed] bg-white p-6 leading-relaxed text-[#2e4c6d] shadow-[0_14px_38px_rgba(35,61,85,0.08)] md:p-9" style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7' }}>
+                    <div className="absolute right-0 top-0 h-3 w-32 rounded-bl-full bg-[#91a8c6]" aria-hidden="true" />
                     <p>
                         Founded in 2011, Vocal U A Cappella is dedicated to fostering musical growth within our group while sharing our passion for the arts with the community.
                     </p>

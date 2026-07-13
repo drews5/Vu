@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Calendar, MapPin, Clock, Share2, Navigation, ArrowLeft, Copy } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
+import { Calendar, MapPin, Clock, Share2, Navigation, ArrowLeft, Copy, Music } from 'lucide-react';
 import { useParams, Link } from 'react-router-dom';
 import { PageShell } from '../components/PageShell';
 import { loadSupabase } from '../utils/loadSupabase';
@@ -23,6 +24,7 @@ interface EventData {
     status?: string;
 }
 export function EventDetail() {
+    const reduceMotion = useReducedMotion();
     const { eventId } = useParams();
     const detailPath = eventId ? `/event/${eventId}` : '/events';
     const fallbackDescription =
@@ -217,8 +219,9 @@ export function EventDetail() {
                 ]}
                 schema={eventSchema}
             />
-            <section style={{ marginTop: '25px', marginBottom: '25px' }}>
-                <div className="bg-white border border-gray-100 shadow-sm overflow-hidden" style={{ borderRadius: '16px' }}>
+            <section className="my-6">
+                <div className="relative overflow-hidden rounded-[32px] border border-[#dce5ed] bg-white shadow-[0_24px_70px_rgba(46,76,109,0.12)]">
+                    <span className="pointer-events-none absolute -right-5 -top-14 select-none text-[11rem] text-[#91a8c6]/[0.08]" aria-hidden="true">VU</span>
                     {/* Back Button */}
                     <div className="p-6 md:p-8 pb-0">
                         <div className="inline-block">
@@ -237,7 +240,10 @@ export function EventDetail() {
                                     </button>
                                     <span className="ml-3 text-xs text-[#2e4c6d]/60" aria-live="polite">{actionMessage}</span>
                                 </div>
-                                <h1 className="text-[#2B4C6F] mb-4 leading-tight" style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 72px)' }}>
+                                <span className="mb-3 inline-flex -rotate-2 rounded-full bg-[#e5edf5] px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-[#2e4c6d]">
+                                    {isUpcoming ? 'Coming up' : 'From the archive'}
+                                </span>
+                                <h1 className="text-[#2B4C6F] mb-4 leading-[0.92]" style={{ ...fontYearbook, fontSize: 'clamp(44px, 8vw, 78px)' }}>
                                     {event.title}
                                 </h1>
                                 <div className="flex flex-wrap gap-6 text-[#2B4C6F]/60" style={fontInter}>
@@ -250,14 +256,17 @@ export function EventDetail() {
                                 {/* Left Column: Image and Description */}
                                 <div className="lg:col-span-2 space-y-8">
                                     {event.imageUrl && (
-                                        <div className="relative rounded-2xl overflow-hidden border border-gray-100 aspect-video">
-                                            <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover" style={{ filter: 'saturate(1.1) contrast(1.1)' }} />
+                                        <motion.div
+                                            whileHover={reduceMotion ? undefined : { rotate: -0.75, scale: 1.012 }}
+                                            className="relative aspect-video overflow-hidden rounded-[26px] border-[6px] border-white shadow-[10px_12px_0_#dbe6f0]"
+                                        >
+                                            <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-[1.025]" style={{ filter: 'saturate(1.1) contrast(1.05)' }} />
                                             {isUpcoming && (
                                                 <div className="absolute top-6 left-6">
                                                     <span className="bg-[#8FA8C8] text-white px-6 py-2 rounded-full text-xs tracking-widest" style={fontYearbook}>Upcoming</span>
                                                 </div>
                                             )}
-                                        </div>
+                                        </motion.div>
                                     )}
                                     <div className="prose prose-lg max-w-none">
                                         <p className="whitespace-pre-wrap text-[#2B4C6F] leading-relaxed text-lg" style={fontInter}>{event.description}</p>
@@ -287,7 +296,8 @@ export function EventDetail() {
                                         </button>
                                     </div>
                                     {/* Location Card */}
-                                    <div className="bg-gray-50 p-6 rounded-2xl space-y-4 border border-gray-100">
+                                    <div className="relative space-y-4 overflow-hidden rounded-[24px] border border-[#dce5ed] bg-gradient-to-br from-[#f4f7fa] to-[#e9f0f7] p-6">
+                                        <Music className="absolute -bottom-3 -right-2 h-20 w-20 rotate-12 text-[#91a8c6]/15" aria-hidden="true" />
                                         <div className="flex items-start gap-3">
                                             <MapPin className="w-6 h-6 text-[#8FA8C8] shrink-0 mt-1" />
                                             <div>
