@@ -10,10 +10,6 @@ export function getEventPath(slug: string) {
   return `/event/${slug}`;
 }
 
-export function isShowcaseSlug(slug: string) {
-  return slug === showcaseSlug;
-}
-
 export function getEventDisplayTitle(slug: string, title: string) {
   if (slug === showcaseSlug) {
     return showcaseTitle;

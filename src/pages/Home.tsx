@@ -1,283 +1,139 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
-import fullLogo from 'figma:asset/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
-import heroBackground from '../assets/15a7da513ab99cbb57e9735db4d4d232088838f1.png';
-import groupPhoto from '../assets/group-photo.jpg';
-
+import { useEffect, useState } from 'react';
+import { ArrowRight, Calendar, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import { PageTransition, childVariants } from '../components/PageTransition';
-import { loadSupabase } from '../utils/loadSupabase';
+import fullLogo from '../assets/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
+import heroBackground from '../assets/hero-group.webp';
+import groupPhoto from '../assets/group-photo.webp';
+import { PageShell } from '../components/PageShell';
+import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { getEventImage } from '../utils/eventImages';
 import { getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
-import { Seo, toAbsoluteUrl } from '../components/Seo';
-import { fontYearbook } from '../styles/fonts';
+import { loadSupabase } from '../utils/loadSupabase';
+import { isEventUpcoming, parseEventDate } from '../utils/eventDate';
 
-const fontInter = { fontFamily: 'Inter, sans-serif' };
-const LazyContactForm = lazy(() => import('../components/ContactForm').then((m) => ({ default: m.ContactForm })));
-
-interface FeaturedEvent {
-  tag: string;
-  date: string;
-  year?: string;
+type FeaturedEvent = {
+  slug: string;
+  date: Date;
+  dateLabel: string;
   title: string;
   location: string;
-  description?: string;
-  link: string;
   image: string;
   status: 'Upcoming' | 'Previous';
-  isInstagram?: boolean;
-}
+};
 
-function getVisibleCardCount(width: number) {
-  if (width >= 1024) return 3;
-  if (width >= 768) return 2;
-  return 1;
-}
+type EventRow = {
+  slug: string;
+  date: string;
+  title: string;
+  location: string;
+  image_url: string;
+  display_time: string | null;
+};
 
 function EventCard({ event }: { event: FeaturedEvent }) {
-  const [copied, setCopied] = useState(false);
-  const handleCopyInfo = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const eventLink = `${window.location.origin}${event.link}`;
-    const info = `Come see Vocal U at ${event.title} on ${event.date} at ${event.location}! ${eventLink}`;
-    navigator.clipboard.writeText(info);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const content = (
-    <>
-      <div className="relative aspect-video overflow-hidden">
-        <img
-          src={event.image}
-          alt={event.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          loading="lazy"
-        />
-        <div className="absolute top-4 left-4">
-          <span
-            className={`${event.status === 'Previous' ? 'bg-gray-400' : 'bg-[#8FA8C8]'} text-white px-3 py-1 text-[10px] tracking-widest font-yearbook`}
-            style={{ borderRadius: '8px', ...fontYearbook }}
-          >
-            {event.tag}
+  return (
+    <article className="group h-full overflow-hidden rounded-2xl border border-[#dce5ed] bg-white transition-[border-color,box-shadow] duration-200 hover:border-[#91a8c6] hover:shadow-[0_14px_35px_rgba(35,61,85,0.12)]">
+      <Link to={getEventPath(event.slug)} className="flex h-full flex-col">
+        <div className="relative aspect-[16/10] overflow-hidden bg-[#eef3f7]">
+          <img
+            src={event.image}
+            alt=""
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            loading="lazy"
+            decoding="async"
+          />
+          <span className="absolute left-4 top-4 rounded-lg bg-[#2e4c6d] px-2.5 py-1 text-xs font-semibold text-white">
+            {event.status === 'Upcoming' ? 'Upcoming' : 'Past event'}
           </span>
         </div>
-      </div>
-      <div className="p-6 flex flex-col flex-grow">
-        <div className="flex justify-between items-center mb-1">
-          <div className="flex items-center gap-2 text-[#8FA8C8] text-xs font-bold" style={fontInter}>
-            <Calendar className="w-3.5 h-3.5" />
-            {event.date}
+        <div className="flex flex-1 flex-col p-5 md:p-6">
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#7895b7]">
+            <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
+            <time dateTime={event.date.toISOString()}>{event.dateLabel}</time>
           </div>
-          {!event.isInstagram && (
-            <button
-              onClick={handleCopyInfo}
-              className="p-1.5 hover:bg-[#8FA8C8]/10 rounded-full transition-all duration-200 shrink-0 group/copy cursor-pointer -mr-1 relative"
-              title="Copy event info"
-            >
-              <span className={`absolute -top-7 right-0 bg-[#2B4C6F] text-white text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none font-bold whitespace-nowrap ${copied ? 'opacity-100' : 'opacity-0'}`}>
-                COPIED!
-              </span>
-              <Copy className="w-3.5 h-3.5 text-[#8FA8C8]/60 group-hover/copy:text-[#8FA8C8]" />
-            </button>
-          )}
+          <h3 className="mt-2 text-2xl leading-tight text-[#2e4c6d] transition-colors group-hover:text-[#7895b7]">
+            {event.title}
+          </h3>
+          <div className="mt-auto flex items-center gap-2 pt-5 text-sm text-[#2e4c6d]/62">
+            <MapPin className="h-4 w-4 shrink-0" aria-hidden="true" />
+            <span className="truncate">{event.location}</span>
+          </div>
         </div>
-        <h3
-          className="text-[#2B4C6F] mb-3 text-xl leading-tight group-hover:text-[#8FA8C8] transition-colors line-clamp-2 font-yearbook"
-          style={fontYearbook}
-        >
-          {event.title}
-        </h3>
-        <div className="mt-auto flex items-center gap-2 text-[#2B4C6F]/60 text-sm" style={fontInter}>
-          <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-          <span className="truncate">{event.location}</span>
-        </div>
-      </div>
-    </>
-  );
-
-  if (event.isInstagram) {
-    return (
-      <motion.a
-        href={event.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        whileHover={{ y: -4 }}
-        whileTap={{ scale: 0.98 }}
-        className="group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] flex flex-col cursor-pointer"
-        style={{ borderRadius: '16px' }}
-      >
-        {content}
-      </motion.a>
-    );
-  }
-
-  return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      whileTap={{ scale: 0.98 }}
-      className="h-full"
-    >
-      <Link
-        to={event.link}
-        className="group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] flex flex-col h-full cursor-pointer"
-        style={{ borderRadius: '16px' }}
-      >
-        {content}
       </Link>
-    </motion.div>
+    </article>
   );
 }
 
 export function Home() {
   const homeDescription =
     'Official site for Vocal U, the University of Minnesota gender-inclusive a cappella group. Explore performances, members, media, auditions, and ways to support the group.';
-  const [items, setItems] = useState<FeaturedEvent[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [visibleCards, setVisibleCards] = useState(1);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [hasScrolledAtAll, setHasScrolledAtAll] = useState(false);
-  const [viewportWidth, setViewportWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
-  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
-  const [isExtraSmall, setIsExtraSmall] = useState(typeof window !== 'undefined' && window.innerWidth <= 468);
-
-  // Track scroll for full-screen hero transition
-  useEffect(() => {
-    let frameId = 0;
-
-    const handleScroll = () => {
-      cancelAnimationFrame(frameId);
-      frameId = window.requestAnimationFrame(() => {
-        const scrollY = window.scrollY;
-        setIsScrolled(scrollY > 20);
-        setHasScrolledAtAll(scrollY > 0);
-      });
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => {
-      cancelAnimationFrame(frameId);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    let frameId = 0;
-
-    const handleResize = () => {
-      cancelAnimationFrame(frameId);
-      frameId = window.requestAnimationFrame(() => {
-        const width = window.innerWidth;
-        setViewportWidth(width);
-        setVisibleCards(getVisibleCardCount(width));
-        setIsMobile(width < 768);
-        setIsExtraSmall(width <= 468);
-      });
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => {
-      cancelAnimationFrame(frameId);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  const [events, setEvents] = useState<FeaturedEvent[]>([]);
+  const [eventsLoading, setEventsLoading] = useState(true);
+  const [eventHeading, setEventHeading] = useState('Coming up');
 
   useEffect(() => {
     let cancelled = false;
 
-    async function fetchData() {
-      const supabase = await loadSupabase();
-      const { data: eventsData, error: eventsError } = await supabase
-        .from('events')
-        .select('*')
-        .order('date', { ascending: true });
+    async function fetchEvents() {
+      try {
+        const supabase = await loadSupabase();
+        const { data, error } = await supabase
+          .from('events')
+          .select('slug,date,title,location,image_url,display_time')
+          .order('date', { ascending: true });
 
-      if (eventsError) {
-        console.error('Error fetching events:', eventsError);
-        return;
+        if (error) throw error;
+        if (cancelled) return;
+
+        const formatted = ((data || []) as EventRow[]).map((row) => {
+          const date = parseEventDate(row.date, row.display_time);
+          return {
+            slug: row.slug,
+            date,
+            dateLabel: date.toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            }),
+            title: getEventDisplayTitle(row.slug, row.title),
+            location: row.location,
+            image: getEventImage(row.slug, row.image_url),
+            status: isEventUpcoming(date) ? 'Upcoming' as const : 'Previous' as const,
+          };
+        });
+
+        const upcoming = formatted.filter((event) => event.status === 'Upcoming').slice(0, 3);
+        const recent = formatted
+          .filter((event) => event.status === 'Previous')
+          .sort((a, b) => b.date.getTime() - a.date.getTime())
+          .slice(0, 3);
+
+        setEvents(upcoming.length > 0 ? upcoming : recent);
+        setEventHeading(upcoming.length > 0 ? 'Coming up' : 'Recent performances');
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      } finally {
+        if (!cancelled) setEventsLoading(false);
       }
-
-      if (cancelled) {
-        return;
-      }
-
-      const now = new Date();
-      const processed = (eventsData || []).map((r: any) => {
-        const d = new Date(r.date);
-        return {
-          ...r,
-          fullDate: d,
-          status: d >= now ? 'Upcoming' : 'Previous'
-        };
-      });
-
-      // Strictly chronological sort (oldest to newest)
-      const allEvents = processed.sort((a: any, b: any) => a.fullDate.getTime() - b.fullDate.getTime());
-      const pastCount = allEvents.filter((e: any) => e.status === 'Previous').length;
-
-      const formattedEvents: any[] = allEvents.map((r: any) => ({
-        // Always override tag from DB — past events must show "PAST"
-        tag: r.status === 'Previous' ? 'PAST' : 'UPCOMING',
-        date: r.fullDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        title: getEventDisplayTitle(r.slug, r.title),
-        location: r.location,
-        description: r.description,
-        link: getEventPath(r.slug),
-        status: r.status,
-        image: getEventImage(r.slug, r.image_url),
-      }));
-
-      if (cancelled) {
-        return;
-      }
-
-      setItems(formattedEvents);
-      const vCards = getVisibleCardCount(window.innerWidth);
-      const firstUpcomingIdx = formattedEvents.findIndex((event) => event.status === 'Upcoming');
-      const initialIdx = vCards === 1 && firstUpcomingIdx !== -1
-        ? firstUpcomingIdx
-        : Math.max(0, pastCount - 1);
-      const maxIdx = Math.max(0, formattedEvents.length - vCards);
-      setCurrentIndex(Math.min(initialIdx, maxIdx));
     }
 
-    void fetchData();
+    void fetchEvents();
     return () => {
       cancelled = true;
     };
   }, []);
 
-  const nextSlide = () => {
-    if (items.length === 0) return;
-    setCurrentIndex((prev) => (prev + 1) % items.length);
+  const homeSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Vocal U Home',
+    description: homeDescription,
+    url: toAbsoluteUrl('/'),
+    about: { '@id': toAbsoluteUrl('/#organization') },
   };
-
-  const prevSlide = () => {
-    if (items.length === 0) return;
-    setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
-  };
-  const showArrows = items.length > visibleCards;
-  const compactHeroWidth = isMobile
-    ? Math.max(viewportWidth - 24, 0)
-    : Math.min(Math.max(viewportWidth - 100, 0), 1340);
-  const expandedHeroWidth = viewportWidth || (isMobile ? 390 : 1440);
-  const homeSchema = [
-    {
-      '@context': 'https://schema.org',
-      '@type': 'WebPage',
-      name: 'Vocal U Home',
-      description: homeDescription,
-      url: toAbsoluteUrl('/'),
-      about: {
-        '@id': toAbsoluteUrl('/#organization'),
-      },
-    },
-  ];
 
   return (
-    <PageTransition className="pb-0 relative" delay={0}>
+    <PageShell className="pb-0">
       <Seo
         title="Vocal U A Cappella | University of Minnesota A Cappella Group"
         description={homeDescription}
@@ -286,309 +142,115 @@ export function Home() {
         schema={homeSchema}
       />
 
-      {/* Hero Section */}
-      <motion.section
-        className="relative left-1/2 w-screen -translate-x-1/2"
-        initial={false}
-        animate={{
-          marginTop: isScrolled ? 110 : 0,
-          marginBottom: isScrolled ? 25 : 0,
-        }}
-        transition={{ type: 'spring', damping: 25, stiffness: 120 }}
-        style={{ position: 'relative', zIndex: 1 }}
-      >
-        <motion.div
-          className="relative overflow-hidden mx-auto"
-          initial={false}
-          animate={{
-            width: isScrolled ? compactHeroWidth : expandedHeroWidth,
-            height: isScrolled ? 576 : 'min(100vh, 160vw)', // limit height slightly on mobile to prevent extreme cropping
-            borderRadius: isScrolled ? 16 : 0,
-            border: isScrolled ? '1px solid rgba(243, 244, 246, 1)' : '0px solid rgba(243, 244, 246, 0)',
-            boxShadow: isScrolled ? '0 1px 2px 0 rgba(0, 0, 0, 0.05)' : 'none'
-          }}
-          transition={{ type: 'spring', damping: 25, stiffness: 120 }}
-        >
-          <motion.img
-            src={heroBackground}
-            alt="Vocal U Group"
-            className="w-full h-full object-cover"
-            style={{ filter: 'brightness(1.08) saturate(1.05)', objectPosition: 'center bottom' }}
-            layout
-            fetchPriority="high"
-            decoding="async"
+      <section className="relative left-1/2 min-h-[640px] w-screen -translate-x-1/2 overflow-hidden bg-[#2e4c6d] md:min-h-[720px] md:h-[min(100svh,920px)]">
+        <img
+          src={heroBackground}
+          alt="Vocal U members together on the University of Minnesota campus"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+          fetchPriority="high"
+          decoding="async"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#182d41]/25 via-transparent to-[#182d41]/82" />
+        <div className="relative mx-auto flex h-full min-h-[640px] max-w-[1440px] flex-col items-center justify-end px-5 pb-12 pt-28 text-center text-white md:min-h-[720px] md:items-start md:px-[50px] md:pb-16 md:text-left">
+          <img
+            src={fullLogo}
+            alt="Vocal U, University of Minnesota"
+            className="w-[min(82vw,390px)] drop-shadow-[0_3px_14px_rgba(0,0,0,0.28)] md:w-[410px]"
           />
-          <div className="absolute inset-0 flex flex-col items-center px-4 pointer-events-none">
-            <motion.div
-              className="pt-[calc(10vh-10px)] md:pt-[70px] flex-shrink-0 pointer-events-auto"
-              initial={false}
-              animate={{
-                opacity: 1,
-                scale: isScrolled ? (isMobile ? 0.85 : 1) : (isMobile ? 1 : 1.25),
-                y: isScrolled ? 0 : (isMobile ? 10 : 20)
-              }}
-              transition={{ type: 'spring', damping: 25, stiffness: 120 }}
-              style={{ originY: 0 }}
+          <p className="mt-5 max-w-xl text-base leading-7 text-white/88 md:text-lg">
+            Gender-inclusive a cappella at the University of Minnesota. We sing, compete, and build community across the Twin Cities.
+          </p>
+          <div className="mt-7 flex w-full max-w-sm flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row">
+            <Link
+              to="/auditions"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-[#2e4c6d] transition-colors hover:bg-[#eaf1f7]"
             >
-              <div className="cursor-default outline-none select-none">
-                <img
-                  src={fullLogo}
-                  alt="Vocal U - University of Minnesota's A Cappella Group"
-                  className="w-[85vw] max-w-[340px] md:max-w-[280px]"
-                  style={{ filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3))' }}
-                />
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="absolute bottom-[125px] left-1/2 -translate-x-1/2 pointer-events-auto"
-              initial={false}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: (isExtraSmall ? 45 : 0) + (isScrolled ? 50 : 0),
-              }}
-              transition={{ type: 'spring', damping: 25, stiffness: 120 }}
-            >
-              <motion.div
-                initial={false}
-                animate={{ y: isScrolled ? 4 : 0 }}
-                transition={{ type: 'spring', damping: 24, stiffness: 180 }}
-                whileHover={{ scale: 1.04, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                className="relative rounded-[16px] shadow-[0_18px_45px_rgba(43,76,111,0.22)]"
-              >
-                <Link
-                  to="/auditions"
-                  className="hero-audition-stroke group relative block overflow-hidden border border-white/80 bg-white/95 px-6 md:px-12 py-2.5 md:py-4 text-center text-[#2B4C6F] transition-all duration-300 hover:border-[#8FA8C8] hover:bg-[#8FA8C8] hover:text-white whitespace-nowrap"
-                  style={{
-                    ...fontYearbook,
-                    fontSize: 'clamp(14px, 4vw, 20px)',
-                    letterSpacing: '0.05em',
-                    borderRadius: '16px',
-                  }}
-                >
-                  <span className="absolute inset-0 bg-gradient-to-r from-white via-[#f8fbff] to-white transition-opacity duration-300 group-hover:opacity-0" />
-                  <span className="relative flex items-center justify-center gap-2">
-                    AUDITION SIGN UP
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </span>
-                </Link>
-              </motion.div>
-            </motion.div>
-          </div>
-
-          {/* Swipe Hint Animation - Mobile Only */}
-          <AnimatePresence>
-            {!hasScrolledAtAll && isMobile && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ opacity: { delay: 4 }, default: { type: 'spring', damping: 25, stiffness: 120 } }}
-                className="absolute bottom-24 right-6 z-10 pointer-events-none"
-              >
-                <div className="relative w-14 h-28 flex justify-center overflow-hidden">
-                  <motion.div
-                    animate={{
-                      y: [90, 15, 15],
-                      opacity: [0, 0.75, 0]
-                    }}
-                    transition={{
-                      duration: 2.5,
-                      repeat: Infinity,
-                      ease: [0.45, 0.05, 0.55, 0.95]
-                    }}
-                    className="flex flex-col items-center"
-                  >
-                    <span className="text-4xl drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" role="img" aria-label="scroll" style={{ filter: 'brightness(0) invert(1)' }}>👆</span>
-                  </motion.div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
-      </motion.section>
-
-      {/* We Are Vocal U Section */}
-      <motion.section
-        variants={childVariants}
-        className="bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center shadow-sm hover:shadow-md transition-shadow duration-300 relative z-10"
-        style={{
-          gap: '25px',
-          marginBottom: '25px',
-          borderRadius: '16px'
-        }}
-      >
-        <div>
-          <h2 className="mb-6 md:mb-8 whitespace-nowrap">
-            <span
-              className="text-[#A3B8D3] font-yearbook"
-              style={{ ...fontYearbook, fontSize: 'clamp(32px, 5.2vw, 56px)' }}
-            >
-              We Are{' '}
-            </span>
-            <span
-              className="text-[#2B4C6F] font-yearbook"
-              style={{ ...fontYearbook, fontSize: 'clamp(32px, 5.2vw, 56px)' }}
-            >
-              Vocal U
-            </span>
-          </h2>
-
-          <div
-            className="space-y-4 text-[#2B4C6F] leading-relaxed mb-6"
-            style={{ ...fontInter, fontSize: '17px', fontWeight: '400', lineHeight: '1.7' }}
-          >
-            <p>
-              Vocal U is a gender-inclusive a cappella group at the University of Minnesota, established in
-              2011. We are a registered student organization dedicated to spreading our music across the
-              Twin Cities and beyond, and having a great time while doing it.
-            </p>
-            <p>
-              We come from all different majors and backgrounds, but we're all a part of VU because we love
-              music and the arts. More than an a cappella group, Vocal U is a family. We support and push
-              each other to be the best performers we can be, which translates to the stage.
-            </p>
-          </div>
-
-          <motion.div
-            whileHover={{ x: 6 }}
-            whileTap={{ scale: 0.97 }}
-          >
+              Audition sign-up
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
             <Link
               to="/about"
-              className="inline-flex items-center gap-2 bg-[#2B4C6F] text-white px-8 py-3 border border-[#2B4C6F] hover:bg-white hover:text-[#2B4C6F] hover:shadow-xl transition-all duration-300 group cursor-pointer font-yearbook"
-              style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}
+              className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/55 bg-[#2e4c6d]/20 px-6 py-3 font-semibold text-white backdrop-blur-[2px] transition-colors hover:bg-white/12"
             >
-              Learn More
-              <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+              Meet Vocal U
             </Link>
-          </motion.div>
+          </div>
         </div>
+      </section>
 
-        <div
-          className="overflow-hidden border border-gray-100"
-          style={{ borderRadius: '16px' }}
-        >
-          <img
-            src={groupPhoto}
-            alt="Vocal U Group Members"
-            className="w-full h-[300px] md:h-[500px] object-cover"
-            style={{ filter: 'brightness(1.08) saturate(1.05)' }}
-            loading="lazy"
-          />
-        </div>
-      </motion.section>
-
-      {/* Events Section */}
-      <motion.section
-        variants={childVariants}
-        className="relative py-12 md:py-16 px-6 md:px-12"
-        style={{
-          marginBottom: '25px',
-          borderRadius: '16px',
-          background: 'linear-gradient(135deg, #91a8c6 0%, #7A97B7 100%)',
-          overflow: 'hidden',
-          zIndex: 1,
-        }}
+      <section
+        className="my-6 grid overflow-hidden rounded-2xl border border-[#dce5ed] bg-white lg:grid-cols-[0.95fr_1.05fr]"
       >
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="text-center mb-10">
-            <h2
-              className="text-white mb-2 font-yearbook"
-              style={{
-                ...fontYearbook,
-                fontSize: 'clamp(48px, 8vw, 80px)',
-                letterSpacing: '0.05em',
-              }}
-            >
-              Events
-            </h2>
-            <p className="text-white/90 font-normal tracking-wide text-sm md:text-base" style={fontInter}>
-              Join us for live performances, competitions, and more.
+        <div className="flex flex-col justify-center p-7 md:p-11 lg:p-12">
+          <p className="text-sm font-semibold tracking-wide text-[#7895b7]">Since 2011</p>
+          <h2 className="mt-2 text-[clamp(2.4rem,5vw,4rem)] leading-none text-[#2e4c6d]">We are Vocal U</h2>
+          <div className="mt-6 space-y-4 text-base leading-7 text-[#2e4c6d]/78 md:text-[17px]">
+            <p>
+              Vocal U brings together students from different majors, backgrounds, and musical experiences to make music that feels like us.
+            </p>
+            <p>
+              We perform around campus and the Twin Cities, compete in the ICCA, and put on showcases that bring our friends, families, and community into the room.
             </p>
           </div>
-
-          <div className="relative group/carousel px-0">
-            <div className="overflow-hidden py-8">
-              <motion.div
-                animate={{ x: `-${currentIndex * (100 / visibleCards)}%` }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="flex"
-                style={{ width: '100%' }}
-              >
-                {items.map((event, idx) => (
-                  <div
-                    key={idx}
-                    className="shrink-0 px-2 md:px-4 flex items-stretch"
-                    style={{ width: `${100 / visibleCards}%` }}
-                  >
-                    <div className="w-full">
-                      <EventCard event={event} />
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
-            </div>
-
-            {showArrows && (
-              <>
-                <button
-                  onClick={prevSlide}
-                  className="absolute left-4 md:-left-6 top-1/2 -translate-y-1/2 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors"
-                  aria-label="Previous slide"
-                >
-                  <ChevronLeft className="w-6 h-6" />
-                </button>
-                <button
-                  onClick={nextSlide}
-                  className="absolute right-4 md:-right-6 top-1/2 -translate-y-1/2 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors"
-                  aria-label="Next slide"
-                >
-                  <ChevronRight className="w-6 h-6" />
-                </button>
-              </>
-            )}
-
-            {/* Pagination Dots for Mobile/Tablet */}
-            {items.length > 1 && (
-              <div className="flex justify-center gap-2 mt-5 lg:hidden">
-                {items.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentIndex(idx)}
-                    className={`h-2 rounded-full transition-all duration-300 ${currentIndex === idx ? 'bg-white w-4' : 'bg-white/40 w-2'}`}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="text-center mt-8">
-            <motion.div
-              whileHover={{ x: 6 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              <Link
-                to="/events"
-                className="inline-flex items-center gap-3 bg-white text-[#2B4C6F] px-10 py-4 border border-white hover:bg-[#2B4C6F] hover:text-white hover:border-[#2B4C6F] transition-all duration-300 shadow-sm group cursor-pointer font-yearbook"
-                style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}
-              >
-                <span>View All Events</span>
-                <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
-              </Link>
-            </motion.div>
-          </div>
+          <Link to="/about" className="mt-7 inline-flex w-fit items-center gap-2 font-semibold text-[#2e4c6d] underline decoration-[#91a8c6] decoration-2 underline-offset-4 hover:text-[#7895b7]">
+            More about the group
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
         </div>
-      </motion.section>
+        <img
+          src={groupPhoto}
+          alt="Vocal U group members"
+          className="h-[340px] w-full object-cover md:h-[480px] lg:h-full lg:min-h-[520px]"
+          loading="lazy"
+          decoding="async"
+        />
+      </section>
 
-      {/* Contact Form Section */}
-      <motion.section variants={childVariants} style={{ marginBottom: '25px', position: 'relative', zIndex: 1 }}>
-        <Suspense fallback={null}>
-          <LazyContactForm />
-        </Suspense>
-      </motion.section>
-    </PageTransition>
+      <section className="rounded-2xl bg-[#91a8c6] px-5 py-10 md:px-10 md:py-13">
+        <div className="flex flex-col gap-3 text-white md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-sm font-semibold text-white/76">On stage</p>
+            <h2 className="mt-1 text-[clamp(2.5rem,6vw,4.5rem)] leading-none">{eventHeading}</h2>
+          </div>
+          <Link to="/events" className="inline-flex items-center gap-2 font-semibold text-white underline decoration-white/45 underline-offset-4 hover:decoration-white">
+            View all events
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+
+        <div className="mt-7 grid gap-4 md:grid-cols-2 lg:grid-cols-3" aria-busy={eventsLoading}>
+          {eventsLoading
+            ? Array.from({ length: 3 }, (_, index) => (
+                <div key={index} className="h-[340px] animate-pulse rounded-2xl bg-white/30" />
+              ))
+            : events.length > 0
+              ? events.map((event) => <EventCard key={event.slug} event={event} />)
+              : (
+                  <div className="rounded-2xl bg-white/92 p-6 text-[#2e4c6d] md:col-span-2 lg:col-span-3">
+                    New dates are announced on <a href="https://www.instagram.com/vocal_u" target="_blank" rel="noopener noreferrer" className="font-semibold underline decoration-[#91a8c6] underline-offset-4">Instagram</a>. Check back soon for the next performance.
+                  </div>
+                )}
+        </div>
+        {eventsLoading && <p className="sr-only" role="status">Loading events</p>}
+      </section>
+
+      <section
+        className="mt-6 flex flex-col gap-6 rounded-2xl border border-[#dce5ed] bg-[#f4f7fa] p-7 md:flex-row md:items-center md:justify-between md:p-10"
+      >
+        <div>
+          <h2 className="text-3xl text-[#2e4c6d] md:text-4xl">Bring Vocal U to your event</h2>
+          <p className="mt-2 max-w-2xl leading-7 text-[#2e4c6d]/72">
+            Planning a campus event, fundraiser, celebration, or collaboration? Tell us what you have in mind.
+          </p>
+        </div>
+        <Link
+          to="/contact"
+          className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#2e4c6d] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#7895b7]"
+        >
+          Contact us
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
+      </section>
+    </PageShell>
   );
 }

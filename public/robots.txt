@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-Host: vocalu.org
-Sitemap: https://vocalu.org/sitemap.xml
+Host: www.vocalu.org
+Sitemap: https://www.vocalu.org/sitemap.xml
