@@ -1,9 +1,8 @@
 import { memo, useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { Instagram, Youtube, ExternalLink, Calendar, MessageCircle, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
-import { PageTransition, childVariants } from '../components/PageTransition';
+import { PageShell } from '../components/PageShell';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
@@ -16,9 +15,17 @@ type InstaPost = {
     caption?: string;
     timestamp: string;
 };
+type YouTubeVideo = {
+    id: string;
+    snippet: {
+        title: string;
+        publishedAt: string;
+        resourceId: { videoId: string };
+    };
+};
 const InstagramCard = memo(function InstagramCard({ post }: { post: InstaPost }) {
     return (
-        <motion.a href={post.permalink} target="_blank" rel="noopener noreferrer" whileHover={{ y: -4 }} whileTap={{ scale: 0.98 }} className="group bg-white overflow-hidden border border-gray-100 shadow-sm transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] flex flex-col cursor-pointer" style={{ borderRadius: '16px' }}>
+        <a href={post.permalink} target="_blank" rel="noopener noreferrer" className="group flex flex-col overflow-hidden rounded-2xl border border-[#dce5ed] bg-white transition-[border-color,box-shadow] duration-200 hover:border-[#91a8c6] hover:shadow-[0_12px_28px_rgba(35,61,85,0.1)]">
             <div className="relative overflow-hidden bg-gray-50">
                 <img src={post.mediaUrl} alt={post.caption || "Instagram Post"} className="w-full h-auto block transition-transform duration-700 group-hover:scale-105" loading="lazy" />
                 <div className="absolute inset-0 bg-[#2B4C6F]/0 group-hover:bg-[#2B4C6F]/20 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -36,7 +43,7 @@ const InstagramCard = memo(function InstagramCard({ post }: { post: InstaPost })
                     </div>
                 </div>
             )}
-        </motion.a>
+        </a>
     );
 });
 const VideoModal = ({ vId, onClose }: { vId: string; onClose: () => void }) => {
@@ -59,12 +66,8 @@ const VideoModal = ({ vId, onClose }: { vId: string; onClose: () => void }) => {
 
     return createPortal(
         <div className="fixed inset-0 z-[220] flex items-center justify-center p-4 sm:p-6">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-black/85 backdrop-blur-md" />
-            <motion.div
-                initial={{ scale: 0.94, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.94, opacity: 0 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
+            <div onClick={onClose} className="absolute inset-0 bg-black/85 backdrop-blur-md" />
+            <div
                 className="relative z-[221] w-full overflow-hidden bg-black shadow-2xl"
                 style={{
                     borderRadius: '24px',
@@ -73,25 +76,25 @@ const VideoModal = ({ vId, onClose }: { vId: string; onClose: () => void }) => {
                 }}
                 role="dialog"
                 aria-modal="true"
+                aria-label="Vocal U performance video"
             >
-                <button onClick={onClose} className="absolute right-4 top-4 z-20 rounded-full bg-black/45 p-2 text-white transition-colors hover:bg-black/60 hover:text-[#8FA8C8]">
+                <button autoFocus onClick={onClose} className="absolute right-4 top-4 z-20 rounded-full bg-black/60 p-2 text-white transition-colors hover:bg-black/80" aria-label="Close video">
                     <X className="w-7 h-7" />
                 </button>
                 <iframe className="h-full w-full border-0" src={`https://www.youtube.com/embed/${vId}?autoplay=1&rel=0`} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen title="Video Player" />
-            </motion.div>
+            </div>
         </div>,
         document.body
     );
 };
-const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen }: { item: any, isHighlighted?: boolean, onOpen: (vId: string) => void }) {
+const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen }: { item: YouTubeVideo | string, isHighlighted?: boolean, onOpen: (vId: string) => void }) {
     const vId = typeof item === 'string' ? item : item.snippet.resourceId.videoId;
     const title = typeof item === 'string' ? 'ICCA 2025 Set: Full Performance' : item.snippet.title;
     const dateStr = typeof item === 'string' ? 'Mar 1, 2025' : new Date(item.snippet.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     return (
-        <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.99 }} onClick={() => onOpen(vId)}
-            className={`group bg-white overflow-hidden border shadow-md transition-[box-shadow,border-color] duration-300 hover:shadow-xl flex flex-col cursor-pointer ${isHighlighted ? 'border-[#8FA8C8] ring-4 ring-[#8FA8C8]/20' : 'border-gray-100'
-                }`}
-            style={{ borderRadius: '16px' }}
+        <button type="button" onClick={() => onOpen(vId)}
+            className={`group flex cursor-pointer flex-col overflow-hidden border bg-white transition-[box-shadow,border-color] duration-200 hover:shadow-[0_12px_28px_rgba(35,61,85,0.1)] ${isHighlighted ? 'border-[#8FA8C8] ring-2 ring-[#8FA8C8]/20' : 'border-[#dce5ed]'
+                } rounded-2xl text-left`}
         >
             <div className={`relative bg-black ${isHighlighted ? 'pt-[56.25%]' : 'pt-[56.25%]'}`}>
                 {isHighlighted && (
@@ -106,7 +109,16 @@ const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen 
                         <Youtube className="w-8 h-8 text-white shadow-xl" />
                     </div>
                 </div>
-                <img src={`https://img.youtube.com/vi/${vId}/maxresdefault.jpg`} alt={title} className="absolute top-0 left-0 w-full h-full object-cover" />
+                <img
+                    src={`https://img.youtube.com/vi/${vId}/maxresdefault.jpg`}
+                    alt={title}
+                    className="absolute left-0 top-0 h-full w-full object-cover"
+                    loading="lazy"
+                    onError={(event) => {
+                        event.currentTarget.onerror = null;
+                        event.currentTarget.src = `https://img.youtube.com/vi/${vId}/hqdefault.jpg`;
+                    }}
+                />
             </div>
             <div className={`p-5 flex-grow flex flex-col justify-between transition-colors ${isHighlighted ? 'bg-gray-50/50' : ''}`}>
                 <div>
@@ -124,16 +136,17 @@ const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen 
                     </p>
                 )}
             </div>
-        </motion.div>
+        </button>
     );
 });
 export function Media() {
     const mediaDescription =
         'Watch Vocal U performances on YouTube and browse recent Instagram posts from the University of Minnesota gender-inclusive a cappella group.';
-    const [videos, setVideos] = useState<any[]>([]);
+    const [videos, setVideos] = useState<YouTubeVideo[]>([]);
     const [instaPosts, setInstaPosts] = useState<InstaPost[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+    const [youtubeError, setYoutubeError] = useState(false);
+    const [instagramError, setInstagramError] = useState(false);
     const [activeVideo, setActiveVideo] = useState<string | null>(null);
     useEffect(() => {
         async function loadFeeds() {
@@ -144,28 +157,37 @@ export function Media() {
                 setLoading(true);
                 // Fetch YouTube
                 const ytPromise = fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=5&playlistId=${YOUTUBE_PLAYLIST_ID}&key=${YOUTUBE_API_KEY}`)
-                    .then(res => res.json());
+                    .then((res) => {
+                        if (!res.ok) throw new Error(`YouTube returned ${res.status}`);
+                        return res.json();
+                    });
                 // Fetch Instagram
                 const instaPromise = fetch(INSTA_FEED_URL)
-                    .then(res => res.json());
-                const [ytData, instaData] = await Promise.all([ytPromise, instaPromise]);
-                if (ytData.items) {
-                    setVideos(ytData.items);
+                    .then((res) => {
+                        if (!res.ok) throw new Error(`Instagram feed returned ${res.status}`);
+                        return res.json();
+                    });
+                const [ytResult, instaResult] = await Promise.allSettled([ytPromise, instaPromise]);
+                if (ytResult.status === 'fulfilled' && ytResult.value.items) {
+                    const items = ytResult.value.items as YouTubeVideo[];
+                    setVideos(items.filter((video) => video.snippet?.resourceId?.videoId !== 'wksl9wmTQio'));
                 }
-                if (instaData && instaData.posts) {
-                    setInstaPosts(instaData.posts.slice(0, 9));
+                if (instaResult.status === 'fulfilled' && instaResult.value?.posts) {
+                    setInstaPosts(instaResult.value.posts.slice(0, 9));
                 }
-                setError(false);
+                setYoutubeError(ytResult.status === 'rejected');
+                setInstagramError(instaResult.status === 'rejected');
             } catch (err) {
                 console.error('Feed Error:', err);
-                setError(true);
+                setYoutubeError(true);
+                setInstagramError(true);
             } finally {
                 setLoading(false);
             }
         }
         loadFeeds();
     }, []);
-    const mediaSchema = [
+    const mediaSchema: Array<Record<string, unknown>> = [
         {
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
@@ -193,7 +215,7 @@ export function Media() {
     }
 
     return (
-        <PageTransition className="pb-8 md:pb-16">
+        <PageShell className="pb-8 md:pb-16">
             <Seo
                 title="Vocal U Media"
                 description={mediaDescription}
@@ -205,11 +227,9 @@ export function Media() {
                 ]}
                 schema={mediaSchema}
             />
-            <AnimatePresence>
-                {activeVideo && <VideoModal vId={activeVideo} onClose={() => setActiveVideo(null)} />}
-            </AnimatePresence>
+            {activeVideo && <VideoModal vId={activeVideo} onClose={() => setActiveVideo(null)} />}
             {/* Header Section */}
-            <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
+            <section style={{ marginTop: '25px', marginBottom: '25px' }}>
                 <div className="bg-[#8FA8C8] py-10 md:py-16 px-4 text-center" style={{ borderRadius: '16px' }}>
                     <h1 className="text-white font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}>
                         Media
@@ -218,11 +238,11 @@ export function Media() {
                         Catch our latest performances and keep up with us on social media.
                     </p>
                 </div>
-            </motion.section>
+            </section>
             {/* Main Feeds Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-16">
                 {/* YouTube Column */}
-                <motion.section variants={childVariants}>
+                <section>
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
                         <div>
                             <div className="flex items-center gap-2 text-[#8FA8C8] mb-2" style={fontInter}>
@@ -233,10 +253,10 @@ export function Media() {
                                 YouTube
                             </h2>
                         </div>
-                        <motion.a href="https://www.youtube.com/@vocal-u/videos" target="_blank" rel="noopener noreferrer" whileHover={{ x: 4 }} whileTap={{ scale: 0.95 }} className="inline-flex items-center gap-2 border-2 border-[#8FA8C8] text-[#2B4C6F] px-5 py-2 hover:bg-[#8FA8C8] hover:text-white transition-all duration-200 cursor-pointer" style={{ ...fontYearbook, borderRadius: '12px', fontSize: '14px' }}>
+                        <a href="https://www.youtube.com/@vocal-u/videos" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-[#8FA8C8] px-5 py-2 text-[#2B4C6F] transition-colors duration-200 hover:bg-[#8FA8C8] hover:text-white" style={{ ...fontYearbook, fontSize: '14px' }}>
                             YouTube Channel
                             <Youtube className="w-4 h-4" />
-                        </motion.a>
+                        </a>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         {/* Highlighted Video */}
@@ -245,7 +265,7 @@ export function Media() {
                             Array(4).fill(0).map((_, i) => (
                                 <div key={i} className="aspect-video bg-gray-100 animate-pulse" style={{ borderRadius: '16px' }} />
                             ))
-                        ) : error ? (
+                        ) : youtubeError ? (
                             <p className="col-span-full text-[#2B4C6F]/60 text-center py-8" style={fontInter}>Unable to load additional videos.</p>
                         ) : (
                             videos.map((video) => (
@@ -253,9 +273,9 @@ export function Media() {
                             ))
                         )}
                     </div>
-                </motion.section>
+                </section>
                 {/* Instagram Column */}
-                <motion.section variants={childVariants}>
+                <section>
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
                         <div>
                             <div className="flex items-center gap-2 text-[#8FA8C8] mb-2" style={fontInter}>
@@ -266,17 +286,17 @@ export function Media() {
                                 Instagram
                             </h2>
                         </div>
-                        <motion.a href="https://www.instagram.com/vocal_u" target="_blank" rel="noopener noreferrer" whileHover={{ x: 4 }} whileTap={{ scale: 0.95 }} className="inline-flex items-center gap-2 border-2 border-[#8FA8C8] text-[#2B4C6F] px-5 py-2 hover:bg-[#8FA8C8] hover:text-white transition-all duration-200 cursor-pointer" style={{ ...fontYearbook, borderRadius: '12px', fontSize: '14px' }}>
+                        <a href="https://www.instagram.com/vocal_u" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-[#8FA8C8] px-5 py-2 text-[#2B4C6F] transition-colors duration-200 hover:bg-[#8FA8C8] hover:text-white" style={{ ...fontYearbook, fontSize: '14px' }}>
                             Visit @vocal_u
                             <Instagram className="w-4 h-4" />
-                        </motion.a>
+                        </a>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-10">
                         {loading ? (
                             Array(4).fill(0).map((_, i) => (
                                 <div key={i} className="aspect-[4/5] bg-gray-100 animate-pulse" style={{ borderRadius: '16px' }} />
                             ))
-                        ) : error ? (
+                        ) : instagramError ? (
                             <p className="col-span-full text-[#2B4C6F]/60 text-center py-8" style={fontInter}>Unable to load photos.</p>
                         ) : (
                             instaPosts.map((post) => (
@@ -284,51 +304,28 @@ export function Media() {
                             ))
                         )}
                     </div>
-                </motion.section>
+                </section>
             </div>
             {/* Reach Out Section */}
-            <motion.section variants={childVariants} className="bg-gray-50 border border-gray-100 p-8 md:p-12 text-center" style={{ borderRadius: '16px' }}>
+            <section className="bg-gray-50 border border-gray-100 p-8 md:p-12 text-center" style={{ borderRadius: '16px' }}>
                 <div className="flex justify-center mb-6">
                     <div className="bg-[#8FA8C8]/20 p-4 rounded-full">
                         <MessageCircle className="w-8 h-8 text-[#2B4C6F]" />
                     </div>
                 </div>
                 <h2 className="text-[#2B4C6F] text-3xl md:text-4xl mb-4 font-yearbook" style={fontYearbook}>
-                    Want more Media?
+                    Need a photo or performance clip?
                 </h2>
                 <p className="text-[#2B4C6F]/70 max-w-xl mx-auto mb-8" style={fontInter}>
-                    If you're looking for additional media or want to reach out about something else, we'd love to hear from you.
+                    Reach out if you need press photos, past performance footage, or information for an event.
                 </p>
-                <motion.div whileHover={{ x: 6 }} whileTap={{ scale: 0.95 }} className="inline-block">
+                <div className="inline-block">
                     <Link to="/contact" className="inline-flex items-center gap-2 bg-white text-[#2B4C6F] px-8 py-3 border border-gray-100 hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/50 transition-all duration-300 cursor-pointer" style={{ ...fontYearbook, borderRadius: '12px' }}>
                         Get in Touch
                         <ExternalLink className="w-5 h-5" />
                     </Link>
-                </motion.div>
-            </motion.section>
-            {/* Explore More Navigator */}
-            <motion.section variants={childVariants} className="mt-24 border-t border-gray-100 pt-16">
-                <h2 className="text-[#2B4C6F] mb-10 text-center font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 36px)' }}>
-                    EXPLORE MORE
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {[
-                        { name: 'About Us', path: '/about' },
-                        { name: 'Our Members', path: '/members' },
-                        { name: 'Support Us', path: '/donate' },
-                        { name: 'Join Us', path: '/auditions' }
-                    ].map((item) => (
-                        <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm hover:shadow-xl transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
-                            <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
-                                {item.name}
-                            </h3>
-                            <p className="text-[#8FA8C8] text-xs mt-2 tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                                LEARN MORE →
-                            </p>
-                        </Link>
-                    ))}
                 </div>
-            </motion.section>
-        </PageTransition>
+            </section>
+        </PageShell>
     );
 }

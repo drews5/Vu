@@ -1,7 +1,5 @@
 import { memo } from 'react';
-import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
-import { PageTransition, childVariants } from '../components/PageTransition';
+import { PageShell } from '../components/PageShell';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
@@ -27,11 +25,11 @@ const SongCard = memo(function SongCard({
     song: { title: string; artist: string; note?: string };
 }) {
     return (
-        <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.99 }} className="bg-white p-6 border border-[#8FA8C8] shadow-xl -translate-y-1 cursor-default group" style={{ borderRadius: '16px' }}>
-            <h3 className="text-[#2B4C6F] mb-2 group-hover:text-[#8FA8C8] transition-colors font-yearbook" style={{ ...fontYearbook, fontSize: '20px' }}>
+        <article className="rounded-2xl border border-[#dce5ed] bg-white p-5 md:p-6">
+            <h3 className="mb-2 text-xl text-[#2e4c6d]" style={fontYearbook}>
                 {song.title}
             </h3>
-            <p className="text-[#8FA8C8]" style={{ ...fontInter, fontSize: '15px' }}>
+            <p className="text-[15px] text-[#7895b7]" style={fontInter}>
                 {song.artist}
             </p>
             {song.note && (
@@ -39,7 +37,7 @@ const SongCard = memo(function SongCard({
                     {song.note}
                 </p>
             )}
-        </motion.div>
+        </article>
     );
 });
 export function About() {
@@ -47,7 +45,7 @@ export function About() {
         'Learn about Vocal U, the University of Minnesota gender-inclusive a cappella group, including our mission, repertoire, and Twin Cities performances.';
 
     return (
-        <PageTransition className="pb-8 md:pb-16">
+        <PageShell className="pb-8 md:pb-16">
             <Seo
                 title="About Vocal U"
                 description={aboutDescription}
@@ -69,19 +67,19 @@ export function About() {
                 }}
             />
             {/* Hero Section */}
-            <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
-                <div className="relative overflow-hidden h-[165px] md:h-[265px] bg-[#2B4C6F] flex items-center justify-center" style={{ borderRadius: '16px' }}>
-                    <h1 className="text-white px-4 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}>
+            <section style={{ marginTop: '25px', marginBottom: '25px' }}>
+                <div className="flex h-[190px] items-center justify-center overflow-hidden rounded-2xl bg-[#2e4c6d] md:h-[280px]">
+                    <h1 className="px-4 text-[clamp(2.8rem,8vw,5rem)] text-white" style={fontYearbook}>
                         About Us
                     </h1>
                 </div>
-            </motion.section>
+            </section>
             {/* Our Mission */}
-            <motion.section variants={childVariants} style={{ marginBottom: '25px' }}>
+            <section style={{ marginBottom: '25px' }}>
                 <h2 className="text-[#2B4C6F] mb-4 md:mb-6 px-4 md:px-0 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 48px)' }}>
                     Our Mission
                 </h2>
-                <div className="text-[#2B4C6F] leading-relaxed bg-white p-6 md:p-8 border border-gray-100 space-y-4" style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7', borderRadius: '16px' }}>
+                <div className="space-y-4 rounded-2xl border border-[#dce5ed] bg-white p-6 leading-relaxed text-[#2e4c6d] md:p-8" style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7' }}>
                     <p>
                         Founded in 2011, Vocal U A Cappella is dedicated to fostering musical growth within our group while sharing our passion for the arts with the community.
                     </p>
@@ -92,52 +90,28 @@ export function About() {
                         Our mission is to share the universal language of music through the unique form of a cappella,
                         reaching as many people as we can.
                     </p>
-                    <div className="italic text-[#2B4C6F]/80 border-l-4 border-[#8FA8C8] pl-4">
+                    <blockquote className="border-l-4 border-[#91a8c6] pl-4 italic text-[#2e4c6d]/80">
                         "A cappella is a way to unify a huge world of culture with the human voice. By arranging,
                         practicing and performing, we are able to pay unique homage to some of today's greatest hits
                         and yesterday's greatest memories."
-                        <div className="mt-2">- Vocal U A Cappella</div>
-                    </div>
+                        <footer className="mt-2 not-italic">Vocal U A Cappella</footer>
+                    </blockquote>
                 </div>
-            </motion.section>
+            </section>
             {/* Our Repertoire */}
-            <motion.section variants={childVariants} style={{ marginBottom: '25px' }}>
+            <section style={{ marginBottom: '25px' }}>
                 <h2 className="text-[#2B4C6F] mb-4 md:mb-6 px-4 md:px-0 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 48px)' }}>
                     Our Repertoire
                 </h2>
                 <p className="text-[#2B4C6F] mb-6 px-4 md:px-0" style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7' }}>
-                    Each semester, Vocal U chooses half of their existing songs to carry over and selects new songs
-                    by a vote.
+                    Each semester, we carry over part of our set and vote on new songs together.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: '25px' }}>
-                    {repertoire.map((song, index) => (
-                        <SongCard key={index} song={song} />
+                    {repertoire.map((song) => (
+                        <SongCard key={song.title} song={song} />
                     ))}
                 </div>
-            </motion.section>
-            {/* Explore More Navigator */}
-            <motion.section variants={childVariants} className="mt-20 border-t border-gray-100 pt-16">
-                <h2 className="text-[#2B4C6F] mb-10 text-center font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 36px)' }}>
-                    EXPLORE MORE
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {[
-                        { name: 'Our Members', path: '/members' },
-                        { name: 'Our Media', path: '/media' },
-                        { name: 'Support Us', path: '/donate' },
-                        { name: 'Join Us', path: '/auditions' }
-                    ].map((item) => (
-                        <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm hover:shadow-xl transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
-                            <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
-                                {item.name}
-                            </h3>
-                            <p className="text-[#8FA8C8] text-xs mt-2 tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                                LEARN MORE →
-                            </p>
-                        </Link>
-                    ))}
-                </div>
-            </motion.section>
-        </PageTransition>
+            </section>
+        </PageShell>
     );
 }

@@ -1,25 +1,25 @@
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Calendar, Copy, MapPin, Navigation, Share2 } from 'lucide-react';
-import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import showcasePhoto from '../assets/spring-showcase.jpg';
-import { PageTransition, childVariants } from '../components/PageTransition';
+import { PageShell } from '../components/PageShell';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 import { loadSupabase } from '../utils/loadSupabase';
 import { springShowcasePath, springShowcaseSlug, springShowcaseTitle } from '../utils/eventRoutes';
+import { getGoogleCalendarUrl, isEventUpcoming, parseEventDate } from '../utils/eventDate';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const inviteDescription =
   'Our annual Spring Showcase is back! Join us for an evening of a cappella. Friends, family, students, and the community are welcome.';
+const archiveDescription =
+  'Event details and archive for Vocal U’s 2026 Spring Showcase at the University of Minnesota.';
 const showcaseDescription = 'Our annual Spring Showcase is back! Join us for an evening of a cappella.';
 const welcomeLine = 'Friends, family, students, and the community are welcome.';
+const showcasePhoto = '/og/spring-showcase-2026.jpg';
 
 type ShowcaseEvent = {
-  slug: string;
   title: string;
   dateLabel: string;
-  rawDate: string;
   time: string;
   location: string;
   address: string;
@@ -27,30 +27,6 @@ type ShowcaseEvent = {
   imageUrl: string;
   fullDate: Date;
 };
-
-function parseEventDate(rawDate: string, displayTime: string) {
-  const [datePart] = rawDate.split('T');
-  const [year, month, day] = datePart.split('-').map(Number);
-  const match = displayTime.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)/i);
-
-  if (!match) {
-    return new Date(rawDate);
-  }
-
-  let hours = Number(match[1]);
-  const minutes = Number(match[2] || '0');
-  const meridiem = match[3].toUpperCase();
-
-  if (meridiem === 'PM' && hours < 12) {
-    hours += 12;
-  }
-
-  if (meridiem === 'AM' && hours === 12) {
-    hours = 0;
-  }
-
-  return new Date(year, month - 1, day, hours, minutes, 0, 0);
-}
 
 function formatEventDate(date: Date) {
   return new Intl.DateTimeFormat('en-US', {
@@ -63,10 +39,8 @@ function formatEventDate(date: Date) {
 
 const fallbackDate = parseEventDate('2026-05-02T19:30:00+00:00', '7:30 PM');
 const fallbackEvent: ShowcaseEvent = {
-  slug: springShowcaseSlug,
   title: springShowcaseTitle,
   dateLabel: formatEventDate(fallbackDate),
-  rawDate: '2026-05-02T19:30:00+00:00',
   time: '7:30 PM',
   location: 'Cowles Auditorium',
   address: 'Humphrey School of Public Affairs, 301 19th Ave S, Minneapolis, MN 55455',
@@ -111,7 +85,7 @@ function ActionButton({
 }) {
   const content = (
     <span
-      className="group flex min-h-[56px] items-center justify-center gap-2 rounded-[20px] border border-[#D7E1EC] bg-[linear-gradient(180deg,#FFFFFF_0%,#F8FBFF_100%)] px-3 py-3 text-center text-[#2B4C6F] shadow-[0_10px_24px_rgba(43,76,111,0.08)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#8FA8C8] hover:shadow-[0_18px_34px_rgba(43,76,111,0.14)] active:translate-y-0"
+      className="group flex min-h-[56px] items-center justify-center gap-2 rounded-xl border border-[#d7e1ec] bg-white px-3 py-3 text-center text-[#2e4c6d] transition-colors duration-200 hover:border-[#91a8c6] hover:bg-[#f4f7fa]"
       style={{ ...fontInter, fontSize: '13px', fontWeight: 700, lineHeight: '1.2' }}
     >
       <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EEF4FA] text-[#6F8BA8] transition-colors group-hover:bg-[#E1ECF7] group-hover:text-[#2B4C6F]">
@@ -147,7 +121,7 @@ export function SpringShowcase() {
       const supabase = await loadSupabase();
       const { data, error } = await supabase
         .from('events')
-        .select('*')
+        .select('date,display_time,location,address')
         .eq('slug', springShowcaseSlug)
         .single();
 
@@ -162,13 +136,11 @@ export function SpringShowcase() {
       const fullDate = parseEventDate(data.date, data.display_time || '7:30 PM');
 
       setEvent({
-        slug: data.slug,
         title: springShowcaseTitle,
         dateLabel: formatEventDate(fullDate),
-        rawDate: data.date,
         time: data.display_time || '7:30 PM',
-        location: data.location,
-        address: data.address,
+        location: data.location || fallbackEvent.location,
+        address: data.address || fallbackEvent.address,
         description: showcaseDescription,
         imageUrl: showcasePhoto,
         fullDate,
@@ -183,20 +155,20 @@ export function SpringShowcase() {
   }, []);
 
   const shareUrl = toAbsoluteUrl(springShowcasePath);
-  const shareMessage = 'Join Vocal U for their Spring Showcase 2026!';
+  const isUpcoming = isEventUpcoming(event.fullDate);
+  const pageDescription = isUpcoming ? inviteDescription : archiveDescription;
+  const shareMessage = isUpcoming
+    ? 'Join Vocal U for our Spring Showcase 2026!'
+    : 'Vocal U Spring Showcase 2026 event details.';
   const shareBody = `${shareMessage} ${event.dateLabel} at ${event.time} in ${event.location}. ${shareUrl}`;
   const calendarUrl = useMemo(() => {
-    const startDate = event.fullDate.toISOString().replace(/-|:|\.\d\d\d/g, '');
-    const endDate = new Date(event.fullDate.getTime() + 2 * 60 * 60 * 1000)
-      .toISOString()
-      .replace(/-|:|\.\d\d\d/g, '');
-
-    return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-      event.title
-    )}&dates=${startDate}/${endDate}&details=${encodeURIComponent(
-      `${shareMessage} ${event.description}`
-    )}&location=${encodeURIComponent(`${event.location} ${event.address}`)}`;
-  }, [event]);
+    return getGoogleCalendarUrl({
+      title: event.title,
+      start: event.fullDate,
+      description: `${shareMessage} ${event.description}`,
+      location: `${event.location}, ${event.address}`,
+    });
+  }, [event, shareMessage]);
   const navigationUrl = useMemo(
     () =>
       `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -209,11 +181,13 @@ export function SpringShowcase() {
     '@context': 'https://schema.org',
     '@type': 'MusicEvent',
     name: event.title,
-    description: inviteDescription,
+    description: pageDescription,
     url: shareUrl,
     image: [toAbsoluteUrl('/og/spring-showcase-2026.jpg')],
     startDate: event.fullDate.toISOString(),
-    eventStatus: 'https://schema.org/EventScheduled',
+    eventStatus: isUpcoming
+      ? 'https://schema.org/EventScheduled'
+      : 'https://schema.org/EventCompleted',
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     location: {
       '@type': 'Place',
@@ -264,10 +238,10 @@ export function SpringShowcase() {
   };
 
   return (
-    <PageTransition className="pb-20 md:pb-28">
+    <PageShell className="pb-20 md:pb-28">
       <Seo
         title={springShowcaseTitle}
-        description={inviteDescription}
+        description={pageDescription}
         path={springShowcasePath}
         image="/og/spring-showcase-2026.jpg"
         keywords={['Vocal U Spring Showcase', 'Spring Showcase 2026', 'UMN a cappella showcase']}
@@ -279,7 +253,7 @@ export function SpringShowcase() {
         schema={showcaseSchema}
       />
 
-      <motion.section variants={childVariants} className="mt-8 md:mt-10">
+      <section className="mt-8 md:mt-10">
         <div className="overflow-hidden rounded-[30px] border border-[#DDE7F0] bg-white p-5 shadow-sm md:p-7 lg:p-8">
           <Link
             to="/events"
@@ -305,7 +279,7 @@ export function SpringShowcase() {
                 className="mb-4 inline-flex w-fit items-center rounded-full border border-[#D7E1EC] bg-white px-3 py-1.5 text-[#6F8BA8] shadow-sm md:mb-5"
                 style={{ ...fontInter, fontSize: '11px', fontWeight: 700, letterSpacing: '0.18em' }}
               >
-                YOU&apos;RE INVITED!
+                {isUpcoming ? 'You’re invited' : 'Event archive'}
               </div>
 
               <div className="flex items-start justify-between gap-3">
@@ -348,7 +322,7 @@ export function SpringShowcase() {
               <div className="mt-5 grid grid-cols-3 gap-3">
                 <ActionButton
                   href={calendarUrl}
-                  title="Add to Calendar"
+                  title="Add to calendar"
                   icon={<Calendar className="h-4 w-4" />}
                 />
                 <ActionButton
@@ -358,7 +332,7 @@ export function SpringShowcase() {
                 />
                 <ActionButton
                   onClick={handleShare}
-                  title={copiedState === 'link' ? 'Link Copied' : 'Share'}
+                  title={copiedState === 'link' ? 'Link copied' : 'Share'}
                   icon={<Share2 className="h-4 w-4" />}
                 />
               </div>
@@ -366,13 +340,15 @@ export function SpringShowcase() {
               <p className="mt-6 max-w-2xl text-[#2B4C6F]/80" style={{ ...fontInter, fontSize: '15px', lineHeight: '1.65' }}>
                 {event.description}
               </p>
-              <p className="mt-2 text-[#2B4C6F]" style={{ ...fontInter, fontSize: '15px', fontWeight: 600, lineHeight: '1.5' }}>
-                {welcomeLine}
-              </p>
+              {isUpcoming && (
+                <p className="mt-2 text-[#2B4C6F]" style={{ ...fontInter, fontSize: '15px', fontWeight: 600, lineHeight: '1.5' }}>
+                  {welcomeLine}
+                </p>
+              )}
             </div>
           </div>
         </div>
-      </motion.section>
-    </PageTransition>
+      </section>
+    </PageShell>
   );
 }

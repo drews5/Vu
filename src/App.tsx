@@ -1,9 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { AnimatePresence } from 'motion/react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
-import { GlobalHaptics } from './components/GlobalHaptics';
 import { HelmetProvider } from 'react-helmet-async';
 import { springShowcasePath } from './utils/eventRoutes';
 
@@ -23,8 +21,9 @@ const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.N
 
 function PageLoader() {
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#8FA8C8]" />
+    <div className="flex min-h-[60vh] items-center justify-center" role="status" aria-live="polite">
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#91a8c6]/30 border-t-[#2e4c6d]" />
+      <span className="sr-only">Loading page</span>
     </div>
   );
 }
@@ -32,7 +31,7 @@ function PageLoader() {
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }, [pathname]);
   return null;
 }
@@ -69,28 +68,30 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-white">
       <ScrollToTop />
-      <GlobalHaptics />
       <ProductionInstrumentation />
+      <a className="skip-link" href="#main-content">Skip to main content</a>
       <div className="max-w-[1440px] mx-auto px-3 md:px-[50px]">
         {!hideHeaderFooter && <Header />}
-        <main className={location.pathname !== '/' && !hideHeaderFooter ? 'md:pt-[110px]' : ''}>
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className={location.pathname !== '/' && !hideHeaderFooter ? 'pt-[88px] md:pt-[104px]' : ''}
+        >
           <Suspense fallback={<PageLoader />}>
-            <AnimatePresence mode="wait">
-              <Routes location={location} key={location.pathname}>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/members" element={<Members />} />
-                <Route path="/media" element={<Media />} />
-                <Route path="/donate" element={<Donate />} />
-                <Route path="/events/showcase" element={<SpringShowcase />} />
-                <Route path="/events" element={<Events />} />
-                <Route path="/event/spring-showcase-2026" element={<Navigate to={springShowcasePath} replace />} />
-                <Route path="/event/:eventId" element={<EventDetail />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/auditions" element={<Auditions />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </AnimatePresence>
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/members" element={<Members />} />
+              <Route path="/media" element={<Media />} />
+              <Route path="/donate" element={<Donate />} />
+              <Route path="/events/showcase" element={<SpringShowcase />} />
+              <Route path="/events" element={<Events />} />
+              <Route path="/event/spring-showcase-2026" element={<Navigate to={springShowcasePath} replace />} />
+              <Route path="/event/:eventId" element={<EventDetail />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/auditions" element={<Auditions />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
           </Suspense>
         </main>
         {!hideHeaderFooter && <Footer />}
@@ -98,8 +99,6 @@ function AppContent() {
     </div>
   );
 }
-
-
 
 export default function App() {
   return (

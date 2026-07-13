@@ -1,5 +1,4 @@
 import { Helmet } from 'react-helmet-async';
-import defaultSocialImage from '../assets/group-photo.jpg';
 
 type BreadcrumbItem = {
   name: string;
@@ -23,7 +22,7 @@ type SeoProps = {
 export const siteConfig = {
   brandName: 'Vocal U',
   siteName: 'Vocal U A Cappella',
-  siteUrl: 'https://vocalu.org',
+  siteUrl: 'https://www.vocalu.org',
   defaultDescription:
     'Vocal U is a gender-inclusive a cappella group at the University of Minnesota performing throughout Minneapolis and the Twin Cities.',
   defaultKeywords: [
@@ -79,7 +78,7 @@ export function Seo({
       ? title
       : `${title} | ${siteConfig.siteName}`;
   const canonicalUrl = toAbsoluteUrl(path);
-  const socialImage = toAbsoluteUrl(image || defaultSocialImage);
+  const socialImage = toAbsoluteUrl(image || '/og-image.jpg');
   const robotsContent = noindex
     ? 'noindex, nofollow'
     : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';

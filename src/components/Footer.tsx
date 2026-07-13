@@ -1,95 +1,56 @@
-import { memo, useState } from 'react';
-import { motion } from 'motion/react';
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, Facebook, Youtube } from 'lucide-react';
-import footerLogo from 'figma:asset/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
-import { fontYearbook } from '../styles/fonts';
+import footerLogo from '../assets/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
+import { SocialLinks } from './SocialLinks';
 
-const fontInter = { fontFamily: 'Inter, sans-serif' };
-const TikTokIcon = memo(function TikTokIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
-    </svg>
-  );
-});
 const resourceLinks = [
-  { to: '/auditions', label: 'Auditions', external: false },
-  { to: '/media', label: 'Media', external: false },
-  { href: 'https://gopherlink.umn.edu/organization/vocalu', label: 'GopherLink', external: true },
-  { href: '#', label: 'Showcase', external: true },
+  { to: '/about', label: 'About us' },
+  { to: '/members', label: 'Members' },
+  { to: '/media', label: 'Media' },
+  { to: '/events/showcase', label: 'Showcase' },
+  { to: '/auditions', label: 'Auditions' },
+  { to: '/donate', label: 'Support us' },
 ];
-const socialIcons = [
-  { href: 'https://www.instagram.com/vocal_u', label: 'Instagram', Icon: Instagram },
-  { href: 'https://www.facebook.com/vocaluacappella/', label: 'Facebook', Icon: Facebook },
-  { href: 'https://www.youtube.com/@vocal-u', label: 'YouTube', Icon: Youtube },
-  { href: 'https://www.tiktok.com/@vocalumn', label: 'TikTok', Icon: TikTokIcon },
-];
+
 export const Footer = memo(function Footer() {
-  const [copied, setCopied] = useState(false);
-  const handleCopy = () => {
-    navigator.clipboard.writeText('vocalu@umn.edu');
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
   return (
-    <footer className="bg-[#2B4C6F] text-white py-5 md:py-12 px-6 md:px-12 shadow-sm border border-white/5 mx-3 md:mx-0" style={{ borderRadius: '16px', marginTop: '48px' }}>
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-[4fr_3fr_3fr] gap-4 md:gap-12 mb-6 md:mb-12 text-left">
-          <div className="flex flex-col items-start pr-2 md:pr-4">
-            <img src={footerLogo} alt="Vocal U" className="h-8 md:h-16 w-auto mb-2 md:mb-4" loading="lazy" />
-            <p className="text-white/70 text-[10px] md:text-sm leading-relaxed max-w-sm">
-              Gender-inclusive a cappella at the University of Minnesota, established in 2011.
-            </p>
-          </div>
-          <div className="flex flex-col items-start">
-            <h3 className="mb-1 md:mb-4" style={{ ...fontYearbook, fontSize: 'clamp(14px, 2vw, 18px)' }}>
-              RESOURCES
-            </h3>
-            <ul className="grid grid-cols-2 md:grid-cols-1 gap-x-4 gap-y-1 md:space-y-2 w-full" style={{ ...fontInter, fontSize: 'clamp(13px, 1.5vw, 14px)' }}>
-              {resourceLinks.map((link) => (
-                <li key={link.label}>
-                  {link.external ? (
-                    <a href={link.href} target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-[#8FA8C8] transition-colors duration-300">
-                      {link.label}
-                    </a>
-                  ) : (
-                    <Link to={link.to || ''} className="text-white/70 hover:text-[#8FA8C8] transition-colors duration-300">
-                      {link.label}
-                    </Link>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex flex-col items-start overflow-hidden">
-            <h3 className="mb-1 md:mb-4" style={{ ...fontYearbook, fontSize: 'clamp(14px, 2vw, 18px)' }}>
-              CONNECT
-            </h3>
-            <div className="flex flex-row md:flex-col items-center md:items-start gap-4 md:gap-0 w-full">
-              <div className="mb-1 md:mb-4 relative shrink-0">
-                <button onClick={handleCopy} className="text-white/70 hover:text-white/90 transition-colors truncate block w-full text-left cursor-pointer group relative" style={{ ...fontInter, fontSize: 'clamp(13px, 1.5vw, 14px)' }}>
-                  vocalu@umn.edu
-                  <span className={`absolute -top-8 left-0 bg-white text-[#2B4C6F] text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none font-bold ${copied ? 'opacity-100' : 'opacity-0'}`}>
-                    COPIED!
-                  </span>
-                </button>
-              </div>
-              <div className="flex gap-2">
-                {socialIcons.map((s) => (
-                  <motion.a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" whileHover={{ y: -2, scale: 1.1 }} whileTap={{ scale: 0.9 }} className="bg-white/10 p-1.5 md:p-2.5 rounded-full hover:bg-[#8FA8C8]/20 hover:text-[#8FA8C8] transition-all duration-200 cursor-pointer flex items-center justify-center aspect-square" aria-label={s.label}>
-                    <s.Icon className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
-                  </motion.a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="pt-4 md:pt-8 border-t border-white/10">
-          <p className="text-white/50 text-[10px] md:text-sm text-center" style={fontInter}>
-            &copy; {new Date().getFullYear()} Vocal U A Cappella. This group is a Registered Student Organization and is independent of the University of Minnesota.
+    <footer className="mt-12 rounded-2xl bg-[#2e4c6d] px-6 py-9 text-white md:mt-16 md:px-10 md:py-11">
+      <div className="mx-auto grid max-w-7xl gap-9 md:grid-cols-[1.5fr_1fr_1fr] md:gap-12">
+        <div>
+          <img src={footerLogo} alt="Vocal U" className="h-14 w-auto" loading="lazy" />
+          <p className="mt-4 max-w-sm text-sm leading-6 text-white/68">
+            Gender-inclusive a cappella at the University of Minnesota, singing together since 2011.
           </p>
         </div>
+
+        <div>
+          <h2 className="text-lg text-white">Explore</h2>
+          <ul className="mt-3 grid grid-cols-2 gap-x-5 gap-y-2 text-sm md:grid-cols-1">
+            {resourceLinks.map((link) => (
+              <li key={link.to}>
+                <Link to={link.to} className="text-white/68 transition-colors hover:text-white">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h2 className="text-lg text-white">Connect</h2>
+          <a href="mailto:vocalu@umn.edu" className="mt-3 inline-block text-sm text-white/68 transition-colors hover:text-white">
+            vocalu@umn.edu
+          </a>
+          <SocialLinks
+            className="mt-4 flex items-center gap-2"
+            linkClassName="rounded-full border border-white/15 p-2.5 text-white/72 transition-colors hover:border-white/30 hover:bg-white/10 hover:text-white"
+            iconClassName="h-4 w-4"
+          />
+        </div>
+      </div>
+
+      <div className="mx-auto mt-9 max-w-7xl border-t border-white/10 pt-5 text-center text-xs leading-5 text-white/48 md:text-left">
+        © {new Date().getFullYear()} Vocal U A Cappella. Vocal U is a registered student organization independent of the University of Minnesota.
       </div>
     </footer>
   );
