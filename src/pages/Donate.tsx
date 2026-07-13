@@ -1,5 +1,6 @@
 import { ArrowUpRight, Heart, Star } from 'lucide-react';
 import logoImage from '../assets/d4630c01b543cc75980f0b293230859d29654fbb.png';
+import { PageHero } from '../components/PageHero';
 import { PageShell } from '../components/PageShell';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 
@@ -29,18 +30,16 @@ export function Donate() {
         }}
       />
 
-      <section className="my-[25px]">
-        <div className="rounded-2xl bg-[#91a8c6] px-5 py-11 text-center text-white md:py-15">
-          <h1 className="text-[clamp(2.7rem,7vw,4.5rem)] leading-none">Support Vocal U</h1>
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-white/88 md:text-base">
-            We are a self-funded student organization. Donations help cover travel, showcase production, arrangements, and competition fees.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        title="Support the sound"
+        eyebrow="Student powered"
+        description="Every gift helps us travel, compete, commission arrangements, and put on the shows we are proud of."
+        stamp="Thank you!"
+      />
 
       <div className="grid items-start gap-6 lg:grid-cols-12">
         <section
-          className="overflow-hidden rounded-2xl border border-[#dce5ed] bg-white lg:col-span-7"
+          className="overflow-hidden rounded-[26px] border border-[#dce5ed] bg-white shadow-[0_14px_38px_rgba(35,61,85,0.08)] lg:col-span-7"
           aria-labelledby="givebutter-heading"
         >
           <div className="flex items-center justify-between gap-4 border-b border-[#dce5ed] bg-[#f4f7fa] px-5 py-4">
@@ -61,7 +60,7 @@ export function Donate() {
         </section>
 
         <div className="space-y-6 lg:col-span-5">
-          <section className="overflow-hidden rounded-2xl border border-[#dce5ed] bg-white">
+          <section className="overflow-hidden rounded-[26px] border border-[#dce5ed] bg-white shadow-[0_14px_38px_rgba(35,61,85,0.08)] transition-transform duration-200 hover:-translate-y-1">
             <div className="flex items-center gap-3 bg-[#008cff] px-6 py-4 text-white">
               <svg viewBox="0 0 512 512" className="h-7 w-7" aria-hidden="true">
                 <path fill="currentColor" d="M364.178 131.79c8.97 14.762 13.013 29.966 13.013 49.172 0 61.26-52.48 140.84-95.074 196.72h-97.285l-39.016-232.48 85.185-8.06 20.627 165.426c19.275-31.29 43.062-80.464 43.062-113.989 0-18.35-3.155-30.85-8.085-41.142l77.573-15.648z" />

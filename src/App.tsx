@@ -75,7 +75,7 @@ function AppContent() {
         <main
           id="main-content"
           tabIndex={-1}
-          className={location.pathname !== '/' && !hideHeaderFooter ? 'pt-[88px] md:pt-[104px]' : ''}
+          className={location.pathname !== '/' && !hideHeaderFooter ? 'pt-0 md:pt-[112px]' : ''}
         >
           <Suspense fallback={<PageLoader />}>
             <Routes location={location} key={location.pathname}>

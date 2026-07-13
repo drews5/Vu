@@ -1,6 +1,7 @@
 import { Mail, MessageCircle } from 'lucide-react';
 import { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { PageHero } from '../components/PageHero';
 import { PageShell } from '../components/PageShell';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
@@ -75,22 +76,15 @@ export function Contact() {
                     },
                 }}
             />
-            {/* Hero Section */}
-            <section style={{ marginTop: '25px', marginBottom: '25px' }}>
-                <div className="bg-[#8FA8C8] py-10 md:py-16 px-4 md:px-8 shadow-sm" style={{ borderRadius: '16px' }}>
-                    <div className="max-w-5xl mx-auto text-center">
-                        <h1 className="text-white mb-2 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}>
-                            Contact Us
-                        </h1>
-                        <p className="text-white text-sm md:text-base" style={fontInter}>
-                            Bookings, collaborations, auditions, or a quick question. Send it our way.
-                        </p>
-                    </div>
-                </div>
-            </section>
+            <PageHero
+                title="Say hello"
+                eyebrow="We would love to hear from you"
+                description="Bookings, collaborations, auditions, or a quick question. Send it our way."
+                stamp="Let’s make something"
+            />
             <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: '25px' }}>
                 {/* Contact Form */}
-                <div className="bg-white p-6 md:p-8 border border-gray-100 shadow-sm" style={{ borderRadius: '16px' }}>
+                <div className="rounded-[26px] border border-[#dce5ed] bg-white p-6 shadow-[0_14px_38px_rgba(35,61,85,0.08)] md:p-8">
                     <h2 className="text-[#2B4C6F] mb-6 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}>
                         Send us a message
                     </h2>
@@ -130,7 +124,7 @@ export function Contact() {
                 </div>
                 {/* Contact Info */}
                 <div className="space-y-6">
-                    <div className="bg-white p-6 md:p-8 border border-gray-100" style={{ borderRadius: '16px' }}>
+                    <div className="rounded-[24px] border border-[#dce5ed] bg-white p-6 shadow-[0_10px_28px_rgba(35,61,85,0.06)] transition-transform hover:-translate-y-1 md:p-8">
                         <h2 className="text-[#2B4C6F] mb-6 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}>
                             Get in Touch
                         </h2>
@@ -163,7 +157,7 @@ export function Contact() {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white p-6 md:p-8 border border-gray-100" style={{ borderRadius: '16px' }}>
+                    <div className="rounded-[24px] border border-[#dce5ed] bg-white p-6 shadow-[0_10px_28px_rgba(35,61,85,0.06)] transition-transform hover:rotate-[0.35deg] md:p-8">
                         <h2 className="text-[#2B4C6F] mb-6 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}>
                             Follow Us
                         </h2>
@@ -173,7 +167,8 @@ export function Contact() {
                             iconClassName="h-5 w-5"
                         />
                     </div>
-                    <div className="bg-[#8FA8C8] p-6 md:p-8 text-white" style={{ borderRadius: '16px' }}>
+                    <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#7895b7] to-[#91a8c6] p-6 text-white shadow-[0_14px_36px_rgba(35,61,85,0.12)] md:p-8">
+                        <div className="absolute -right-8 -top-10 select-none text-8xl text-white/[0.08]" style={{ fontFamily: 'var(--font-yearbook-stack)' }} aria-hidden="true">VU</div>
                         <h2 className="mb-4 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}>
                             Interested in joining?
                         </h2>

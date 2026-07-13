@@ -119,6 +119,31 @@ h3,
   transform: translateY(0);
 }
 
+.confetti-piece {
+  position: absolute;
+  top: -6vh;
+  width: 9px;
+  height: 17px;
+  border-radius: 3px;
+  animation: confetti-fall 1.4s cubic-bezier(0.2, 0.75, 0.35, 1) both;
+}
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -8vh, 0) rotate(0deg);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--confetti-drift, 0), 112vh, 0) rotate(760deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
