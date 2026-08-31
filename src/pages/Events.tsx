@@ -102,7 +102,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
                     <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" style={{ filter: 'saturate(1.1) contrast(1.1)' }} loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                         <span className="text-white text-sm font-black flex items-center gap-2">
-                            VIEW DETAILS <ArrowRight className="w-4 h-4" />
+                            View details <ArrowRight className="w-4 h-4" />
                         </span>
                     </div>
                     {isUpcoming && (
@@ -122,7 +122,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
                         </div>
                         <button onClick={handleCopyInfo} className="relative z-20 -mr-2 shrink-0 cursor-pointer rounded-full p-2 transition-colors duration-200 hover:bg-[#8FA8C8]/10" aria-label={`Copy details for ${event.title}`}>
                             <span aria-live="polite" className={`absolute -top-8 right-0 bg-[#2B4C6F] text-white text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none font-bold whitespace-nowrap ${copied ? 'opacity-100' : 'opacity-0'}`}>
-                                COPIED!
+                                Copied
                             </span>
                             <Copy className="w-3.5 h-3.5 text-[#8FA8C8]/60 group-hover/copy:text-[#8FA8C8]" />
                         </button>
@@ -149,7 +149,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
                                 <motion.a href={getCalendarUrl()} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}
                                     whileHover={{ y: -2 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2 rounded-full hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/40 transition-all duration-200 border border-[#8FA8C8]/20 group/btn shadow-sm cursor-pointer"
+                                    className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2 rounded-full hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/40 transition-all duration-200 border border-[#8FA8C8]/20 group/btn cursor-pointer"
                                 >
                                     <Calendar className="w-3.5 h-3.5" />
                                     <span className="text-[10px] font-normal tracking-wider" style={fontInter}>Add to Calendar</span>
@@ -157,12 +157,12 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
                                 <motion.a href={getNavigationUrl()} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}
                                     whileHover={{ x: 4 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2 rounded-full hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/40 transition-all duration-200 border border-[#8FA8C8]/20 shadow-sm cursor-pointer"
+                                    className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2 rounded-full hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/40 transition-all duration-200 border border-[#8FA8C8]/20 cursor-pointer"
                                 >
                                     <Navigation className="w-3.5 h-3.5" />
                                     <span className="text-[10px] font-normal tracking-wider" style={fontInter}>Navigate</span>
                                 </motion.a>
-                                <motion.button onClick={handleShare} whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }} className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2 rounded-full hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/40 transition-all duration-200 border border-[#8FA8C8]/20 shadow-sm cursor-pointer">
+                                <motion.button onClick={handleShare} whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }} className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white text-[#8FA8C8] px-4 py-2 rounded-full hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/40 transition-all duration-200 border border-[#8FA8C8]/20 cursor-pointer">
                                     <Share2 className="w-3.5 h-3.5" />
                                     <span className="text-[10px] font-normal tracking-wider" style={fontInter}>Share</span>
                                 </motion.button>
@@ -177,7 +177,7 @@ const PastEventCard = memo(function PastEventCard({ event }: { event: Event }) {
     const eventPath = getEventPath(event.slug);
     return (
         <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="h-full">
-            <Link to={eventPath} className="flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:border-[#8FA8C8] transition-all duration-300 h-full group">
+            <Link to={eventPath} className="flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden hover:border-[#8FA8C8] transition-all duration-300 h-full group">
                 <div className="relative aspect-video overflow-hidden">
                     <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" style={{ filter: 'saturate(1.1) contrast(1.1)' }} loading="lazy" />
                 </div>
@@ -324,13 +324,13 @@ export function Events() {
             />
             {/* Header Section */}
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
-                <div className="vu-page-hero bg-[#91a8c6] py-10 md:py-16 px-4 text-center border border-gray-100 shadow-sm relative overflow-hidden" style={{ borderRadius: '16px' }}>
+                <div className="vu-page-hero bg-[#91a8c6] py-10 md:py-16 px-4 text-center border border-gray-100 relative overflow-hidden" style={{ borderRadius: '16px' }}>
                     <div className="max-w-4xl mx-auto relative z-10">
                         <h1 className="text-white mb-2 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}>
                             Events
                         </h1>
                         <p className="text-white/90 tracking-wide text-xs md:text-base" style={fontInter}>
-                            Join us for live performances, competitions, and more.
+                            Performances, competitions, and campus events.
                         </p>
                     </div>
                 </div>
@@ -400,10 +400,10 @@ export function Events() {
                                     </motion.div>
                                 </div>
                                 {showPastArrows && (
-                                    <> <button onClick={prevPast} className="absolute left-0 top-1/2 z-20 flex h-11 w-11 -translate-x-2 -translate-y-1/2 items-center justify-center rounded-full border border-[#8FA8C8]/20 bg-white text-[#2B4C6F] shadow-sm transition-colors hover:bg-[#F8FAFC] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2B4C6F] md:-translate-x-6" aria-label="Previous past events">
+                                    <> <button onClick={prevPast} className="absolute left-0 top-1/2 z-20 flex h-11 w-11 -translate-x-2 -translate-y-1/2 items-center justify-center rounded-full border border-[#8FA8C8]/20 bg-white text-[#2B4C6F] transition-colors hover:bg-[#F8FAFC] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2B4C6F] md:-translate-x-6" aria-label="Previous past events">
                                         <ChevronLeft className="w-6 h-6" />
                                     </button>
-                                        <button onClick={nextPast} className="absolute right-0 top-1/2 z-20 flex h-11 w-11 translate-x-2 -translate-y-1/2 items-center justify-center rounded-full border border-[#8FA8C8]/20 bg-white text-[#2B4C6F] shadow-sm transition-colors hover:bg-[#F8FAFC] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2B4C6F] md:translate-x-6" aria-label="Next past events">
+                                        <button onClick={nextPast} className="absolute right-0 top-1/2 z-20 flex h-11 w-11 translate-x-2 -translate-y-1/2 items-center justify-center rounded-full border border-[#8FA8C8]/20 bg-white text-[#2B4C6F] transition-colors hover:bg-[#F8FAFC] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2B4C6F] md:translate-x-6" aria-label="Next past events">
                                             <ChevronRight className="w-6 h-6" />
                                         </button>
                                     </>

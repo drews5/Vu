@@ -1,6 +1,5 @@
 /// <reference types="vite/client" />
 import { memo, useEffect, useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { Instagram, Music } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -25,27 +24,15 @@ const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
     const nameParts = member.name.split(' ');
     const firstName = nameParts[0];
     const lastName = nameParts.slice(1).join(' ');
-    const isDaniel = member.name === 'Daniel Ho';
     return (
         <div className="vu-panel vu-member-card bg-white p-3 border border-[#8FA8C8] flex flex-col items-center text-center relative overflow-hidden w-full group" style={{ borderRadius: '12px' }}>
-            {!isDaniel && member.is_vp && (
-                <div className="absolute top-2 right-[-35px] bg-[#8FA8C8] text-white py-1 px-10 rotate-45 text-[8px] tracking-widest z-10 shadow-sm">
-                    Vice President
-                </div>
-            )}
             {/* Photo Container - Rounded Rectangle */}
-            <div className="w-full aspect-[4/5] bg-gradient-to-br from-gray-50 to-gray-100 mb-3 overflow-hidden border border-gray-100 relative scale-[1.02]" style={{ borderRadius: '8px' }}>
+            <div className="w-full aspect-[4/5] bg-gray-50 mb-3 overflow-hidden border border-gray-100 relative scale-[1.02]" style={{ borderRadius: '8px' }}>
                 {member.photo ? (
                     <img src={member.photo} alt={member.name} className="w-full h-full object-cover" style={{ imageRendering: 'auto', transform: 'translateZ(0)', backfaceVisibility: 'hidden' }} loading="lazy" />
                 ) : (
                     <div className="w-full h-full flex items-center justify-center">
                         <Music className="w-10 h-10 text-[#91a8c6]/40" />
-                    </div>
-                )}
-                {/* Daniel's Custom Banner at the bottom of the photo */}
-                {isDaniel && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-[#2B4C6F] text-white py-1 text-[8px] tracking-widest z-20 shadow-sm font-sans">
-                        Vocal Percussionist
                     </div>
                 )}
             </div>
@@ -200,7 +187,7 @@ export function Members() {
                             Our Members
                         </h1>
                         <p className="text-white/80 mt-2 max-w-2xl mx-auto text-sm md:text-base relative" style={{ fontFamily: 'Inter, sans-serif' }}>
-                            Meet the voices of Vocal U.
+                            Current Vocal U members.
                         </p>
                     </div>
                 </div>
@@ -234,29 +221,6 @@ export function Members() {
                     })}
                 </div>
             )}
-            {/* Explore More Navigator */}
-            <motion.section variants={childVariants} className="mt-24 border-t border-gray-100 pt-16">
-                <h2 className="text-[#2B4C6F] mb-10 text-center font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 36px)' }}>
-                    EXPLORE MORE
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {[
-                        { name: 'About Us', path: '/about' },
-                        { name: 'Our Media', path: '/media' },
-                        { name: 'Support Us', path: '/donate' },
-                        { name: 'Join Us', path: '/auditions' }
-                    ].map((item) => (
-                        <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
-                            <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
-                                {item.name}
-                            </h3>
-                            <p className="text-[#8FA8C8] text-xs mt-2 tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                                LEARN MORE →
-                            </p>
-                        </Link>
-                    ))}
-                </div>
-            </motion.section>
         </PageTransition>
     );
 }

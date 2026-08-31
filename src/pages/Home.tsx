@@ -354,7 +354,6 @@ export function Home() {
                     borderRadius: '16px',
                   }}
                 >
-                  <span className="absolute inset-0 bg-gradient-to-r from-white via-[#f8fbff] to-white transition-opacity duration-300 group-hover:opacity-0" />
                   <span className="relative flex items-center justify-center gap-2">
                     AUDITION SIGN UP
                     <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -374,10 +373,10 @@ export function Home() {
                 exit={{ opacity: 0 }}
                 transition={{ opacity: { delay: 2 }, default: { type: 'spring', damping: 24, stiffness: 150 } }}
                 onClick={() => document.getElementById('meet-vocal-u')?.scrollIntoView({ behavior: 'smooth' })}
-                className="absolute bottom-[72px] right-5 z-20 flex items-center gap-1.5 rounded-full border border-white/40 bg-[#2B4C6F]/90 px-3 py-2 text-white shadow-sm"
+                className="absolute bottom-[72px] right-5 z-20 flex items-center gap-1.5 rounded-full border border-white/40 bg-[#2B4C6F]/90 px-3 py-2 text-white"
                 aria-label="Scroll to meet Vocal U"
               >
-                <span className="text-[10px] font-bold uppercase tracking-[0.16em]" style={fontInter}>Explore</span>
+                <span className="text-[10px] font-semibold tracking-[0.08em]" style={fontInter}>Scroll</span>
                 <span>
                   <ChevronDown className="h-4 w-4" />
                 </span>
@@ -391,7 +390,7 @@ export function Home() {
       <motion.section
         id="meet-vocal-u"
         variants={childVariants}
-        className="vu-panel bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center shadow-sm transition-shadow duration-300 relative z-10"
+        className="vu-panel bg-white border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center relative z-10"
         style={{
           gap: '25px',
           marginBottom: '25px',
@@ -419,14 +418,12 @@ export function Home() {
             style={{ ...fontInter, fontSize: '17px', fontWeight: '400', lineHeight: '1.7' }}
           >
             <p>
-              Vocal U is a gender-inclusive a cappella group at the University of Minnesota, established in
-              2011. We are a registered student organization dedicated to spreading our music across the
-              Twin Cities and beyond, and having a great time while doing it.
+              Vocal U is a gender-inclusive a cappella group at the University of Minnesota. Since 2011,
+              we have performed on campus, around the Twin Cities, and at collegiate competitions.
             </p>
             <p>
-              We come from all different majors and backgrounds, but we're all a part of VU because we love
-              music and the arts. More than an a cappella group, Vocal U is a family. We support and push
-              each other to be the best performers we can be, which translates to the stage.
+              Our members come from across the university. We arrange music, rehearse together, and put on
+              performances throughout the school year.
             </p>
           </div>
 
@@ -466,7 +463,7 @@ export function Home() {
         style={{
           marginBottom: '25px',
           borderRadius: '16px',
-          background: 'linear-gradient(135deg, #91a8c6 0%, #7A97B7 100%)',
+          background: '#8FA8C8',
           overflow: 'hidden',
           zIndex: 1,
         }}
@@ -484,7 +481,7 @@ export function Home() {
               Events
             </h2>
             <p className="text-white/90 font-normal tracking-wide text-sm md:text-base" style={fontInter}>
-              Join us for live performances, competitions, and more.
+              Upcoming performances and appearances.
             </p>
           </div>
 
@@ -536,14 +533,14 @@ export function Home() {
               <>
                 <button
                   onClick={prevSlide}
-                  className="absolute left-2 md:-left-6 top-1/2 -translate-y-1/2 bg-white text-[#2B4C6F] flex h-11 w-11 items-center justify-center rounded-full border border-[#8FA8C8]/20 shadow-sm z-20 hover:bg-[#F8FAFC] hover:scale-105 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="absolute left-2 md:-left-6 top-1/2 -translate-y-1/2 bg-white text-[#2B4C6F] flex h-11 w-11 items-center justify-center rounded-full border border-[#8FA8C8]/20 z-20 hover:bg-[#F8FAFC] hover:scale-105 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   aria-label="Previous event"
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </button>
                 <button
                   onClick={nextSlide}
-                  className="absolute right-2 md:-right-6 top-1/2 -translate-y-1/2 bg-white text-[#2B4C6F] flex h-11 w-11 items-center justify-center rounded-full border border-[#8FA8C8]/20 shadow-sm z-20 hover:bg-[#F8FAFC] hover:scale-105 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="absolute right-2 md:-right-6 top-1/2 -translate-y-1/2 bg-white text-[#2B4C6F] flex h-11 w-11 items-center justify-center rounded-full border border-[#8FA8C8]/20 z-20 hover:bg-[#F8FAFC] hover:scale-105 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   aria-label="Next event"
                 >
                   <ChevronRight className="w-6 h-6" />
@@ -576,7 +573,7 @@ export function Home() {
             >
               <Link
                 to="/events"
-                className="inline-flex items-center gap-3 bg-white text-[#2B4C6F] px-10 py-4 border border-white hover:bg-[#2B4C6F] hover:text-white hover:border-[#2B4C6F] transition-all duration-300 shadow-sm group cursor-pointer font-yearbook"
+                className="inline-flex items-center gap-3 bg-white text-[#2B4C6F] px-10 py-4 border border-white hover:bg-[#2B4C6F] hover:text-white hover:border-[#2B4C6F] transition-all duration-300 group cursor-pointer font-yearbook"
                 style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}
               >
                 <span>View All Events</span>

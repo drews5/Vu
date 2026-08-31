@@ -7,7 +7,6 @@ import {
   Calendar,
   X,
   AlertCircle,
-  ArrowRight,
   Check,
   Trash2,
   Music
@@ -351,7 +350,7 @@ export function Auditions() {
         className="vu-page-hero relative mb-2 flex items-center justify-center overflow-hidden border border-white/30 px-3 py-2.5 md:mb-6 md:px-6 md:py-8"
         style={{
           borderRadius: '18px',
-          background: 'linear-gradient(105deg, #2B4C6F 0%, #8FA8C8 24%, #B6CBE3 48%, #7592B3 72%, #2B4C6F 100%)',
+          background: '#8FA8C8',
         }}
       >
         <div className="relative z-10 flex w-full items-center justify-center gap-3 px-1 text-center md:gap-10">
@@ -375,7 +374,7 @@ export function Auditions() {
       </motion.section>
       <div className="px-0">
         {/* Sign Up Section */}
-        <motion.section variants={childVariants} className="mb-4 overflow-hidden rounded-xl border border-[#DDE7F0] bg-white shadow-sm md:mb-[25px] md:rounded-2xl">
+        <motion.section variants={childVariants} className="mb-4 overflow-hidden rounded-xl border border-[#DDE7F0] bg-white md:mb-[25px] md:rounded-2xl">
           <div className="flex flex-wrap items-baseline justify-between gap-1 border-b border-[#DDE7F0] px-3 py-2 md:px-4">
             <h2 className="text-[#2B4C6F]" style={{ ...fontYearbook, fontSize: 'clamp(15px, 3vw, 20px)' }}>
               AUDITION SIGN-UP SHEET
@@ -525,55 +524,39 @@ export function Auditions() {
             </aside>
           </div>
         </motion.section>
-        <motion.section variants={childVariants} className="mt-10">
-          <h2 className="mb-3 px-1 text-[22px] text-[#2B4C6F] font-yearbook" style={fontYearbook}>More from Vocal U</h2>
-          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[14px] border border-[#DDE7F0] bg-[#DDE7F0] lg:grid-cols-4">
-            {[
-              { name: 'About Us', path: '/about' },
-              { name: 'Our Members', path: '/members' },
-              { name: 'Our Media', path: '/media' },
-              { name: 'Support Us', path: '/donate' }
-            ].map((item) => (
-              <Link key={item.path} to={item.path} className="group flex min-h-14 items-center justify-between gap-3 bg-white px-4 py-3 text-[#2B4C6F] transition-colors hover:bg-[#F5F8FC] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#8FA8C8]">
-                <span className="text-[15px] font-yearbook" style={fontYearbook}>{item.name}</span>
-                <ArrowRight className="size-4 shrink-0 text-[#8FA8C8] transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-              </Link>
-            ))}
-          </div>
-        </motion.section>
       </div>
       {/* Delete Warning Modal */}
       <AnimatePresence>
         {showDeleteWarning && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowDeleteWarning(null)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-md"
+              className="absolute inset-0 bg-black/55"
             />
-            <motion.div initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }} className="relative w-full max-w-sm bg-white shadow-2xl rounded-[32px] p-8 border border-red-500/10 flex flex-col gap-6 text-center">
-              <div className="mx-auto bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mb-2">
-                <AlertCircle className="w-8 h-8 text-red-500" />
+            <motion.div initial={{ opacity: 0, scale: 0.96, y: 12 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96, y: 12 }} className="relative flex w-full max-w-sm flex-col gap-5 rounded-2xl border border-gray-200 bg-white p-6 text-center">
+              <div className="mx-auto flex size-11 items-center justify-center rounded-full bg-red-50">
+                <AlertCircle className="size-5 text-red-500" />
               </div>
-              <div className="space-y-3">
-                <h3 className="text-[#2B4C6F] text-2xl font-yearbook" style={fontYearbook}>Wait!</h3>
+              <div className="space-y-2">
+                <h3 className="text-2xl text-[#2B4C6F] font-yearbook" style={fontYearbook}>Cancel this audition?</h3>
                 <p className="text-gray-600 text-[14px] leading-relaxed" style={fontInter}>
-                  We'd still love to hear you sing, <span className="font-bold">{showDeleteWarning.name}</span>!
+                  This will remove <span className="font-semibold">{showDeleteWarning.name}</span> from the signup sheet.
                 </p>
                 <p className="text-gray-500 text-[12px] leading-relaxed" style={fontInter}>
-                  If this time no longer works, we strongly suggest picking a new slot instead of cancelling. Remember, this spot could have been taken by someone else!
+                  If you need a different time, cancel this slot and choose another available one.
                 </p>
               </div>
-              <div className="flex flex-col gap-3 mt-4">
+              <div className="mt-2 flex flex-col gap-2">
                 <button onClick={() => setShowDeleteWarning(null)}
-                  className="w-full py-4 bg-[#8FA8C8] text-white rounded-2xl hover:bg-[#7A97B7] shadow-sm transition-all active:scale-[0.98] font-bold tracking-[0.1em] text-sm flex items-center justify-center gap-2"
+                  className="flex w-full items-center justify-center rounded-xl bg-[#8FA8C8] py-3 text-sm font-semibold text-white transition-colors hover:bg-[#7A97B7] active:scale-[0.98]"
                   style={fontInter}
                 >
-                  KEEP MY SPOT
+                  Keep my spot
                 </button>
-                <button onClick={confirmDeletion} disabled={isSubmitting} className="w-full py-3 bg-transparent text-gray-400 hover:text-red-500 rounded-xl transition-colors text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-2" style={fontInter}>
+                <button onClick={confirmDeletion} disabled={isSubmitting} className="flex w-full items-center justify-center gap-2 rounded-xl bg-transparent py-3 text-sm font-medium text-gray-400 transition-colors hover:text-red-500" style={fontInter}>
                   {isSubmitting ? (
                     <div className="w-4 h-4 border-2 border-current border-t-transparent animate-spin rounded-full" />
                   ) : (
-                    "Proceed to Cancel"
+                    "Cancel audition"
                   )}
                 </button>
               </div>

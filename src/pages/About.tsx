@@ -1,6 +1,5 @@
 import { memo } from 'react';
 import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
@@ -81,23 +80,13 @@ export function About() {
                 <h2 className="text-[#2B4C6F] mb-4 md:mb-6 px-4 md:px-0 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 48px)' }}>
                     Our Mission
                 </h2>
-                <div className="text-[#2B4C6F] leading-relaxed bg-white p-6 md:p-8 border border-gray-100 space-y-4" style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7', borderRadius: '16px' }}>
+                <div className="max-w-4xl space-y-4 px-4 text-[#2B4C6F] leading-relaxed md:px-0" style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7' }}>
                     <p>
-                        Founded in 2011, Vocal U A Cappella is dedicated to fostering musical growth within our group while sharing our passion for the arts with the community.
+                        Vocal U is a gender-inclusive student a cappella group at the University of Minnesota. We perform pop arrangements on campus and around the Twin Cities.
                     </p>
                     <p>
-                        We embrace our diversity of voices and backgrounds to perform at charity events that resonate with our
-                        members, seek to build the University community at U of M events, and spread our harmonies in
-                        the surrounding communities, especially the University District and greater Twin Cities area.
-                        Our mission is to share the universal language of music through the unique form of a cappella,
-                        reaching as many people as we can.
+                        We work to improve as musicians, make the group welcoming, and support university and community events through performance.
                     </p>
-                    <div className="italic text-[#2B4C6F]/80 border-l-4 border-[#8FA8C8] pl-4">
-                        "A cappella is a way to unify a huge world of culture with the human voice. By arranging,
-                        practicing and performing, we are able to pay unique homage to some of today's greatest hits
-                        and yesterday's greatest memories."
-                        <div className="mt-2">- Vocal U A Cappella</div>
-                    </div>
                 </div>
             </motion.section>
             {/* Our Repertoire */}
@@ -106,35 +95,11 @@ export function About() {
                     Our Repertoire
                 </h2>
                 <p className="text-[#2B4C6F] mb-6 px-4 md:px-0" style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7' }}>
-                    Each semester, Vocal U chooses half of their existing songs to carry over and selects new songs
-                    by a vote.
+                    Each semester, the group keeps some current arrangements and votes on new songs to add.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: '25px' }}>
                     {repertoire.map((song, index) => (
                         <SongCard key={index} song={song} />
-                    ))}
-                </div>
-            </motion.section>
-            {/* Explore More Navigator */}
-            <motion.section variants={childVariants} className="mt-20 border-t border-gray-100 pt-16">
-                <h2 className="text-[#2B4C6F] mb-10 text-center font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 36px)' }}>
-                    EXPLORE MORE
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {[
-                        { name: 'Our Members', path: '/members' },
-                        { name: 'Our Media', path: '/media' },
-                        { name: 'Support Us', path: '/donate' },
-                        { name: 'Join Us', path: '/auditions' }
-                    ].map((item) => (
-                        <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
-                            <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
-                                {item.name}
-                            </h3>
-                            <p className="text-[#8FA8C8] text-xs mt-2 tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                                LEARN MORE →
-                            </p>
-                        </Link>
                     ))}
                 </div>
             </motion.section>

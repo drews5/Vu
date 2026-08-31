@@ -331,7 +331,7 @@ export function SpringShowcase() {
 
         {/* Main Invite Card */}
         <motion.div
-          className="bg-white border border-gray-100 shadow-sm overflow-hidden relative flex flex-col md:flex-row"
+          className="bg-white border border-gray-100 overflow-hidden relative flex flex-col md:flex-row"
           style={{ borderRadius: '16px' }}
           initial={{ y: 15, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -354,10 +354,10 @@ export function SpringShowcase() {
             {/* "You're Invited" floating badge */}
             <div className="absolute top-4 sm:top-6 left-4 sm:left-6 md:top-8 md:left-8">
               <span
-                className="bg-white/95 backdrop-blur-sm text-[#2B4C6F] px-4 py-2 text-[11px] tracking-widest font-yearbook shadow-sm border border-white"
+                className="bg-white/95 text-[#2B4C6F] px-4 py-2 text-[12px] font-yearbook border border-white"
                 style={{ borderRadius: '12px', ...fontInter, fontWeight: 700 }}
               >
-                YOU&apos;RE INVITED!
+                You&apos;re invited
               </span>
             </div>
           </div>
@@ -395,7 +395,7 @@ export function SpringShowcase() {
                  </div>
                  <div className="flex flex-col items-start text-left">
                    <div className="font-bold text-[#2B4C6F] text-[15px] sm:text-[17px] leading-none mb-1 md:mb-1.5">{event.dateLabel}</div>
-                   <div className="font-medium text-[#2B4C6F]/70 text-[14px] sm:text-[15px] leading-none uppercase tracking-wider">{event.time}</div>
+                   <div className="font-medium text-[#2B4C6F]/70 text-[14px] sm:text-[15px] leading-none">{event.time}</div>
                  </div>
               </div>
 

@@ -90,7 +90,7 @@ const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen 
     const dateStr = typeof item === 'string' ? 'Mar 1, 2025' : new Date(item.snippet.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     return (
         <motion.button type="button" whileHover={{ y: -3 }} whileTap={{ scale: 0.99 }} onClick={() => onOpen(vId)}
-            className={`group flex w-full flex-col overflow-hidden border bg-white text-left shadow-sm transition-[box-shadow,border-color] duration-200 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#2B4C6F] ${isHighlighted ? 'border-[#8FA8C8] ring-4 ring-[#8FA8C8]/20' : 'border-gray-100'
+            className={`group flex w-full flex-col overflow-hidden border bg-white text-left transition-[transform,border-color] duration-200 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#2B4C6F] ${isHighlighted ? 'border-[#8FA8C8]' : 'border-gray-100'
                 }`}
             style={{ borderRadius: '16px' }}
         >
@@ -216,7 +216,7 @@ export function Media() {
                         Media
                     </h1>
                     <p className="text-white/90 mt-2 max-w-2xl mx-auto text-sm md:text-base" style={{ fontFamily: 'Inter, sans-serif' }}>
-                        Catch our latest performances and keep up with us on social media.
+                        Videos and recent social posts.
                     </p>
                 </div>
             </motion.section>
@@ -226,13 +226,10 @@ export function Media() {
                 <motion.section variants={childVariants}>
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
                         <div>
-                            <div className="flex items-center gap-2 text-[#8FA8C8] mb-2" style={fontInter}>
+                            <div className="flex items-center gap-2 text-[#2B4C6F]" style={fontInter}>
                                 <Youtube className="w-5 h-5" />
-                                <span className="tracking-widest text-sm font-bold">Latest Performances</span>
+                                <h2 className="text-4xl md:text-5xl font-yearbook" style={fontYearbook}>YouTube</h2>
                             </div>
-                            <h2 className="text-[#2B4C6F] text-4xl md:text-5xl font-yearbook" style={fontYearbook}>
-                                YouTube
-                            </h2>
                         </div>
                         <motion.a href="https://www.youtube.com/@vocal-u/videos" target="_blank" rel="noopener noreferrer" whileHover={{ x: 4 }} whileTap={{ scale: 0.95 }} className="inline-flex items-center gap-2 border-2 border-[#8FA8C8] text-[#2B4C6F] px-5 py-2 hover:bg-[#8FA8C8] hover:text-white transition-all duration-200 cursor-pointer" style={{ ...fontYearbook, borderRadius: '12px', fontSize: '14px' }}>
                             YouTube Channel
@@ -259,13 +256,10 @@ export function Media() {
                 <motion.section variants={childVariants}>
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
                         <div>
-                            <div className="flex items-center gap-2 text-[#8FA8C8] mb-2" style={fontInter}>
+                            <div className="flex items-center gap-2 text-[#2B4C6F]" style={fontInter}>
                                 <Instagram className="w-5 h-5" />
-                                <span className="tracking-widest text-sm font-bold">Recent Photos</span>
+                                <h2 className="text-4xl md:text-5xl font-yearbook" style={fontYearbook}>Instagram</h2>
                             </div>
-                            <h2 className="text-[#2B4C6F] text-4xl md:text-5xl font-yearbook" style={fontYearbook}>
-                                Instagram
-                            </h2>
                         </div>
                         <motion.a href="https://www.instagram.com/vocal_u" target="_blank" rel="noopener noreferrer" whileHover={{ x: 4 }} whileTap={{ scale: 0.95 }} className="inline-flex items-center gap-2 border-2 border-[#8FA8C8] text-[#2B4C6F] px-5 py-2 hover:bg-[#8FA8C8] hover:text-white transition-all duration-200 cursor-pointer" style={{ ...fontYearbook, borderRadius: '12px', fontSize: '14px' }}>
                             Visit @vocal_u
@@ -295,40 +289,17 @@ export function Media() {
                     </div>
                 </div>
                 <h2 className="text-[#2B4C6F] text-3xl md:text-4xl mb-4 font-yearbook" style={fontYearbook}>
-                    Want more Media?
+                    Looking for a specific photo or video?
                 </h2>
                 <p className="text-[#2B4C6F]/70 max-w-xl mx-auto mb-8" style={fontInter}>
-                    If you're looking for additional media or want to reach out about something else, we'd love to hear from you.
+                    Contact us and we will help if we have it available.
                 </p>
                 <motion.div whileHover={{ x: 6 }} whileTap={{ scale: 0.95 }} className="inline-block">
                     <Link to="/contact" className="inline-flex items-center gap-2 bg-white text-[#2B4C6F] px-8 py-3 border border-gray-100 hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/50 transition-all duration-300 cursor-pointer" style={{ ...fontYearbook, borderRadius: '12px' }}>
-                        Get in Touch
+                        Contact us
                         <ExternalLink className="w-5 h-5" />
                     </Link>
                 </motion.div>
-            </motion.section>
-            {/* Explore More Navigator */}
-            <motion.section variants={childVariants} className="mt-24 border-t border-gray-100 pt-16">
-                <h2 className="text-[#2B4C6F] mb-10 text-center font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 36px)' }}>
-                    EXPLORE MORE
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {[
-                        { name: 'About Us', path: '/about' },
-                        { name: 'Our Members', path: '/members' },
-                        { name: 'Support Us', path: '/donate' },
-                        { name: 'Join Us', path: '/auditions' }
-                    ].map((item) => (
-                        <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
-                            <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
-                                {item.name}
-                            </h3>
-                            <p className="text-[#8FA8C8] text-xs mt-2 tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                                LEARN MORE →
-                            </p>
-                        </Link>
-                    ))}
-                </div>
             </motion.section>
         </PageTransition>
     );

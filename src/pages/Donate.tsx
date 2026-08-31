@@ -1,8 +1,6 @@
-import { memo } from 'react';
 import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
-import { Heart, Star, Check } from 'lucide-react';
+import { Heart, Star } from 'lucide-react';
 import logoImage from '../assets/d4630c01b543cc75980f0b293230859d29654fbb.png';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
@@ -46,7 +44,7 @@ export function Donate() {
             />
             {/* Hero Section */}
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
-                <div className="vu-page-hero bg-[#91a8c6] py-8 md:py-12 px-4 text-center text-white border border-gray-100 shadow-sm" style={{ borderRadius: '16px' }}>
+                <div className="vu-page-hero bg-[#91a8c6] py-8 md:py-12 px-4 text-center text-white border border-gray-100" style={{ borderRadius: '16px' }}>
                     <h1 className="font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 64px)', letterSpacing: '0.05em' }}>
                         Support Us
                     </h1>
@@ -59,44 +57,35 @@ export function Donate() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                 {/* Venmo Section (TOP on Mobile, RIGHT on Desktop) */}
                 <motion.div variants={childVariants} className="order-1 lg:order-2 lg:col-span-5 space-y-6">
-                    {/* Venmo Card - Authentic Venmo Styling */}
-                    <div className="vu-panel bg-white p-0 border border-gray-100 shadow-sm overflow-hidden" style={{ borderRadius: '16px' }}>
-                        {/* Venmo Header */}
-                        <div className="bg-[#008CFF] py-4 px-6 flex justify-between items-center">
+                    {/* Venmo */}
+                    <div className="vu-panel bg-white p-0 border border-gray-100 overflow-hidden" style={{ borderRadius: '16px' }}>
+                        <div className="flex items-center gap-3 border-b border-gray-100 bg-[#008CFF] px-6 py-4 text-white">
                             <svg viewBox="0 0 512 512" className="w-8 h-8">
                                 <path fill="#ffffff" d="M364.178 131.79c8.97 14.762 13.013 29.966 13.013 49.172 0 61.26-52.48 140.84-95.074 196.72h-97.285l-39.016-232.48 85.185-8.06 20.627 165.426c19.275-31.29 43.062-80.464 43.062-113.989 0-18.35-3.155-30.85-8.085-41.142l77.573-15.648z" />
                             </svg>
-                            <div className="bg-white/20 px-3 py-1 rounded-full text-white text-[10px] font-bold tracking-widest" style={fontInter}>Profile</div>
+                            <h2 className="text-xl font-semibold" style={fontInter}>Donate with Venmo</h2>
                         </div>
-                        {/* Profile Content */}
-                        <div className="p-8 flex flex-col items-center">
-                            <div className="relative mb-6">
-                                <div className="w-32 h-32 flex items-center justify-center bg-[#8FA8C8] border-4 border-white shadow-sm" style={{ borderRadius: '50%' }}>
-                                    <img src={logoImage} alt="Vocal U" className="w-20 h-auto" />
+                        <div className="p-6 md:p-8">
+                            <div className="mb-6 flex items-center gap-4">
+                                <div className="flex size-16 shrink-0 items-center justify-center rounded-full bg-[#8FA8C8]">
+                                    <img src={logoImage} alt="" className="w-11 h-auto" />
                                 </div>
-                                <div className="absolute bottom-1 right-1 bg-[#008CFF] p-2 rounded-full border-2 border-white shadow-sm">
-                                    <Check className="w-4 h-4 text-white" />
+                                <div>
+                                    <p className="font-semibold text-[#2B4C6F]" style={fontInter}>Vocal U A Cappella</p>
+                                    <p className="text-[#008CFF]" style={fontInter}>@vocalu</p>
                                 </div>
                             </div>
-                            <h2 className="text-2xl font-bold text-[#3D4248] mb-0.5" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}>Vocal U A Cappella</h2>
-                            <p className="text-[#008CFF] font-bold text-lg mb-6" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}>@vocalu</p>
-                            <div className="w-full space-y-3">
-                                <motion.a href="https://venmo.com/u/vocalu" target="_blank" rel="noopener noreferrer" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="block w-full bg-[#008CFF] text-white py-4 rounded-full font-bold text-lg shadow-sm hover:bg-[#0074D9] transition-all duration-300 text-center cursor-pointer font-yearbook" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}>
-                                    Pay or Request
-                                </motion.a>
-                            </div>
-                        </div>
-                        {/* Venmo Footer Tip */}
-                        <div className="bg-gray-50 py-4 px-8 border-t border-gray-100">
-                            <p className="text-[11px] text-gray-400 leading-tight text-center" style={fontInter}>
-                                Payments are secure and processed directly by Venmo.
-                                Vocal U is a self-funded student organization.
+                            <p className="mb-5 text-sm leading-6 text-[#2B4C6F]/65" style={fontInter}>
+                                Venmo opens in a new tab. Please confirm the username before sending your donation.
                             </p>
+                            <motion.a href="https://venmo.com/u/vocalu" target="_blank" rel="noopener noreferrer" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="block w-full rounded-xl bg-[#008CFF] py-3.5 text-center text-base font-semibold text-white transition-colors hover:bg-[#0074D9]" style={fontInter}>
+                                Open Venmo
+                            </motion.a>
                         </div>
                     </div>
                 </motion.div>
                 {/* Givebutter Embed Container (Left on Desktop, MIDDLE on Mobile) */}
-                <motion.div variants={childVariants} className="order-2 lg:order-1 lg:col-span-7 lg:row-span-2 bg-white shadow-sm overflow-hidden relative flex flex-col border border-gray-100" style={{ borderRadius: '16px', minHeight: '800px', width: '100%' }}>
+                <motion.div variants={childVariants} className="order-2 lg:order-1 lg:col-span-7 lg:row-span-2 bg-white overflow-hidden relative flex flex-col border border-gray-100" style={{ borderRadius: '16px', minHeight: '800px', width: '100%' }}>
                     <div className="p-4 bg-gray-50 border-b flex justify-between items-center">
                         <span className="text-[#2B4C6F] font-bold text-sm" style={fontInter}>Givebutter Secure Donation</span>
                         <a href="https://givebutter.com/vu" target="_blank" rel="noopener noreferrer" className="text-[#8FA8C8] text-xs hover:text-[#2B4C6F] hover:underline transition-all duration-300 font-bold underline-offset-2" style={fontInter}>
@@ -109,7 +98,7 @@ export function Donate() {
                 </motion.div>
                 {/* Other Ways to Help Section (BOTTOM on Mobile, RIGHT on Desktop) */}
                 <motion.div variants={childVariants} className="order-3 lg:order-2 lg:col-span-5 space-y-6">
-                    <div className="bg-white p-8 border border-gray-100 shadow-sm" style={{ borderRadius: '16px' }}>
+                    <div className="bg-white p-8 border border-gray-100" style={{ borderRadius: '16px' }}>
                         <h2 className="text-[#2B4C6F] text-2xl mb-8 border-b pb-4" style={fontYearbook}>
                             Other Ways to Help
                         </h2>
@@ -119,9 +108,9 @@ export function Donate() {
                                     <Heart className="w-6 h-6 text-[#8FA8C8]" />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-[#2B4C6F] text-lg mb-1">Spread the Word</h3>
+                                    <h3 className="font-bold text-[#2B4C6F] text-lg mb-1">Share our events</h3>
                                     <p className="text-[#2B4C6F]/70 text-sm leading-relaxed">
-                                        Follow us on Instagram and TikTok, share our posts, and tell your friends about our upcoming shows!
+                                        Follow Vocal U, share an event, or invite a friend to a show.
                                     </p>
                                 </div>
                             </div>
@@ -130,9 +119,9 @@ export function Donate() {
                                     <Star className="w-6 h-6 text-[#8FA8C8]" />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-[#2B4C6F] text-lg mb-1">Book Us for a Gig</h3>
+                                    <h3 className="font-bold text-[#2B4C6F] text-lg mb-1">Book a performance</h3>
                                     <p className="text-[#2B4C6F]/70 text-sm leading-relaxed">
-                                        Have us perform at your next event! We love collaborating with other groups and performing for the community.
+                                        Contact us about university events, private events, and collaborations.
                                     </p>
                                 </div>
                             </div>
@@ -140,29 +129,6 @@ export function Donate() {
                     </div>
                 </motion.div>
             </div>
-            {/* Explore More Navigator */}
-            <motion.section variants={childVariants} className="mt-24 border-t border-gray-100 pt-16">
-                <h2 className="text-[#2B4C6F] mb-10 text-center font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 36px)' }}>
-                    EXPLORE MORE
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {[
-                        { name: 'About Us', path: '/about' },
-                        { name: 'Our Members', path: '/members' },
-                        { name: 'Our Media', path: '/media' },
-                        { name: 'Join Us', path: '/auditions' }
-                    ].map((item) => (
-                        <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
-                            <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
-                                {item.name}
-                            </h3>
-                            <p className="text-[#8FA8C8] text-xs mt-2 tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                                LEARN MORE →
-                            </p>
-                        </Link>
-                    ))}
-                </div>
-            </motion.section>
         </PageTransition>
     );
 }

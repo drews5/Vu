@@ -93,7 +93,7 @@ export function NotFound() {
                 >
                     <Link
                         to="/"
-                        className="w-full sm:w-auto bg-[#2B4C6F] text-white px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-[#1a3249] transition-all shadow-sm hover:-translate-y-1 active:scale-95 group"
+                        className="w-full sm:w-auto bg-[#2B4C6F] text-white px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-[#1a3249] transition-all hover:-translate-y-1 active:scale-95 group"
                         style={fontInter}
                     >
                         <Home className="w-5 h-5" />
@@ -102,7 +102,7 @@ export function NotFound() {
 
                     <Link
                         to="/events"
-                        className="w-full sm:w-auto bg-white text-[#2B4C6F] px-8 py-4 rounded-2xl font-bold border-2 border-gray-100 flex items-center justify-center gap-2 hover:border-[#8FA8C8] hover:text-[#8FA8C8] transition-all shadow-sm hover:shadow-md hover:-translate-y-1 active:scale-95 group"
+                        className="w-full sm:w-auto bg-white text-[#2B4C6F] px-8 py-4 rounded-2xl font-bold border-2 border-gray-100 flex items-center justify-center gap-2 hover:border-[#8FA8C8] hover:text-[#8FA8C8] transition-all hover:-translate-y-1 active:scale-95 group"
                         style={fontInter}
                     >
                         <Search className="w-5 h-5" />
