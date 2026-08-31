@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Host: www.vocalu.org
+Sitemap: https://www.vocalu.org/sitemap.xml
