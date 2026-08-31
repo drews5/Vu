@@ -32,9 +32,10 @@ interface AuditionSlot {
 }
 export function Auditions() {
   const auditionsDescription =
-    'Audition for Vocal U at the University of Minnesota on September 17 or 18, 2026. Choose a live signup time and review preparation and callback details.';
+    'Sign up for a Vocal U audition at the University of Minnesota on September 17 or 18, 2026.';
   const [slots, setSlots] = useState<AuditionSlot[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [editingId, setEditingSlotId] = useState<string | null>(null);
   const [confirmingId, setConfirmingId] = useState<{ id: string, mode: 'save' | 'delete' } | null>(null);
   const [tempNames, setTempNames] = useState<Record<string, string>>({});
@@ -43,46 +44,62 @@ export function Auditions() {
   const [showDeleteWarning, setShowDeleteWarning] = useState<{ id: string, name: string } | null>(null);
 
   const fetchSlots = useCallback(async () => {
-    const supabase = await loadSupabase();
-    const { data, error } = await supabase
-      .from('auditions')
-      .select('*')
-      .order('time', { ascending: true });
-    if (error) {
-      console.error('Error fetching audition slots:', error);
-    } else {
+    try {
+      const supabase = await loadSupabase();
+      const { data, error } = await Promise.race([
+        supabase
+          .from('auditions')
+          .select('*')
+          .order('time', { ascending: true }),
+        new Promise<never>((_, reject) => {
+          window.setTimeout(() => reject(new Error('Audition signup request timed out.')), 4000);
+        }),
+      ]);
+      if (error) throw error;
+
       setSlots(data.map((r: any) => ({
-        id: r.id,
-        day: r.day,
-        time: r.time,
-        status: r.status,
-        name: r.name,
-        email: r.email,
-      })));
+          id: r.id,
+          day: r.day,
+          time: r.time,
+          status: r.status,
+          name: r.name,
+          email: r.email,
+        })));
+      setLoadError(false);
+    } catch (error) {
+      console.error('Error fetching audition slots:', error);
+      setLoadError(true);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
   useEffect(() => {
     let isActive = true;
     let removeRealtimeChannel: (() => void) | undefined;
 
     const initializeSlots = async () => {
-      const supabase = await loadSupabase();
-      if (!isActive) {
-        return;
+      try {
+        const supabase = await loadSupabase();
+        if (!isActive) return;
+
+        await fetchSlots();
+        const channel = supabase
+          .channel('audition-updates')
+          .on('postgres_changes', { event: '*', table: 'auditions', schema: 'public' }, () => {
+            void fetchSlots();
+          })
+          .subscribe();
+
+        removeRealtimeChannel = () => {
+          void supabase.removeChannel(channel);
+        };
+      } catch (error) {
+        console.error('Could not initialize audition signup:', error);
+        if (isActive) {
+          setLoadError(true);
+          setLoading(false);
+        }
       }
-
-      await fetchSlots();
-      const channel = supabase
-        .channel('audition-updates')
-        .on('postgres_changes', { event: '*', table: 'auditions', schema: 'public' }, () => {
-          void fetchSlots();
-        })
-        .subscribe();
-
-      removeRealtimeChannel = () => {
-        void supabase.removeChannel(channel);
-      };
     };
 
     void initializeSlots();
@@ -367,7 +384,12 @@ export function Auditions() {
             </p>
           </div>
           {loading ? (
-            <div className="flex justify-center py-12"><div className="size-6 animate-spin rounded-full border-b-2 border-[#8FA8C8]" /></div>
+            <div className="flex min-h-64 items-center justify-center py-12"><div className="size-6 animate-spin rounded-full border-b-2 border-[#8FA8C8]" /></div>
+          ) : loadError && slots.length === 0 ? (
+            <div className="flex min-h-64 flex-col items-center justify-center gap-3 px-6 py-12 text-center" style={fontInter}>
+              <p className="text-sm text-[#2B4C6F]/70">The signup times are not available right now.</p>
+              <button type="button" onClick={() => { setLoading(true); void fetchSlots(); }} className="text-sm font-semibold text-[#2B4C6F] underline decoration-[#8FA8C8] underline-offset-4 hover:text-[#8FA8C8]">Try again</button>
+            </div>
           ) : (
             <div className="overflow-hidden">
               <table className="w-full table-fixed border-collapse text-left" aria-label="Audition signup times for Wednesday, September 17 and Thursday, September 18">
@@ -419,42 +441,37 @@ export function Auditions() {
         <motion.section variants={childVariants} className="overflow-hidden rounded-2xl border border-[#DDE7F0] bg-white">
           <div className="border-b border-[#DDE7F0] px-5 py-5 md:flex md:items-end md:justify-between md:gap-8 md:px-7 md:py-6">
             <div>
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#8FA8C8]" style={fontInter}>Before you arrive</p>
               <h2 className="text-[#2B4C6F] font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(26px, 4vw, 36px)', lineHeight: 1.05 }}>
-                THE AUDITION, AT A GLANCE
+                What to expect
               </h2>
             </div>
             <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#2B4C6F]/60 md:mt-0 md:text-right" style={fontInter}>
-              A little preparation goes a long way. Here is what to bring and what will happen when you arrive.
+              Here is what to bring and what will happen when you arrive.
             </p>
           </div>
           <div className="grid divide-y divide-[#DDE7F0] md:grid-cols-3 md:divide-x md:divide-y-0">
             {[
               {
-                number: '01',
                 title: 'Arrive early',
                 Icon: Users,
                 body: <>Check in <strong className="font-semibold text-[#2B4C6F]">15 minutes before</strong> your slot. Walk-ins are welcome when space allows.</>,
               },
               {
-                number: '02',
-                title: 'Prepare your cut',
+                title: 'Bring a song',
                 Icon: Music,
                 body: <>Bring about <strong className="font-semibold text-[#2B4C6F]">60 seconds</strong> of a contemporary song that feels comfortable and shows your voice.</>,
               },
               {
-                number: '03',
-                title: 'Sing with us',
+                title: 'What happens',
                 Icon: Clock,
                 body: <>We will introduce ourselves, guide you through a short warm-up and range check, then hear your prepared song.</>,
               },
             ].map((item) => (
-              <article key={item.number} className="p-5 md:p-6 lg:p-7">
-                <div className="mb-4 flex items-center justify-between">
+              <article key={item.title} className="p-5 md:p-6 lg:p-7">
+                <div className="mb-4">
                   <span className="flex size-9 items-center justify-center rounded-[10px] bg-[#EEF4FA] text-[#2B4C6F]">
                     <item.Icon className="size-[18px]" />
                   </span>
-                  <span className="text-[10px] font-bold tracking-[0.18em] text-[#8FA8C8]" style={fontInter}>{item.number}</span>
                 </div>
                 <h3 className="mb-2 text-[21px] text-[#2B4C6F] font-yearbook" style={fontYearbook}>{item.title}</h3>
                 <p className="text-[14px] leading-6 text-[#2B4C6F]/65" style={fontInter}>{item.body}</p>
@@ -467,30 +484,25 @@ export function Auditions() {
         <motion.section variants={childVariants} className="mt-6 overflow-hidden rounded-2xl border border-[#DDE7F0] bg-[#F8FBFE]">
           <div className="grid lg:grid-cols-[minmax(0,1fr)_360px]">
             <div className="p-5 md:p-7 lg:p-8">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#8FA8C8]" style={fontInter}>Audition tips</p>
               <h2 className="text-[#2B4C6F] font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(26px, 4vw, 36px)', lineHeight: 1.05 }}>
-                SET YOURSELF UP TO SING WELL
+                How to prepare
               </h2>
-              <ol className="mt-5 divide-y divide-[#DDE7F0] border-y border-[#DDE7F0]">
+              <ul className="mt-5 divide-y divide-[#DDE7F0] border-y border-[#DDE7F0]">
                 {[
-                  { number: '01', title: 'Choose something familiar.', detail: 'Pick a song you have sung many times. Familiarity makes nerves easier to manage.' },
-                  { number: '02', title: 'Warm up beforehand.', detail: 'Give your voice time to wake up before check-in so you can spend the room time singing.' },
-                  { number: '03', title: 'Let us meet you.', detail: 'We care about musicianship and the person behind it. Be present, be kind, and be yourself.' },
+                  { title: 'Choose a song you know.', detail: 'Pick a song you have sung many times.' },
+                  { title: 'Warm up before you arrive.', detail: 'Give your voice time to wake up before check-in.' },
+                  { title: 'Be yourself.', detail: 'We want to hear your voice and meet you.' },
                 ].map((tip) => (
-                  <li key={tip.number} className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-3 py-4">
-                    <span className="pt-0.5 text-[10px] font-bold tracking-[0.12em] text-[#8FA8C8]" style={fontInter}>{tip.number}</span>
-                    <div>
-                      <p className="text-sm font-semibold text-[#2B4C6F]" style={fontInter}>{tip.title}</p>
-                      <p className="mt-1 text-[13px] leading-5 text-[#2B4C6F]/60" style={fontInter}>{tip.detail}</p>
-                    </div>
+                  <li key={tip.title} className="py-4">
+                    <p className="text-sm font-semibold text-[#2B4C6F]" style={fontInter}>{tip.title}</p>
+                    <p className="mt-1 text-[13px] leading-5 text-[#2B4C6F]/60" style={fontInter}>{tip.detail}</p>
                   </li>
                 ))}
-              </ol>
+              </ul>
             </div>
             <aside className="border-t border-[#DDE7F0] bg-white p-5 lg:border-l lg:border-t-0 lg:p-8" aria-labelledby="callbacks-heading">
               <Calendar className="mb-5 size-5 text-[#8FA8C8]" aria-hidden="true" />
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#8FA8C8]" style={fontInter}>After auditions</p>
-              <h3 id="callbacks-heading" className="text-[24px] text-[#2B4C6F] font-yearbook" style={fontYearbook}>CALLBACKS</h3>
+              <h3 id="callbacks-heading" className="text-[24px] text-[#2B4C6F] font-yearbook" style={fontYearbook}>Callbacks</h3>
               <p className="mt-3 text-sm leading-6 text-[#2B4C6F]/65" style={fontInter}>
                 Callback invitations and next steps will be sent after initial auditions. Callbacks take place the following week.
               </p>
@@ -501,12 +513,8 @@ export function Auditions() {
             </aside>
           </div>
         </motion.section>
-        {/* Explore More Navigator */}
         <motion.section variants={childVariants} className="mt-10">
-          <div className="mb-3 flex items-baseline justify-between gap-4 px-1">
-            <h2 className="text-[22px] text-[#2B4C6F] font-yearbook" style={fontYearbook}>MORE FROM VOCAL U</h2>
-            <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8FA8C8]" style={fontInter}>Explore</span>
-          </div>
+          <h2 className="mb-3 px-1 text-[22px] text-[#2B4C6F] font-yearbook" style={fontYearbook}>More from Vocal U</h2>
           <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[14px] border border-[#DDE7F0] bg-[#DDE7F0] lg:grid-cols-4">
             {[
               { name: 'About Us', path: '/about' },

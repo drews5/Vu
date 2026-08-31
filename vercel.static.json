@@ -1,0 +1,24 @@
+{
+  "framework": null,
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), geolocation=(), microphone=()" }
+      ]
+    }
+  ],
+  "redirects": [
+    { "source": "/program", "destination": "/program.pdf", "permanent": false },
+    { "source": "/program/", "destination": "/program.pdf", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/events/showcase", "destination": "/events/showcase/index.html" },
+    { "source": "/events/showcase/", "destination": "/events/showcase/index.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
