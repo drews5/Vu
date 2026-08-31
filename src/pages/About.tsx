@@ -27,7 +27,7 @@ const SongCard = memo(function SongCard({
     song: { title: string; artist: string; note?: string };
 }) {
     return (
-        <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.99 }} className="bg-white p-6 border border-[#8FA8C8] shadow-xl -translate-y-1 cursor-default group" style={{ borderRadius: '16px' }}>
+        <motion.div className="vu-panel vu-song-card bg-white p-6 border border-[#8FA8C8] cursor-default group" style={{ borderRadius: '16px' }}>
             <h3 className="text-[#2B4C6F] mb-2 group-hover:text-[#8FA8C8] transition-colors font-yearbook" style={{ ...fontYearbook, fontSize: '20px' }}>
                 {song.title}
             </h3>
@@ -70,7 +70,7 @@ export function About() {
             />
             {/* Hero Section */}
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
-                <div className="relative overflow-hidden h-[165px] md:h-[265px] bg-[#2B4C6F] flex items-center justify-center" style={{ borderRadius: '16px' }}>
+                <div className="vu-page-hero relative overflow-hidden h-[165px] md:h-[265px] bg-[#2B4C6F] flex items-center justify-center" style={{ borderRadius: '16px' }}>
                     <h1 className="text-white px-4 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}>
                         About Us
                     </h1>
@@ -127,7 +127,7 @@ export function About() {
                         { name: 'Support Us', path: '/donate' },
                         { name: 'Join Us', path: '/auditions' }
                     ].map((item) => (
-                        <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm hover:shadow-xl transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
+                        <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
                             <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
                                 {item.name}
                             </h3>

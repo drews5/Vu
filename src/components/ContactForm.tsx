@@ -48,7 +48,7 @@ const ContactInfo = memo(function ContactInfo() {
           We hold auditions at the beginning of each semester. Follow us on social media to stay updated
           on audition dates and other opportunities to get involved!
         </p>
-        <Link to="/auditions" className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-[#2B4C6F] hover:text-white hover:translate-x-1.5 active:scale-[0.97] transition-all duration-200 hover:shadow-xl inline-block cursor-pointer" style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '12px' }}>
+        <Link to="/auditions" className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-[#2B4C6F] hover:text-white hover:translate-x-1.5 active:scale-[0.97] transition-all duration-200 inline-block cursor-pointer" style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '12px' }}>
           AUDITION INFO →
         </Link>
       </div>
@@ -118,7 +118,7 @@ export function ContactForm() {
             </label>
             <textarea id="home-message" name="message" value={formData.message} onChange={handleChange} required rows={5} className={`${inputClass} resize-none`} style={inputStyle} />
           </div>
-          <button type="submit" disabled={status === 'sending'} className="w-full bg-[#2B4C6F] text-white px-8 py-4 border border-[#2B4C6F] hover:bg-[#8FA8C8] hover:border-[#8FA8C8] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-300 hover:shadow-xl disabled:opacity-50 cursor-pointer" style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}>
+          <button type="submit" disabled={status === 'sending'} className="w-full bg-[#2B4C6F] text-white px-8 py-4 border border-[#2B4C6F] hover:bg-[#8FA8C8] hover:border-[#8FA8C8] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-300 disabled:opacity-50 cursor-pointer" style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}>
             {status === 'sending' ? 'SENDING...' : 'SEND MESSAGE'}
           </button>
           {status === 'success' && (

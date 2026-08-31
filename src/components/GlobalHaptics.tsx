@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useWebHaptics } from 'web-haptics/react';
 
 const INTERACTIVE_SELECTOR = [
@@ -17,10 +17,13 @@ const INTERACTIVE_SELECTOR = [
 
 export function GlobalHaptics() {
   const { trigger, isSupported } = useWebHaptics();
-  const lastScrollFeedbackAt = useRef(0);
 
   useEffect(() => {
-    if (!isSupported || !window.matchMedia('(pointer: coarse)').matches) {
+    if (
+      !isSupported ||
+      !window.matchMedia('(pointer: coarse)').matches ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
       return;
     }
 
@@ -29,31 +32,15 @@ export function GlobalHaptics() {
     };
 
     const handleClick = (event: MouseEvent) => {
-      if (!(event.target instanceof Element)) {
-        triggerPattern('selection');
-        return;
+      if (event.target instanceof Element && event.target.closest(INTERACTIVE_SELECTOR)) {
+        triggerPattern('medium');
       }
-
-      const isInteractive = Boolean(event.target.closest(INTERACTIVE_SELECTOR));
-      triggerPattern(isInteractive ? 'medium' : 'selection');
-    };
-
-    const handleScrollGesture = () => {
-      const now = Date.now();
-      if (now - lastScrollFeedbackAt.current < 140) {
-        return;
-      }
-
-      lastScrollFeedbackAt.current = now;
-      triggerPattern('light');
     };
 
     document.addEventListener('click', handleClick, true);
-    window.addEventListener('touchmove', handleScrollGesture, { passive: true });
 
     return () => {
       document.removeEventListener('click', handleClick, true);
-      window.removeEventListener('touchmove', handleScrollGesture);
     };
   }, [isSupported, trigger]);
 

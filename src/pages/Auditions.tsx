@@ -7,6 +7,7 @@ import {
   Calendar,
   X,
   AlertCircle,
+  ArrowRight,
   Check,
   Trash2,
   Music
@@ -19,6 +20,8 @@ import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
+const isUmnEmail = (value: string) => /^[^@\s]+@umn\.edu$/i.test(value.trim());
+
 interface AuditionSlot {
   id: string;
   time: string;
@@ -29,7 +32,7 @@ interface AuditionSlot {
 }
 export function Auditions() {
   const auditionsDescription =
-    'Audition for Vocal U at the University of Minnesota. View audition timing, sign-up details, preparation tips, and callback information for the group.';
+    'Audition for Vocal U at the University of Minnesota on September 17 or 18, 2026. Choose a live signup time and review preparation and callback details.';
   const [slots, setSlots] = useState<AuditionSlot[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingSlotId] = useState<string | null>(null);
@@ -116,6 +119,10 @@ export function Auditions() {
   };
   const processAction = async () => {
     if (!confirmingId || !emailInput.trim()) return;
+    if (!isUmnEmail(emailInput)) {
+      alert('Please enter your full @umn.edu email address.');
+      return;
+    }
     setIsSubmitting(true);
     const { id, mode } = confirmingId;
     const slot = slots.find(s => s.id === id);
@@ -143,7 +150,7 @@ export function Auditions() {
       } else {
         // Delete mode
         if (emailInput.trim().toLowerCase() !== slot.email?.trim().toLowerCase()) {
-          alert("Student ID doesn't match!");
+          alert("That @umn.edu email doesn't match this signup.");
           setIsSubmitting(false);
           return;
         }
@@ -188,116 +195,110 @@ export function Auditions() {
     }
   };
   const daysData = [
-    { day: 'Wednesday', date: 'September 18' },
-    { day: 'Thursday', date: 'September 19' }
+    { day: 'Wednesday', date: 'September 17' },
+    { day: 'Thursday', date: 'September 18' }
   ];
-  const renderSlots = (daySlots: AuditionSlot[]) => {
-    return (
-      <div className="min-w-0 space-y-1 md:space-y-1.5">
-        <div className="grid grid-cols-[2.15rem_minmax(0,1fr)] gap-1 rounded-lg bg-gray-50 px-1.5 py-1 text-[8px] font-bold uppercase tracking-[0.12em] text-gray-400 md:grid-cols-[3rem_minmax(0,1fr)] md:px-2 md:py-1.5 md:text-[10px]" style={fontInter}>
-          <div>Time</div>
-          <div>Name</div>
+  const orderedTimes = Array.from(new Set(slots.map((slot) => slot.time)));
+  const slotLookup = new Map(slots.map((slot) => [`${slot.day}:${slot.time}`, slot]));
+
+  const renderSlotCell = (slot: AuditionSlot) => {
+    const isConfirming = confirmingId?.id === slot.id;
+    const isBooked = slot.status === 'Booked';
+    const isBreak = slot.status === 'Break';
+    const hasText = (tempNames[slot.id] || '').trim().length > 0;
+
+    if (isBreak) {
+      return (
+        <div className="flex h-7 items-center bg-gray-100 px-2 text-[9px] font-semibold uppercase tracking-[0.12em] text-gray-400 md:h-8 md:text-[10px]" style={fontInter}>
+          Break
         </div>
-            {daySlots.map((slot) => {
-              const isConfirming = confirmingId?.id === slot.id;
-              const isBooked = slot.status === 'Booked';
-              const isBreak = slot.status === 'Break';
-              const hasText = (tempNames[slot.id] || '').trim().length > 0;
-              const displayTime = slot.time.replace(' PM', '');
-              return (
-                <div key={slot.id} className={`grid grid-cols-[2.15rem_minmax(0,1fr)] md:grid-cols-[3rem_minmax(0,1fr)] gap-1 items-center rounded-lg border p-0.5 md:rounded-xl md:p-1 transition-all ${isConfirming ? 'border-[#8FA8C8] bg-[#8FA8C8]/5' : isBooked ? 'border-transparent bg-gray-50/60 opacity-80' : isBreak ? 'border-transparent bg-gray-100' : 'border-transparent hover:border-gray-100 hover:bg-gray-50'}`}>
-                  <div className="px-0.5 text-left">
-                    <span className={`font-bold text-[9px] tracking-tight md:text-[11px] ${isBooked ? 'text-gray-400' : 'text-[#2B4C6F]'}`} style={{ ...fontInter, letterSpacing: '-0.02em' }}>{displayTime}</span>
-                  </div>
-                  <div className="relative group min-w-0">
-                    {isBreak ? (
-                      <span className="italic text-gray-400 font-medium px-1 text-[8px] md:text-[9px] tracking-tighter" style={fontInter}>---</span>
-                    ) : isBooked ? (
-                      <div className="flex min-h-[22px] items-center justify-between gap-0.5 px-1 py-0.5 bg-white rounded border border-gray-100 h-full relative overflow-hidden md:min-h-[28px] md:rounded-md md:px-1.5">
-                        <AnimatePresence mode="wait">
-                          {isConfirming ? (
-                            <motion.div key="cancel-input" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="w-full relative flex items-center">
-                              <input autoFocus type="text" placeholder="ID" className="w-full bg-red-50/50 border border-red-200 px-1.5 py-0.5 md:px-2 md:py-1 rounded-md text-[9px] md:text-[12px] outline-none font-bold pr-[42px] md:pr-[64px]" style={fontInter} value={emailInput} onChange={(e) => setEmailInput(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') processAction();
-                                  if (e.key === 'Escape') setConfirmingId(null);
-                                }}
-                              />
-                              <div className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5 md:right-1 md:gap-1">
-                                <button onClick={processAction} className="p-0.5 md:p-1.5 bg-red-500 text-white rounded hover:bg-red-600 transition-colors active:scale-95 flex items-center justify-center">
-                                  {isSubmitting ? <div className="w-3 h-3 md:w-3.5 md:h-3.5 border-2 border-white border-t-transparent animate-spin rounded-full" /> : <Check className="w-3 h-3 md:w-3.5 md:h-3.5" />}
-                                </button>
-                                <button onClick={() => setConfirmingId(null)} className="p-0.5 md:p-1.5 bg-white border border-gray-200 text-gray-400 rounded hover:bg-gray-50 transition-colors active:scale-95 flex items-center justify-center">
-                                  <X className="w-3 h-3 md:w-3.5 md:h-3.5" />
-                                </button>
-                              </div>
-                            </motion.div>
-                          ) : (
-                            <motion.div key="booked-info" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex items-center justify-between w-full">
-                              <span className="font-bold text-[#2B4C6F] text-[9px] md:text-[12px] truncate" style={fontInter}>{slot.name}</span>
-                              <button onClick={() => startConfirmation(slot.id, 'delete')}
-                                className="text-gray-300 hover:text-red-500 transition-colors p-0.5"
-                              >
-                                <Trash2 className="w-3 h-3 md:w-3.5 md:h-3.5" />
-                              </button>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    ) : (
-                      <div className="relative flex items-center w-full">
-                        <AnimatePresence mode="wait">
-                          {isConfirming ? (
-                            <motion.div key="id-input" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="w-full relative flex items-center">
-                              <input autoFocus type="text" placeholder="x500" className="w-full px-1.5 py-0.5 md:px-2 md:py-1.5 bg-green-50/50 border border-green-200 md:border-2 rounded-md md:rounded-lg outline-none text-[9px] md:text-[13px] font-bold pr-[42px] md:pr-[72px]" style={fontInter} value={emailInput} onChange={(e) => setEmailInput(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter' && emailInput.trim()) processAction();
-                                  if (e.key === 'Escape') setConfirmingId(null);
-                                }}
-                              />
-                              <div className="absolute right-0.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5 md:right-1 md:gap-1">
-                                {emailInput.trim() && (
-                                  <button onClick={processAction} disabled={isSubmitting} className="p-0.5 md:p-1.5 bg-green-500 text-white rounded md:rounded-md shadow-sm hover:bg-green-600 transition-all active:scale-90 flex items-center justify-center">
-                                    {isSubmitting ? (
-                                      <div className="w-3 h-3 md:w-5 md:h-5 border-2 border-white border-t-transparent animate-spin rounded-full" />
-                                    ) : (
-                                      <Check className="w-3 h-3 md:w-5 md:h-5 stroke-[3px]" />
-                                    )}
-                                  </button>
-                                )}
-                                <button onClick={() => setConfirmingId(null)}
-                                  className="p-0.5 md:p-1.5 bg-white border border-gray-200 text-gray-400 rounded md:rounded-md hover:bg-gray-50 flex items-center justify-center transition-colors"
-                                >
-                                  <X className="w-3 h-3 md:w-5 md:h-5" />
-                                </button>
-                              </div>
-                            </motion.div>
-                          ) : (
-                            <motion.div key="name-input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="relative w-full">
-                              <input type="text" placeholder="Name" className={`w-full px-1.5 py-0.5 md:px-2 md:py-1.5 bg-white border rounded-md md:border-2 md:rounded-lg outline-none transition-all text-[9px] md:text-[13px] font-bold pr-[24px] md:pr-[40px] ${editingId === slot.id ? 'border-[#8FA8C8]' : 'border-gray-100'}`} style={fontInter} value={tempNames[slot.id] || ''} onFocus={() => setEditingSlotId(slot.id)}
-                                onChange={(e) => handleNameChange(slot.id, e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter' && hasText) startConfirmation(slot.id, 'save');
-                                }}
-                              />
-                              <AnimatePresence>
-                                {hasText && (
-                                  <motion.button initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.5 }} onClick={() => startConfirmation(slot.id, 'save')}
-                                    className="absolute right-0.5 top-1/2 -translate-y-1/2 p-0.5 md:right-1 md:p-2 bg-green-500 text-white rounded hover:bg-green-600 shadow-md active:scale-95 flex items-center justify-center min-w-[18px] min-h-[18px] md:min-w-[28px] md:min-h-[28px]"
-                                  >
-                                    <Check className="w-3 h-3 md:w-5 md:h-5 stroke-[3px]" />
-                                  </motion.button>
-                                )}
-                              </AnimatePresence>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+      );
+    }
+
+    if (isBooked && !isConfirming) {
+      return (
+        <div className="flex h-7 min-w-0 items-center bg-[#F7F9FC] md:h-8">
+          <span className="audition-slot-name min-w-0 flex-1 truncate px-2 font-semibold text-[#2B4C6F]" style={fontInter}>{slot.name}</span>
+          <button
+            type="button"
+            onClick={() => startConfirmation(slot.id, 'delete')}
+            className="flex h-full w-8 shrink-0 items-center justify-center border-l border-[#DDE7F0] text-gray-300 transition-colors hover:bg-red-50 hover:text-red-500"
+            aria-label={`Cancel ${slot.day} ${slot.time} audition for ${slot.name || 'this singer'}`}
+          >
+            <Trash2 className="size-3.5" />
+          </button>
+        </div>
+      );
+    }
+
+    if (isConfirming) {
+      const isDeleting = confirmingId?.mode === 'delete';
+      return (
+        <div className={`relative flex h-7 items-center md:h-8 ${isDeleting ? 'bg-red-50' : 'bg-green-50'}`}>
+          <input
+            autoFocus
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            placeholder="name@umn.edu"
+            className="h-full w-full border-0 bg-transparent px-2 pr-16 text-[10px] font-semibold text-[#2B4C6F] outline-none placeholder:text-gray-400 md:text-[12px]"
+            style={fontInter}
+            value={emailInput}
+            onChange={(event) => setEmailInput(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' && emailInput.trim()) void processAction();
+              if (event.key === 'Escape') setConfirmingId(null);
+            }}
+            aria-label={`University of Minnesota email for ${slot.day} at ${slot.time}`}
+          />
+          <div className="absolute inset-y-0 right-0 flex">
+            <button
+              type="button"
+              onClick={() => void processAction()}
+              disabled={!isUmnEmail(emailInput) || isSubmitting}
+              className={`flex h-full w-8 items-center justify-center border-l border-white/70 text-white transition-colors disabled:opacity-40 ${isDeleting ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}
+              aria-label={isDeleting ? 'Confirm cancellation' : 'Confirm signup'}
+            >
+              {isSubmitting ? <div className="size-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" /> : <Check className="size-4 stroke-[3px]" />}
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirmingId(null)}
+              className="flex h-full w-8 items-center justify-center border-l border-[#DDE7F0] bg-white text-gray-400 transition-colors hover:bg-gray-50"
+              aria-label="Close confirmation"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="relative h-7 md:h-8">
+        <input
+          type="text"
+          placeholder="Type name"
+          className={`audition-slot-name h-full w-full border-0 bg-white px-2 pr-9 font-semibold text-[#2B4C6F] outline-none transition-colors placeholder:font-normal placeholder:text-gray-400 hover:bg-[#FBFDFF] focus:bg-[#EEF4FA] focus:ring-2 focus:ring-inset focus:ring-[#8FA8C8] ${editingId === slot.id ? 'bg-[#EEF4FA]' : ''}`}
+          style={fontInter}
+          value={tempNames[slot.id] || ''}
+          onFocus={() => setEditingSlotId(slot.id)}
+          onChange={(event) => handleNameChange(slot.id, event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' && hasText) startConfirmation(slot.id, 'save');
+          }}
+          aria-label={`Name for ${slot.day} at ${slot.time}`}
+        />
+        {hasText && (
+          <button
+            type="button"
+            onClick={() => startConfirmation(slot.id, 'save')}
+            className="absolute inset-y-0 right-0 flex w-8 items-center justify-center border-l border-green-200 bg-green-500 text-white transition-colors hover:bg-green-600"
+            aria-label={`Continue signup for ${slot.day} at ${slot.time}`}
+          >
+            <Check className="size-4 stroke-[3px]" />
+          </button>
+        )}
       </div>
     );
   };
@@ -327,7 +328,14 @@ export function Auditions() {
           },
         }}
       />
-      <motion.section variants={childVariants} className="relative mb-2 flex items-center justify-center overflow-hidden border border-gray-100 px-3 py-2.5 shadow-sm md:mb-6 md:px-6 md:py-8" style={{ borderRadius: '18px', background: 'linear-gradient(135deg, #8FA8C8 0%, #7F99B8 100%)' }}>
+      <motion.section
+        variants={childVariants}
+        className="vu-page-hero relative mb-2 flex items-center justify-center overflow-hidden border border-white/30 px-3 py-2.5 md:mb-6 md:px-6 md:py-8"
+        style={{
+          borderRadius: '18px',
+          background: 'linear-gradient(105deg, #2B4C6F 0%, #8FA8C8 24%, #B6CBE3 48%, #7592B3 72%, #2B4C6F 100%)',
+        }}
+      >
         <div className="relative z-10 flex w-full items-center justify-center gap-3 px-1 text-center md:gap-10">
           <div className="shrink-0 hover:-translate-y-0.5 transition-transform duration-200">
             <Link to="/" className="group cursor-pointer">
@@ -340,7 +348,7 @@ export function Auditions() {
                 AUDITIONS
               </h1>
               <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[9px] font-bold tracking-widest text-white/90 md:mt-2 md:gap-x-5 md:gap-y-2 md:text-[14px]" style={fontInter}>
-                <div className="flex items-center gap-1 md:gap-2"><Calendar className="w-3 h-3 md:w-5 md:h-5" /> Sep 18/19</div>
+                <div className="flex items-center gap-1 md:gap-2"><Calendar className="w-3 h-3 md:w-5 md:h-5" /> September 17 &amp; 18</div>
                 <div className="flex items-center gap-1 md:gap-2"><Clock className="w-3 h-3 md:w-5 md:h-5" /> 6-9 PM</div>
               </div>
             </div>
@@ -349,118 +357,159 @@ export function Auditions() {
       </motion.section>
       <div className="px-0">
         {/* Sign Up Section */}
-        <motion.section variants={childVariants} className="bg-white rounded-xl md:rounded-2xl shadow-sm overflow-hidden mb-4 md:mb-[25px] border border-gray-100">
-          <div className="px-2 py-1 md:px-6 md:py-3 border-b border-gray-50 flex justify-center items-center">
-            <h2 className="text-[#2B4C6F] opacity-80" style={{ ...fontYearbook, fontSize: 'clamp(13px, 3vw, 18px)' }}>
-              SIGN UP
+        <motion.section variants={childVariants} className="mb-4 overflow-hidden rounded-xl border border-[#DDE7F0] bg-white shadow-sm md:mb-[25px] md:rounded-2xl">
+          <div className="flex flex-wrap items-baseline justify-between gap-1 border-b border-[#DDE7F0] px-3 py-2 md:px-4">
+            <h2 className="text-[#2B4C6F]" style={{ ...fontYearbook, fontSize: 'clamp(15px, 3vw, 20px)' }}>
+              AUDITION SIGN-UP SHEET
             </h2>
+            <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#2B4C6F]/45 md:text-[10px]" style={fontInter}>
+              Enter your name in an open cell
+            </p>
           </div>
-          <div className="p-1 md:p-4">
-            <div className="grid grid-cols-2 gap-1 md:gap-4 xl:gap-6">
-              {daysData.map((dayInfo) => (
-                <div key={dayInfo.day} className="rounded-lg border border-gray-100 bg-[#fcfdff] p-1 md:rounded-[22px] md:p-4 min-w-0">
-                  <div className="flex flex-col items-center mb-1 md:mb-3">
-                    <h3 className="text-[#2B4C6F] font-bold text-center whitespace-nowrap" style={{ ...fontInter, fontSize: 'clamp(9px, 2.3vw, 15px)' }}>
-                      {dayInfo.day}, {dayInfo.date}
-                    </h3>
-                    <div className="w-full h-[1px] bg-[#8FA8C8] mt-1 md:mt-1.5" />
-                  </div>
-                  {loading ? (
-                    <div className="py-12 flex justify-center"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#8FA8C8]" /></div>
-                  ) : (
-                    renderSlots(slots.filter(s => s.day === dayInfo.day))
-                  )}
-                </div>
-              ))}
+          {loading ? (
+            <div className="flex justify-center py-12"><div className="size-6 animate-spin rounded-full border-b-2 border-[#8FA8C8]" /></div>
+          ) : (
+            <div className="overflow-hidden">
+              <table className="w-full table-fixed border-collapse text-left" aria-label="Audition signup times for Wednesday, September 17 and Thursday, September 18">
+                <colgroup>
+                  <col className="w-[3.25rem] md:w-20" />
+                  <col />
+                  <col />
+                </colgroup>
+                <thead className="bg-[#2B4C6F] text-white">
+                  <tr>
+                    <th scope="col" className="border-r border-white/20 px-1.5 py-2 text-[9px] font-bold uppercase tracking-[0.12em] md:px-3 md:text-[10px]" style={fontInter}>Time</th>
+                    {daysData.map((dayInfo) => (
+                      <th key={dayInfo.day} scope="col" className="border-r border-white/20 px-2 py-2 last:border-r-0 md:px-3">
+                        <span className="block text-[10px] font-bold uppercase tracking-[0.08em] md:text-[12px]" style={fontInter}>{dayInfo.day}</span>
+                        <span className="block text-[9px] font-medium text-white/70 md:text-[10px]" style={fontInter}>{dayInfo.date}</span>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#DDE7F0]">
+                  {orderedTimes.map((time) => (
+                    <tr key={time} className="group/row transition-colors hover:bg-[#FBFDFF]">
+                      <th scope="row" className="border-r border-[#DDE7F0] bg-[#F4F7FA] px-1.5 text-[9px] font-bold text-[#2B4C6F] md:px-3 md:text-[11px]" style={fontInter}>
+                        {time.replace(' PM', '')}
+                      </th>
+                      {daysData.map((dayInfo) => {
+                        const slot = slotLookup.get(`${dayInfo.day}:${time}`);
+                        return (
+                          <td key={dayInfo.day} className="border-r border-[#DDE7F0] p-0 last:border-r-0">
+                            {slot ? renderSlotCell(slot) : <div className="h-7 bg-gray-50 md:h-8" aria-hidden="true" />}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
+          )}
+        </motion.section>
+        {/* Audition overview */}
+        <motion.section variants={childVariants} className="overflow-hidden rounded-2xl border border-[#DDE7F0] bg-white">
+          <div className="border-b border-[#DDE7F0] px-5 py-5 md:flex md:items-end md:justify-between md:gap-8 md:px-7 md:py-6">
+            <div>
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#8FA8C8]" style={fontInter}>Before you arrive</p>
+              <h2 className="text-[#2B4C6F] font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(26px, 4vw, 36px)', lineHeight: 1.05 }}>
+                THE AUDITION, AT A GLANCE
+              </h2>
+            </div>
+            <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#2B4C6F]/60 md:mt-0 md:text-right" style={fontInter}>
+              A little preparation goes a long way. Here is what to bring and what will happen when you arrive.
+            </p>
+          </div>
+          <div className="grid divide-y divide-[#DDE7F0] md:grid-cols-3 md:divide-x md:divide-y-0">
+            {[
+              {
+                number: '01',
+                title: 'Arrive early',
+                Icon: Users,
+                body: <>Check in <strong className="font-semibold text-[#2B4C6F]">15 minutes before</strong> your slot. Walk-ins are welcome when space allows.</>,
+              },
+              {
+                number: '02',
+                title: 'Prepare your cut',
+                Icon: Music,
+                body: <>Bring about <strong className="font-semibold text-[#2B4C6F]">60 seconds</strong> of a contemporary song that feels comfortable and shows your voice.</>,
+              },
+              {
+                number: '03',
+                title: 'Sing with us',
+                Icon: Clock,
+                body: <>We will introduce ourselves, guide you through a short warm-up and range check, then hear your prepared song.</>,
+              },
+            ].map((item) => (
+              <article key={item.number} className="p-5 md:p-6 lg:p-7">
+                <div className="mb-4 flex items-center justify-between">
+                  <span className="flex size-9 items-center justify-center rounded-[10px] bg-[#EEF4FA] text-[#2B4C6F]">
+                    <item.Icon className="size-[18px]" />
+                  </span>
+                  <span className="text-[10px] font-bold tracking-[0.18em] text-[#8FA8C8]" style={fontInter}>{item.number}</span>
+                </div>
+                <h3 className="mb-2 text-[21px] text-[#2B4C6F] font-yearbook" style={fontYearbook}>{item.title}</h3>
+                <p className="text-[14px] leading-6 text-[#2B4C6F]/65" style={fontInter}>{item.body}</p>
+              </article>
+            ))}
           </div>
         </motion.section>
-        {/* Detailed Info Grid */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 md:gap-8">
-          <motion.div variants={childVariants} className="relative h-full overflow-hidden rounded-[28px] border border-gray-100 bg-white p-7 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl md:p-8 group">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-[#8FA8C8]/10 rounded-bl-full -mr-8 -mt-8 transition-transform duration-500 group-hover:scale-110"></div>
-            <div className="bg-[#8FA8C8]/10 w-20 h-20 rounded-3xl flex items-center justify-center mb-6 relative z-10 rotate-3 transition-transform duration-500 group-hover:rotate-0">
-              <Users className="w-10 h-10 text-[#2B4C6F]" />
-            </div>
-            <h3 className="text-[#2B4C6F] text-2xl md:text-[30px] mb-4 font-yearbook relative z-10" style={fontYearbook}>ARRIVAL</h3>
-            <p className="text-gray-700 text-[15px] md:text-[17px] leading-relaxed relative z-10 font-medium" style={fontInter}>
-              Please arrive <span className="font-bold text-[#2B4C6F]">15 minutes</span> before your slot to check in. If you're a walk-in, come by the desk and we'll fit you into the next available gap!
-            </p>
-          </motion.div>
 
-          <motion.div variants={childVariants} className="relative h-full overflow-hidden rounded-[28px] border border-[#2B4C6F]/10 bg-white p-7 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl md:p-8 group">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-[#2B4C6F]/5 rounded-bl-full -mr-8 -mt-8 transition-transform duration-500 group-hover:scale-110"></div>
-            <div className="bg-[#2B4C6F]/10 w-20 h-20 rounded-3xl flex items-center justify-center mb-6 relative z-10 -rotate-3 transition-transform duration-500 group-hover:rotate-0">
-              <Music className="w-10 h-10 text-[#2B4C6F]" />
+        {/* Advice and callbacks */}
+        <motion.section variants={childVariants} className="mt-6 overflow-hidden rounded-2xl border border-[#DDE7F0] bg-[#F8FBFE]">
+          <div className="grid lg:grid-cols-[minmax(0,1fr)_360px]">
+            <div className="p-5 md:p-7 lg:p-8">
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#8FA8C8]" style={fontInter}>Audition tips</p>
+              <h2 className="text-[#2B4C6F] font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(26px, 4vw, 36px)', lineHeight: 1.05 }}>
+                SET YOURSELF UP TO SING WELL
+              </h2>
+              <ol className="mt-5 divide-y divide-[#DDE7F0] border-y border-[#DDE7F0]">
+                {[
+                  { number: '01', title: 'Choose something familiar.', detail: 'Pick a song you have sung many times. Familiarity makes nerves easier to manage.' },
+                  { number: '02', title: 'Warm up beforehand.', detail: 'Give your voice time to wake up before check-in so you can spend the room time singing.' },
+                  { number: '03', title: 'Let us meet you.', detail: 'We care about musicianship and the person behind it. Be present, be kind, and be yourself.' },
+                ].map((tip) => (
+                  <li key={tip.number} className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-3 py-4">
+                    <span className="pt-0.5 text-[10px] font-bold tracking-[0.12em] text-[#8FA8C8]" style={fontInter}>{tip.number}</span>
+                    <div>
+                      <p className="text-sm font-semibold text-[#2B4C6F]" style={fontInter}>{tip.title}</p>
+                      <p className="mt-1 text-[13px] leading-5 text-[#2B4C6F]/60" style={fontInter}>{tip.detail}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
             </div>
-            <h3 className="text-[#2B4C6F] text-2xl md:text-[30px] mb-4 font-yearbook relative z-10" style={fontYearbook}>PREPARATION</h3>
-            <p className="text-gray-700 text-[15px] md:text-[17px] leading-relaxed relative z-10 font-medium" style={fontInter}>
-              Prepare <span className="font-bold text-[#2B4C6F]">~60 seconds</span> (verse and a chorus) of a contemporary song (Pop, Rock, R&B, etc.) that showcases your voice. Just bring your talent!
-            </p>
-          </motion.div>
-
-          <motion.div variants={childVariants} className="relative h-full overflow-hidden rounded-[28px] border border-gray-100 bg-white p-7 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl md:p-8 group">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-[#8FA8C8]/10 rounded-bl-full -mr-8 -mt-8 transition-transform duration-500 group-hover:scale-110"></div>
-            <div className="bg-[#8FA8C8]/10 w-20 h-20 rounded-3xl flex items-center justify-center mb-6 relative z-10 rotate-3 transition-transform duration-500 group-hover:rotate-0">
-              <Clock className="w-10 h-10 text-[#2B4C6F]" />
-            </div>
-            <h3 className="text-[#2B4C6F] text-2xl md:text-[30px] mb-4 font-yearbook relative z-10" style={fontYearbook}>THE PROCESS</h3>
-            <p className="text-gray-700 text-[15px] md:text-[17px] leading-relaxed relative z-10 font-medium" style={fontInter}>
-              The process involves introducing yourself, a <span className="font-bold text-[#2B4C6F]">warm up/range check</span>, and then singing your prepared song!
-            </p>
-          </motion.div>
-        </div>
-        {/* FAQ / Advice Section */}
-        <motion.section variants={childVariants} className="mt-12 bg-[#2B4C6F] p-7 md:p-10 text-white overflow-hidden relative" style={{ borderRadius: '24px' }}>
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-          <div className="relative z-10 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr),340px]">
-            <div>
-              <h2 className="text-3xl mb-6 font-yearbook" style={fontYearbook}>AUDITION TIPS</h2>
-              <div className="space-y-4 text-white/75" style={fontInter}>
-                <div className="flex gap-4">
-                  <div className="bg-white/10 w-8 h-8 rounded-full flex items-center justify-center shrink-0">1</div>
-                  <p>Choose a song you've sung many times before. Nerves are real and familiarity is your best friend!</p>
-                </div>
-                <div className="flex gap-4">
-                  <div className="bg-white/10 w-8 h-8 rounded-full flex items-center justify-center shrink-0">2</div>
-                  <p>Warm up your voice before you arrive. Use your shower time or the walk to the audition!</p>
-                </div>
-                <div className="flex gap-4">
-                  <div className="bg-white/10 w-8 h-8 rounded-full flex items-center justify-center shrink-0">3</div>
-                  <p>Be yourself! We're not just looking for great voices, we're looking for great people to join our Vocal U family.</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white/10 p-6 md:p-8 border border-white/20 backdrop-blur-sm" style={{ borderRadius: '18px' }}>
-              <h3 className="text-xl mb-4 font-yearbook" style={fontYearbook}>WHAT'S NEXT?</h3>
-              <p className="text-white/70 mb-6" style={fontInter}>
-                After initial auditions, we'll send out callback notifications via email. Callbacks are held the following week after auditions.
+            <aside className="border-t border-[#DDE7F0] bg-white p-5 lg:border-l lg:border-t-0 lg:p-8" aria-labelledby="callbacks-heading">
+              <Calendar className="mb-5 size-5 text-[#8FA8C8]" aria-hidden="true" />
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#8FA8C8]" style={fontInter}>After auditions</p>
+              <h3 id="callbacks-heading" className="text-[24px] text-[#2B4C6F] font-yearbook" style={fontYearbook}>CALLBACKS</h3>
+              <p className="mt-3 text-sm leading-6 text-[#2B4C6F]/65" style={fontInter}>
+                Callback invitations and next steps will be sent after initial auditions. Callbacks take place the following week.
               </p>
-              <div className="flex items-center gap-3 text-sm font-bold tracking-widest bg-white text-[#2B4C6F] px-4 py-2 rounded-lg w-fit">
-                <Check className="w-4 h-4" /> GOOD LUCK!
+              <div className="mt-6 flex items-start gap-2.5 border-t border-[#DDE7F0] pt-4 text-[12px] leading-5 text-[#2B4C6F]/60" style={fontInter}>
+                <Check className="mt-0.5 size-4 shrink-0 text-[#8FA8C8]" aria-hidden="true" />
+                <span>Watch your @umn.edu inbox for your result and any scheduling details.</span>
               </div>
-            </div>
+            </aside>
           </div>
         </motion.section>
         {/* Explore More Navigator */}
-        <motion.section variants={childVariants} className="mt-16 border-t border-gray-100 pt-12">
-          <h2 className="text-[#2B4C6F] mb-10 text-center font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 4vw, 36px)' }}>
-            EXPLORE MORE
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.section variants={childVariants} className="mt-10">
+          <div className="mb-3 flex items-baseline justify-between gap-4 px-1">
+            <h2 className="text-[22px] text-[#2B4C6F] font-yearbook" style={fontYearbook}>MORE FROM VOCAL U</h2>
+            <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8FA8C8]" style={fontInter}>Explore</span>
+          </div>
+          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[14px] border border-[#DDE7F0] bg-[#DDE7F0] lg:grid-cols-4">
             {[
               { name: 'About Us', path: '/about' },
               { name: 'Our Members', path: '/members' },
               { name: 'Our Media', path: '/media' },
               { name: 'Support Us', path: '/donate' }
             ].map((item) => (
-              <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm hover:shadow-xl transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
-                <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
-                  {item.name}
-                </h3>
-                <p className="text-[#8FA8C8] text-xs mt-2 tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                  LEARN MORE
-                </p>
+              <Link key={item.path} to={item.path} className="group flex min-h-14 items-center justify-between gap-3 bg-white px-4 py-3 text-[#2B4C6F] transition-colors hover:bg-[#F5F8FC] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#8FA8C8]">
+                <span className="text-[15px] font-yearbook" style={fontYearbook}>{item.name}</span>
+                <ArrowRight className="size-4 shrink-0 text-[#8FA8C8] transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
             ))}
           </div>
@@ -488,7 +537,7 @@ export function Auditions() {
               </div>
               <div className="flex flex-col gap-3 mt-4">
                 <button onClick={() => setShowDeleteWarning(null)}
-                  className="w-full py-4 bg-[#8FA8C8] text-white rounded-2xl hover:bg-[#7A97B7] shadow-xl shadow-[#8FA8C8]/20 transition-all active:scale-[0.98] font-bold tracking-[0.1em] text-sm flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-[#8FA8C8] text-white rounded-2xl hover:bg-[#7A97B7] shadow-sm transition-all active:scale-[0.98] font-bold tracking-[0.1em] text-sm flex items-center justify-center gap-2"
                   style={fontInter}
                 >
                   KEEP MY SPOT

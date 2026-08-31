@@ -84,7 +84,7 @@ export function Contact() {
             />
             {/* Hero Section */}
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
-                <div className="bg-[#8FA8C8] py-10 md:py-16 px-4 md:px-8 shadow-sm" style={{ borderRadius: '16px' }}>
+                <div className="vu-page-hero bg-[#8FA8C8] py-10 md:py-16 px-4 md:px-8 shadow-sm" style={{ borderRadius: '16px' }}>
                     <div className="max-w-5xl mx-auto text-center">
                         <h1 className="text-white mb-2 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}>
                             Contact Us
@@ -97,7 +97,7 @@ export function Contact() {
             </motion.section>
             <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: '25px' }}>
                 {/* Contact Form */}
-                <motion.div variants={childVariants} className="bg-white p-6 md:p-8 border border-gray-100 shadow-sm" style={{ borderRadius: '16px' }}>
+                <motion.div variants={childVariants} className="vu-panel bg-white p-6 md:p-8 border border-gray-100 shadow-sm" style={{ borderRadius: '16px' }}>
                     <h2 className="text-[#2B4C6F] mb-6 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}>
                         Send us a message
                     </h2>
@@ -126,7 +126,7 @@ export function Contact() {
                             </label>
                             <textarea id="contact-message" name="message" value={formData.message} onChange={handleChange} required rows={5} className={`${inputClass} resize-none`} style={inputStyle} />
                         </div>
-                        <motion.button type="submit" disabled={status === 'sending'} whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }} className="w-full bg-[#8FA8C8] text-white px-8 py-4 hover:bg-[#2B4C6F] transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 cursor-pointer font-yearbook" style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '20px', }}>
+                        <motion.button type="submit" disabled={status === 'sending'} whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }} className="w-full bg-[#8FA8C8] text-white px-8 py-4 hover:bg-[#2B4C6F] transition-all duration-200 shadow-sm disabled:opacity-50 cursor-pointer font-yearbook" style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '20px', }}>
                             {status === 'sending' ? 'Sending...' : 'Send Message'}
                         </motion.button>
                         {status === 'success' && (
@@ -143,7 +143,7 @@ export function Contact() {
                 </motion.div>
                 {/* Contact Info */}
                 <div className="space-y-6">
-                    <motion.div variants={childVariants} className="bg-white p-6 md:p-8 border border-gray-100" style={{ borderRadius: '16px' }}>
+                    <motion.div variants={childVariants} className="vu-panel bg-white p-6 md:p-8 border border-gray-100" style={{ borderRadius: '16px' }}>
                         <h2 className="text-[#2B4C6F] mb-6 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}>
                             Get in Touch
                         </h2>
@@ -176,19 +176,19 @@ export function Contact() {
                             </div>
                         </div>
                     </motion.div>
-                    <motion.div variants={childVariants} className="bg-white p-6 md:p-8 border border-gray-100" style={{ borderRadius: '16px' }}>
+                    <motion.div variants={childVariants} className="vu-panel bg-white p-6 md:p-8 border border-gray-100" style={{ borderRadius: '16px' }}>
                         <h2 className="text-[#2B4C6F] mb-6 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}>
                             Follow Us
                         </h2>
-                        <div className="flex gap-4">
+                        <div className="flex flex-wrap gap-3">
                             {[
                                 { href: 'https://www.instagram.com/vocal_u', label: 'Instagram', Icon: Instagram },
                                 { href: 'https://www.facebook.com/vocaluacappella/', label: 'Facebook', Icon: Facebook },
                                 { href: 'https://www.youtube.com/@vocal-u', label: 'YouTube', Icon: Youtube },
                                 { href: 'https://www.tiktok.com/@vocalumn', label: 'TikTok', Icon: TikTokIcon },
                             ].map((s) => (
-                                <motion.a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" whileHover={{ y: -2, scale: 1.1 }} whileTap={{ scale: 0.9 }} className="bg-[#8FA8C8] p-4 hover:bg-[#2B4C6F] transition-all duration-200 shadow-md hover:shadow-xl cursor-pointer" aria-label={s.label} style={{ borderRadius: '12px' }}>
-                                    <s.Icon className="w-6 h-6 text-white" />
+                                <motion.a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" whileHover={{ y: -2 }} whileTap={{ scale: 0.94 }} className="flex size-14 shrink-0 aspect-square items-center justify-center rounded-full bg-[#8FA8C8] transition-all duration-200 shadow-sm hover:bg-[#2B4C6F] cursor-pointer" aria-label={s.label}>
+                                    <s.Icon className="size-6 text-white" />
                                 </motion.a>
                             ))}
                         </div>
@@ -202,7 +202,7 @@ export function Contact() {
                             updated on audition dates and other opportunities to get involved!
                         </p>
                         <motion.div whileHover={{ x: 6 }} whileTap={{ scale: 0.97 }} className="inline-block">
-                            <Link to="/auditions" className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 border border-gray-100 hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/50 transition-all duration-300 hover:shadow-xl inline-block cursor-pointer font-yearbook" style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '12px' }}>
+                            <Link to="/auditions" className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 border border-gray-100 hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/50 transition-all duration-300 inline-block cursor-pointer font-yearbook" style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '12px' }}>
                                 Audition Info →
                             </Link>
                         </motion.div>

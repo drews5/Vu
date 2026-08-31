@@ -23,6 +23,10 @@ function getEventPath(slug) {
     return '/events/showcase';
   }
 
+  if (slug === 'fall-auditions-2026') {
+    return '/auditions';
+  }
+
   return `/event/${slug}`;
 }
 

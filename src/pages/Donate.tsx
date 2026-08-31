@@ -46,7 +46,7 @@ export function Donate() {
             />
             {/* Hero Section */}
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
-                <div className="bg-[#91a8c6] py-8 md:py-12 px-4 text-center text-white border border-gray-100 shadow-sm" style={{ borderRadius: '16px' }}>
+                <div className="vu-page-hero bg-[#91a8c6] py-8 md:py-12 px-4 text-center text-white border border-gray-100 shadow-sm" style={{ borderRadius: '16px' }}>
                     <h1 className="font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(32px, 6vw, 64px)', letterSpacing: '0.05em' }}>
                         Support Us
                     </h1>
@@ -60,7 +60,7 @@ export function Donate() {
                 {/* Venmo Section (TOP on Mobile, RIGHT on Desktop) */}
                 <motion.div variants={childVariants} className="order-1 lg:order-2 lg:col-span-5 space-y-6">
                     {/* Venmo Card - Authentic Venmo Styling */}
-                    <div className="bg-white p-0 border border-gray-100 shadow-sm overflow-hidden" style={{ borderRadius: '16px' }}>
+                    <div className="vu-panel bg-white p-0 border border-gray-100 shadow-sm overflow-hidden" style={{ borderRadius: '16px' }}>
                         {/* Venmo Header */}
                         <div className="bg-[#008CFF] py-4 px-6 flex justify-between items-center">
                             <svg viewBox="0 0 512 512" className="w-8 h-8">
@@ -81,7 +81,7 @@ export function Donate() {
                             <h2 className="text-2xl font-bold text-[#3D4248] mb-0.5" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}>Vocal U A Cappella</h2>
                             <p className="text-[#008CFF] font-bold text-lg mb-6" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}>@vocalu</p>
                             <div className="w-full space-y-3">
-                                <motion.a href="https://venmo.com/u/vocalu" target="_blank" rel="noopener noreferrer" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="block w-full bg-[#008CFF] text-white py-4 rounded-full font-bold text-lg shadow-sm hover:bg-[#0074D9] transition-all duration-300 text-center cursor-pointer shadow-md font-yearbook" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}>
+                                <motion.a href="https://venmo.com/u/vocalu" target="_blank" rel="noopener noreferrer" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="block w-full bg-[#008CFF] text-white py-4 rounded-full font-bold text-lg shadow-sm hover:bg-[#0074D9] transition-all duration-300 text-center cursor-pointer font-yearbook" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}>
                                     Pay or Request
                                 </motion.a>
                             </div>
@@ -152,7 +152,7 @@ export function Donate() {
                         { name: 'Our Media', path: '/media' },
                         { name: 'Join Us', path: '/auditions' }
                     ].map((item) => (
-                        <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm hover:shadow-xl transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
+                        <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
                             <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
                                 {item.name}
                             </h3>

@@ -1,15 +1,16 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import fullLogo from 'figma:asset/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
-import heroBackground from '../assets/15a7da513ab99cbb57e9735db4d4d232088838f1.png';
+import heroBackground from '../assets/hero-1600.webp';
+import heroBackgroundLarge from '../assets/hero-2400.webp';
 import groupPhoto from '../assets/group-photo.jpg';
 
 import { Link } from 'react-router-dom';
-import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
+import { ArrowRight, Calendar, MapPin, ChevronDown, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
 import { getEventImage } from '../utils/eventImages';
-import { getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
+import { getEventDatePresentation, getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
@@ -41,7 +42,7 @@ function EventCard({ event }: { event: FeaturedEvent }) {
     e.preventDefault();
     e.stopPropagation();
     const eventLink = `${window.location.origin}${event.link}`;
-    const info = `Come see Vocal U at ${event.title} on ${event.date} at ${event.location}! ${eventLink}`;
+    const info = `${event.title} — ${event.date} at ${event.location}. ${eventLink}`;
     navigator.clipboard.writeText(info);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -53,7 +54,7 @@ function EventCard({ event }: { event: FeaturedEvent }) {
         <img
           src={event.image}
           alt={event.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
           loading="lazy"
         />
         <div className="absolute top-4 left-4">
@@ -66,23 +67,11 @@ function EventCard({ event }: { event: FeaturedEvent }) {
         </div>
       </div>
       <div className="p-6 flex flex-col flex-grow">
-        <div className="flex justify-between items-center mb-1">
+        <div className="flex items-center mb-1">
           <div className="flex items-center gap-2 text-[#8FA8C8] text-xs font-bold" style={fontInter}>
             <Calendar className="w-3.5 h-3.5" />
             {event.date}
           </div>
-          {!event.isInstagram && (
-            <button
-              onClick={handleCopyInfo}
-              className="p-1.5 hover:bg-[#8FA8C8]/10 rounded-full transition-all duration-200 shrink-0 group/copy cursor-pointer -mr-1 relative"
-              title="Copy event info"
-            >
-              <span className={`absolute -top-7 right-0 bg-[#2B4C6F] text-white text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none font-bold whitespace-nowrap ${copied ? 'opacity-100' : 'opacity-0'}`}>
-                COPIED!
-              </span>
-              <Copy className="w-3.5 h-3.5 text-[#8FA8C8]/60 group-hover/copy:text-[#8FA8C8]" />
-            </button>
-          )}
         </div>
         <h3
           className="text-[#2B4C6F] mb-3 text-xl leading-tight group-hover:text-[#8FA8C8] transition-colors line-clamp-2 font-yearbook"
@@ -106,7 +95,7 @@ function EventCard({ event }: { event: FeaturedEvent }) {
         rel="noopener noreferrer"
         whileHover={{ y: -4 }}
         whileTap={{ scale: 0.98 }}
-        className="group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] flex flex-col cursor-pointer"
+        className="vu-card group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:border-[#8FA8C8] flex flex-col cursor-pointer"
         style={{ borderRadius: '16px' }}
       >
         {content}
@@ -116,17 +105,27 @@ function EventCard({ event }: { event: FeaturedEvent }) {
 
   return (
     <motion.div
-      whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
-      className="h-full"
+      className="relative h-full"
     >
       <Link
         to={event.link}
-        className="group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] flex flex-col h-full cursor-pointer"
+        className="vu-card group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:border-[#8FA8C8] flex flex-col h-full cursor-pointer"
         style={{ borderRadius: '16px' }}
       >
         {content}
       </Link>
+      <button
+        type="button"
+        onClick={handleCopyInfo}
+        className="group/copy absolute right-3 top-3 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-white/70 bg-white/95 shadow-sm transition-transform duration-200 hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        aria-label={copied ? `${event.title} event details copied` : `Copy ${event.title} event details`}
+      >
+        <span aria-live="polite" className={`absolute -top-8 right-0 rounded bg-[#2B4C6F] px-2 py-1 text-[10px] font-bold text-white transition-opacity pointer-events-none whitespace-nowrap ${copied ? 'opacity-100' : 'opacity-0'}`}>
+          {copied ? 'COPIED!' : ''}
+        </span>
+        <Copy className="h-4 w-4 text-[#8FA8C8] transition-colors group-hover/copy:text-[#2B4C6F]" />
+      </button>
     </motion.div>
   );
 }
@@ -137,30 +136,38 @@ export function Home() {
   const [items, setItems] = useState<FeaturedEvent[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCards, setVisibleCards] = useState(1);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [hasScrolledAtAll, setHasScrolledAtAll] = useState(false);
-  const [viewportWidth, setViewportWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+  const [isHeroContained, setIsHeroContained] = useState(
+    typeof window !== 'undefined' && window.scrollY > 24
+  );
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
   const [isExtraSmall, setIsExtraSmall] = useState(typeof window !== 'undefined' && window.innerWidth <= 468);
 
-  // Track scroll for full-screen hero transition
+  // Toggle only when crossing the threshold so scroll itself stays free of layout work.
   useEffect(() => {
-    let frameId = 0;
+    let contained = window.scrollY > 24;
+    let hasExplored = window.scrollY > 0;
+
+    setIsHeroContained(contained);
+    setHasScrolledAtAll(hasExplored);
 
     const handleScroll = () => {
-      cancelAnimationFrame(frameId);
-      frameId = window.requestAnimationFrame(() => {
-        const scrollY = window.scrollY;
-        setIsScrolled(scrollY > 20);
-        setHasScrolledAtAll(scrollY > 0);
-      });
+      const scrollY = window.scrollY;
+      const nextContained = contained ? scrollY > 8 : scrollY > 24;
+
+      if (nextContained !== contained) {
+        contained = nextContained;
+        setIsHeroContained(nextContained);
+      }
+
+      if (!hasExplored && scrollY > 0) {
+        hasExplored = true;
+        setHasScrolledAtAll(true);
+      }
     };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => {
-      cancelAnimationFrame(frameId);
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
@@ -170,7 +177,6 @@ export function Home() {
       cancelAnimationFrame(frameId);
       frameId = window.requestAnimationFrame(() => {
         const width = window.innerWidth;
-        setViewportWidth(width);
         setVisibleCards(getVisibleCardCount(width));
         setIsMobile(width < 768);
         setIsExtraSmall(width <= 468);
@@ -215,12 +221,10 @@ export function Home() {
 
       // Strictly chronological sort (oldest to newest)
       const allEvents = processed.sort((a: any, b: any) => a.fullDate.getTime() - b.fullDate.getTime());
-      const pastCount = allEvents.filter((e: any) => e.status === 'Previous').length;
-
       const formattedEvents: any[] = allEvents.map((r: any) => ({
         // Always override tag from DB — past events must show "PAST"
-        tag: r.status === 'Previous' ? 'PAST' : 'UPCOMING',
-        date: r.fullDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        tag: r.status === 'Previous' ? 'PAST' : r.tag || 'UPCOMING',
+        date: getEventDatePresentation(r.slug, r.fullDate).full,
         title: getEventDisplayTitle(r.slug, r.title),
         location: r.location,
         description: r.description,
@@ -236,11 +240,8 @@ export function Home() {
       setItems(formattedEvents);
       const vCards = getVisibleCardCount(window.innerWidth);
       const firstUpcomingIdx = formattedEvents.findIndex((event) => event.status === 'Upcoming');
-      const initialIdx = vCards === 1 && firstUpcomingIdx !== -1
-        ? firstUpcomingIdx
-        : Math.max(0, pastCount - 1);
       const maxIdx = Math.max(0, formattedEvents.length - vCards);
-      setCurrentIndex(Math.min(initialIdx, maxIdx));
+      setCurrentIndex(firstUpcomingIdx === -1 ? maxIdx : Math.min(firstUpcomingIdx, maxIdx));
     }
 
     void fetchData();
@@ -251,18 +252,22 @@ export function Home() {
 
   const nextSlide = () => {
     if (items.length === 0) return;
-    setCurrentIndex((prev) => (prev + 1) % items.length);
+    const finalIndex = Math.max(0, items.length - visibleCards);
+    setCurrentIndex((prev) => (prev >= finalIndex ? 0 : prev + 1));
   };
 
   const prevSlide = () => {
     if (items.length === 0) return;
-    setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
+    const finalIndex = Math.max(0, items.length - visibleCards);
+    setCurrentIndex((prev) => (prev <= 0 ? finalIndex : prev - 1));
   };
   const showArrows = items.length > visibleCards;
-  const compactHeroWidth = isMobile
-    ? Math.max(viewportWidth - 24, 0)
-    : Math.min(Math.max(viewportWidth - 100, 0), 1340);
-  const expandedHeroWidth = viewportWidth || (isMobile ? 390 : 1440);
+  const slideCount = Math.max(1, items.length - visibleCards + 1);
+  const heroStageHeight = isHeroContained
+    ? isMobile
+      ? 'calc(clamp(480px, 72svh, 576px) + 72px)'
+      : '686px'
+    : 'max(560px, min(100svh, 900px))';
   const homeSchema = [
     {
       '@context': 'https://schema.org',
@@ -287,76 +292,57 @@ export function Home() {
       />
 
       {/* Hero Section */}
-      <motion.section
-        className="relative left-1/2 w-screen -translate-x-1/2"
-        initial={false}
-        animate={{
-          marginTop: isScrolled ? 110 : 0,
-          marginBottom: isScrolled ? 25 : 0,
-        }}
-        transition={{ type: 'spring', damping: 25, stiffness: 120 }}
-        style={{ position: 'relative', zIndex: 1 }}
+      <section
+        className="relative left-1/2 mb-[25px] w-screen -translate-x-1/2"
+        style={{ zIndex: 1, height: heroStageHeight }}
       >
         <motion.div
-          className="relative overflow-hidden mx-auto"
+          layout
+          layoutDependency={isHeroContained}
           initial={false}
-          animate={{
-            width: isScrolled ? compactHeroWidth : expandedHeroWidth,
-            height: isScrolled ? 576 : 'min(100vh, 160vw)', // limit height slightly on mobile to prevent extreme cropping
-            borderRadius: isScrolled ? 16 : 0,
-            border: isScrolled ? '1px solid rgba(243, 244, 246, 1)' : '0px solid rgba(243, 244, 246, 0)',
-            boxShadow: isScrolled ? '0 1px 2px 0 rgba(0, 0, 0, 0.05)' : 'none'
-          }}
-          transition={{ type: 'spring', damping: 25, stiffness: 120 }}
+          transition={{ layout: { duration: 0.48, ease: [0.22, 1, 0.36, 1] } }}
+          className={`absolute overflow-hidden bg-[#2B4C6F] ${
+            isHeroContained
+              ? 'inset-x-0 top-[72px] mx-auto w-[calc(100%-24px)] rounded-[18px] border border-white/70 md:top-[110px] md:h-[576px] md:w-[calc(100%-100px)] md:max-w-[1340px]'
+              : 'inset-0 h-full w-full rounded-none border border-transparent'
+          }`}
+          style={isHeroContained && isMobile ? { height: 'clamp(480px, 72svh, 576px)' } : undefined}
         >
           <motion.img
+            layout
+            layoutDependency={isHeroContained}
             src={heroBackground}
+            srcSet={`${heroBackground} 1600w, ${heroBackgroundLarge} 2400w`}
+            sizes="100vw"
             alt="Vocal U Group"
             className="w-full h-full object-cover"
-            style={{ filter: 'brightness(1.08) saturate(1.05)', objectPosition: 'center bottom' }}
-            layout
-            fetchPriority="high"
+            style={{ objectPosition: 'center bottom' }}
+            transition={{ layout: { duration: 0.48, ease: [0.22, 1, 0.36, 1] } }}
             decoding="async"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 flex flex-col items-center px-4 pointer-events-none">
-            <motion.div
+            <div
               className="pt-[calc(10vh-10px)] md:pt-[70px] flex-shrink-0 pointer-events-auto"
-              initial={false}
-              animate={{
-                opacity: 1,
-                scale: isScrolled ? (isMobile ? 0.85 : 1) : (isMobile ? 1 : 1.25),
-                y: isScrolled ? 0 : (isMobile ? 10 : 20)
-              }}
-              transition={{ type: 'spring', damping: 25, stiffness: 120 }}
-              style={{ originY: 0 }}
             >
-              <div className="cursor-default outline-none select-none">
+              <div className="vu-hero-logo-shell cursor-default outline-none select-none">
                 <img
                   src={fullLogo}
                   alt="Vocal U - University of Minnesota's A Cappella Group"
                   className="w-[85vw] max-w-[340px] md:max-w-[280px]"
-                  style={{ filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3))' }}
+                  style={{ filter: 'drop-shadow(0 2px 3px rgba(19, 43, 68, 0.2))' }}
                 />
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="absolute bottom-[125px] left-1/2 -translate-x-1/2 pointer-events-auto"
-              initial={false}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: (isExtraSmall ? 45 : 0) + (isScrolled ? 50 : 0),
-              }}
-              transition={{ type: 'spring', damping: 25, stiffness: 120 }}
+            <div
+              className="pointer-events-none absolute inset-x-0 z-20 flex justify-center px-4"
+              style={{ bottom: isExtraSmall ? '70px' : '125px' }}
             >
               <motion.div
-                initial={false}
-                animate={{ y: isScrolled ? 4 : 0 }}
-                transition={{ type: 'spring', damping: 24, stiffness: 180 }}
                 whileHover={{ scale: 1.04, y: -2 }}
                 whileTap={{ scale: 0.97 }}
-                className="relative rounded-[16px] shadow-[0_18px_45px_rgba(43,76,111,0.22)]"
+                className="hero-audition-glow pointer-events-auto rounded-[16px]"
               >
                 <Link
                   to="/auditions"
@@ -375,45 +361,37 @@ export function Home() {
                   </span>
                 </Link>
               </motion.div>
-            </motion.div>
+            </div>
           </div>
 
-          {/* Swipe Hint Animation - Mobile Only */}
+          {/* Scroll cue - mobile */}
           <AnimatePresence>
             {!hasScrolledAtAll && isMobile && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+              <motion.button
+                type="button"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                transition={{ opacity: { delay: 4 }, default: { type: 'spring', damping: 25, stiffness: 120 } }}
-                className="absolute bottom-24 right-6 z-10 pointer-events-none"
+                transition={{ opacity: { delay: 2 }, default: { type: 'spring', damping: 24, stiffness: 150 } }}
+                onClick={() => document.getElementById('meet-vocal-u')?.scrollIntoView({ behavior: 'smooth' })}
+                className="absolute bottom-[72px] right-5 z-20 flex items-center gap-1.5 rounded-full border border-white/40 bg-[#2B4C6F]/90 px-3 py-2 text-white shadow-sm"
+                aria-label="Scroll to meet Vocal U"
               >
-                <div className="relative w-14 h-28 flex justify-center overflow-hidden">
-                  <motion.div
-                    animate={{
-                      y: [90, 15, 15],
-                      opacity: [0, 0.75, 0]
-                    }}
-                    transition={{
-                      duration: 2.5,
-                      repeat: Infinity,
-                      ease: [0.45, 0.05, 0.55, 0.95]
-                    }}
-                    className="flex flex-col items-center"
-                  >
-                    <span className="text-4xl drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" role="img" aria-label="scroll" style={{ filter: 'brightness(0) invert(1)' }}>👆</span>
-                  </motion.div>
-                </div>
-              </motion.div>
+                <span className="text-[10px] font-bold uppercase tracking-[0.16em]" style={fontInter}>Explore</span>
+                <span>
+                  <ChevronDown className="h-4 w-4" />
+                </span>
+              </motion.button>
             )}
           </AnimatePresence>
         </motion.div>
-      </motion.section>
+      </section>
 
       {/* We Are Vocal U Section */}
       <motion.section
+        id="meet-vocal-u"
         variants={childVariants}
-        className="bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center shadow-sm hover:shadow-md transition-shadow duration-300 relative z-10"
+        className="vu-panel bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 items-center shadow-sm transition-shadow duration-300 relative z-10"
         style={{
           gap: '25px',
           marginBottom: '25px',
@@ -458,7 +436,7 @@ export function Home() {
           >
             <Link
               to="/about"
-              className="inline-flex items-center gap-2 bg-[#2B4C6F] text-white px-8 py-3 border border-[#2B4C6F] hover:bg-white hover:text-[#2B4C6F] hover:shadow-xl transition-all duration-300 group cursor-pointer font-yearbook"
+              className="inline-flex items-center gap-2 bg-[#2B4C6F] text-white px-8 py-3 border border-[#2B4C6F] hover:bg-white hover:text-[#2B4C6F] transition-all duration-300 group cursor-pointer font-yearbook"
               style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}
             >
               Learn More
@@ -468,7 +446,7 @@ export function Home() {
         </div>
 
         <div
-          className="overflow-hidden border border-gray-100"
+          className="vu-image-frame overflow-hidden border border-gray-100"
           style={{ borderRadius: '16px' }}
         >
           <img
@@ -484,7 +462,7 @@ export function Home() {
       {/* Events Section */}
       <motion.section
         variants={childVariants}
-        className="relative py-12 md:py-16 px-6 md:px-12"
+        className="vu-events-stage relative py-12 md:py-16 px-6 md:px-12"
         style={{
           marginBottom: '25px',
           borderRadius: '16px',
@@ -510,56 +488,82 @@ export function Home() {
             </p>
           </div>
 
-          <div className="relative group/carousel px-0">
-            <div className="overflow-hidden py-8">
-              <motion.div
-                animate={{ x: `-${currentIndex * (100 / visibleCards)}%` }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="flex"
-                style={{ width: '100%' }}
-              >
-                {items.map((event, idx) => (
-                  <div
-                    key={idx}
-                    className="shrink-0 px-2 md:px-4 flex items-stretch"
-                    style={{ width: `${100 / visibleCards}%` }}
-                  >
-                    <div className="w-full">
-                      <EventCard event={event} />
+          <div
+            className="relative group/carousel px-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+            role="region"
+            aria-label="Featured events carousel"
+            tabIndex={0}
+            onKeyDown={(event) => {
+              if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                prevSlide();
+              }
+              if (event.key === 'ArrowRight') {
+                event.preventDefault();
+                nextSlide();
+              }
+            }}
+          >
+            <div className="overflow-hidden py-8 touch-pan-y">
+                <motion.div
+                  animate={{ x: `-${currentIndex * (100 / visibleCards)}%` }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.12}
+                  onDragEnd={(_, info) => {
+                    if (info.offset.x < -55) nextSlide();
+                    if (info.offset.x > 55) prevSlide();
+                  }}
+                  className="flex cursor-grab active:cursor-grabbing"
+                  style={{ width: '100%' }}
+                >
+                  {items.map((event, idx) => (
+                    <div
+                      key={idx}
+                      className="shrink-0 px-2 md:px-4 flex items-stretch"
+                      style={{ width: `${100 / visibleCards}%` }}
+                    >
+                      <div className="w-full">
+                        <EventCard event={event} />
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </motion.div>
-            </div>
+                  ))}
+                </motion.div>
+              </div>
 
             {showArrows && (
               <>
                 <button
                   onClick={prevSlide}
-                  className="absolute left-4 md:-left-6 top-1/2 -translate-y-1/2 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors"
-                  aria-label="Previous slide"
+                  className="absolute left-2 md:-left-6 top-1/2 -translate-y-1/2 bg-white text-[#2B4C6F] flex h-11 w-11 items-center justify-center rounded-full border border-[#8FA8C8]/20 shadow-sm z-20 hover:bg-[#F8FAFC] hover:scale-105 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  aria-label="Previous event"
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </button>
                 <button
                   onClick={nextSlide}
-                  className="absolute right-4 md:-right-6 top-1/2 -translate-y-1/2 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors"
-                  aria-label="Next slide"
+                  className="absolute right-2 md:-right-6 top-1/2 -translate-y-1/2 bg-white text-[#2B4C6F] flex h-11 w-11 items-center justify-center rounded-full border border-[#8FA8C8]/20 shadow-sm z-20 hover:bg-[#F8FAFC] hover:scale-105 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  aria-label="Next event"
                 >
                   <ChevronRight className="w-6 h-6" />
                 </button>
               </>
             )}
 
-            {/* Pagination Dots for Mobile/Tablet */}
+            {/* Pagination */}
             {items.length > 1 && (
-              <div className="flex justify-center gap-2 mt-5 lg:hidden">
-                {items.map((_, idx) => (
+              <div className="mt-3 flex flex-wrap justify-center gap-0.5" aria-label="Choose an event">
+                {Array.from({ length: slideCount }, (_, idx) => (
                   <button
                     key={idx}
                     onClick={() => setCurrentIndex(idx)}
-                    className={`h-2 rounded-full transition-all duration-300 ${currentIndex === idx ? 'bg-white w-4' : 'bg-white/40 w-2'}`}
-                  />
+                    className="group/dot flex h-11 w-8 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-white"
+                    aria-label={`Show event ${idx + 1} of ${slideCount}`}
+                    aria-current={currentIndex === idx ? 'true' : undefined}
+                  >
+                    <span className={`h-2 rounded-full transition-all duration-300 ${currentIndex === idx ? 'bg-white w-5' : 'bg-white/40 group-hover/dot:bg-white/70 w-2'}`} />
+                  </button>
                 ))}
               </div>
             )}

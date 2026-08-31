@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { AnimatePresence } from 'motion/react';
+import { AnimatePresence, MotionConfig } from 'motion/react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -23,8 +23,15 @@ const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.N
 
 function PageLoader() {
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#8FA8C8]" />
+    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3" role="status" aria-label="Loading page">
+      <div className="vu-equalizer" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
+      <span className="font-yearbook text-sm tracking-[0.2em] text-[#2B4C6F]/60">WARMING UP</span>
     </div>
   );
 }
@@ -67,11 +74,11 @@ function AppContent() {
   const hideHeaderFooter = isAuditionsPage;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="vu-site-shell min-h-screen bg-white">
       <ScrollToTop />
       <GlobalHaptics />
       <ProductionInstrumentation />
-      <div className="max-w-[1440px] mx-auto px-3 md:px-[50px]">
+      <div className="vu-frame vu-content-shell">
         {!hideHeaderFooter && <Header />}
         <main className={location.pathname !== '/' && !hideHeaderFooter ? 'md:pt-[110px]' : ''}>
           <Suspense fallback={<PageLoader />}>
@@ -104,9 +111,11 @@ function AppContent() {
 export default function App() {
   return (
     <HelmetProvider>
-      <Router>
-        <AppContent />
-      </Router>
+      <MotionConfig reducedMotion="user">
+        <Router>
+          <AppContent />
+        </Router>
+      </MotionConfig>
     </HelmetProvider>
   );
 }

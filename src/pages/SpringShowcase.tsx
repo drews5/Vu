@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, Calendar, Copy, MapPin, Navigation, Share2 } from 'lucide-react';
+import { ArrowLeft, Calendar, Copy, MapPin, Navigation, Share2, Check } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import showcasePhoto from '../assets/spring-showcase.jpg';
@@ -98,39 +98,77 @@ async function copyText(text: string) {
   return copied;
 }
 
+const BloomingFlowers = () => {
+  const flowers = [
+    { top: '-3%', left: '-1%', size: 58, rotate: 18, color: '#FFB7B2' },
+    { bottom: '-4%', right: '-1%', size: 68, rotate: -18, color: '#E2F0CB' },
+  ];
+  return (
+    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden" style={{ borderRadius: '16px' }}>
+      {flowers.map((f, i) => (
+        <div
+          key={i}
+          className="absolute opacity-60"
+          style={{ top: f.top, bottom: f.bottom, left: f.left, right: f.right, transform: `rotate(${f.rotate}deg)` }}
+        >
+          <svg width={f.size} height={f.size} viewBox="0 0 100 100">
+            <g transform="translate(50 50)">
+              <path fill={f.color} d="M0,0 C-15,-20 -10,-40 0,-45 C10,-40 15,-20 0,0 Z" />
+              <path fill={f.color} d="M0,0 C-15,-20 -10,-40 0,-45 C10,-40 15,-20 0,0 Z" transform="rotate(72)" />
+              <path fill={f.color} d="M0,0 C-15,-20 -10,-40 0,-45 C10,-40 15,-20 0,0 Z" transform="rotate(144)" />
+              <path fill={f.color} d="M0,0 C-15,-20 -10,-40 0,-45 C10,-40 15,-20 0,0 Z" transform="rotate(216)" />
+              <path fill={f.color} d="M0,0 C-15,-20 -10,-40 0,-45 C10,-40 15,-20 0,0 Z" transform="rotate(288)" />
+              <circle cx="0" cy="0" r="8" fill="#FFF4D2" />
+              <circle cx="0" cy="0" r="4" fill="#ECA2A2" />
+            </g>
+          </svg>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 function ActionButton({
   href,
   onClick,
   title,
   icon,
+  primary = false,
 }: {
   href?: string;
   onClick?: () => void;
   title: string;
   icon: ReactNode;
+  primary?: boolean;
 }) {
+  const baseClasses = "flex items-center justify-center gap-2 w-full px-4 py-3.5 sm:py-3 transition-all duration-300 font-semibold text-[13px] sm:text-[14px] cursor-pointer";
+
+  const styleClasses = primary
+    ? "bg-[#2B4C6F] text-white border border-[#2B4C6F] hover:bg-white hover:text-[#2B4C6F]"
+    : "bg-white text-[#2B4C6F] border border-[#DDE7F0] hover:border-[#8FA8C8]";
+
   const content = (
-    <span
-      className="group flex min-h-[56px] items-center justify-center gap-2 rounded-[20px] border border-[#D7E1EC] bg-[linear-gradient(180deg,#FFFFFF_0%,#F8FBFF_100%)] px-3 py-3 text-center text-[#2B4C6F] shadow-[0_10px_24px_rgba(43,76,111,0.08)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#8FA8C8] hover:shadow-[0_18px_34px_rgba(43,76,111,0.14)] active:translate-y-0"
-      style={{ ...fontInter, fontSize: '13px', fontWeight: 700, lineHeight: '1.2' }}
+    <motion.span
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.98 }}
+      className={`${baseClasses} ${styleClasses}`}
+      style={{ borderRadius: '12px', ...fontInter }}
     >
-      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EEF4FA] text-[#6F8BA8] transition-colors group-hover:bg-[#E1ECF7] group-hover:text-[#2B4C6F]">
-        {icon}
-      </span>
-      {title}
-    </span>
+      {icon}
+      <span>{title}</span>
+    </motion.span>
   );
 
   if (href) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="block">
+      <a href={href} target="_blank" rel="noopener noreferrer" className="block w-full">
         {content}
       </a>
     );
   }
 
   return (
-    <button type="button" onClick={onClick} className="block w-full cursor-pointer">
+    <button type="button" onClick={onClick} className="block w-full">
       {content}
     </button>
   );
@@ -167,7 +205,7 @@ export function SpringShowcase() {
         dateLabel: formatEventDate(fullDate),
         rawDate: data.date,
         time: data.display_time || '7:30 PM',
-        location: data.location,
+        location: data.location || fallbackEvent.location,
         address: data.address,
         description: showcaseDescription,
         imageUrl: showcasePhoto,
@@ -264,7 +302,7 @@ export function SpringShowcase() {
   };
 
   return (
-    <PageTransition className="pb-20 md:pb-28">
+    <PageTransition className="pb-24">
       <Seo
         title={springShowcaseTitle}
         description={inviteDescription}
@@ -279,100 +317,135 @@ export function SpringShowcase() {
         schema={showcaseSchema}
       />
 
-      <motion.section variants={childVariants} className="mt-8 md:mt-10">
-        <div className="overflow-hidden rounded-[30px] border border-[#DDE7F0] bg-white p-5 shadow-sm md:p-7 lg:p-8">
+      <section className="mt-8 w-full md:mt-12">
+        <motion.div whileHover={{ x: -4 }} className="inline-block mb-6 md:mb-8">
           <Link
             to="/events"
-            className="mb-5 inline-flex items-center gap-2 text-[#6F8BA8] transition-colors hover:text-[#2B4C6F]"
+            className="inline-flex items-center gap-2 text-[#6F8BA8] font-medium transition-colors hover:text-[#2B4C6F]"
             style={fontInter}
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Events
           </Link>
+        </motion.div>
 
-          <div className="lg:grid lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1fr)] lg:items-stretch lg:gap-8">
-            <div className="overflow-hidden rounded-[24px] border border-[#E6EDF5] bg-white shadow-sm">
-              <img
-                src={event.imageUrl}
-                alt={event.title}
-                className="h-[190px] w-full object-cover sm:h-[280px] lg:h-full lg:min-h-[560px]"
-                style={{ objectPosition: 'center 42%' }}
-              />
-            </div>
+        {/* Main Invite Card */}
+        <motion.div
+          className="bg-white border border-gray-100 shadow-sm overflow-hidden relative flex flex-col md:flex-row"
+          style={{ borderRadius: '16px' }}
+          initial={{ y: 15, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
+          <BloomingFlowers />
 
-            <div className="mt-8 flex flex-col md:mt-10 lg:mt-0 lg:justify-center">
-              <div
-                className="mb-4 inline-flex w-fit items-center rounded-full border border-[#D7E1EC] bg-white px-3 py-1.5 text-[#6F8BA8] shadow-sm md:mb-5"
-                style={{ ...fontInter, fontSize: '11px', fontWeight: 700, letterSpacing: '0.18em' }}
+          {/* Left: Top/Side Banner Background */}
+          <div className="relative h-64 sm:h-80 md:h-auto md:w-[45%] lg:w-[45%] shrink-0 bg-[#f8fbff]">
+            <img
+              src={event.imageUrl}
+              alt={event.title}
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: 'center 40%' }}
+            />
+            {/* Elegant gradient blending into content */}
+            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent pointer-events-none md:hidden"></div>
+            <div className="hidden md:block absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+
+            {/* "You're Invited" floating badge */}
+            <div className="absolute top-4 sm:top-6 left-4 sm:left-6 md:top-8 md:left-8">
+              <span
+                className="bg-white/95 backdrop-blur-sm text-[#2B4C6F] px-4 py-2 text-[11px] tracking-widest font-yearbook shadow-sm border border-white"
+                style={{ borderRadius: '12px', ...fontInter, fontWeight: 700 }}
               >
                 YOU&apos;RE INVITED!
+              </span>
+            </div>
+          </div>
+
+          {/* Right: Invitation Content */}
+          <div className="px-6 py-8 sm:px-12 md:px-10 lg:px-14 sm:py-12 md:py-16 flex-1 flex flex-col items-center md:items-start text-center md:text-left relative z-20">
+
+            <div className="relative inline-block w-full">
+              <h1
+                className="text-[#2B4C6F] leading-tight flex flex-col items-center md:items-start"
+                style={{ ...fontYearbook, fontSize: 'clamp(38px, 5.5vw, 64px)', letterSpacing: '0.02em' }}
+              >
+                <span>Vocal U</span>
+                <span className="text-[#8FA8C8] text-[0.85em] mt-1 md:mt-2 relative inline-flex items-center justify-center md:justify-start">
+                  Spring Showcase
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={handleCopyInvite}
+                    className="absolute -right-10 md:-right-14 text-[#A3B8D3] hover:text-[#2B4C6F] p-2"
+                    title="Copy full invite details"
+                  >
+                    {copiedState === 'invite' ? <Check className="h-5 w-5 md:h-6 md:w-6 text-green-500" /> : <Copy className="h-5 w-5 md:h-6 md:w-6" />}
+                  </motion.button>
+                </span>
+              </h1>
+            </div>
+
+            {/* Clean Information List (No boxes) */}
+            <div className="mt-6 md:mt-8 flex flex-col gap-5 sm:gap-6 w-full relative z-20">
+              {/* Date & Time */}
+              <div className="flex items-center md:justify-start gap-4 group cursor-default">
+                 <div className="flex items-center justify-center p-3 bg-[#EEF4FA] text-[#8FA8C8] rounded-full shrink-0 transition-colors group-hover:bg-[#8FA8C8]/15 group-hover:text-[#2B4C6F]">
+                   <Calendar className="h-5 w-5 sm:h-6 sm:w-6 transition-transform group-hover:scale-110" />
+                 </div>
+                 <div className="flex flex-col items-start text-left">
+                   <div className="font-bold text-[#2B4C6F] text-[15px] sm:text-[17px] leading-none mb-1 md:mb-1.5">{event.dateLabel}</div>
+                   <div className="font-medium text-[#2B4C6F]/70 text-[14px] sm:text-[15px] leading-none uppercase tracking-wider">{event.time}</div>
+                 </div>
               </div>
 
-              <div className="flex items-start justify-between gap-3">
-                <h1
-                  className="text-[#2B4C6F]"
-                  style={{ ...fontYearbook, fontSize: 'clamp(28px, 6vw, 72px)', lineHeight: '1', letterSpacing: '0.04em' }}
-                >
-                  <span className="block">Vocal U</span>
-                  <span className="mt-1 block sm:mt-2">Spring Showcase</span>
-                </h1>
-                <button
-                  type="button"
-                  onClick={handleCopyInvite}
-                  className="mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center text-[#6F8BA8] transition-colors hover:text-[#2B4C6F]"
-                  aria-label={copiedState === 'invite' ? 'Invite copied' : 'Copy invite'}
-                >
-                  <Copy className="h-4 w-4" />
-                </button>
+              {/* Location & Address */}
+              <div className="flex items-center md:justify-start gap-4 group cursor-default">
+                 <div className="flex items-center justify-center p-3 bg-[#EEF4FA] text-[#8FA8C8] rounded-full shrink-0 transition-colors group-hover:bg-[#8FA8C8]/15 group-hover:text-[#2B4C6F]">
+                   <MapPin className="h-5 w-5 sm:h-6 sm:w-6 transition-transform group-hover:scale-110" />
+                 </div>
+                 <div className="flex flex-col items-start text-left">
+                   <div className="font-bold text-[#2B4C6F] text-[15px] sm:text-[17px] leading-none mb-1 md:mb-1.5">{event.location}</div>
+                   <div className="font-medium text-[#2B4C6F]/70 text-[14px] sm:text-[15px] leading-snug lg:whitespace-nowrap">{event.address}</div>
+                 </div>
               </div>
+            </div>
 
-              <div className="mt-6 space-y-2.5 text-[#2B4C6F]/78 md:mt-7" style={{ ...fontInter, fontSize: '14px', lineHeight: '1.45' }}>
-                <div className="flex items-start gap-2">
-                  <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-[#8FA8C8]" />
-                  <span>
-                    {event.dateLabel}
-                    <br />
-                    {event.time}
-                  </span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#8FA8C8]" />
-                  <span>
-                    {event.location}
-                    <br />
-                    {event.address}
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-5 grid grid-cols-3 gap-3">
+            {/* Buttons Above Description */}
+            <div className="mt-8 w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3 relative z-20">
                 <ActionButton
                   href={calendarUrl}
                   title="Add to Calendar"
                   icon={<Calendar className="h-4 w-4" />}
+                  primary={true}
                 />
                 <ActionButton
                   href={navigationUrl}
-                  title="Navigate"
+                  title="Navigate to Venue"
                   icon={<Navigation className="h-4 w-4" />}
                 />
-                <ActionButton
-                  onClick={handleShare}
-                  title={copiedState === 'link' ? 'Link Copied' : 'Share'}
-                  icon={<Share2 className="h-4 w-4" />}
-                />
-              </div>
+                <div className="sm:col-span-2">
+                  <ActionButton
+                    onClick={handleShare}
+                    title={copiedState === 'link' ? 'Copied Link' : 'Share Invite'}
+                    icon={<Share2 className="h-4 w-4" />}
+                  />
+                </div>
+            </div>
 
-              <p className="mt-6 max-w-2xl text-[#2B4C6F]/80" style={{ ...fontInter, fontSize: '15px', lineHeight: '1.65' }}>
+            {/* Description */}
+            <div className="mt-8 md:mt-10 max-w-2xl border-t border-[#DDE7F0] pt-8 md:pt-10">
+              <p className="text-[#2B4C6F]/80 leading-relaxed text-[16px] sm:text-[17px] md:text-[18px]" style={fontInter}>
                 {event.description}
               </p>
-              <p className="mt-2 text-[#2B4C6F]" style={{ ...fontInter, fontSize: '15px', fontWeight: 600, lineHeight: '1.5' }}>
+              <p className="font-bold text-[#2B4C6F] text-[16px] sm:text-[17px] md:text-[18px] mt-4" style={fontInter}>
                 {welcomeLine}
               </p>
             </div>
+
           </div>
-        </div>
-      </motion.section>
+        </motion.div>
+      </section>
     </PageTransition>
   );
 }

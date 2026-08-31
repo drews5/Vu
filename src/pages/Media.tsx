@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Instagram, Youtube, ExternalLink, Calendar, MessageCircle, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
-import { Seo, toAbsoluteUrl } from '../components/Seo';
+import { Seo, toAbsoluteUrl, type SeoSchema } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
@@ -18,7 +18,7 @@ type InstaPost = {
 };
 const InstagramCard = memo(function InstagramCard({ post }: { post: InstaPost }) {
     return (
-        <motion.a href={post.permalink} target="_blank" rel="noopener noreferrer" whileHover={{ y: -4 }} whileTap={{ scale: 0.98 }} className="group bg-white overflow-hidden border border-gray-100 shadow-sm transition-[box-shadow,border-color] duration-300 hover:shadow-xl hover:border-[#8FA8C8] flex flex-col cursor-pointer" style={{ borderRadius: '16px' }}>
+        <motion.a href={post.permalink} target="_blank" rel="noopener noreferrer" whileTap={{ scale: 0.98 }} className="vu-card group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:border-[#8FA8C8] flex flex-col cursor-pointer" style={{ borderRadius: '16px' }}>
             <div className="relative overflow-hidden bg-gray-50">
                 <img src={post.mediaUrl} alt={post.caption || "Instagram Post"} className="w-full h-auto block transition-transform duration-700 group-hover:scale-105" loading="lazy" />
                 <div className="absolute inset-0 bg-[#2B4C6F]/0 group-hover:bg-[#2B4C6F]/20 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -73,8 +73,9 @@ const VideoModal = ({ vId, onClose }: { vId: string; onClose: () => void }) => {
                 }}
                 role="dialog"
                 aria-modal="true"
+                aria-label="Vocal U video player"
             >
-                <button onClick={onClose} className="absolute right-4 top-4 z-20 rounded-full bg-black/45 p-2 text-white transition-colors hover:bg-black/60 hover:text-[#8FA8C8]">
+                <button onClick={onClose} className="absolute right-4 top-4 z-20 rounded-full bg-black/45 p-2 text-white transition-colors hover:bg-black/60 hover:text-[#8FA8C8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" aria-label="Close video player">
                     <X className="w-7 h-7" />
                 </button>
                 <iframe className="h-full w-full border-0" src={`https://www.youtube.com/embed/${vId}?autoplay=1&rel=0`} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen title="Video Player" />
@@ -88,8 +89,8 @@ const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen 
     const title = typeof item === 'string' ? 'ICCA 2025 Set: Full Performance' : item.snippet.title;
     const dateStr = typeof item === 'string' ? 'Mar 1, 2025' : new Date(item.snippet.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     return (
-        <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.99 }} onClick={() => onOpen(vId)}
-            className={`group bg-white overflow-hidden border shadow-md transition-[box-shadow,border-color] duration-300 hover:shadow-xl flex flex-col cursor-pointer ${isHighlighted ? 'border-[#8FA8C8] ring-4 ring-[#8FA8C8]/20' : 'border-gray-100'
+        <motion.button type="button" whileHover={{ y: -3 }} whileTap={{ scale: 0.99 }} onClick={() => onOpen(vId)}
+            className={`group flex w-full flex-col overflow-hidden border bg-white text-left shadow-sm transition-[box-shadow,border-color] duration-200 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#2B4C6F] ${isHighlighted ? 'border-[#8FA8C8] ring-4 ring-[#8FA8C8]/20' : 'border-gray-100'
                 }`}
             style={{ borderRadius: '16px' }}
         >
@@ -103,7 +104,7 @@ const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen 
                 )}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10 bg-black/20">
                     <div className="bg-white/20 backdrop-blur-md p-4 rounded-full border border-white/30">
-                        <Youtube className="w-8 h-8 text-white shadow-xl" />
+                        <Youtube className="w-8 h-8 text-white" />
                     </div>
                 </div>
                 <img src={`https://img.youtube.com/vi/${vId}/maxresdefault.jpg`} alt={title} className="absolute top-0 left-0 w-full h-full object-cover" />
@@ -124,7 +125,7 @@ const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen 
                     </p>
                 )}
             </div>
-        </motion.div>
+        </motion.button>
     );
 });
 export function Media() {
@@ -165,7 +166,7 @@ export function Media() {
         }
         loadFeeds();
     }, []);
-    const mediaSchema = [
+    const mediaSchema: SeoSchema[] = [
         {
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
@@ -210,7 +211,7 @@ export function Media() {
             </AnimatePresence>
             {/* Header Section */}
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
-                <div className="bg-[#8FA8C8] py-10 md:py-16 px-4 text-center" style={{ borderRadius: '16px' }}>
+                <div className="vu-page-hero bg-[#8FA8C8] py-10 md:py-16 px-4 text-center" style={{ borderRadius: '16px' }}>
                     <h1 className="text-white font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}>
                         Media
                     </h1>
@@ -318,7 +319,7 @@ export function Media() {
                         { name: 'Support Us', path: '/donate' },
                         { name: 'Join Us', path: '/auditions' }
                     ].map((item) => (
-                        <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm hover:shadow-xl transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
+                        <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
                             <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
                                 {item.name}
                             </h3>

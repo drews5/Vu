@@ -6,26 +6,23 @@ import { ReactNode } from 'react';
 export const pageVariants = {
     initial: {
         opacity: 0,
-        y: 20,
-        filter: 'blur(10px)',
+        y: 10,
     },
     animate: {
         opacity: 1,
         y: 0,
-        filter: 'blur(0px)',
         transition: {
-            duration: 0.5,
+            duration: 0.32,
             ease: [0.22, 1, 0.36, 1] as const, // Custom ease-out
             when: 'beforeChildren',
-            staggerChildren: 0.1,
+            staggerChildren: 0.05,
         },
     },
     exit: {
         opacity: 0,
-        y: -20,
-        filter: 'blur(10px)',
+        y: -6,
         transition: {
-            duration: 0.3,
+            duration: 0.18,
             ease: [0.22, 1, 0.36, 1] as const,
         },
     },
@@ -34,13 +31,13 @@ export const pageVariants = {
 export const childVariants = {
     initial: {
         opacity: 0,
-        y: 20,
+        y: 10,
     },
     animate: {
         opacity: 1,
         y: 0,
         transition: {
-            duration: 0.5,
+            duration: 0.32,
             ease: [0.22, 1, 0.36, 1] as const,
         },
     },

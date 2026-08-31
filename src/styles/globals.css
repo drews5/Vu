@@ -28,6 +28,9 @@
 
 :root {
     --font-yearbook-stack: "Yearbook Solid", "Graduate", "Rockwell Extra Bold", "Bookman Old Style", Georgia, serif;
+    --vu-navy: #2B4C6F;
+    --vu-blue: #8FA8C8;
+    --vu-powder: #DDEAF7;
     --font-size: 16px;
     --background: #fff;
     --foreground: oklch(0.145 0 0);
@@ -152,12 +155,212 @@
         @apply border-border outline-ring/50
     }
 
-    body {
+body {
         @apply bg-background text-foreground;
         font-family: 'Inter', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         overflow-x: hidden
+    }
+}
+
+.vu-site-shell {
+    position: relative;
+    isolation: isolate;
+    background:
+        linear-gradient(180deg, #fff 0%, #fbfdff 42%, #f7fbff 100%);
+}
+
+.vu-frame {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 12px;
+}
+
+@media (min-width: 768px) {
+    .vu-frame {
+        padding-inline: 50px;
+    }
+}
+
+.vu-content-shell {
+    position: relative;
+    z-index: 1;
+}
+
+.vu-equalizer {
+    display: flex;
+    height: 42px;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.vu-equalizer span {
+    width: 6px;
+    height: 40px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #A3B8D3, #2B4C6F);
+    transform: scaleY(.3);
+    transform-origin: bottom;
+    animation: vu-equalizer-bounce .85s ease-in-out infinite alternate;
+}
+
+.vu-equalizer span:nth-child(2) { animation-delay: -.52s; }
+.vu-equalizer span:nth-child(3) { animation-delay: -.22s; }
+.vu-equalizer span:nth-child(4) { animation-delay: -.66s; }
+.vu-equalizer span:nth-child(5) { animation-delay: -.35s; }
+
+@keyframes vu-equalizer-bounce {
+    to { transform: scaleY(1); }
+}
+
+.vu-page-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: 20px !important;
+    border-color: rgba(255, 255, 255, .5) !important;
+    box-shadow:
+        0 8px 20px -18px rgba(43, 76, 111, .24),
+        inset 0 1px 0 rgba(255, 255, 255, .34) !important;
+}
+
+.vu-page-hero::before {
+    content: '\266A';
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    right: clamp(20px, 6vw, 84px);
+    color: rgba(255, 255, 255, .1);
+    font-family: var(--font-yearbook-stack);
+    font-size: clamp(74px, 11vw, 150px);
+    line-height: 1;
+    transform: translateY(-50%) rotate(-7deg);
+    pointer-events: none;
+}
+
+.vu-page-hero::after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent 0 28px, rgba(255, 255, 255, .04) 29px 30px);
+    pointer-events: none;
+}
+
+.vu-page-hero h1,
+.vu-page-hero p {
+    position: relative;
+    z-index: 3;
+}
+
+.vu-page-hero h1 {
+    text-shadow: 0 3px 12px rgba(19, 43, 68, .16);
+}
+
+.vu-card {
+    position: relative;
+    border-radius: 18px !important;
+    border-color: rgba(143, 168, 200, .24) !important;
+    box-shadow: 0 7px 18px -16px rgba(43, 76, 111, .28) !important;
+    transition:
+        transform .22s ease-out,
+        box-shadow .22s ease-out,
+        border-color .22s ease-out !important;
+}
+
+.vu-panel {
+    position: relative;
+    border-radius: 18px !important;
+    border-color: rgba(143, 168, 200, .22) !important;
+    box-shadow: 0 6px 18px -16px rgba(43, 76, 111, .22) !important;
+}
+
+.vu-song-card {
+    overflow: hidden;
+    padding-left: 4.5rem !important;
+}
+
+.vu-song-card::before {
+    content: '♪';
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    color: rgba(143, 168, 200, .34);
+    font-family: var(--font-yearbook-stack);
+    font-size: 2.15rem;
+    transform: translateY(-50%) rotate(-8deg);
+}
+
+@media (hover: hover) {
+    .vu-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(143, 168, 200, .62) !important;
+        box-shadow: 0 11px 24px -18px rgba(43, 76, 111, .32) !important;
+    }
+}
+
+@media (hover: hover) and (min-width: 768px) {
+    .vu-member-card:nth-child(odd) { transform: rotate(-.15deg); }
+    .vu-member-card:nth-child(even) { transform: rotate(.15deg); }
+}
+
+.vu-image-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px !important;
+    box-shadow: 0 9px 22px -18px rgba(43, 76, 111, .26);
+}
+
+.vu-image-frame img {
+    transition: transform .3s ease-out;
+}
+
+@media (hover: hover) {
+    .vu-image-frame:hover img {
+        transform: scale(1.025);
+    }
+}
+
+.vu-events-stage {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: 20px !important;
+    box-shadow: 0 12px 28px -22px rgba(43, 76, 111, .32);
+}
+
+.vu-events-stage::before {
+    content: '♫';
+    position: absolute;
+    z-index: 0;
+    top: -46px;
+    left: -12px;
+    color: rgba(255, 255, 255, .11);
+    font-family: var(--font-yearbook-stack);
+    font-size: clamp(150px, 24vw, 320px);
+    transform: rotate(-12deg);
+    pointer-events: none;
+}
+
+.vu-events-stage::after {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    background: radial-gradient(circle at 85% 12%, rgba(255, 255, 255, .22), transparent 28%);
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
     }
 }
 
@@ -223,44 +426,44 @@ button,
     font-weight: normal
 }
 
-@keyframes gradient-shift {
-    0% {
-        background-position: 0 0
-    }
-
-    100% {
-        background-position: 100% 0
-    }
+.hero-audition-glow {
+    position: relative;
+    isolation: isolate;
 }
 
-@keyframes hero-audition-stroke {
-    0% {
-        box-shadow:
-            0 0 0 1px rgba(168, 220, 255, .95),
-            0 0 12px rgba(145, 205, 255, .5),
-            0 18px 45px rgba(43, 76, 111, .22)
-    }
-
-    50% {
-        box-shadow:
-            0 0 0 2px rgba(205, 235, 255, 1),
-            0 0 20px rgba(145, 205, 255, .78),
-            0 18px 45px rgba(43, 76, 111, .22)
-    }
-
-    100% {
-        box-shadow:
-            0 0 0 1px rgba(168, 220, 255, .95),
-            0 0 12px rgba(145, 205, 255, .5),
-            0 18px 45px rgba(43, 76, 111, .22)
-    }
+.hero-audition-glow::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    inset: -7px;
+    border-radius: 20px;
+    background: rgba(145, 205, 255, .68);
+    filter: blur(11px);
+    opacity: .42;
+    transform: scale(.96);
+    animation: vu-audition-glow 2.8s ease-in-out infinite;
+    pointer-events: none;
 }
 
 .hero-audition-stroke {
-    animation: hero-audition-stroke 2.8s ease-in-out infinite;
+    z-index: 1;
+    box-shadow: 0 0 0 1px rgba(205, 235, 255, .92);
 }
 
-.animate-gradient {
-    background-size: 200% 100% !important;
-    animation: gradient-shift 15s linear infinite !important
+.audition-slot-name {
+    font-size: 11px !important;
+    line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+    .audition-slot-name {
+        font-size: 12px !important;
+    }
+}
+
+@keyframes vu-audition-glow {
+    50% {
+        opacity: .84;
+        transform: scale(1.04);
+    }
 }

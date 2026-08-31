@@ -5,7 +5,7 @@ import { PageTransition, childVariants } from '../components/PageTransition';
 import { Instagram, Music } from 'lucide-react';
 import { motion } from 'motion/react';
 import { loadSupabase } from '../utils/loadSupabase';
-import { Seo, toAbsoluteUrl } from '../components/Seo';
+import { Seo, toAbsoluteUrl, type SeoSchema } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
 const memberPhotos = import.meta.glob('../assets/members/*.jpg', { eager: true, import: 'default' }) as Record<string, string>;
@@ -27,7 +27,7 @@ const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
     const lastName = nameParts.slice(1).join(' ');
     const isDaniel = member.name === 'Daniel Ho';
     return (
-        <div className="bg-white p-3 border border-[#8FA8C8] flex flex-col items-center text-center relative overflow-hidden shadow-lg w-full group" style={{ borderRadius: '12px' }}>
+        <div className="vu-panel vu-member-card bg-white p-3 border border-[#8FA8C8] flex flex-col items-center text-center relative overflow-hidden w-full group" style={{ borderRadius: '12px' }}>
             {!isDaniel && member.is_vp && (
                 <div className="absolute top-2 right-[-35px] bg-[#8FA8C8] text-white py-1 px-10 rotate-45 text-[8px] tracking-widest z-10 shadow-sm">
                     Vice President
@@ -61,7 +61,7 @@ const MemberCard = memo(function MemberCard({ member }: { member: Member }) {
                 </div>
                 {member.instagram && (
                     <div className="mt-2.5">
-                        <motion.a href={`https://instagram.com/${member.instagram}`} target="_blank" rel="noreferrer" whileHover={{ y: -2, scale: 1.1 }} whileTap={{ scale: 0.9 }} className="text-[#8FA8C8] hover:text-[#2B4C6F] transition-colors duration-200 inline-block p-1 cursor-pointer">
+                        <motion.a href={`https://instagram.com/${member.instagram}`} target="_blank" rel="noreferrer" whileHover={{ y: -2 }} whileTap={{ scale: 0.94 }} className="text-[#8FA8C8] hover:text-[#2B4C6F] transition-colors duration-200 inline-block p-1 cursor-pointer" aria-label={`${member.name} on Instagram`}>
                             <Instagram className="w-4 h-4" />
                         </motion.a>
                     </div>
@@ -135,7 +135,7 @@ export function Members() {
             members: groups[part]
         }));
     }, [members]);
-    const membersSchema = [
+    const membersSchema: SeoSchema[] = [
         {
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
@@ -180,7 +180,7 @@ export function Members() {
             />
             {/* Hero Section */}
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '40px' }}>
-                <div className="bg-[#2B4C6F] relative overflow-hidden flex items-center justify-center text-center py-12 md:py-20" style={{ borderRadius: '16px', minHeight: '300px' }}>
+                <div className="vu-page-hero bg-[#2B4C6F] relative overflow-hidden flex items-center justify-center text-center py-12 md:py-20" style={{ borderRadius: '16px', minHeight: '300px' }}>
                     {/* Background Images */}
                     <div className="absolute inset-0 flex w-full h-full">
                         {heroImageUrls.length > 0 ? (
@@ -246,7 +246,7 @@ export function Members() {
                         { name: 'Support Us', path: '/donate' },
                         { name: 'Join Us', path: '/auditions' }
                     ].map((item) => (
-                        <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm hover:shadow-xl transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
+                        <Link key={item.path} to={item.path} className="group bg-white p-8 border border-gray-100 hover:border-[#8FA8C8] shadow-sm transition-all duration-300 text-center" style={{ borderRadius: '20px' }}>
                             <h3 className="text-[#2B4C6F] text-lg font-yearbook group-hover:text-[#8FA8C8] transition-colors" style={fontYearbook}>
                                 {item.name}
                             </h3>

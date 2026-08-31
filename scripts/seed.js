@@ -1,5 +1,6 @@
 const { createClient } = require('@jsr/supabase__supabase-js');
 require('dotenv').config();
+const upcomingEvents = require('./upsert-upcoming-events');
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -215,7 +216,8 @@ Dress Code: Stylish, warm, and sophisticated (tailored jackets, blazers, cocktai
       status: 'Previous',
       is_featured: true,
       image_url: 'winter-showcase.jpg'
-    }
+    },
+    ...upcomingEvents
   ];
 
   const { error: eventError } = await supabase.from('events').upsert(events, { onConflict: 'slug' });

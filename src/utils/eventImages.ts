@@ -4,6 +4,7 @@ import icca2026Photo from '../assets/icca-2026.jpg';
 import icca2025Photo from '../assets/icca-2025.jpg';
 import winterShowcasePhoto from '../assets/winter-showcase.jpg';
 import nightSongsPhoto from '../assets/night-songs.jpg';
+import groupPhoto from '../assets/group-photo.jpg';
 
 const eventImageBySlug: Record<string, string> = {
   'ichsa-quarterfinal-4-2026': ichsaPhoto,
@@ -12,6 +13,9 @@ const eventImageBySlug: Record<string, string> = {
   'icca-quarterfinal-2025': icca2025Photo,
   'winter-showcase-2025': winterShowcasePhoto,
   'night-songs': nightSongsPhoto,
+  'minnesota-state-fair-2026': groupPhoto,
+  'fall-auditions-2026': groupPhoto,
+  'umn-homecoming-2026': groupPhoto,
 };
 
 export function getEventImage(slug: string, fallbackImage: string) {

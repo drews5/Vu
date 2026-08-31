@@ -5,11 +5,18 @@ import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
 import { getEventImage } from '../utils/eventImages';
-import { getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
-import { Seo, toAbsoluteUrl } from '../components/Seo';
+import { getEventDatePresentation, getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
+import { Seo, toAbsoluteUrl, type SeoSchema } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
+
+function getPastVisibleCardCount(width: number) {
+    if (width >= 1024) return 3;
+    if (width >= 768) return 2;
+    return 1;
+}
+
 interface Event {
     id: string;
     slug: string;
@@ -84,11 +91,15 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
         return `https://www.google.com/maps/search/?api=1&query=${query}`;
     };
     return (
-        <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.99 }} className="relative h-full">
-            <Link to={eventPath} className={`group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:shadow-2xl flex flex-col md:flex-row h-full md:min-h-64 cursor-pointer ${isUpcoming ? 'ring-1 ring-[#8FA8C8]/30 shadow-md' : 'shadow-sm'}`} style={{ borderRadius: '16px' }}>
+        <article className={`vu-card group relative flex h-full flex-col overflow-hidden border border-gray-100 bg-white md:min-h-64 md:flex-row ${isUpcoming ? 'ring-1 ring-[#8FA8C8]/30' : ''}`} style={{ borderRadius: '16px' }}>
+                <Link
+                    to={eventPath}
+                    className="absolute inset-0 z-10 rounded-[16px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2B4C6F]"
+                    aria-label={`View details for ${event.title}`}
+                />
                 {/* Image Section */}
                 <div className="relative w-full md:w-80 aspect-video md:aspect-auto md:h-auto overflow-hidden shrink-0">
-                    <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" style={{ filter: 'saturate(1.1) contrast(1.1)' }} loading="lazy" />
+                    <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" style={{ filter: 'saturate(1.1) contrast(1.1)' }} loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                         <span className="text-white text-sm font-black flex items-center gap-2">
                             VIEW DETAILS <ArrowRight className="w-4 h-4" />
@@ -109,8 +120,8 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
                             <Calendar className="w-3.5 h-3.5" />
                             {event.date}, {event.year}
                         </div>
-                        <button onClick={handleCopyInfo} className="p-2 hover:bg-[#8FA8C8]/10 rounded-full transition-all duration-200 shrink-0 group/copy cursor-pointer -mr-2 relative" title="Copy event info">
-                            <span className={`absolute -top-8 right-0 bg-[#2B4C6F] text-white text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none font-bold whitespace-nowrap ${copied ? 'opacity-100' : 'opacity-0'}`}>
+                        <button onClick={handleCopyInfo} className="relative z-20 -mr-2 shrink-0 cursor-pointer rounded-full p-2 transition-colors duration-200 hover:bg-[#8FA8C8]/10" aria-label={`Copy details for ${event.title}`}>
+                            <span aria-live="polite" className={`absolute -top-8 right-0 bg-[#2B4C6F] text-white text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none font-bold whitespace-nowrap ${copied ? 'opacity-100' : 'opacity-0'}`}>
                                 COPIED!
                             </span>
                             <Copy className="w-3.5 h-3.5 text-[#8FA8C8]/60 group-hover/copy:text-[#8FA8C8]" />
@@ -134,7 +145,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
                             {event.description}
                         </p>
                         {isUpcoming && (
-                            <div className="flex flex-wrap gap-2 mt-2">
+                            <div className="relative z-20 mt-2 flex flex-wrap gap-2">
                                 <motion.a href={getCalendarUrl()} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}
                                     whileHover={{ y: -2 }}
                                     whileTap={{ scale: 0.95 }}
@@ -159,17 +170,16 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
                         )}
                     </div>
                 </div>
-            </Link>
-        </motion.div>
+        </article>
     );
 });
 const PastEventCard = memo(function PastEventCard({ event }: { event: Event }) {
     const eventPath = getEventPath(event.slug);
     return (
-        <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.98 }} className="h-full">
-            <Link to={eventPath} className="flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full group">
+        <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="h-full">
+            <Link to={eventPath} className="flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:border-[#8FA8C8] transition-all duration-300 h-full group">
                 <div className="relative aspect-video overflow-hidden">
-                    <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-all duration-500 transform group-hover:scale-110" style={{ filter: 'saturate(1.1) contrast(1.1)' }} loading="lazy" />
+                    <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" style={{ filter: 'saturate(1.1) contrast(1.1)' }} loading="lazy" />
                 </div>
                 <div className="p-5 flex flex-col flex-grow">
                     <div className="flex items-center gap-2 text-[#8FA8C8] font-bold text-[10px] tracking-[0.2em] mb-2 uppercase" style={fontInter}>
@@ -189,24 +199,45 @@ export function Events() {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);
     const [pastIndex, setPastIndex] = useState(0);
-    const nextPast = () => {
-        const pastCount = events.filter(e => e.status === 'Previous').length;
-        if (pastCount === 0) return;
-        setPastIndex((prev: any) => (prev + 1) % pastCount);
-    };
-    const prevPast = () => {
-        const pastCount = events.filter(e => e.status === 'Previous').length;
-        if (pastCount === 0) return;
-        setPastIndex((prev: any) => (prev - 1 + pastCount) % pastCount);
-    };
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const isTablet = typeof window !== 'undefined' && window.innerWidth >= 768 && window.innerWidth < 1024;
+    const [visiblePastCards, setVisiblePastCards] = useState(() =>
+        typeof window === 'undefined' ? 1 : getPastVisibleCardCount(window.innerWidth)
+    );
     const pastEvents = events.filter(e => e.status === 'Previous');
     const upcomingEvents = events
         .filter((e) => e.status === 'Upcoming')
         .sort((a, b) => (a.fullDate?.getTime() || 0) - (b.fullDate?.getTime() || 0));
-    const showPastArrows = pastEvents.length > (isMobile ? 1 : isTablet ? 2 : 3);
-    const translatePercent = isMobile ? 100 : isTablet ? 50 : 33.333;
+    const finalPastIndex = Math.max(0, pastEvents.length - visiblePastCards);
+    const showPastArrows = finalPastIndex > 0;
+    const translatePercent = 100 / visiblePastCards;
+    const nextPast = () => {
+        if (pastEvents.length === 0) return;
+        setPastIndex((prev) => (prev >= finalPastIndex ? 0 : prev + 1));
+    };
+    const prevPast = () => {
+        if (pastEvents.length === 0) return;
+        setPastIndex((prev) => (prev <= 0 ? finalPastIndex : prev - 1));
+    };
+
+    useEffect(() => {
+        let frameId = 0;
+        const handleResize = () => {
+            cancelAnimationFrame(frameId);
+            frameId = window.requestAnimationFrame(() => {
+                setVisiblePastCards(getPastVisibleCardCount(window.innerWidth));
+            });
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => {
+            cancelAnimationFrame(frameId);
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    useEffect(() => {
+        setPastIndex((current) => Math.min(current, finalPastIndex));
+    }, [finalPastIndex]);
+
     useEffect(() => {
         let cancelled = false;
         async function fetchEvents() {
@@ -224,11 +255,12 @@ export function Events() {
 
                 const formatted = data.map((r: any) => {
                     const d = new Date(r.date);
+                    const datePresentation = getEventDatePresentation(r.slug, d);
                     return {
                         id: r.id,
                         slug: r.slug,
-                        date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-                        year: d.getFullYear().toString(),
+                        date: datePresentation.short,
+                        year: datePresentation.year,
                         title: getEventDisplayTitle(r.slug, r.title),
                         time: r.display_time || d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                         location: r.location,
@@ -250,7 +282,7 @@ export function Events() {
             cancelled = true;
         };
     }, []);
-    const eventsSchema = [
+    const eventsSchema: SeoSchema[] = [
         {
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
@@ -292,7 +324,7 @@ export function Events() {
             />
             {/* Header Section */}
             <motion.section variants={childVariants} style={{ marginTop: '25px', marginBottom: '25px' }}>
-                <div className="bg-[#91a8c6] py-10 md:py-16 px-4 text-center border border-gray-100 shadow-sm relative overflow-hidden" style={{ borderRadius: '16px' }}>
+                <div className="vu-page-hero bg-[#91a8c6] py-10 md:py-16 px-4 text-center border border-gray-100 shadow-sm relative overflow-hidden" style={{ borderRadius: '16px' }}>
                     <div className="max-w-4xl mx-auto relative z-10">
                         <h1 className="text-white mb-2 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(40px, 8vw, 80px)', letterSpacing: '0.05em' }}>
                             Events
@@ -303,7 +335,7 @@ export function Events() {
                     </div>
                 </div>
             </motion.section>
-            <div className="max-w-6xl mx-auto space-y-12">
+            <div className="w-full space-y-12">
                 {loading ? (
                     <div className="flex justify-center py-20">
                         <div className="w-10 h-10 border-4 border-[#8FA8C8]/30 border-t-[#8FA8C8] rounded-full animate-spin" />
@@ -331,32 +363,64 @@ export function Events() {
                                 </h2>
                                 <div className="h-[1px] bg-[#8FA8C8]/20 flex-grow" />
                             </div>
-                            <div className="relative group/carousel pb-4">
+                            <div
+                                className="relative group/carousel pb-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8FA8C8]"
+                                role="region"
+                                aria-label="Past events carousel"
+                                tabIndex={showPastArrows ? 0 : -1}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'ArrowLeft') {
+                                        event.preventDefault();
+                                        prevPast();
+                                    }
+                                    if (event.key === 'ArrowRight') {
+                                        event.preventDefault();
+                                        nextPast();
+                                    }
+                                }}
+                            >
                                 <div className="overflow-hidden px-4 md:px-0 pb-2">
-                                    <motion.div animate={{ x: `-${pastIndex * translatePercent}%` }} transition={{ type: "spring", stiffness: 300, damping: 30 }} style={{ display: 'flex', width: '100%', }}>
+                                    <motion.div
+                                        animate={{ x: `-${pastIndex * translatePercent}%` }}
+                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                        drag="x"
+                                        dragConstraints={{ left: 0, right: 0 }}
+                                        dragElastic={0.12}
+                                        onDragEnd={(_, info) => {
+                                            if (info.offset.x < -55) nextPast();
+                                            if (info.offset.x > 55) prevPast();
+                                        }}
+                                        className="flex touch-pan-y"
+                                    >
                                         {pastEvents.map((event) => (
-                                            <div key={event.id} className="w-full md:w-1/2 lg:w-1/3 shrink-0 px-2" style={{ paddingBottom: '4px' }}>
+                                            <div key={event.id} className="shrink-0 px-2" style={{ width: `${100 / visiblePastCards}%`, paddingBottom: '4px' }}>
                                                 <PastEventCard event={event} />
                                             </div>
                                         ))}
                                     </motion.div>
                                 </div>
                                 {showPastArrows && (
-                                    <> <button onClick={prevPast} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors" aria-label="Previous past events">
+                                    <> <button onClick={prevPast} className="absolute left-0 top-1/2 z-20 flex h-11 w-11 -translate-x-2 -translate-y-1/2 items-center justify-center rounded-full border border-[#8FA8C8]/20 bg-white text-[#2B4C6F] shadow-sm transition-colors hover:bg-[#F8FAFC] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2B4C6F] md:-translate-x-6" aria-label="Previous past events">
                                         <ChevronLeft className="w-6 h-6" />
                                     </button>
-                                        <button onClick={nextPast} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 bg-white text-[#2B4C6F] p-2 rounded-full shadow-lg z-20 hover:bg-[#F8FAFC] transition-colors" aria-label="Next past events">
+                                        <button onClick={nextPast} className="absolute right-0 top-1/2 z-20 flex h-11 w-11 translate-x-2 -translate-y-1/2 items-center justify-center rounded-full border border-[#8FA8C8]/20 bg-white text-[#2B4C6F] shadow-sm transition-colors hover:bg-[#F8FAFC] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2B4C6F] md:translate-x-6" aria-label="Next past events">
                                             <ChevronRight className="w-6 h-6" />
                                         </button>
                                     </>
                                 )}
                                 {/* Pagination Dots for Mobile */}
-                                {isMobile && pastEvents.length > 1 && (
-                                    <div className="flex justify-center gap-2 mt-6 md:hidden">
+                                {visiblePastCards === 1 && finalPastIndex > 0 && (
+                                    <div className="mt-3 flex justify-center md:hidden" aria-label="Choose a past event">
                                         {pastEvents.map((_, idx) => (
-                                            <button key={idx} onClick={() => setPastIndex(idx)}
-                                                className={`w-2 h-2 rounded-full transition-all duration-300 ${pastIndex === idx ? 'bg-[#8FA8C8] w-4' : 'bg-[#8FA8C8]/40'}`}
-                                            />
+                                            <button
+                                                key={idx}
+                                                onClick={() => setPastIndex(idx)}
+                                                className="group/dot flex h-11 w-8 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-[#2B4C6F]"
+                                                aria-label={`Show past event ${idx + 1} of ${pastEvents.length}`}
+                                                aria-current={pastIndex === idx ? 'true' : undefined}
+                                            >
+                                                <span className={`h-2 rounded-full transition-all duration-200 ${pastIndex === idx ? 'w-5 bg-[#8FA8C8]' : 'w-2 bg-[#8FA8C8]/40 group-hover/dot:bg-[#8FA8C8]/70'}`} />
+                                            </button>
                                         ))}
                                     </div>
                                 )}

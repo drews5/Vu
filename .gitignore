@@ -12,11 +12,16 @@
 
 # misc
 .DS_Store
+.runtime/
+scripts/keep-dev-server.ps1
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+errors.txt
+typescript-errors.txt
+Wait-Process
 
 npm-debug.log*
 yarn-debug.log*

@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
 import { getEventImage } from '../utils/eventImages';
+import { getEventDatePresentation, isEventScheduleConfirmed } from '../utils/eventRoutes';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
@@ -50,7 +51,7 @@ export function EventDetail() {
                 setEvent({
                     slug: data.slug,
                     title: data.title,
-                    date: d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+                    date: getEventDatePresentation(data.slug, d).full,
                     time: data.display_time || d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                     location: data.location,
                     address: data.address,
@@ -157,6 +158,7 @@ export function EventDetail() {
         );
     }
     const isUpcoming = event.status === 'Upcoming';
+    const hasConfirmedSchedule = isEventScheduleConfirmed(event.slug);
     const locationAddress = event.address
         ? {
             '@type': 'PostalAddress',
@@ -271,21 +273,21 @@ export function EventDetail() {
                                     {/* Action Buttons */}
                                     <div className="flex flex-col gap-3">
                                         {event.ticketLink && (
-                                            <a href={event.ticketLink} target="_blank" rel="noreferrer" className="w-full bg-[#8FA8C8] text-white py-5 rounded-2xl text-center border border-[#8FA8C8] hover:bg-[#2B4C6F] hover:border-[#2B4C6F] hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.97] transition-all duration-200 cursor-pointer block" style={fontYearbook}>
+                                            <a href={event.ticketLink} target="_blank" rel="noreferrer" className="w-full bg-[#8FA8C8] text-white py-5 rounded-2xl text-center border border-[#8FA8C8] hover:bg-[#2B4C6F] hover:border-[#2B4C6F] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-200 cursor-pointer block" style={fontYearbook}>
                                                 GET TICKETS
                                             </a>
                                         )}
-                                        {isUpcoming && (
-                                            <a href={getCalendarUrl()} target="_blank" rel="noopener noreferrer" className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-3 hover:border-[#8FA8C8] hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.97] transition-all duration-200 cursor-pointer" style={fontInter}>
+                                        {isUpcoming && hasConfirmedSchedule && (
+                                            <a href={getCalendarUrl()} target="_blank" rel="noopener noreferrer" className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-3 hover:border-[#8FA8C8] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-200 cursor-pointer" style={fontInter}>
                                                 <Calendar className="w-5 h-5 text-[#8FA8C8]" /> Add to Calendar
                                             </a>
                                         )}
                                         {isUpcoming && (
-                                            <a href={getNavigationUrl()} target="_blank" rel="noopener noreferrer" className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-3 hover:border-[#8FA8C8] hover:translate-x-0.5 hover:shadow-lg active:scale-[0.97] transition-all duration-200 cursor-pointer" style={fontInter}>
+                                            <a href={getNavigationUrl()} target="_blank" rel="noopener noreferrer" className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-3 hover:border-[#8FA8C8] hover:translate-x-0.5 active:scale-[0.97] transition-all duration-200 cursor-pointer" style={fontInter}>
                                                 <Navigation className="w-5 h-5 text-[#8FA8C8]" /> Navigate to Venue
                                             </a>
                                         )}
-                                        <button onClick={handleShare} className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-3 hover:border-[#8FA8C8] hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.97] transition-all duration-200 cursor-pointer" style={fontInter}>
+                                        <button onClick={handleShare} className="w-full bg-white text-[#2B4C6F] border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-3 hover:border-[#8FA8C8] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-200 cursor-pointer" style={fontInter}>
                                             <Share2 className="w-5 h-5 text-[#8FA8C8]" /> Share Event
                                         </button>
                                     </div>

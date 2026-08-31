@@ -1,12 +1,10 @@
 import { Helmet } from 'react-helmet-async';
-import defaultSocialImage from '../assets/group-photo.jpg';
-
 type BreadcrumbItem = {
   name: string;
   path: string;
 };
 
-type SeoSchema = Record<string, unknown>;
+export type SeoSchema = Record<string, unknown>;
 
 type SeoProps = {
   title: string;
@@ -79,7 +77,7 @@ export function Seo({
       ? title
       : `${title} | ${siteConfig.siteName}`;
   const canonicalUrl = toAbsoluteUrl(path);
-  const socialImage = toAbsoluteUrl(image || defaultSocialImage);
+  const socialImage = toAbsoluteUrl(image || '/og.png');
   const robotsContent = noindex
     ? 'noindex, nofollow'
     : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
