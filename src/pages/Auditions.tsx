@@ -222,10 +222,10 @@ export function Auditions() {
           <button
             type="button"
             onClick={() => startConfirmation(slot.id, 'delete')}
-            className="flex h-full w-8 shrink-0 items-center justify-center border-l border-[#DDE7F0] text-gray-300 transition-colors hover:bg-red-50 hover:text-red-500"
+            className="flex h-full w-6 shrink-0 items-center justify-center border-l border-[#DDE7F0]/70 text-[#2B4C6F]/20 transition-colors hover:bg-[#F4F7FA] hover:text-[#2B4C6F]/45 focus-visible:text-[#2B4C6F]/55 md:w-8"
             aria-label={`Cancel ${slot.day} ${slot.time} audition for ${slot.name || 'this singer'}`}
           >
-            <Trash2 className="size-3.5" />
+            <Trash2 className="size-3 md:size-3.5" />
           </button>
         </div>
       );
@@ -372,15 +372,15 @@ export function Auditions() {
             <div className="overflow-hidden">
               <table className="w-full table-fixed border-collapse text-left" aria-label="Audition signup times for Wednesday, September 17 and Thursday, September 18">
                 <colgroup>
-                  <col className="w-[3.25rem] md:w-20" />
-                  <col />
-                  <col />
+                  <col className="hidden md:table-column md:w-20" />
+                  <col className="w-1/2 md:w-auto" />
+                  <col className="w-1/2 md:w-auto" />
                 </colgroup>
                 <thead className="bg-[#2B4C6F] text-white">
                   <tr>
-                    <th scope="col" className="border-r border-white/20 px-1.5 py-2 text-[9px] font-bold uppercase tracking-[0.12em] md:px-3 md:text-[10px]" style={fontInter}>Time</th>
+                    <th scope="col" className="hidden border-r border-white/20 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.12em] md:table-cell" style={fontInter}>Time</th>
                     {daysData.map((dayInfo) => (
-                      <th key={dayInfo.day} scope="col" className="border-r border-white/20 px-2 py-2 last:border-r-0 md:px-3">
+                      <th key={dayInfo.day} scope="col" className="border-r border-white/20 px-1.5 py-2 text-center last:border-r-0 md:px-3 md:text-left">
                         <span className="block text-[10px] font-bold uppercase tracking-[0.08em] md:text-[12px]" style={fontInter}>{dayInfo.day}</span>
                         <span className="block text-[9px] font-medium text-white/70 md:text-[10px]" style={fontInter}>{dayInfo.date}</span>
                       </th>
@@ -390,14 +390,21 @@ export function Auditions() {
                 <tbody className="divide-y divide-[#DDE7F0]">
                   {orderedTimes.map((time) => (
                     <tr key={time} className="group/row transition-colors hover:bg-[#FBFDFF]">
-                      <th scope="row" className="border-r border-[#DDE7F0] bg-[#F4F7FA] px-1.5 text-[9px] font-bold text-[#2B4C6F] md:px-3 md:text-[11px]" style={fontInter}>
+                      <th scope="row" className="hidden border-r border-[#DDE7F0] bg-[#F4F7FA] px-3 text-[11px] font-bold text-[#2B4C6F] md:table-cell" style={fontInter}>
                         {time.replace(' PM', '')}
                       </th>
                       {daysData.map((dayInfo) => {
                         const slot = slotLookup.get(`${dayInfo.day}:${time}`);
                         return (
                           <td key={dayInfo.day} className="border-r border-[#DDE7F0] p-0 last:border-r-0">
-                            {slot ? renderSlotCell(slot) : <div className="h-7 bg-gray-50 md:h-8" aria-hidden="true" />}
+                            <div className="grid grid-cols-[2.35rem_minmax(0,1fr)] md:block">
+                              <span className="flex h-7 items-center justify-center border-r border-[#DDE7F0] bg-[#F4F7FA] text-[8px] font-bold text-[#2B4C6F] md:hidden" style={fontInter}>
+                                {time.replace(' PM', '')}
+                              </span>
+                              <div className="min-w-0">
+                                {slot ? renderSlotCell(slot) : <div className="h-7 bg-gray-50 md:h-8" aria-hidden="true" />}
+                              </div>
+                            </div>
                           </td>
                         );
                       })}
