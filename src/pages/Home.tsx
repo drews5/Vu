@@ -1,8 +1,8 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import fullLogo from 'figma:asset/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
+import fullLogo from '../assets/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
 import heroBackground from '../assets/hero-1600.webp';
 import heroBackgroundLarge from '../assets/hero-2400.webp';
-import groupPhoto from '../assets/group-photo.jpg';
+import groupPhoto from '../assets/group-photo.webp';
 
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar, MapPin, ChevronDown, ChevronLeft, ChevronRight, Copy } from 'lucide-react';

@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-const siteUrl = 'https://vocalu.org';
+const siteUrl = 'https://www.vocalu.org';
 const buildDate = new Date().toISOString().split('T')[0];
 const outputPath = resolve(process.cwd(), 'public', 'sitemap.xml');
 
@@ -17,6 +17,16 @@ const staticRoutes = [
   { path: '/members', changefreq: 'monthly', priority: '0.8', lastmod: buildDate },
   { path: '/program', changefreq: 'monthly', priority: '0.8', lastmod: buildDate },
 ];
+
+const fallbackEventRoutes = [
+  { path: '/event/icca-quarterfinal-2025', lastmod: '2025-03-01' },
+  { path: '/event/icca-quarterfinal-2026', lastmod: '2026-02-14' },
+  { path: '/event/ichsa-quarterfinal-4-2026', lastmod: '2026-02-21' },
+  { path: '/event/night-songs', lastmod: '2026-02-15' },
+  { path: '/event/the-mix-2026', lastmod: '2026-05-15' },
+  { path: '/event/winter-showcase-2025', lastmod: '2025-12-06' },
+  { path: '/events/showcase', lastmod: '2026-05-02' },
+].map((route) => ({ ...route, changefreq: 'weekly', priority: '0.8' }));
 
 function getEventPath(slug) {
   if (slug === 'spring-showcase-2026') {
@@ -40,8 +50,8 @@ async function fetchEventRoutes() {
   const anonKey = process.env.VITE_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !anonKey) {
-    console.warn('Skipping event sitemap entries because Supabase env vars are missing.');
-    return [];
+    console.warn('Using known event routes because Supabase env vars are missing.');
+    return fallbackEventRoutes;
   }
 
   try {
@@ -70,8 +80,8 @@ async function fetchEventRoutes() {
         lastmod: formatDate(event.date),
       }));
   } catch (error) {
-    console.warn(`Skipping event sitemap entries because live fetch failed: ${String(error)}`);
-    return [];
+    console.warn(`Using known event routes because live fetch failed: ${String(error)}`);
+    return fallbackEventRoutes;
   }
 }
 

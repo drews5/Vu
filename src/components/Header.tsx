@@ -2,7 +2,7 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import { Facebook, Instagram, Menu, Music, X, Youtube } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Link, useLocation } from 'react-router-dom';
-import logoImage from 'figma:asset/d4630c01b543cc75980f0b293230859d29654fbb.png';
+import logoImage from '../assets/d4630c01b543cc75980f0b293230859d29654fbb.png';
 import { fontYearbook } from '../styles/fonts';
 
 const TikTokIcon = memo(function TikTokIcon({ className }: { className?: string }) {

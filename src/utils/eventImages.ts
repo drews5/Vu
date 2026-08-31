@@ -1,10 +1,10 @@
-import ichsaPhoto from '../assets/ichsa-quarterfinal.jpg';
+import ichsaPhoto from '../assets/ichsa-quarterfinal.webp';
 import showcasePhoto from '../assets/spring-showcase.jpg';
-import icca2026Photo from '../assets/icca-2026.jpg';
-import icca2025Photo from '../assets/icca-2025.jpg';
-import winterShowcasePhoto from '../assets/winter-showcase.jpg';
-import nightSongsPhoto from '../assets/night-songs.jpg';
-import groupPhoto from '../assets/group-photo.jpg';
+import icca2026Photo from '../assets/icca-2026.webp';
+import icca2025Photo from '../assets/icca-2025.webp';
+import winterShowcasePhoto from '../assets/winter-showcase.webp';
+import nightSongsPhoto from '../assets/night-songs.webp';
+import groupPhoto from '../assets/group-photo.webp';
 
 const eventImageBySlug: Record<string, string> = {
   'ichsa-quarterfinal-4-2026': ichsaPhoto,

@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { Heart, Star, Check } from 'lucide-react';
-import logoImage from 'figma:asset/d4630c01b543cc75980f0b293230859d29654fbb.png';
+import logoImage from '../assets/d4630c01b543cc75980f0b293230859d29654fbb.png';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
