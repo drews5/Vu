@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
+import { SiGmail } from 'react-icons/si';
 import logoImage from '../assets/d4630c01b543cc75980f0b293230859d29654fbb.png';
 import { loadSupabase } from '../utils/loadSupabase';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
@@ -386,9 +387,20 @@ export function Auditions() {
           {loading ? (
             <div className="flex min-h-64 items-center justify-center py-12"><div className="size-6 animate-spin rounded-full border-b-2 border-[#8FA8C8]" /></div>
           ) : loadError && slots.length === 0 ? (
-            <div className="flex min-h-64 flex-col items-center justify-center gap-3 px-6 py-12 text-center" style={fontInter}>
-              <p className="text-sm text-[#2B4C6F]/70">The signup times are not available right now.</p>
-              <button type="button" onClick={() => { setLoading(true); void fetchSlots(); }} className="text-sm font-semibold text-[#2B4C6F] underline decoration-[#8FA8C8] underline-offset-4 hover:text-[#8FA8C8]">Try again</button>
+            <div className="flex min-h-64 flex-col items-center justify-center px-6 py-10 text-center" style={fontInter}>
+              <h3 className="text-lg font-semibold text-[#2B4C6F]">Email us to sign up</h3>
+              <p className="mt-2 max-w-md text-sm leading-6 text-[#2B4C6F]/70">
+                The online signup sheet is unavailable. Email <a className="font-semibold text-[#2B4C6F] underline decoration-[#8FA8C8] underline-offset-4" href="mailto:vocalu@umn.edu">vocalu@umn.edu</a> with your name and preferred audition time.
+              </p>
+              <a
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=vocalu%40umn.edu&su=Audition%20signup"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-5 inline-flex min-h-11 items-center justify-center gap-2.5 rounded-lg border border-[#DDE7F0] bg-white px-5 py-2.5 text-sm font-semibold text-[#2B4C6F] transition-colors hover:bg-[#F4F7FA] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8FA8C8]"
+              >
+                <SiGmail className="size-[18px] text-[#EA4335]" aria-hidden="true" />
+                Email Vocal U in Gmail
+              </a>
             </div>
           ) : (
             <div className="overflow-hidden">
