@@ -20,7 +20,9 @@ import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
-const isUmnEmail = (value: string) => /^[^@\s]+@umn\.edu$/i.test(value.trim());
+const isUmnInternetId = (value: string) => /^[^@\s]+$/.test(value.trim());
+const toUmnEmail = (internetId: string) => `${internetId.trim().toLowerCase()}@umn.edu`;
+const normalizeInternetId = (value: string) => value.split('@', 1)[0].replace(/\s/g, '');
 
 interface AuditionSlot {
   id: string;
@@ -136,8 +138,8 @@ export function Auditions() {
   };
   const processAction = async () => {
     if (!confirmingId || !emailInput.trim()) return;
-    if (!isUmnEmail(emailInput)) {
-      alert('Please enter your full @umn.edu email address.');
+    if (!isUmnInternetId(emailInput)) {
+      alert('Please enter your UMN Internet ID.');
       return;
     }
     setIsSubmitting(true);
@@ -158,7 +160,7 @@ export function Auditions() {
           .from('auditions')
           .update({
             name: nameToSave,
-            email: emailInput.trim().toLowerCase(),
+            email: toUmnEmail(emailInput),
             status: 'Booked'
           })
           .eq('id', id);
@@ -166,7 +168,7 @@ export function Auditions() {
         triggerConfetti();
       } else {
         // Delete mode
-        if (emailInput.trim().toLowerCase() !== slot.email?.trim().toLowerCase()) {
+        if (toUmnEmail(emailInput) !== slot.email?.trim().toLowerCase()) {
           alert("That @umn.edu email doesn't match this signup.");
           setIsSubmitting(false);
           return;
@@ -202,6 +204,12 @@ export function Auditions() {
         })
         .eq('id', showDeleteWarning.id);
       if (error) throw error;
+      setTempNames((previousNames) => {
+        const nextNames = { ...previousNames };
+        delete nextNames[showDeleteWarning.id];
+        return nextNames;
+      });
+      setEditingSlotId((currentId) => currentId === showDeleteWarning.id ? null : currentId);
       setShowDeleteWarning(null);
       await fetchSlots();
     } catch (error: any) {
@@ -254,25 +262,28 @@ export function Auditions() {
         <div className={`relative flex h-7 items-center md:h-8 ${isDeleting ? 'bg-red-50' : 'bg-green-50'}`}>
           <input
             autoFocus
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            placeholder="name@umn.edu"
-            className="h-full w-full border-0 bg-transparent px-2 pr-16 text-[10px] font-semibold text-[#2B4C6F] outline-none placeholder:text-gray-400 md:text-[12px]"
+            type="text"
+            inputMode="text"
+            autoComplete="username"
+            placeholder="Internet ID"
+            className="h-full min-w-0 flex-1 border-0 bg-transparent px-2 text-[9px] font-semibold text-[#2B4C6F] outline-none placeholder:text-gray-400 md:text-[12px]"
             style={fontInter}
             value={emailInput}
-            onChange={(event) => setEmailInput(event.target.value)}
+            onChange={(event) => setEmailInput(normalizeInternetId(event.target.value))}
             onKeyDown={(event) => {
               if (event.key === 'Enter' && emailInput.trim()) void processAction();
               if (event.key === 'Escape') setConfirmingId(null);
             }}
-            aria-label={`University of Minnesota email for ${slot.day} at ${slot.time}`}
+            aria-label={`University of Minnesota Internet ID for ${slot.day} at ${slot.time}`}
           />
-          <div className="absolute inset-y-0 right-0 flex">
+          <span className="shrink-0 text-[9px] font-semibold text-[#2B4C6F]/70 md:text-[11px]" style={fontInter} aria-hidden="true">
+            @umn.edu
+          </span>
+          <div className="ml-1 flex h-full shrink-0">
             <button
               type="button"
               onClick={() => void processAction()}
-              disabled={!isUmnEmail(emailInput) || isSubmitting}
+              disabled={!isUmnInternetId(emailInput) || isSubmitting}
               className={`flex h-full w-8 items-center justify-center border-l border-white/70 text-white transition-colors disabled:opacity-40 ${isDeleting ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}
               aria-label={isDeleting ? 'Confirm cancellation' : 'Confirm signup'}
             >
@@ -405,13 +416,11 @@ export function Auditions() {
             <div className="overflow-hidden">
               <table className="w-full table-fixed border-collapse text-left" aria-label="Audition signup times for Wednesday, September 17 and Thursday, September 18">
                 <colgroup>
-                  <col className="hidden md:table-column md:w-20" />
-                  <col className="w-1/2 md:w-auto" />
-                  <col className="w-1/2 md:w-auto" />
+                  <col className="w-1/2" />
+                  <col className="w-1/2" />
                 </colgroup>
                 <thead className="bg-[#2B4C6F] text-white">
                   <tr>
-                    <th scope="col" className="hidden border-r border-white/20 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.12em] md:table-cell" style={fontInter}>Time</th>
                     {daysData.map((dayInfo) => (
                       <th key={dayInfo.day} scope="col" className="border-r border-white/20 px-1.5 py-2 text-center last:border-r-0 md:px-3 md:text-left">
                         <span className="block text-[10px] font-bold uppercase tracking-[0.08em] md:text-[12px]" style={fontInter}>{dayInfo.day}</span>
@@ -423,18 +432,18 @@ export function Auditions() {
                 <tbody className="divide-y divide-[#DDE7F0]">
                   {orderedTimes.map((time) => (
                     <tr key={time} className="group/row transition-colors hover:bg-[#FBFDFF]">
-                      <th scope="row" className="hidden border-r border-[#DDE7F0] bg-[#F4F7FA] px-3 text-[11px] font-bold text-[#2B4C6F] md:table-cell" style={fontInter}>
-                        {time.replace(' PM', '')}
-                      </th>
                       {daysData.map((dayInfo) => {
                         const slot = slotLookup.get(`${dayInfo.day}:${time}`);
+                        const isConfirmingSlot = slot && confirmingId?.id === slot.id;
                         return (
                           <td key={dayInfo.day} className="border-r border-[#DDE7F0] p-0 last:border-r-0">
-                            <div className="grid grid-cols-[2.35rem_minmax(0,1fr)] md:block">
-                              <span className="flex h-7 items-center justify-center border-r border-[#DDE7F0] bg-[#F4F7FA] text-[8px] font-bold text-[#2B4C6F] md:hidden" style={fontInter}>
-                                {time.replace(' PM', '')}
-                              </span>
-                              <div className="min-w-0">
+                            <div className="grid grid-cols-[2.35rem_minmax(0,1fr)] md:grid-cols-[4.25rem_minmax(0,1fr)]">
+                              {!isConfirmingSlot && (
+                                <span className="flex h-7 items-center justify-center border-r border-[#DDE7F0] bg-[#F4F7FA] text-[8px] font-bold text-[#2B4C6F] md:h-8 md:text-[11px]" style={fontInter}>
+                                  {time.replace(' PM', '')}
+                                </span>
+                              )}
+                              <div className={`min-w-0 ${isConfirmingSlot ? 'col-span-2' : ''}`}>
                                 {slot ? renderSlotCell(slot) : <div className="h-7 bg-gray-50 md:h-8" aria-hidden="true" />}
                               </div>
                             </div>

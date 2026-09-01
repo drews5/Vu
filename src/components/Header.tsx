@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useState } from 'react';
-import { Facebook, Instagram, Menu, Music, X, Youtube } from 'lucide-react';
+import { ArrowRight, Facebook, Instagram, Menu, X, Youtube } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Link, useLocation } from 'react-router-dom';
 import logoImage from '../assets/d4630c01b543cc75980f0b293230859d29654fbb.png';
@@ -215,11 +215,11 @@ export function Header() {
           {isSolid && (
             <Link
               to="/auditions"
-              className="pointer-events-auto absolute left-1/2 top-full z-10 flex h-7 w-[300px] -translate-x-1/2 items-center justify-center gap-2 rounded-b-full border border-t-0 border-white/70 bg-white/95 px-4 text-[#2B4C6F] shadow-[0_4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
-              style={{ fontFamily: 'Inter, sans-serif' }}
+              className="group pointer-events-auto absolute left-[50px] right-[50px] top-full z-10 flex h-9 items-center justify-center gap-2 rounded-[20px] border border-white/70 bg-white/95 px-4 text-[#2B4C6F] shadow-[0_4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
+              style={{ ...fontYearbook, letterSpacing: '0.05em' }}
             >
-              <Music className="h-3.5 w-3.5 text-[#8FA8C8]" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.15em]">Auditions are open</span>
+              <span className="text-[14px]">AUDITION SIGN UP</span>
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           )}
         </div>
@@ -230,11 +230,11 @@ export function Header() {
           {!mobileMenuOpen && (
             <Link
               to="/auditions"
-              className="pointer-events-auto absolute bottom-full left-1/2 flex h-7 w-[226px] -translate-x-1/2 items-center justify-center gap-1.5 rounded-t-full border border-b-0 border-white/70 bg-white/95 px-3 text-[#2B4C6F] shadow-[0_-4px_12px_rgba(43,76,111,0.05)]"
-              style={{ fontFamily: 'Inter, sans-serif' }}
+              className="group pointer-events-auto absolute inset-x-0 bottom-full flex h-9 items-center justify-center gap-2 rounded-[18px] border border-white/70 bg-white/95 px-3 text-[#2B4C6F] shadow-[0_-4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
+              style={{ ...fontYearbook, letterSpacing: '0.05em' }}
             >
-              <Music className="h-3 w-3 text-[#8FA8C8]" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.12em]">Auditions are open</span>
+              <span className="text-[14px]">AUDITION SIGN UP</span>
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           )}
 
