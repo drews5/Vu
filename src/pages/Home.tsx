@@ -421,12 +421,14 @@ export function Home() {
             style={{ ...fontInter, fontSize: '17px', fontWeight: '400', lineHeight: '1.7' }}
           >
             <p>
-              Vocal U is a gender-inclusive a cappella group at the University of Minnesota. Since 2011,
-              we have performed on campus, around the Twin Cities, and at collegiate competitions.
+              Vocal U is a gender-inclusive a cappella group at the University of Minnesota, established in
+              2011. We are a registered student organization dedicated to spreading our music across the
+              Twin Cities and beyond, and having a great time while doing it.
             </p>
             <p>
-              Our members come from across the university. We arrange music, rehearse together, and put on
-              performances throughout the school year.
+              We come from all different majors and backgrounds, but we're all a part of VU because we love
+              music and the arts. More than an a cappella group, Vocal U is a family. We support and push
+              each other to be the best performers we can be, which translates to the stage.
             </p>
           </div>
 
@@ -484,7 +486,7 @@ export function Home() {
               Events
             </h2>
             <p className="text-white/90 font-normal tracking-wide text-sm md:text-base" style={fontInter}>
-              Upcoming performances and appearances.
+              Join us for live performances, competitions, and more.
             </p>
           </div>
 

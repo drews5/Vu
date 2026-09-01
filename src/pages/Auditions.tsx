@@ -572,12 +572,12 @@ export function Auditions() {
                 <AlertCircle className="size-5 text-red-500" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-2xl text-[#2B4C6F] font-yearbook" style={fontYearbook}>Cancel this audition?</h3>
+                <h3 className="text-2xl text-[#2B4C6F] font-yearbook" style={fontYearbook}>Wait!</h3>
                 <p className="text-gray-600 text-[14px] leading-relaxed" style={fontInter}>
-                  This will remove <span className="font-semibold">{showDeleteWarning.name}</span> from the signup sheet.
+                  We'd still love to hear you sing, <span className="font-semibold">{showDeleteWarning.name}</span>!
                 </p>
                 <p className="text-gray-500 text-[12px] leading-relaxed" style={fontInter}>
-                  If you need a different time, cancel this slot and choose another available one.
+                  If this time no longer works, we strongly suggest picking a new slot instead of cancelling. Remember, this spot could have been taken by someone else!
                 </p>
                 {cancellationError && (
                   <p className="rounded-lg bg-red-50 px-3 py-2 text-[12px] font-semibold leading-relaxed text-red-600" style={fontInter} role="alert">
@@ -590,13 +590,13 @@ export function Auditions() {
                   className="flex w-full items-center justify-center rounded-xl bg-[#8FA8C8] py-3 text-sm font-semibold text-white transition-colors hover:bg-[#7A97B7] active:scale-[0.98]"
                   style={fontInter}
                 >
-                  Keep my spot
+                  KEEP MY SPOT
                 </button>
                 <button onClick={confirmDeletion} disabled={isSubmitting} className="flex w-full items-center justify-center gap-2 rounded-xl bg-transparent py-3 text-sm font-medium text-gray-400 transition-colors hover:text-red-500" style={fontInter}>
                   {isSubmitting ? (
                     <div className="w-4 h-4 border-2 border-current border-t-transparent animate-spin rounded-full" />
                   ) : (
-                    "Cancel audition"
+                    "Proceed to Cancel"
                   )}
                 </button>
               </div>

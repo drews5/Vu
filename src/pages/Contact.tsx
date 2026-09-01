@@ -90,7 +90,7 @@ export function Contact() {
                             Contact Us
                         </h1>
                         <p className="text-white text-sm md:text-base" style={fontInter}>
-                            Bookings, questions, and collaborations.
+                            We'd love to hear from you!
                         </p>
                     </div>
                 </div>
@@ -136,7 +136,7 @@ export function Contact() {
                         )}
                         {status === 'error' && (
                             <p className="text-red-600 text-center" style={fontInter}>
-                                Your message could not be sent. Please try again.
+                                Oops! Something went wrong. Please try again.
                             </p>
                         )}
                     </form>
@@ -145,7 +145,7 @@ export function Contact() {
                 <div className="space-y-6">
                     <motion.div variants={childVariants} className="vu-panel bg-white p-6 md:p-8 border border-gray-100" style={{ borderRadius: '16px' }}>
                         <h2 className="text-[#2B4C6F] mb-6 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}>
-                            Contact
+                            Get in Touch
                         </h2>
                         <div className="space-y-6">
                             <div className="flex items-start gap-4">
@@ -178,7 +178,7 @@ export function Contact() {
                     </motion.div>
                     <motion.div variants={childVariants} className="vu-panel bg-white p-6 md:p-8 border border-gray-100" style={{ borderRadius: '16px' }}>
                         <h2 className="text-[#2B4C6F] mb-6 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}>
-                            Follow Vocal U
+                            Follow Us
                         </h2>
                         <div className="flex flex-wrap gap-3">
                             {[
@@ -198,11 +198,12 @@ export function Contact() {
                             Interested in joining?
                         </h2>
                         <p className="mb-6 leading-relaxed" style={{ ...fontInter, fontSize: '16px', lineHeight: '1.7' }}>
-                            Auditions are held at the beginning of each semester. See current dates and sign up online.
+                            We hold auditions at the beginning of each semester. Follow us on social media to stay
+                            updated on audition dates and other opportunities to get involved!
                         </p>
                         <motion.div whileHover={{ x: 6 }} whileTap={{ scale: 0.97 }} className="inline-block">
                             <Link to="/auditions" className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 border border-gray-100 hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/50 transition-all duration-300 inline-block cursor-pointer font-yearbook" style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '12px' }}>
-                                Audition information →
+                                Audition Info →
                             </Link>
                         </motion.div>
                     </motion.div>

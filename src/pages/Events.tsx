@@ -102,7 +102,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
                     <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" style={{ filter: 'saturate(1.1) contrast(1.1)' }} loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                         <span className="text-white text-sm font-black flex items-center gap-2">
-                            View details <ArrowRight className="w-4 h-4" />
+                            VIEW DETAILS <ArrowRight className="w-4 h-4" />
                         </span>
                     </div>
                     {isUpcoming && (
@@ -122,7 +122,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
                         </div>
                         <button onClick={handleCopyInfo} className="relative z-20 -mr-2 shrink-0 cursor-pointer rounded-full p-2 transition-colors duration-200 hover:bg-[#8FA8C8]/10" aria-label={`Copy details for ${event.title}`}>
                             <span aria-live="polite" className={`absolute -top-8 right-0 bg-[#2B4C6F] text-white text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none font-bold whitespace-nowrap ${copied ? 'opacity-100' : 'opacity-0'}`}>
-                                Copied
+                                COPIED!
                             </span>
                             <Copy className="w-3.5 h-3.5 text-[#8FA8C8]/60 group-hover/copy:text-[#8FA8C8]" />
                         </button>
@@ -330,7 +330,7 @@ export function Events() {
                             Events
                         </h1>
                         <p className="text-white/90 tracking-wide text-xs md:text-base" style={fontInter}>
-                            Performances, competitions, and campus events.
+                            Join us for live performances, competitions, and more.
                         </p>
                     </div>
                 </div>

@@ -76,10 +76,10 @@ export function Donate() {
                                 </div>
                             </div>
                             <p className="mb-5 text-sm leading-6 text-[#2B4C6F]/65" style={fontInter}>
-                                Venmo opens in a new tab. Please confirm the username before sending your donation.
+                                Payments are secure and processed directly by Venmo. Vocal U is a self-funded student organization.
                             </p>
                             <motion.a href="https://venmo.com/u/vocalu" target="_blank" rel="noopener noreferrer" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="block w-full rounded-xl bg-[#008CFF] py-3.5 text-center text-base font-semibold text-white transition-colors hover:bg-[#0074D9]" style={fontInter}>
-                                Open Venmo
+                                Pay or Request
                             </motion.a>
                         </div>
                     </div>
@@ -108,9 +108,9 @@ export function Donate() {
                                     <Heart className="w-6 h-6 text-[#8FA8C8]" />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-[#2B4C6F] text-lg mb-1">Share our events</h3>
+                                    <h3 className="font-bold text-[#2B4C6F] text-lg mb-1">Spread the Word</h3>
                                     <p className="text-[#2B4C6F]/70 text-sm leading-relaxed">
-                                        Follow Vocal U, share an event, or invite a friend to a show.
+                                        Follow us on Instagram and TikTok, share our posts, and tell your friends about our upcoming shows!
                                     </p>
                                 </div>
                             </div>
@@ -119,9 +119,9 @@ export function Donate() {
                                     <Star className="w-6 h-6 text-[#8FA8C8]" />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-[#2B4C6F] text-lg mb-1">Book a performance</h3>
+                                    <h3 className="font-bold text-[#2B4C6F] text-lg mb-1">Book Us for a Gig</h3>
                                     <p className="text-[#2B4C6F]/70 text-sm leading-relaxed">
-                                        Contact us about university events, private events, and collaborations.
+                                        Have us perform at your next event! We love collaborating with other groups and performing for the community.
                                     </p>
                                 </div>
                             </div>

@@ -9,7 +9,7 @@ const ContactInfo = memo(function ContactInfo() {
     <div className="space-y-6">
       <div className="bg-white p-6 md:p-8 border border-gray-100" style={{ borderRadius: '16px' }}>
         <h3 className="text-[#2B4C6F] mb-6" style={{ ...fontYearbook, fontSize: 'clamp(24px, 4vw, 28px)' }}>
-          Contact
+          CONTACT INFORMATION
         </h3>
         <div className="space-y-4">
           <div className="flex items-start gap-4">
@@ -42,13 +42,14 @@ const ContactInfo = memo(function ContactInfo() {
       </div>
       <div className="bg-[#8FA8C8] p-6 md:p-8 text-white" style={{ borderRadius: '16px' }}>
         <h3 className="mb-4" style={{ ...fontYearbook, fontSize: 'clamp(24px, 4vw, 28px)' }}>
-          Interested in joining?
+          INTERESTED IN JOINING?
         </h3>
         <p className="mb-6 leading-relaxed" style={{ ...fontInter, fontSize: '15px', lineHeight: '1.7' }}>
-          Auditions are held at the beginning of each semester. See current dates and sign up online.
+          We hold auditions at the beginning of each semester. Follow us on social media to stay updated
+          on audition dates and other opportunities to get involved!
         </p>
         <Link to="/auditions" className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-[#2B4C6F] hover:text-white hover:translate-x-1.5 active:scale-[0.97] transition-all duration-200 inline-block cursor-pointer" style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '12px' }}>
-          Audition information →
+          AUDITION INFO →
         </Link>
       </div>
     </div>
@@ -91,10 +92,10 @@ export function ContactForm() {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div className="bg-white p-6 md:p-8 border border-gray-100" style={{ borderRadius: '16px' }}>
         <h2 className="text-[#2B4C6F] mb-2" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}>
-          Contact us
+          GET IN TOUCH
         </h2>
         <p className="text-[#2B4C6F]/70 mb-6" style={{ ...fontInter, fontSize: '16px' }}>
-          Send a booking request, collaboration idea, or general question.
+          Reach out about booking and audition information, collaborations, or general inquiries.
         </p>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -118,7 +119,7 @@ export function ContactForm() {
             <textarea id="home-message" name="message" value={formData.message} onChange={handleChange} required rows={5} className={`${inputClass} resize-none`} style={inputStyle} />
           </div>
           <button type="submit" disabled={status === 'sending'} className="w-full bg-[#2B4C6F] text-white px-8 py-4 border border-[#2B4C6F] hover:bg-[#8FA8C8] hover:border-[#8FA8C8] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-300 disabled:opacity-50 cursor-pointer" style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}>
-            {status === 'sending' ? 'Sending...' : 'Send message'}
+            {status === 'sending' ? 'SENDING...' : 'SEND MESSAGE'}
           </button>
           {status === 'success' && (
             <p className="text-green-600 text-center" style={fontInter}>
@@ -127,7 +128,7 @@ export function ContactForm() {
           )}
           {status === 'error' && (
             <p className="text-red-600 text-center" style={fontInter}>
-              Your message could not be sent. Please try again.
+              Oops! Something went wrong. Please try again.
             </p>
           )}
         </form>

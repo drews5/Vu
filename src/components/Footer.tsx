@@ -44,7 +44,7 @@ export const Footer = memo(function Footer() {
           </div>
           <div className="flex flex-col items-start">
             <h3 className="mb-1 md:mb-4" style={{ ...fontYearbook, fontSize: 'clamp(14px, 2vw, 18px)' }}>
-              Resources
+              RESOURCES
             </h3>
             <ul className="grid grid-cols-2 md:grid-cols-1 gap-x-4 gap-y-1 md:space-y-2 w-full" style={{ ...fontInter, fontSize: 'clamp(13px, 1.5vw, 14px)' }}>
               {resourceLinks.map((link) => (
@@ -64,14 +64,14 @@ export const Footer = memo(function Footer() {
           </div>
           <div className="flex flex-col items-start overflow-hidden">
             <h3 className="mb-1 md:mb-4" style={{ ...fontYearbook, fontSize: 'clamp(14px, 2vw, 18px)' }}>
-              Connect
+              CONNECT
             </h3>
             <div className="flex flex-row md:flex-col items-center md:items-start gap-4 md:gap-0 w-full">
               <div className="mb-1 md:mb-4 relative shrink-0">
                 <button onClick={handleCopy} className="text-white/70 hover:text-white/90 transition-colors truncate block w-full text-left cursor-pointer group relative" style={{ ...fontInter, fontSize: 'clamp(13px, 1.5vw, 14px)' }}>
                   vocalu@umn.edu
                   <span className={`absolute -top-8 left-0 bg-white text-[#2B4C6F] text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none font-bold ${copied ? 'opacity-100' : 'opacity-0'}`}>
-                    Copied
+                    COPIED!
                   </span>
                 </button>
               </div>

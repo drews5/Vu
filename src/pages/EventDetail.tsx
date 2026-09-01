@@ -238,7 +238,7 @@ export function EventDetail() {
                                     <button onClick={handleCopyInfo} className="flex items-center gap-2 text-[#8FA8C8] hover:text-[#2B4C6F] transition-colors duration-200 text-xs tracking-widest cursor-pointer group/copy relative" style={fontInter}>
                                         <Copy className="w-4 h-4" /> Copy Event Info
                                         <span className={`ml-2 bg-[#2B4C6F] text-white text-[10px] px-2 py-1 rounded transition-opacity pointer-events-none font-bold whitespace-nowrap ${copied ? 'opacity-100' : 'opacity-0'}`}>
-                                            Copied
+                                            COPIED!
                                         </span>
                                     </button>
                                 </div>
@@ -274,7 +274,7 @@ export function EventDetail() {
                                     <div className="flex flex-col gap-3">
                                         {event.ticketLink && (
                                             <a href={event.ticketLink} target="_blank" rel="noreferrer" className="w-full bg-[#8FA8C8] text-white py-5 rounded-2xl text-center border border-[#8FA8C8] hover:bg-[#2B4C6F] hover:border-[#2B4C6F] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-200 cursor-pointer block" style={fontYearbook}>
-                                                Get tickets
+                                                GET TICKETS
                                             </a>
                                         )}
                                         {isUpcoming && hasConfirmedSchedule && (

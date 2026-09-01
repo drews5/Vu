@@ -187,7 +187,7 @@ export function Members() {
                             Our Members
                         </h1>
                         <p className="text-white/80 mt-2 max-w-2xl mx-auto text-sm md:text-base relative" style={{ fontFamily: 'Inter, sans-serif' }}>
-                            Current Vocal U members.
+                            Meet the voices of Vocal U.
                         </p>
                     </div>
                 </div>

@@ -82,11 +82,21 @@ export function About() {
                 </h2>
                 <div className="max-w-4xl space-y-4 px-4 text-[#2B4C6F] leading-relaxed md:px-0" style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7' }}>
                     <p>
-                        Vocal U is a gender-inclusive student a cappella group at the University of Minnesota. We perform pop arrangements on campus and around the Twin Cities.
+                        Founded in 2011, Vocal U A Cappella is dedicated to fostering musical growth within our group while sharing our passion for the arts with the community.
                     </p>
                     <p>
-                        We work to improve as musicians, make the group welcoming, and support university and community events through performance.
+                        We embrace our diversity of voices and backgrounds to perform at charity events that resonate with our
+                        members, seek to build the University community at U of M events, and spread our harmonies in
+                        the surrounding communities, especially the University District and greater Twin Cities area.
+                        Our mission is to share the universal language of music through the unique form of a cappella,
+                        reaching as many people as we can.
                     </p>
+                    <div className="italic text-[#2B4C6F]/80 border-l-4 border-[#8FA8C8] pl-4">
+                        "A cappella is a way to unify a huge world of culture with the human voice. By arranging,
+                        practicing and performing, we are able to pay unique homage to some of today's greatest hits
+                        and yesterday's greatest memories."
+                        <div className="mt-2">- Vocal U A Cappella</div>
+                    </div>
                 </div>
             </motion.section>
             {/* Our Repertoire */}
@@ -95,7 +105,8 @@ export function About() {
                     Our Repertoire
                 </h2>
                 <p className="text-[#2B4C6F] mb-6 px-4 md:px-0" style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7' }}>
-                    Each semester, the group keeps some current arrangements and votes on new songs to add.
+                    Each semester, Vocal U chooses half of their existing songs to carry over and selects new songs
+                    by a vote.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: '25px' }}>
                     {repertoire.map((song, index) => (

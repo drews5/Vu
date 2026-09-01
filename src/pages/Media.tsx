@@ -216,7 +216,7 @@ export function Media() {
                         Media
                     </h1>
                     <p className="text-white/90 mt-2 max-w-2xl mx-auto text-sm md:text-base" style={{ fontFamily: 'Inter, sans-serif' }}>
-                        Videos and recent social posts.
+                        Catch our latest performances and keep up with us on social media.
                     </p>
                 </div>
             </motion.section>
@@ -289,14 +289,14 @@ export function Media() {
                     </div>
                 </div>
                 <h2 className="text-[#2B4C6F] text-3xl md:text-4xl mb-4 font-yearbook" style={fontYearbook}>
-                    Looking for a specific photo or video?
+                    Want more Media?
                 </h2>
                 <p className="text-[#2B4C6F]/70 max-w-xl mx-auto mb-8" style={fontInter}>
-                    Contact us and we will help if we have it available.
+                    If you're looking for additional media or want to reach out about something else, we'd love to hear from you.
                 </p>
                 <motion.div whileHover={{ x: 6 }} whileTap={{ scale: 0.95 }} className="inline-block">
                     <Link to="/contact" className="inline-flex items-center gap-2 bg-white text-[#2B4C6F] px-8 py-3 border border-gray-100 hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/50 transition-all duration-300 cursor-pointer" style={{ ...fontYearbook, borderRadius: '12px' }}>
-                        Contact us
+                        Get in Touch
                         <ExternalLink className="w-5 h-5" />
                     </Link>
                 </motion.div>

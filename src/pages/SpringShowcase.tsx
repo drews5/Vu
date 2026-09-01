@@ -357,7 +357,7 @@ export function SpringShowcase() {
                 className="bg-white/95 text-[#2B4C6F] px-4 py-2 text-[12px] font-yearbook border border-white"
                 style={{ borderRadius: '12px', ...fontInter, fontWeight: 700 }}
               >
-                You&apos;re invited
+                YOU&apos;RE INVITED!
               </span>
             </div>
           </div>
