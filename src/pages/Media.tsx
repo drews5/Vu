@@ -7,9 +7,23 @@ import { PageTransition, childVariants } from '../components/PageTransition';
 import { ExploreMore } from '../components/ExploreMore';
 import { Seo, toAbsoluteUrl, type SeoSchema } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
+import { fetchJson } from '../utils/network';
+import { getSafeExternalUrl } from '../utils/safeUrl';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
-// Instagram Post Type from Behold
+const YOUTUBE_API_KEY = 'AIzaSyDN6gIEwSBWQkwZ0LqcmzwQjwBJy3Pgq7Y';
+const YOUTUBE_PLAYLIST_ID = 'UUnTUlN8WPYoqaAgnR58dXBA';
+const INSTA_FEED_URL = 'https://feeds.behold.so/rWuujcErcs5hcWQ5MPPw';
+
+type YouTubeVideo = {
+    id?: string;
+    snippet: {
+        title: string;
+        publishedAt: string;
+        resourceId: { videoId: string };
+    };
+};
+
 type InstaPost = {
     id: string;
     mediaUrl: string;
@@ -17,11 +31,37 @@ type InstaPost = {
     caption?: string;
     timestamp: string;
 };
+
+function isYouTubeVideo(value: unknown): value is YouTubeVideo {
+    if (!value || typeof value !== 'object') return false;
+    const video = value as Partial<YouTubeVideo>;
+    const videoId = video.snippet?.resourceId?.videoId;
+    return typeof video.snippet?.title === 'string'
+        && typeof video.snippet.publishedAt === 'string'
+        && typeof videoId === 'string'
+        && /^[\w-]{11}$/.test(videoId);
+}
+
+function normalizeInstagramPost(value: unknown): InstaPost | null {
+    if (!value || typeof value !== 'object') return null;
+    const post = value as Partial<InstaPost>;
+    const mediaUrl = getSafeExternalUrl(post.mediaUrl);
+    const permalink = getSafeExternalUrl(post.permalink);
+    if (typeof post.id !== 'string' || !mediaUrl || !permalink) return null;
+
+    return {
+        id: post.id,
+        mediaUrl,
+        permalink,
+        caption: typeof post.caption === 'string' ? post.caption : undefined,
+        timestamp: typeof post.timestamp === 'string' ? post.timestamp : '',
+    };
+}
 const InstagramCard = memo(function InstagramCard({ post }: { post: InstaPost }) {
     return (
         <motion.a href={post.permalink} target="_blank" rel="noopener noreferrer" whileTap={{ scale: 0.98 }} className="vu-card group bg-white overflow-hidden border border-gray-100 transition-[box-shadow,border-color] duration-300 hover:border-[#8FA8C8] flex flex-col cursor-pointer" style={{ borderRadius: '16px' }}>
             <div className="relative overflow-hidden bg-gray-50">
-                <img src={post.mediaUrl} alt={post.caption || "Instagram Post"} className="w-full h-auto block transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                <img src={post.mediaUrl} alt={post.caption || "Instagram Post"} className="w-full h-auto block transition-transform duration-700 group-hover:scale-105" loading="lazy" referrerPolicy="no-referrer" />
                 <div className="absolute inset-0 bg-[#2B4C6F]/0 group-hover:bg-[#2B4C6F]/20 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <Instagram className="w-8 h-8 text-white drop-shadow-md" />
                 </div>
@@ -79,13 +119,13 @@ const VideoModal = ({ vId, onClose }: { vId: string; onClose: () => void }) => {
                 <button onClick={onClose} className="absolute right-4 top-4 z-20 rounded-full bg-black/45 p-2 text-white transition-colors hover:bg-black/60 hover:text-[#8FA8C8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" aria-label="Close video player">
                     <X className="w-7 h-7" />
                 </button>
-                <iframe className="h-full w-full border-0" src={`https://www.youtube.com/embed/${vId}?autoplay=1&rel=0`} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen title="Video Player" />
+                <iframe className="h-full w-full border-0" src={`https://www.youtube.com/embed/${vId}?autoplay=1&rel=0`} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen title="Video Player" referrerPolicy="strict-origin-when-cross-origin" />
             </motion.div>
         </div>,
         document.body
     );
 };
-const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen }: { item: any, isHighlighted?: boolean, onOpen: (vId: string) => void }) {
+const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen }: { item: YouTubeVideo | string, isHighlighted?: boolean, onOpen: (vId: string) => void }) {
     const vId = typeof item === 'string' ? item : item.snippet.resourceId.videoId;
     const title = typeof item === 'string' ? 'ICCA 2025 Set: Full Performance' : item.snippet.title;
     const dateStr = typeof item === 'string' ? 'Mar 1, 2025' : new Date(item.snippet.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -108,7 +148,7 @@ const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen 
                         <Youtube className="w-8 h-8 text-white" />
                     </div>
                 </div>
-                <img src={`https://img.youtube.com/vi/${vId}/maxresdefault.jpg`} alt={title} className="absolute top-0 left-0 w-full h-full object-cover" />
+                <img src={`https://img.youtube.com/vi/${vId}/maxresdefault.jpg`} alt={title} className="absolute top-0 left-0 w-full h-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
             </div>
             <div className={`p-5 flex-grow flex flex-col justify-between transition-colors ${isHighlighted ? 'bg-gray-50/50' : ''}`}>
                 <div>
@@ -132,40 +172,50 @@ const VideoCard = memo(function VideoCard({ item, isHighlighted = false, onOpen 
 export function Media() {
     const mediaDescription =
         'Watch Vocal U performances on YouTube and browse recent Instagram posts from the University of Minnesota gender-inclusive a cappella group.';
-    const [videos, setVideos] = useState<any[]>([]);
+    const [videos, setVideos] = useState<YouTubeVideo[]>([]);
     const [instaPosts, setInstaPosts] = useState<InstaPost[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+    const [youtubeError, setYoutubeError] = useState(false);
+    const [instagramError, setInstagramError] = useState(false);
     const [activeVideo, setActiveVideo] = useState<string | null>(null);
     useEffect(() => {
+        const controller = new AbortController();
+        let cancelled = false;
+
         async function loadFeeds() {
-            const YOUTUBE_API_KEY = 'AIzaSyDN6gIEwSBWQkwZ0LqcmzwQjwBJy3Pgq7Y';
-            const YOUTUBE_PLAYLIST_ID = 'UUnTUlN8WPYoqaAgnR58dXBA';
-            const INSTA_FEED_URL = 'https://feeds.behold.so/rWuujcErcs5hcWQ5MPPw';
-            try {
-                setLoading(true);
-                // Fetch YouTube
-                const ytPromise = fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=5&playlistId=${YOUTUBE_PLAYLIST_ID}&key=${YOUTUBE_API_KEY}`)
-                    .then(res => res.json());
-                // Fetch Instagram
-                const instaPromise = fetch(INSTA_FEED_URL)
-                    .then(res => res.json());
-                const [ytData, instaData] = await Promise.all([ytPromise, instaPromise]);
-                if (ytData.items) {
-                    setVideos(ytData.items);
-                }
-                if (instaData && instaData.posts) {
-                    setInstaPosts(instaData.posts.slice(0, 9));
-                }
-                setError(false);
-            } catch (err) {
-                console.error('Feed Error:', err);
-                setError(true);
-            } finally {
-                setLoading(false);
+            setLoading(true);
+            const youtubeUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=5&playlistId=${YOUTUBE_PLAYLIST_ID}&key=${YOUTUBE_API_KEY}`;
+            const [youtubeResult, instagramResult] = await Promise.allSettled([
+                fetchJson<{ items?: unknown[] }>(youtubeUrl, { signal: controller.signal }, 10000),
+                fetchJson<{ posts?: unknown[] }>(INSTA_FEED_URL, { signal: controller.signal }, 10000),
+            ]);
+
+            if (cancelled) return;
+
+            if (youtubeResult.status === 'fulfilled') {
+                setVideos((youtubeResult.value.items || []).filter(isYouTubeVideo));
+                setYoutubeError(false);
+            } else {
+                console.error('YouTube feed error:', youtubeResult.reason);
+                setYoutubeError(true);
             }
+
+            if (instagramResult.status === 'fulfilled') {
+                setInstaPosts((instagramResult.value.posts || []).map(normalizeInstagramPost).filter((post): post is InstaPost => post !== null).slice(0, 9));
+                setInstagramError(false);
+            } else {
+                console.error('Instagram feed error:', instagramResult.reason);
+                setInstagramError(true);
+            }
+
+            setLoading(false);
         }
-        loadFeeds();
+
+        void loadFeeds();
+        return () => {
+            cancelled = true;
+            controller.abort();
+        };
     }, []);
     const mediaSchema: SeoSchema[] = [
         {
@@ -244,7 +294,7 @@ export function Media() {
                             Array(4).fill(0).map((_, i) => (
                                 <div key={i} className="aspect-video bg-gray-100 animate-pulse" style={{ borderRadius: '16px' }} />
                             ))
-                        ) : error ? (
+                        ) : youtubeError ? (
                             <p className="col-span-full text-[#2B4C6F]/60 text-center py-8" style={fontInter}>Unable to load additional videos.</p>
                         ) : (
                             videos.map((video) => (
@@ -272,7 +322,7 @@ export function Media() {
                             Array(4).fill(0).map((_, i) => (
                                 <div key={i} className="aspect-[4/5] bg-gray-100 animate-pulse" style={{ borderRadius: '16px' }} />
                             ))
-                        ) : error ? (
+                        ) : instagramError ? (
                             <p className="col-span-full text-[#2B4C6F]/60 text-center py-8" style={fontInter}>Unable to load photos.</p>
                         ) : (
                             instaPosts.map((post) => (

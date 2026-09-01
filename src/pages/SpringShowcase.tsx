@@ -3,11 +3,13 @@ import { ArrowLeft, Calendar, Copy, MapPin, Navigation, Share2, Check } from 'lu
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import showcasePhoto from '../assets/spring-showcase.jpg';
-import { PageTransition, childVariants } from '../components/PageTransition';
+import { PageTransition } from '../components/PageTransition';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 import { loadSupabase } from '../utils/loadSupabase';
 import { springShowcasePath, springShowcaseSlug, springShowcaseTitle } from '../utils/eventRoutes';
+import { copyText } from '../utils/clipboard';
+import { getGoogleCalendarUrl, isEventUpcoming, parseEventDate } from '../utils/eventDate';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const inviteDescription =
@@ -27,30 +29,6 @@ type ShowcaseEvent = {
   imageUrl: string;
   fullDate: Date;
 };
-
-function parseEventDate(rawDate: string, displayTime: string) {
-  const [datePart] = rawDate.split('T');
-  const [year, month, day] = datePart.split('-').map(Number);
-  const match = displayTime.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)/i);
-
-  if (!match) {
-    return new Date(rawDate);
-  }
-
-  let hours = Number(match[1]);
-  const minutes = Number(match[2] || '0');
-  const meridiem = match[3].toUpperCase();
-
-  if (meridiem === 'PM' && hours < 12) {
-    hours += 12;
-  }
-
-  if (meridiem === 'AM' && hours === 12) {
-    hours = 0;
-  }
-
-  return new Date(year, month - 1, day, hours, minutes, 0, 0);
-}
 
 function formatEventDate(date: Date) {
   return new Intl.DateTimeFormat('en-US', {
@@ -74,29 +52,6 @@ const fallbackEvent: ShowcaseEvent = {
   imageUrl: showcasePhoto,
   fullDate: fallbackDate,
 };
-
-async function copyText(text: string) {
-  try {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(text);
-      return true;
-    }
-  } catch {
-    // Fall back to a temporary textarea for older browsers.
-  }
-
-  const textArea = document.createElement('textarea');
-  textArea.value = text;
-  textArea.setAttribute('readonly', 'true');
-  textArea.style.position = 'absolute';
-  textArea.style.left = '-9999px';
-  document.body.appendChild(textArea);
-  textArea.select();
-
-  const copied = document.execCommand('copy');
-  document.body.removeChild(textArea);
-  return copied;
-}
 
 const BloomingFlowers = () => {
   const flowers = [
@@ -180,61 +135,57 @@ export function SpringShowcase() {
 
   useEffect(() => {
     let cancelled = false;
+    const controller = new AbortController();
 
     async function fetchShowcase() {
-      const supabase = await loadSupabase();
-      const { data, error } = await supabase
-        .from('events')
-        .select('*')
-        .eq('slug', springShowcaseSlug)
-        .single();
+      try {
+        const supabase = await loadSupabase();
+        const { data, error } = await supabase
+          .from('events')
+          .select('slug, date, display_time, location, address')
+          .eq('slug', springShowcaseSlug)
+          .abortSignal(controller.signal)
+          .single();
 
-      if (error || !data || cancelled) {
-        if (error) {
-          console.error('Error fetching showcase:', error);
-        }
+        if (error) throw error;
+        if (!data || cancelled) return;
 
-        return;
+        const fullDate = parseEventDate(data.date, data.display_time || '7:30 PM');
+
+        setEvent({
+          slug: data.slug,
+          title: springShowcaseTitle,
+          dateLabel: formatEventDate(fullDate),
+          rawDate: data.date,
+          time: data.display_time || '7:30 PM',
+          location: data.location || fallbackEvent.location,
+          address: data.address || fallbackEvent.address,
+          description: showcaseDescription,
+          imageUrl: showcasePhoto,
+          fullDate,
+        });
+      } catch (error) {
+        if (!cancelled) console.error('Error fetching showcase:', error);
       }
-
-      const fullDate = parseEventDate(data.date, data.display_time || '7:30 PM');
-
-      setEvent({
-        slug: data.slug,
-        title: springShowcaseTitle,
-        dateLabel: formatEventDate(fullDate),
-        rawDate: data.date,
-        time: data.display_time || '7:30 PM',
-        location: data.location || fallbackEvent.location,
-        address: data.address,
-        description: showcaseDescription,
-        imageUrl: showcasePhoto,
-        fullDate,
-      });
     }
 
     void fetchShowcase();
 
     return () => {
       cancelled = true;
+      controller.abort();
     };
   }, []);
 
   const shareUrl = toAbsoluteUrl(springShowcasePath);
   const shareMessage = 'Join Vocal U for their Spring Showcase 2026!';
   const shareBody = `${shareMessage} ${event.dateLabel} at ${event.time} in ${event.location}. ${shareUrl}`;
-  const calendarUrl = useMemo(() => {
-    const startDate = event.fullDate.toISOString().replace(/-|:|\.\d\d\d/g, '');
-    const endDate = new Date(event.fullDate.getTime() + 2 * 60 * 60 * 1000)
-      .toISOString()
-      .replace(/-|:|\.\d\d\d/g, '');
-
-    return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-      event.title
-    )}&dates=${startDate}/${endDate}&details=${encodeURIComponent(
-      `${shareMessage} ${event.description}`
-    )}&location=${encodeURIComponent(`${event.location} ${event.address}`)}`;
-  }, [event]);
+  const calendarUrl = useMemo(() => getGoogleCalendarUrl({
+    title: event.title,
+    start: event.fullDate,
+    description: `${shareMessage} ${event.description}`,
+    location: `${event.location} ${event.address}`,
+  }), [event]);
   const navigationUrl = useMemo(
     () =>
       `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -251,7 +202,9 @@ export function SpringShowcase() {
     url: shareUrl,
     image: [toAbsoluteUrl('/og/spring-showcase-2026.jpg')],
     startDate: event.fullDate.toISOString(),
-    eventStatus: 'https://schema.org/EventScheduled',
+    eventStatus: isEventUpcoming(event.fullDate)
+      ? 'https://schema.org/EventScheduled'
+      : 'https://schema.org/EventCompleted',
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     location: {
       '@type': 'Place',

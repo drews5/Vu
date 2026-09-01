@@ -8,6 +8,8 @@ import { getEventImage, getEventImageFit, getEventImagePosition } from '../utils
 import { getEventDatePresentation, getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
 import { Seo, toAbsoluteUrl, type SeoSchema } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
+import { copyText } from '../utils/clipboard';
+import { getGoogleCalendarUrl, isEventUpcoming } from '../utils/eventDate';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 
@@ -35,14 +37,15 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
     const isUpcoming = event.status === 'Upcoming';
     const eventPath = getEventPath(event.slug);
     const [copied, setCopied] = useState(false);
-    const handleCopyInfo = (e: React.MouseEvent) => {
+    const handleCopyInfo = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         const eventLink = `${window.location.origin}${eventPath}`;
         const info = `Come see Vocal U at ${event.title} on ${event.date}, ${event.year} at ${event.time} at ${event.location}! ${eventLink}`;
-        navigator.clipboard.writeText(info);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        if (await copyText(info)) {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
     };
     const handleShare = async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -61,15 +64,17 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
                 if ((err as Error).name !== 'AbortError') {
                     console.error('Error sharing:', err);
                     // Fallback if share fails
-                    navigator.clipboard.writeText(shareUrl);
-                    alert('Link copied to clipboard!');
+                    if (await copyText(shareUrl)) alert('Link copied to clipboard!');
                 }
             }
         } else {
             // Fallback: Copy to clipboard
             try {
-                await navigator.clipboard.writeText(shareUrl);
-                alert('Link copied to clipboard!');
+                if (await copyText(shareUrl)) {
+                    alert('Link copied to clipboard!');
+                } else {
+                    throw new Error('Clipboard unavailable');
+                }
             } catch (err) {
                 console.error('Clipboard error:', err);
                 alert('Could not copy link. Please copy the URL from your browser.');
@@ -78,13 +83,12 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
     };
     const getCalendarUrl = () => {
         if (!event.fullDate) return '#';
-        const title = encodeURIComponent(event.title);
-        const location = encodeURIComponent(`${event.location} ${event.address || ''}`);
-        const details = encodeURIComponent(event.description);
-        // Create Google Calendar link
-        const startDate = event.fullDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
-        const endDate = new Date(event.fullDate.getTime() + 2 * 60 * 60 * 1000).toISOString().replace(/-|:|\.\d\d\d/g, "");
-        return `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
+        return getGoogleCalendarUrl({
+            title: event.title,
+            start: event.fullDate,
+            description: event.description,
+            location: `${event.location} ${event.address || ''}`,
+        });
     };
     const getNavigationUrl = () => {
         const query = encodeURIComponent(`${event.location} ${event.address || ''}`);
@@ -198,6 +202,7 @@ export function Events() {
         'See upcoming Vocal U performances, showcases, competitions, and past events from the University of Minnesota a cappella group.';
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
     const [pastIndex, setPastIndex] = useState(0);
     const [visiblePastCards, setVisiblePastCards] = useState(() =>
         typeof window === 'undefined' ? 1 : getPastVisibleCardCount(window.innerWidth)
@@ -240,20 +245,19 @@ export function Events() {
 
     useEffect(() => {
         let cancelled = false;
+        const controller = new AbortController();
         async function fetchEvents() {
-            const supabase = await loadSupabase();
-            const { data, error } = await supabase
-                .from('events')
-                .select('*')
-                .order('date', { ascending: false });
-            if (error) {
-                console.error('Error fetching events:', error);
-            } else {
-                if (cancelled) {
-                    return;
-                }
+            try {
+                const supabase = await loadSupabase();
+                const { data, error } = await supabase
+                    .from('events')
+                    .select('id, slug, date, display_time, title, location, address, description, image_url')
+                    .order('date', { ascending: false })
+                    .abortSignal(controller.signal);
+                if (error) throw error;
+                if (cancelled) return;
 
-                const formatted = data.map((r: any) => {
+                const formatted = (data || []).map((r: any) => {
                     const d = new Date(r.date);
                     const datePresentation = getEventDatePresentation(r.slug, d);
                     return {
@@ -267,19 +271,25 @@ export function Events() {
                         address: r.address,
                         description: r.description,
                         image: getEventImage(r.slug, r.image_url),
-                        status: new Date(d.setHours(23, 59, 59, 999)) >= new Date() ? 'Upcoming' : 'Previous',
+                        status: isEventUpcoming(d) ? 'Upcoming' : 'Previous',
                         fullDate: d
                     };
                 });
                 setEvents(formatted as Event[]);
-            }
-            if (!cancelled) {
-                setLoading(false);
+                setLoadError(false);
+            } catch (error) {
+                if (!cancelled) {
+                    console.error('Error fetching events:', error);
+                    setLoadError(true);
+                }
+            } finally {
+                if (!cancelled) setLoading(false);
             }
         }
         void fetchEvents();
         return () => {
             cancelled = true;
+            controller.abort();
         };
     }, []);
     const eventsSchema: SeoSchema[] = [
@@ -340,6 +350,8 @@ export function Events() {
                     <div className="flex justify-center py-20">
                         <div className="w-10 h-10 border-4 border-[#8FA8C8]/30 border-t-[#8FA8C8] rounded-full animate-spin" />
                     </div>
+                ) : loadError ? (
+                    <p className="py-16 text-center text-[#2B4C6F]/70" role="alert">Unable to load events right now. Please refresh and try again.</p>
                 ) : (
                     <> {upcomingEvents.length > 0 && (
                         <motion.section variants={childVariants}>

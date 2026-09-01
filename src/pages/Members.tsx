@@ -64,22 +64,22 @@ export function Members() {
         'Meet the current singers of Vocal U, the University of Minnesota gender-inclusive a cappella group, and get to know the voices behind the performances.';
     const [members, setMembers] = useState<Member[]>([]);
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
     useEffect(() => {
         let cancelled = false;
+        const controller = new AbortController();
         async function fetchMembers() {
-            const supabase = await loadSupabase();
-            const { data, error } = await supabase
-                .from('members')
-                .select('*')
-                .order('display_order', { ascending: true });
-            if (error) {
-                console.error('Error fetching members:', error);
-            } else {
-                if (cancelled) {
-                    return;
-                }
+            try {
+                const supabase = await loadSupabase();
+                const { data, error } = await supabase
+                    .from('members')
+                    .select('name, role, part, major, year, photo_url, instagram, is_vp, display_order')
+                    .order('display_order', { ascending: true })
+                    .abortSignal(controller.signal);
+                if (error) throw error;
+                if (cancelled) return;
 
-                setMembers(data.map((m: any) => {
+                setMembers((data || []).map((m: any) => {
                     const localPhotoKey = `../assets/members/${m.name}.jpg`;
                     return {
                         name: m.name,
@@ -92,14 +92,20 @@ export function Members() {
                         is_vp: m.is_vp
                     };
                 }));
-            }
-            if (!cancelled) {
-                setLoading(false);
+                setLoadError(false);
+            } catch (error) {
+                if (!cancelled) {
+                    console.error('Error fetching members:', error);
+                    setLoadError(true);
+                }
+            } finally {
+                if (!cancelled) setLoading(false);
             }
         }
         void fetchMembers();
         return () => {
             cancelled = true;
+            controller.abort();
         };
     }, []);
     const groupedMembers = useMemo(() => {
@@ -197,6 +203,8 @@ export function Members() {
                 <div className="flex justify-center py-12">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#8FA8C8]" />
                 </div>
+            ) : loadError ? (
+                <p className="py-16 text-center text-[#2B4C6F]/70" role="alert">Unable to load the member list right now. Please refresh and try again.</p>
             ) : (
                 /* Flex container for sections that allows them to grow proportional to their card count */
                 <div className="flex flex-wrap gap-x-8 gap-y-12 items-start justify-center">

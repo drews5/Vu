@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
+import { fetchWithTimeout } from '../utils/network';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const TikTokIcon = ({ className }: { className?: string }) => {
@@ -29,11 +30,11 @@ export function Contact() {
             e.preventDefault();
             setStatus('sending');
             try {
-                const response = await fetch('https://formspree.io/f/xanygerw', {
+                const response = await fetchWithTimeout('https://formspree.io/f/xanygerw', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData),
-                });
+                }, 12000);
                 if (response.ok) {
                     setStatus('success');
                     setFormData({ name: '', email: '', subject: '', message: '' });
@@ -106,25 +107,25 @@ export function Contact() {
                             <label htmlFor="contact-name" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
                                 Name
                             </label>
-                            <input type="text" id="contact-name" name="name" value={formData.name} onChange={handleChange} required className={inputClass} style={inputStyle} />
+                            <input type="text" id="contact-name" name="name" value={formData.name} onChange={handleChange} required maxLength={100} autoComplete="name" className={inputClass} style={inputStyle} />
                         </div>
                         <div>
                             <label htmlFor="contact-email" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
                                 Email
                             </label>
-                            <input type="email" id="contact-email" name="email" value={formData.email} onChange={handleChange} required className={inputClass} style={inputStyle} />
+                            <input type="email" id="contact-email" name="email" value={formData.email} onChange={handleChange} required maxLength={254} autoComplete="email" className={inputClass} style={inputStyle} />
                         </div>
                         <div>
                             <label htmlFor="contact-subject" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
                                 Subject
                             </label>
-                            <input type="text" id="contact-subject" name="subject" value={formData.subject} onChange={handleChange} required className={inputClass} style={inputStyle} />
+                            <input type="text" id="contact-subject" name="subject" value={formData.subject} onChange={handleChange} required maxLength={150} className={inputClass} style={inputStyle} />
                         </div>
                         <div>
                             <label htmlFor="contact-message" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
                                 Message
                             </label>
-                            <textarea id="contact-message" name="message" value={formData.message} onChange={handleChange} required rows={5} className={`${inputClass} resize-none`} style={inputStyle} />
+                            <textarea id="contact-message" name="message" value={formData.message} onChange={handleChange} required maxLength={5000} rows={5} className={`${inputClass} resize-none`} style={inputStyle} />
                         </div>
                         <motion.button type="submit" disabled={status === 'sending'} whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }} className="w-full bg-[#8FA8C8] text-white px-8 py-4 hover:bg-[#2B4C6F] transition-all duration-200 disabled:opacity-50 cursor-pointer font-yearbook" style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.03em', borderRadius: '14px', }}>
                             {status === 'sending' ? 'Sending...' : 'Send Message'}

@@ -2,6 +2,7 @@ import { useState, useCallback, memo } from 'react';
 import { Mail, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { fontYearbook } from '../styles/fonts';
+import { fetchWithTimeout } from '../utils/network';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const ContactInfo = memo(function ContactInfo() {
@@ -63,11 +64,11 @@ export function ContactForm() {
       e.preventDefault();
       setStatus('sending');
       try {
-        const response = await fetch('https://formspree.io/f/xanygerw', {
+        const response = await fetchWithTimeout('https://formspree.io/f/xanygerw', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
-        });
+        }, 12000);
         if (response.ok) {
           setStatus('success');
           setFormData({ name: '', email: '', message: '' });
@@ -103,20 +104,20 @@ export function ContactForm() {
               <label htmlFor="home-name" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
                 Name
               </label>
-              <input type="text" id="home-name" name="name" value={formData.name} onChange={handleChange} required className={inputClass} style={inputStyle} />
+              <input type="text" id="home-name" name="name" value={formData.name} onChange={handleChange} required maxLength={100} autoComplete="name" className={inputClass} style={inputStyle} />
             </div>
             <div>
               <label htmlFor="home-email" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
                 Email
               </label>
-              <input type="email" id="home-email" name="email" value={formData.email} onChange={handleChange} required className={inputClass} style={inputStyle} />
+              <input type="email" id="home-email" name="email" value={formData.email} onChange={handleChange} required maxLength={254} autoComplete="email" className={inputClass} style={inputStyle} />
             </div>
           </div>
           <div>
             <label htmlFor="home-message" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
               Message
             </label>
-            <textarea id="home-message" name="message" value={formData.message} onChange={handleChange} required rows={5} className={`${inputClass} resize-none`} style={inputStyle} />
+            <textarea id="home-message" name="message" value={formData.message} onChange={handleChange} required maxLength={5000} rows={5} className={`${inputClass} resize-none`} style={inputStyle} />
           </div>
           <button type="submit" disabled={status === 'sending'} className="w-full bg-[#2B4C6F] text-white px-8 py-4 border border-[#2B4C6F] hover:bg-[#8FA8C8] hover:border-[#8FA8C8] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-300 disabled:opacity-50 cursor-pointer" style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}>
             {status === 'sending' ? 'SENDING...' : 'SEND MESSAGE'}

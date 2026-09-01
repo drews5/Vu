@@ -8,6 +8,9 @@ import { getEventImage, getEventImageFit, getEventImagePosition } from '../utils
 import { getEventDatePresentation, isEventScheduleConfirmed } from '../utils/eventRoutes';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
+import { copyText } from '../utils/clipboard';
+import { getGoogleCalendarUrl, isEventUpcoming } from '../utils/eventDate';
+import { getSafeExternalUrl } from '../utils/safeUrl';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 interface EventData {
@@ -30,23 +33,32 @@ export function EventDetail() {
         'View details for an upcoming Vocal U performance, showcase, or appearance in Minneapolis and around the University of Minnesota.';
     const [event, setEvent] = useState<EventData | null>(null);
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
     useEffect(() => {
-        if (!eventId) return;
+        if (!eventId) {
+            setLoading(false);
+            return;
+        }
         let cancelled = false;
+        const controller = new AbortController();
         async function fetchEventDetail() {
-            const supabase = await loadSupabase();
-            const { data, error } = await supabase
-                .from('events')
-                .select('*')
-                .eq('slug', eventId)
-                .single();
-            if (error) {
-                console.error('Error fetching event detail:', error);
-            } else if (data) {
-                const d = new Date(data.date);
-                if (cancelled) {
-                    return;
+            try {
+                const supabase = await loadSupabase();
+                const { data, error } = await supabase
+                    .from('events')
+                    .select('slug, title, date, display_time, location, address, description, ticket_link, image_url')
+                    .eq('slug', eventId)
+                    .abortSignal(controller.signal)
+                    .single();
+                if (error) {
+                    if (error.code === 'PGRST116') {
+                        if (!cancelled) setEvent(null);
+                        return;
+                    }
+                    throw error;
                 }
+                if (!data || cancelled) return;
+                const d = new Date(data.date);
 
                 setEvent({
                     slug: data.slug,
@@ -56,29 +68,36 @@ export function EventDetail() {
                     location: data.location,
                     address: data.address,
                     description: data.description,
-                    ticketLink: data.ticket_link,
+                    ticketLink: getSafeExternalUrl(data.ticket_link),
                     imageUrl: getEventImage(data.slug, data.image_url),
                     fullDate: d,
-                    status: data.status,
+                    status: isEventUpcoming(d) ? 'Upcoming' : 'Previous',
                 });
-            }
-            if (!cancelled) {
-                setLoading(false);
+                setLoadError(false);
+            } catch (error) {
+                if (!cancelled) {
+                    console.error('Error fetching event detail:', error);
+                    setLoadError(true);
+                }
+            } finally {
+                if (!cancelled) setLoading(false);
             }
         }
         void fetchEventDetail();
         return () => {
             cancelled = true;
+            controller.abort();
         };
     }, [eventId]);
     const [copied, setCopied] = useState(false);
-    const handleCopyInfo = () => {
+    const handleCopyInfo = async () => {
         if (!event) return;
         const eventLink = window.location.href;
         const info = `Come see Vocal U at ${event.title} on ${event.date} at ${event.time} at ${event.location}! ${eventLink}`;
-        navigator.clipboard.writeText(info);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        if (await copyText(info)) {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
     };
     const handleShare = async () => {
         if (!event) return;
@@ -95,14 +114,16 @@ export function EventDetail() {
             } catch (err) {
                 if ((err as Error).name !== 'AbortError') {
                     console.error('Error sharing:', err);
-                    navigator.clipboard.writeText(shareUrl);
-                    alert('Link copied to clipboard!');
+                    if (await copyText(shareUrl)) alert('Link copied to clipboard!');
                 }
             }
         } else {
             try {
-                await navigator.clipboard.writeText(shareUrl);
-                alert('Link copied to clipboard!');
+                if (await copyText(shareUrl)) {
+                    alert('Link copied to clipboard!');
+                } else {
+                    throw new Error('Clipboard unavailable');
+                }
             } catch (err) {
                 console.error('Clipboard error:', err);
                 alert('Could not copy link. Please copy the URL from your browser.');
@@ -111,12 +132,12 @@ export function EventDetail() {
     };
     const getCalendarUrl = () => {
         if (!event || !event.fullDate) return '#';
-        const title = encodeURIComponent(event.title);
-        const location = encodeURIComponent(`${event.location} ${event.address}`);
-        const details = encodeURIComponent(event.description);
-        const startDate = event.fullDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
-        const endDate = new Date(event.fullDate.getTime() + 2 * 60 * 60 * 1000).toISOString().replace(/-|:|\.\d\d\d/g, "");
-        return `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
+        return getGoogleCalendarUrl({
+            title: event.title,
+            start: event.fullDate,
+            description: event.description,
+            location: `${event.location} ${event.address}`,
+        });
     };
     const getNavigationUrl = () => {
         if (!event) return '#';
@@ -141,6 +162,15 @@ export function EventDetail() {
         );
     }
     if (!event) {
+        if (loadError) {
+            return (
+                <div className="py-24 text-center" role="alert">
+                    <h1 className="text-3xl text-[#2B4C6F]" style={fontYearbook}>Unable to Load Event</h1>
+                    <p className="mt-3 text-[#2B4C6F]/70">Please refresh the page or try again shortly.</p>
+                    <Link to="/events" className="mt-5 inline-block text-[#8FA8C8]">Back to Events</Link>
+                </div>
+            );
+        }
         return (
             <>
                 <Seo

@@ -5,8 +5,8 @@ import icca2025Photo from '../assets/icca-2025.webp';
 import winterShowcasePhoto from '../assets/winter-showcase.webp';
 import nightSongsPhoto from '../assets/night-songs.webp';
 import groupPhoto from '../assets/group-photo.webp';
-import minnesotaStateFairPhoto from '../assets/minnesota-state-fair.png';
-import homecomingPhoto from '../assets/umn-homecoming.png';
+import minnesotaStateFairPhoto from '../assets/minnesota-state-fair.webp';
+import homecomingPhoto from '../assets/umn-homecoming.webp';
 
 const eventImageBySlug: Record<string, string> = {
   'ichsa-quarterfinal-4-2026': ichsaPhoto,

@@ -13,6 +13,8 @@ import { getEventImage, getEventImageFit, getEventImagePosition } from '../utils
 import { getEventDatePresentation, getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
+import { copyText } from '../utils/clipboard';
+import { isEventUpcoming } from '../utils/eventDate';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const LazyContactForm = lazy(() => import('../components/ContactForm').then((m) => ({ default: m.ContactForm })));
@@ -39,14 +41,15 @@ function getVisibleCardCount(width: number) {
 
 function EventCard({ event }: { event: FeaturedEvent }) {
   const [copied, setCopied] = useState(false);
-  const handleCopyInfo = (e: React.MouseEvent) => {
+  const handleCopyInfo = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     const eventLink = `${window.location.origin}${event.link}`;
     const info = `${event.title} — ${event.date} at ${event.location}. ${eventLink}`;
-    navigator.clipboard.writeText(info);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (await copyText(info)) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   const content = (
@@ -270,62 +273,63 @@ export function Home() {
 
   useEffect(() => {
     let cancelled = false;
+    const controller = new AbortController();
 
     async function fetchData() {
-      const supabase = await loadSupabase();
-      const { data: eventsData, error: eventsError } = await supabase
-        .from('events')
-        .select('*')
-        .order('date', { ascending: true });
+      try {
+        const supabase = await loadSupabase();
+        const { data: eventsData, error: eventsError } = await supabase
+          .from('events')
+          .select('slug, date, title, location, description, image_url, tag')
+          .order('date', { ascending: true })
+          .abortSignal(controller.signal);
 
-      if (eventsError) {
-        console.error('Error fetching events:', eventsError);
-        return;
+        if (eventsError) {
+          if (!cancelled) console.error('Error fetching events:', eventsError);
+          return;
+        }
+
+        if (cancelled) return;
+
+        const now = new Date();
+        const processed = (eventsData || []).map((r: any) => {
+          const d = new Date(r.date);
+          return {
+            ...r,
+            fullDate: d,
+            status: isEventUpcoming(d, now) ? 'Upcoming' : 'Previous'
+          };
+        });
+
+        const allEvents = processed.sort((a: any, b: any) => a.fullDate.getTime() - b.fullDate.getTime());
+        const formattedEvents: FeaturedEvent[] = allEvents.map((r: any) => ({
+          slug: r.slug,
+          tag: r.status === 'Previous' ? 'PAST' : r.tag || 'UPCOMING',
+          date: getEventDatePresentation(r.slug, r.fullDate).full,
+          title: getEventDisplayTitle(r.slug, r.title),
+          location: r.location,
+          description: r.description,
+          link: getEventPath(r.slug),
+          status: r.status,
+          image: getEventImage(r.slug, r.image_url),
+        }));
+
+        if (cancelled) return;
+
+        setItems(formattedEvents);
+        const vCards = getVisibleCardCount(window.innerWidth);
+        const firstUpcomingIdx = formattedEvents.findIndex((event) => event.status === 'Upcoming');
+        const maxIdx = Math.max(0, formattedEvents.length - vCards);
+        setCurrentIndex(firstUpcomingIdx === -1 ? maxIdx : Math.min(firstUpcomingIdx, maxIdx));
+      } catch (error) {
+        if (!cancelled) console.error('Could not load events:', error);
       }
-
-      if (cancelled) {
-        return;
-      }
-
-      const now = new Date();
-      const processed = (eventsData || []).map((r: any) => {
-        const d = new Date(r.date);
-        return {
-          ...r,
-          fullDate: d,
-          status: d >= now ? 'Upcoming' : 'Previous'
-        };
-      });
-
-      // Strictly chronological sort (oldest to newest)
-      const allEvents = processed.sort((a: any, b: any) => a.fullDate.getTime() - b.fullDate.getTime());
-      const formattedEvents: any[] = allEvents.map((r: any) => ({
-        slug: r.slug,
-        // Always override tag from DB — past events must show "PAST"
-        tag: r.status === 'Previous' ? 'PAST' : r.tag || 'UPCOMING',
-        date: getEventDatePresentation(r.slug, r.fullDate).full,
-        title: getEventDisplayTitle(r.slug, r.title),
-        location: r.location,
-        description: r.description,
-        link: getEventPath(r.slug),
-        status: r.status,
-        image: getEventImage(r.slug, r.image_url),
-      }));
-
-      if (cancelled) {
-        return;
-      }
-
-      setItems(formattedEvents);
-      const vCards = getVisibleCardCount(window.innerWidth);
-      const firstUpcomingIdx = formattedEvents.findIndex((event) => event.status === 'Upcoming');
-      const maxIdx = Math.max(0, formattedEvents.length - vCards);
-      setCurrentIndex(firstUpcomingIdx === -1 ? maxIdx : Math.min(firstUpcomingIdx, maxIdx));
     }
 
     void fetchData();
     return () => {
       cancelled = true;
+      controller.abort();
     };
   }, []);
 
@@ -387,18 +391,15 @@ export function Home() {
           }`}
           style={isHeroContained && isMobile ? { height: 'clamp(480px, 72svh, 576px)' } : undefined}
         >
-          <motion.img
-            layout
-            layoutDependency={isHeroContained}
+          <img
             src={heroBackground}
             srcSet={`${heroBackground} 1600w, ${heroBackgroundLarge} 2400w`}
             sizes="100vw"
             alt="Vocal U Group"
             className="w-full h-full object-cover"
             style={{ objectPosition: 'center bottom' }}
-            transition={{ layout: { duration: 0.48, ease: [0.22, 1, 0.36, 1] } }}
             decoding="async"
-            fetchPriority="high"
+            {...({ fetchpriority: 'high' } as Record<string, string>)}
           />
           <div className="absolute inset-0 flex flex-col items-center px-4 pointer-events-none">
             <motion.div

@@ -278,6 +278,7 @@ export function Auditions() {
             className="h-full min-w-0 flex-1 border-0 bg-transparent px-2 text-[9px] font-semibold text-[#2B4C6F] outline-none placeholder:text-gray-400 md:text-[12px]"
             style={fontInter}
             value={emailInput}
+            maxLength={64}
             onChange={(event) => setEmailInput(normalizeInternetId(event.target.value))}
             onKeyDown={(event) => {
               if (event.key === 'Enter' && emailInput.trim()) void processAction();
@@ -320,6 +321,7 @@ export function Auditions() {
           className={`audition-slot-name h-full w-full border-0 bg-white px-2 pr-9 font-semibold text-[#2B4C6F] outline-none transition-colors placeholder:font-normal placeholder:text-gray-400 hover:bg-[#FBFDFF] focus:bg-[#EEF4FA] focus:ring-2 focus:ring-inset focus:ring-[#8FA8C8] ${editingId === slot.id ? 'bg-[#EEF4FA]' : ''}`}
           style={fontInter}
           value={tempNames[slot.id] || ''}
+          maxLength={100}
           onFocus={() => setEditingSlotId(slot.id)}
           onChange={(event) => handleNameChange(slot.id, event.target.value)}
           onKeyDown={(event) => {

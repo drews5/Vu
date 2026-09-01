@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Instagram, Facebook, Youtube } from 'lucide-react';
 import footerLogo from '../assets/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
 import { fontYearbook } from '../styles/fonts';
+import { copyText } from '../utils/clipboard';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const TikTokIcon = memo(function TikTokIcon({ className }: { className?: string }) {
@@ -27,10 +28,11 @@ const socialIcons = [
 ];
 export const Footer = memo(function Footer() {
   const [copied, setCopied] = useState(false);
-  const handleCopy = () => {
-    navigator.clipboard.writeText('vocalu@umn.edu');
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async () => {
+    if (await copyText('vocalu@umn.edu')) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
   return (
     <footer className="bg-[#2B4C6F] text-white py-5 md:py-12 px-6 md:px-12 border border-white/5 mx-3 md:mx-0" style={{ borderRadius: '16px', marginTop: '48px' }}>

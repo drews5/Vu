@@ -15,15 +15,16 @@ const staticRoutes = [
   { path: '/events', changefreq: 'weekly', priority: '0.9', lastmod: buildDate },
   { path: '/media', changefreq: 'weekly', priority: '0.8', lastmod: buildDate },
   { path: '/members', changefreq: 'monthly', priority: '0.8', lastmod: buildDate },
-  { path: '/program', changefreq: 'monthly', priority: '0.8', lastmod: buildDate },
 ];
 
 const fallbackEventRoutes = [
   { path: '/event/icca-quarterfinal-2025', lastmod: '2025-03-01' },
   { path: '/event/icca-quarterfinal-2026', lastmod: '2026-02-14' },
   { path: '/event/ichsa-quarterfinal-4-2026', lastmod: '2026-02-21' },
+  { path: '/event/minnesota-state-fair-2026', lastmod: '2026-09-05' },
   { path: '/event/night-songs', lastmod: '2026-02-15' },
   { path: '/event/the-mix-2026', lastmod: '2026-05-15' },
+  { path: '/event/umn-homecoming-2026', lastmod: '2026-10-19' },
   { path: '/event/winter-showcase-2025', lastmod: '2025-12-06' },
   { path: '/events/showcase', lastmod: '2026-05-02' },
 ].map((route) => ({ ...route, changefreq: 'weekly', priority: '0.8' }));
@@ -62,6 +63,7 @@ async function fetchEventRoutes() {
           apikey: anonKey,
           Authorization: `Bearer ${anonKey}`,
         },
+        signal: AbortSignal.timeout(8_000),
       }
     );
 

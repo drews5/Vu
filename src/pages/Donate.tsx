@@ -94,7 +94,7 @@ export function Donate() {
                         </a>
                     </div>
                     <div className="flex-grow relative bg-gray-50/50">
-                        <iframe src="https://givebutter.com/embed/c/vu" className="w-full h-full border-0 absolute inset-0" title="Vocal U Donation" allow="payment" />
+                        <iframe src="https://givebutter.com/embed/c/vu" className="w-full h-full border-0 absolute inset-0" title="Vocal U Donation" allow="payment" loading="lazy" referrerPolicy="strict-origin-when-cross-origin" />
                     </div>
                 </motion.div>
                 {/* Other Ways to Help Section (BOTTOM on Mobile, RIGHT on Desktop) */}
