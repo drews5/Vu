@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
-import { getEventImage } from '../utils/eventImages';
+import { getEventImage, getEventImageFit, getEventImagePosition } from '../utils/eventImages';
 import { getEventDatePresentation, getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
 import { Seo, toAbsoluteUrl, type SeoSchema } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
@@ -98,8 +98,8 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
                     aria-label={`View details for ${event.title}`}
                 />
                 {/* Image Section */}
-                <div className="relative w-full md:w-80 aspect-video md:aspect-auto md:h-auto overflow-hidden shrink-0">
-                    <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" style={{ filter: 'saturate(1.1) contrast(1.1)' }} loading="lazy" />
+                <div className="relative w-full md:w-80 aspect-video md:aspect-auto md:h-auto overflow-hidden shrink-0 bg-[#27316B]">
+                    <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" style={{ filter: 'saturate(1.1) contrast(1.1)', objectFit: getEventImageFit(event.slug), objectPosition: getEventImagePosition(event.slug) }} loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                         <span className="text-white text-sm font-black flex items-center gap-2">
                             VIEW DETAILS <ArrowRight className="w-4 h-4" />
@@ -178,8 +178,8 @@ const PastEventCard = memo(function PastEventCard({ event }: { event: Event }) {
     return (
         <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="h-full">
             <Link to={eventPath} className="flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden hover:border-[#8FA8C8] transition-all duration-300 h-full group">
-                <div className="relative aspect-video overflow-hidden">
-                    <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" style={{ filter: 'saturate(1.1) contrast(1.1)' }} loading="lazy" />
+                <div className="relative aspect-video overflow-hidden bg-[#27316B]">
+                    <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" style={{ filter: 'saturate(1.1) contrast(1.1)', objectFit: getEventImageFit(event.slug), objectPosition: getEventImagePosition(event.slug) }} loading="lazy" />
                 </div>
                 <div className="p-5 flex flex-col flex-grow">
                     <div className="flex items-center gap-2 text-[#8FA8C8] font-bold text-[10px] tracking-[0.2em] mb-2 uppercase" style={fontInter}>

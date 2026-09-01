@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import fullLogo from '../assets/6e321558ab9ee06d335e9a166fab86aa46ff5821.png';
 import heroBackground from '../assets/hero-1600.webp';
 import heroBackgroundLarge from '../assets/hero-2400.webp';
@@ -9,7 +9,7 @@ import { ArrowRight, Calendar, MapPin, ChevronDown, ChevronLeft, ChevronRight, C
 import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
-import { getEventImage } from '../utils/eventImages';
+import { getEventImage, getEventImageFit, getEventImagePosition } from '../utils/eventImages';
 import { getEventDatePresentation, getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
@@ -18,6 +18,7 @@ const fontInter = { fontFamily: 'Inter, sans-serif' };
 const LazyContactForm = lazy(() => import('../components/ContactForm').then((m) => ({ default: m.ContactForm })));
 
 interface FeaturedEvent {
+  slug: string;
   tag: string;
   date: string;
   year?: string;
@@ -50,11 +51,12 @@ function EventCard({ event }: { event: FeaturedEvent }) {
 
   const content = (
     <>
-      <div className="relative aspect-video overflow-hidden">
+      <div className="relative aspect-video overflow-hidden bg-[#27316B]">
         <img
           src={event.image}
           alt={event.title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
+          style={{ objectFit: getEventImageFit(event.slug), objectPosition: getEventImagePosition(event.slug) }}
           loading="lazy"
         />
         <div className="absolute top-4 left-4">
@@ -136,38 +138,114 @@ export function Home() {
   const [items, setItems] = useState<FeaturedEvent[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCards, setVisibleCards] = useState(1);
-  const [hasScrolledAtAll, setHasScrolledAtAll] = useState(false);
-  const [isHeroContained, setIsHeroContained] = useState(
-    typeof window !== 'undefined' && window.scrollY > 24
+  const [hasScrolledAtAll, setHasScrolledAtAll] = useState(
+    typeof window !== 'undefined' && window.scrollY > 0
   );
+  const [isHeroContained, setIsHeroContained] = useState(
+    typeof window !== 'undefined' && window.scrollY > 0
+  );
+  const heroContainedRef = useRef(isHeroContained);
+  const heroTransitionLockedRef = useRef(false);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
   const [isExtraSmall, setIsExtraSmall] = useState(typeof window !== 'undefined' && window.innerWidth <= 468);
 
-  // Toggle only when crossing the threshold so scroll itself stays free of layout work.
+  // The first downward gesture reveals the contained webpage layout without also
+  // moving it underneath the fixed header. Later gestures scroll normally.
   useEffect(() => {
-    let contained = window.scrollY > 24;
-    let hasExplored = window.scrollY > 0;
+    let unlockTimer = 0;
+    let touchStartY: number | null = null;
+    let hasEnteredPageScroll = window.scrollY > 0;
 
-    setIsHeroContained(contained);
-    setHasScrolledAtAll(hasExplored);
+    const publishHeroState = (contained: boolean) => {
+      document.documentElement.dataset.homeHeroContained = String(contained);
+      window.dispatchEvent(new CustomEvent('vu:home-hero-state', { detail: { contained } }));
+    };
 
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const nextContained = contained ? scrollY > 8 : scrollY > 24;
+    const unlockAfterTransition = () => {
+      window.clearTimeout(unlockTimer);
+      unlockTimer = window.setTimeout(() => {
+        heroTransitionLockedRef.current = false;
+      }, 560);
+    };
 
-      if (nextContained !== contained) {
-        contained = nextContained;
-        setIsHeroContained(nextContained);
-      }
+    const containHero = () => {
+      if (heroContainedRef.current) return;
+      heroContainedRef.current = true;
+      heroTransitionLockedRef.current = true;
+      setIsHeroContained(true);
+      setHasScrolledAtAll(true);
+      publishHeroState(true);
+      unlockAfterTransition();
+    };
 
-      if (!hasExplored && scrollY > 0) {
-        hasExplored = true;
-        setHasScrolledAtAll(true);
+    const expandHero = () => {
+      if (!heroContainedRef.current) return;
+      heroContainedRef.current = false;
+      heroTransitionLockedRef.current = false;
+      setIsHeroContained(false);
+      publishHeroState(false);
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      if (window.scrollY > 0 || event.deltaY <= 0) return;
+      if (!heroContainedRef.current || heroTransitionLockedRef.current) {
+        event.preventDefault();
+        containHero();
+        unlockAfterTransition();
       }
     };
 
+    const handleTouchStart = (event: TouchEvent) => {
+      touchStartY = event.touches[0]?.clientY ?? null;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      const currentY = event.touches[0]?.clientY;
+      if (touchStartY === null || currentY === undefined || touchStartY - currentY < 8 || window.scrollY > 0) return;
+      if (!heroContainedRef.current || heroTransitionLockedRef.current) {
+        event.preventDefault();
+        containHero();
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const isDownwardNavigation = ['ArrowDown', 'PageDown', ' ', 'End'].includes(event.key);
+      if (!isDownwardNavigation || window.scrollY > 0 || heroContainedRef.current) return;
+      event.preventDefault();
+      containHero();
+    };
+
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        hasEnteredPageScroll = true;
+        setHasScrolledAtAll(true);
+        if (!heroContainedRef.current) {
+          heroContainedRef.current = true;
+          setIsHeroContained(true);
+          publishHeroState(true);
+        }
+      } else if (hasEnteredPageScroll) {
+        hasEnteredPageScroll = false;
+        expandHero();
+      }
+    };
+
+    publishHeroState(heroContainedRef.current);
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.clearTimeout(unlockTimer);
+      delete document.documentElement.dataset.homeHeroContained;
+      window.dispatchEvent(new CustomEvent('vu:home-hero-state', { detail: { contained: false } }));
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -222,6 +300,7 @@ export function Home() {
       // Strictly chronological sort (oldest to newest)
       const allEvents = processed.sort((a: any, b: any) => a.fullDate.getTime() - b.fullDate.getTime());
       const formattedEvents: any[] = allEvents.map((r: any) => ({
+        slug: r.slug,
         // Always override tag from DB — past events must show "PAST"
         tag: r.status === 'Previous' ? 'PAST' : r.tag || 'UPCOMING',
         date: getEventDatePresentation(r.slug, r.fullDate).full,
@@ -265,8 +344,8 @@ export function Home() {
   const slideCount = Math.max(1, items.length - visibleCards + 1);
   const heroStageHeight = isHeroContained
     ? isMobile
-      ? 'calc(clamp(480px, 72svh, 576px) + 72px)'
-      : '686px'
+      ? 'calc(clamp(480px, 72svh, 576px) + 84px)'
+      : '726px'
     : 'max(560px, min(100svh, 900px))';
   const homeSchema = [
     {
@@ -303,7 +382,7 @@ export function Home() {
           transition={{ layout: { duration: 0.48, ease: [0.22, 1, 0.36, 1] } }}
           className={`absolute overflow-hidden bg-[#2B4C6F] ${
             isHeroContained
-              ? 'inset-x-0 top-[72px] mx-auto w-[calc(100%-24px)] rounded-[18px] border border-white/70 md:top-[110px] md:h-[576px] md:w-[calc(100%-100px)] md:max-w-[1340px]'
+              ? 'inset-x-0 top-[84px] mx-auto w-[calc(100%-24px)] rounded-[18px] border border-white/70 md:top-[134px] md:h-[576px] md:w-[calc(100%-100px)] md:max-w-[1340px]'
               : 'inset-0 h-full w-full rounded-none border border-transparent'
           }`}
           style={isHeroContained && isMobile ? { height: 'clamp(480px, 72svh, 576px)' } : undefined}
@@ -322,8 +401,11 @@ export function Home() {
             fetchPriority="high"
           />
           <div className="absolute inset-0 flex flex-col items-center px-4 pointer-events-none">
-            <div
-              className="pt-[calc(10vh-10px)] md:pt-[70px] flex-shrink-0 pointer-events-auto"
+            <motion.div
+              className="flex-shrink-0 pointer-events-auto"
+              initial={false}
+              animate={{ paddingTop: isHeroContained ? (isMobile ? 'calc(10vh - 10px)' : 64) : (isMobile ? 'calc(10vh - 10px)' : 132) }}
+              transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="vu-hero-logo-shell cursor-default outline-none select-none">
                 <img
@@ -333,7 +415,7 @@ export function Home() {
                   style={{ filter: 'drop-shadow(0 2px 3px rgba(19, 43, 68, 0.2))' }}
                 />
               </div>
-            </div>
+            </motion.div>
 
             <div
               className="pointer-events-none absolute inset-x-0 z-20 flex justify-center px-4"

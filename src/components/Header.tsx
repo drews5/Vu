@@ -66,6 +66,9 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(() => typeof window !== 'undefined' && window.scrollY > 24);
+  const [isHomeHeroContained, setIsHomeHeroContained] = useState(
+    () => typeof document !== 'undefined' && document.documentElement.dataset.homeHeroContained === 'true'
+  );
 
   useEffect(() => {
     let lastScrolledState = window.scrollY > 24;
@@ -80,6 +83,21 @@ export function Header() {
     setIsScrolled(lastScrolledState);
     window.addEventListener('scroll', syncScrolledState, { passive: true });
     return () => window.removeEventListener('scroll', syncScrolledState);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const handleHeroState = (event: Event) => {
+      setIsHomeHeroContained(Boolean((event as CustomEvent<{ contained: boolean }>).detail?.contained));
+    };
+
+    if (location.pathname !== '/') {
+      setIsHomeHeroContained(false);
+      return;
+    }
+
+    setIsHomeHeroContained(document.documentElement.dataset.homeHeroContained === 'true');
+    window.addEventListener('vu:home-hero-state', handleHeroState);
+    return () => window.removeEventListener('vu:home-hero-state', handleHeroState);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -112,7 +130,7 @@ export function Header() {
     location.pathname === '/media' ||
     location.pathname === '/donate' ||
     location.pathname === '/auditions';
-  const isSolid = isScrolled || location.pathname !== '/';
+  const isSolid = isScrolled || isHomeHeroContained || location.pathname !== '/';
   const currentPage = navItems.find((item) => location.pathname === item.path)?.name || (isAboutActive ? 'About' : 'Menu');
 
   return (

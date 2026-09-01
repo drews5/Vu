@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
-import { getEventImage } from '../utils/eventImages';
+import { getEventImage, getEventImageFit, getEventImagePosition } from '../utils/eventImages';
 import { getEventDatePresentation, isEventScheduleConfirmed } from '../utils/eventRoutes';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
@@ -255,8 +255,8 @@ export function EventDetail() {
                                 {/* Left Column: Image and Description */}
                                 <div className="lg:col-span-2 space-y-8">
                                     {event.imageUrl && (
-                                        <motion.div variants={childVariants} className="relative rounded-2xl overflow-hidden border border-gray-100 aspect-video">
-                                            <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover" style={{ filter: 'saturate(1.1) contrast(1.1)' }} />
+                                        <motion.div variants={childVariants} className="relative rounded-2xl overflow-hidden border border-gray-100 aspect-video bg-[#27316B]">
+                                            <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover" style={{ filter: 'saturate(1.1) contrast(1.1)', objectFit: getEventImageFit(event.slug), objectPosition: getEventImagePosition(event.slug) }} />
                                             {isUpcoming && (
                                                 <div className="absolute top-6 left-6">
                                                     <span className="bg-[#8FA8C8] text-white px-6 py-2 rounded-full text-xs tracking-widest" style={fontYearbook}>Upcoming</span>
