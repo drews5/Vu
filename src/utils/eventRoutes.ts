@@ -39,7 +39,7 @@ export function getEventDisplayTitle(slug: string, title: string) {
 
 export function getEventDatePresentation(slug: string, date: Date): EventDatePresentation {
   if (slug === auditionsSlug) {
-    return { full: 'September 17–18, 2026', short: 'Sep 17–18', year: '2026' };
+    return { full: 'September 16–17, 2026', short: 'Sep 16–17', year: '2026' };
   }
 
   if (slug === 'umn-homecoming-2026') {

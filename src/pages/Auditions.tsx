@@ -34,7 +34,7 @@ interface AuditionSlot {
 }
 export function Auditions() {
   const auditionsDescription =
-    'Sign up for a Vocal U audition at the University of Minnesota on September 17 or 18, 2026.';
+    'Sign up for a Vocal U audition at the University of Minnesota on September 16 or 17, 2026.';
   const [slots, setSlots] = useState<AuditionSlot[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -220,8 +220,8 @@ export function Auditions() {
     }
   };
   const daysData = [
-    { day: 'Wednesday', date: 'September 17' },
-    { day: 'Thursday', date: 'September 18' }
+    { day: 'Wednesday', date: 'September 16' },
+    { day: 'Thursday', date: 'September 17' }
   ];
   const orderedTimes = Array.from(new Set(slots.map((slot) => slot.time)));
   const slotLookup = new Map(slots.map((slot) => [`${slot.day}:${slot.time}`, slot]));
@@ -376,7 +376,7 @@ export function Auditions() {
                 AUDITIONS
               </h1>
               <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[9px] font-bold tracking-widest text-white/90 md:mt-2 md:gap-x-5 md:gap-y-2 md:text-[14px]" style={fontInter}>
-                <div className="flex items-center gap-1 md:gap-2"><Calendar className="w-3 h-3 md:w-5 md:h-5" /> September 17 &amp; 18</div>
+                <div className="flex items-center gap-1 md:gap-2"><Calendar className="w-3 h-3 md:w-5 md:h-5" /> September 16 &amp; 17</div>
                 <div className="flex items-center gap-1 md:gap-2"><Clock className="w-3 h-3 md:w-5 md:h-5" /> 6-9 PM</div>
               </div>
             </div>
@@ -414,7 +414,7 @@ export function Auditions() {
             </div>
           ) : (
             <div className="overflow-hidden">
-              <table className="w-full table-fixed border-collapse text-left" aria-label="Audition signup times for Wednesday, September 17 and Thursday, September 18">
+              <table className="w-full table-fixed border-collapse text-left" aria-label="Audition signup times for Wednesday, September 16 and Thursday, September 17">
                 <colgroup>
                   <col className="w-1/2" />
                   <col className="w-1/2" />

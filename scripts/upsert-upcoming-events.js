@@ -17,12 +17,12 @@ const upcomingEvents = [
   {
     slug: 'fall-auditions-2026',
     title: 'Fall 2026 Auditions',
-    date: '2026-09-17T18:00:00-05:00',
-    display_time: 'September 17 & 18, 6:00-9:00 PM',
+    date: '2026-09-16T18:00:00-05:00',
+    display_time: 'September 16 & 17, 6:00-9:00 PM',
     location: 'University of Minnesota Twin Cities',
     address: 'Minneapolis, MN',
     description:
-      'Come sing with Vocal U on September 17 or 18. Choose a live audition slot between 6:00 and 9:00 PM, prepare about 60 seconds of a contemporary song, and arrive 15 minutes early. Location details will be shared with singers.',
+      'Come sing with Vocal U on September 16 or 17. Choose a live audition slot between 6:00 and 9:00 PM, prepare about 60 seconds of a contemporary song, and arrive 15 minutes early. Location details will be shared with singers.',
     image_url: 'group-photo.jpg',
     tag: 'SIGN UP',
     status: 'Upcoming',
