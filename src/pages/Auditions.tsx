@@ -256,10 +256,10 @@ export function Auditions() {
           <button
             type="button"
             onClick={() => startConfirmation(slot.id, 'delete')}
-            className="flex h-full w-6 shrink-0 items-center justify-center border-l border-[#DDE7F0]/70 text-[#2B4C6F]/20 transition-colors hover:bg-[#F4F7FA] hover:text-[#2B4C6F]/45 focus-visible:text-[#2B4C6F]/55 md:w-8"
+            className="mr-1 flex size-5 shrink-0 items-center justify-center text-[#2B4C6F]/15 transition-colors hover:text-[#2B4C6F]/40 focus-visible:text-[#2B4C6F]/55"
             aria-label={`Cancel ${slot.day} ${slot.time} audition for ${slot.name || 'this singer'}`}
           >
-            <Trash2 className="size-3 md:size-3.5" />
+            <Trash2 className="size-2.5 md:size-3" />
           </button>
         </div>
       );
