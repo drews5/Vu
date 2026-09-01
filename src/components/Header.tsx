@@ -215,7 +215,7 @@ export function Header() {
           {isSolid && (
             <Link
               to="/auditions"
-              className="group pointer-events-auto absolute left-[100px] right-[100px] top-[calc(100%-10px)] z-10 flex h-8 items-center justify-center gap-1.5 rounded-b-[14px] border border-t-0 border-white/70 bg-white/95 px-3 pt-2 text-[#2B4C6F] shadow-[0_4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
+              className="group pointer-events-auto absolute left-[100px] right-[100px] top-[calc(100%-2px)] z-10 flex h-7 items-center justify-center gap-1.5 rounded-b-[14px] border border-t-0 border-white/70 bg-white/95 px-3 text-[#2B4C6F] shadow-[0_4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
               style={{ ...fontYearbook, letterSpacing: '0.05em' }}
             >
               <span className="text-[12px]">AUDITION SIGN UP</span>
@@ -230,7 +230,7 @@ export function Header() {
           {!mobileMenuOpen && (
             <Link
               to="/auditions"
-              className="group pointer-events-auto absolute inset-x-[50px] bottom-[calc(100%-10px)] flex h-8 items-center justify-center gap-1.5 rounded-t-[14px] border border-b-0 border-white/70 bg-white/95 px-2 pb-2 text-[#2B4C6F] shadow-[0_-4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
+              className="group pointer-events-auto absolute inset-x-[50px] bottom-[calc(100%-2px)] z-10 flex h-7 items-center justify-center gap-1.5 rounded-t-[14px] border border-b-0 border-white/70 bg-white/95 px-2 text-[#2B4C6F] shadow-[0_-4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
               style={{ ...fontYearbook, letterSpacing: '0.05em' }}
             >
               <span className="text-[12px]">AUDITION SIGN UP</span>
@@ -238,7 +238,7 @@ export function Header() {
             </Link>
           )}
 
-          <div className="pointer-events-auto overflow-hidden rounded-[18px] border border-white/45 bg-[#8FA8C8] px-5 py-[6px] shadow-[0_6px_18px_rgba(43,76,111,0.1)]">
+          <div className="pointer-events-auto relative z-20 overflow-hidden rounded-[18px] border border-white/45 bg-[#8FA8C8] px-5 py-[6px] shadow-[0_6px_18px_rgba(43,76,111,0.1)]">
             <div className={`flex items-center justify-between ${mobileMenuOpen ? 'gap-4 border-b border-white/20 pb-4' : 'gap-3'}`}>
               <Link to="/" className="flex shrink-0 items-center" onClick={closeMobileMenu} aria-label="Vocal U home">
                 <img src={logoImage} alt="Vocal U" className="h-8 w-auto" loading="lazy" />
