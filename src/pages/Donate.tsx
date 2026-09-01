@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
+import { ExploreMore } from '../components/ExploreMore';
 import { Heart, Star } from 'lucide-react';
 import logoImage from '../assets/d4630c01b543cc75980f0b293230859d29654fbb.png';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
@@ -129,6 +130,7 @@ export function Donate() {
                     </div>
                 </motion.div>
             </div>
+            <ExploreMore currentPath="/donate" />
         </PageTransition>
     );
 }

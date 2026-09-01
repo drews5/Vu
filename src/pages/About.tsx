@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { motion } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
+import { ExploreMore } from '../components/ExploreMore';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
@@ -114,6 +115,7 @@ export function About() {
                     ))}
                 </div>
             </motion.section>
+            <ExploreMore currentPath="/about" className="mt-20" />
         </PageTransition>
     );
 }

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Instagram, Youtube, ExternalLink, Calendar, MessageCircle, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
+import { ExploreMore } from '../components/ExploreMore';
 import { Seo, toAbsoluteUrl, type SeoSchema } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
@@ -301,6 +302,7 @@ export function Media() {
                     </Link>
                 </motion.div>
             </motion.section>
+            <ExploreMore currentPath="/media" />
         </PageTransition>
     );
 }

@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 import { memo, useEffect, useState, useMemo } from 'react';
 import { PageTransition, childVariants } from '../components/PageTransition';
+import { ExploreMore } from '../components/ExploreMore';
 import { Instagram, Music } from 'lucide-react';
 import { motion } from 'motion/react';
 import { loadSupabase } from '../utils/loadSupabase';
@@ -221,6 +222,7 @@ export function Members() {
                     })}
                 </div>
             )}
+            <ExploreMore currentPath="/members" />
         </PageTransition>
     );
 }
