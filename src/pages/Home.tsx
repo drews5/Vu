@@ -337,7 +337,7 @@ export function Home() {
 
             <div
               className="pointer-events-none absolute inset-x-0 z-20 flex justify-center px-4"
-              style={{ bottom: isExtraSmall ? '70px' : '125px' }}
+              style={{ bottom: isExtraSmall ? '135px' : '125px' }}
             >
               <motion.div
                 whileHover={{ scale: 1.04, y: -2 }}
