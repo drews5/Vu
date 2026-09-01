@@ -1,4 +1,4 @@
-import{c as o,j as e,m as t,a as n,L as i}from"./main-BAxIPTnY.js";import{P as r,S as c,c as a}from"./Seo-I3xr1Og_.js";import{M as d}from"./music-Akbdn_KS.js";import{A as m}from"./arrow-left-CaszT98k.js";/**
+import{c as o,j as e,m as t,a as n,L as i}from"./main-CdoB-QZm.js";import{P as r,S as c,c as a}from"./Seo-07JzmWOE.js";import{M as d}from"./music-iI_g3Ge7.js";import{A as m}from"./arrow-left-CrM5VGSk.js";/**
  * @license lucide-react v0.487.0 - ISC
  *
  * This source code is licensed under the ISC license.
