@@ -368,18 +368,21 @@ export function Home() {
             {!hasScrolledAtAll && isMobile && (
               <motion.button
                 type="button"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ opacity: { delay: 2 }, default: { type: 'spring', damping: 24, stiffness: 150 } }}
+                transition={{ delay: 2, duration: 0.3 }}
                 onClick={() => document.getElementById('meet-vocal-u')?.scrollIntoView({ behavior: 'smooth' })}
-                className="absolute bottom-[72px] right-5 z-20 flex items-center gap-1.5 rounded-full border border-white/40 bg-[#2B4C6F]/90 px-3 py-2 text-white"
+                className="absolute bottom-[96px] left-1/2 z-20 -translate-x-1/2 text-white/95 drop-shadow-[0_2px_3px_rgba(19,43,68,0.65)]"
                 aria-label="Scroll to meet Vocal U"
               >
-                <span className="text-[10px] font-semibold tracking-[0.08em]" style={fontInter}>Scroll</span>
-                <span>
-                  <ChevronDown className="h-4 w-4" />
-                </span>
+                <motion.span
+                  className="block"
+                  animate={{ y: [0, 5, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <ChevronDown className="h-7 w-7 stroke-[2.5px]" />
+                </motion.span>
               </motion.button>
             )}
           </AnimatePresence>

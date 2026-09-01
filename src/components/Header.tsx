@@ -215,11 +215,11 @@ export function Header() {
           {isSolid && (
             <Link
               to="/auditions"
-              className="group pointer-events-auto absolute left-[50px] right-[50px] top-[calc(100%-8px)] z-10 flex h-11 items-center justify-center gap-2 rounded-b-[20px] border border-t-0 border-white/70 bg-white/95 px-4 pt-2 text-[#2B4C6F] shadow-[0_4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
+              className="group pointer-events-auto absolute left-[100px] right-[100px] top-[calc(100%-10px)] z-10 flex h-8 items-center justify-center gap-1.5 rounded-b-[14px] border border-t-0 border-white/70 bg-white/95 px-3 pt-2 text-[#2B4C6F] shadow-[0_4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
               style={{ ...fontYearbook, letterSpacing: '0.05em' }}
             >
-              <span className="text-[14px]">AUDITION SIGN UP</span>
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              <span className="text-[12px]">AUDITION SIGN UP</span>
+              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           )}
         </div>
@@ -230,11 +230,11 @@ export function Header() {
           {!mobileMenuOpen && (
             <Link
               to="/auditions"
-              className="group pointer-events-auto absolute inset-x-0 bottom-[calc(100%-6px)] flex h-11 items-center justify-center gap-2 rounded-t-[18px] border border-b-0 border-white/70 bg-white/95 px-3 pb-1.5 text-[#2B4C6F] shadow-[0_-4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
+              className="group pointer-events-auto absolute inset-x-[50px] bottom-[calc(100%-10px)] flex h-8 items-center justify-center gap-1.5 rounded-t-[14px] border border-b-0 border-white/70 bg-white/95 px-2 pb-2 text-[#2B4C6F] shadow-[0_-4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
               style={{ ...fontYearbook, letterSpacing: '0.05em' }}
             >
-              <span className="text-[14px]">AUDITION SIGN UP</span>
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              <span className="text-[12px]">AUDITION SIGN UP</span>
+              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           )}
 
