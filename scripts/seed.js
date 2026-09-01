@@ -1,4 +1,6 @@
 const { createClient } = require('@jsr/supabase__supabase-js');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 const upcomingEvents = require('./upsert-upcoming-events');
 
@@ -73,9 +75,17 @@ async function setupAndSeed() {
       create policy "Public Read Members" on members for select using (true);
       create policy "Public Read Events" on events for select using (true);
       create policy "Public Read Auditions" on auditions for select using (true);
-      create policy "Update Auditions for Signup" on auditions for update using (status = 'Available');
     `
   });
+
+  if (rpcError) throw rpcError;
+
+  const auditionMigration = fs.readFileSync(
+    path.join(__dirname, '..', 'supabase', 'migrations', '20260901020000_harden_audition_reservations.sql'),
+    'utf8'
+  );
+  const { error: auditionMigrationError } = await supabase.rpc('exec_sql', { sql_query: auditionMigration });
+  if (auditionMigrationError) throw auditionMigrationError;
 
   console.log('Seeding data...');
 

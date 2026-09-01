@@ -5,6 +5,12 @@ export async function loadSupabase() {
     supabaseModulePromise = import('./supabase');
   }
 
-  const { supabase } = await supabaseModulePromise;
-  return supabase;
+  try {
+    const { supabase } = await supabaseModulePromise;
+    return supabase;
+  } catch (error) {
+    // A failed lazy chunk request should be retryable after connectivity returns.
+    supabaseModulePromise = null;
+    throw error;
+  }
 }

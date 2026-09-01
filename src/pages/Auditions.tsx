@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import {
@@ -16,6 +16,13 @@ import confetti from 'canvas-confetti';
 import { SiGmail } from 'react-icons/si';
 import logoImage from '../assets/d4630c01b543cc75980f0b293230859d29654fbb.png';
 import { loadSupabase } from '../utils/loadSupabase';
+import {
+  type AuditionSlotRecord,
+  bookAuditionSlot,
+  cancelAuditionSlot,
+  fetchAuditionSlots,
+  getAuditionFailureMessage,
+} from '../utils/auditionApi';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
@@ -23,58 +30,60 @@ const fontInter = { fontFamily: 'Inter, sans-serif' };
 const isUmnInternetId = (value: string) => /^[^@\s]+$/.test(value.trim());
 const toUmnEmail = (internetId: string) => `${internetId.trim().toLowerCase()}@umn.edu`;
 const normalizeInternetId = (value: string) => value.split('@', 1)[0].replace(/\s/g, '');
+const SLOT_CACHE_KEY = 'vocal-u-audition-slots-v1';
+const SLOT_CACHE_MAX_AGE_MS = 12 * 60 * 60 * 1000;
 
-interface AuditionSlot {
-  id: string;
-  time: string;
-  day: string;
-  status: 'Available' | 'Booked' | 'Break';
-  name?: string;
-  email?: string;
+function readCachedSlots(): AuditionSlotRecord[] {
+  try {
+    const cached = JSON.parse(window.localStorage.getItem(SLOT_CACHE_KEY) || 'null');
+    if (!cached || Date.now() - cached.savedAt > SLOT_CACHE_MAX_AGE_MS || !Array.isArray(cached.slots)) return [];
+    return cached.slots;
+  } catch {
+    return [];
+  }
 }
+
+function cacheSlots(slots: AuditionSlotRecord[]) {
+  try {
+    window.localStorage.setItem(SLOT_CACHE_KEY, JSON.stringify({ savedAt: Date.now(), slots }));
+  } catch {
+    // Storage can be disabled; the live signup flow still works without the cache.
+  }
+}
+
 export function Auditions() {
   const auditionsDescription =
     'Sign up for a Vocal U audition at the University of Minnesota on September 16 or 17, 2026.';
-  const [slots, setSlots] = useState<AuditionSlot[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [initialSlots] = useState<AuditionSlotRecord[]>(readCachedSlots);
+  const [slots, setSlots] = useState<AuditionSlotRecord[]>(initialSlots);
+  const [loading, setLoading] = useState(initialSlots.length === 0);
   const [loadError, setLoadError] = useState(false);
+  const [usingCachedSlots, setUsingCachedSlots] = useState(initialSlots.length > 0);
   const [editingId, setEditingSlotId] = useState<string | null>(null);
   const [confirmingId, setConfirmingId] = useState<{ id: string, mode: 'save' | 'delete' } | null>(null);
   const [tempNames, setTempNames] = useState<Record<string, string>>({});
   const [emailInput, setEmailInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showDeleteWarning, setShowDeleteWarning] = useState<{ id: string, name: string } | null>(null);
+  const [actionNotice, setActionNotice] = useState<{ type: 'info' | 'success' | 'error', message: string } | null>(null);
+  const [showDeleteWarning, setShowDeleteWarning] = useState<{ id: string, name: string, email: string } | null>(null);
+  const [cancellationError, setCancellationError] = useState('');
+  const submissionInFlight = useRef(false);
 
   const fetchSlots = useCallback(async () => {
     try {
-      const supabase = await loadSupabase();
-      const { data, error } = await Promise.race([
-        supabase
-          .from('auditions')
-          .select('*')
-          .order('time', { ascending: true }),
-        new Promise<never>((_, reject) => {
-          window.setTimeout(() => reject(new Error('Audition signup request timed out.')), 4000);
-        }),
-      ]);
-      if (error) throw error;
-
-      setSlots(data.map((r: any) => ({
-          id: r.id,
-          day: r.day,
-          time: r.time,
-          status: r.status,
-          name: r.name,
-          email: r.email,
-        })));
+      const freshSlots = await fetchAuditionSlots();
+      setSlots(freshSlots);
+      cacheSlots(freshSlots);
       setLoadError(false);
+      setUsingCachedSlots(false);
     } catch (error) {
       console.error('Error fetching audition slots:', error);
       setLoadError(true);
+      setUsingCachedSlots(initialSlots.length > 0);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [initialSlots.length]);
   useEffect(() => {
     let isActive = true;
     let removeRealtimeChannel: (() => void) | undefined;
@@ -104,9 +113,11 @@ export function Auditions() {
       }
     };
 
+    window.addEventListener('online', fetchSlots);
     void initializeSlots();
     return () => {
       isActive = false;
+      window.removeEventListener('online', fetchSlots);
       removeRealtimeChannel?.();
     };
   }, [fetchSlots]);
@@ -133,77 +144,73 @@ export function Auditions() {
     setTempNames(prev => ({ ...prev, [id]: value }));
   };
   const startConfirmation = (id: string, mode: 'save' | 'delete') => {
+    if (submissionInFlight.current) return;
     setConfirmingId({ id, mode });
     setEmailInput('');
+    setActionNotice(null);
   };
   const processAction = async () => {
-    if (!confirmingId || !emailInput.trim()) return;
+    if (!confirmingId || !emailInput.trim() || submissionInFlight.current) return;
     if (!isUmnInternetId(emailInput)) {
       alert('Please enter your UMN Internet ID.');
       return;
     }
-    setIsSubmitting(true);
     const { id, mode } = confirmingId;
     const slot = slots.find(s => s.id === id);
     if (!slot) {
       alert("Slot no longer exists.");
-      setIsSubmitting(false);
       setConfirmingId(null);
       return;
     }
+
+    if (mode === 'delete') {
+      setCancellationError('');
+      setShowDeleteWarning({ id: slot.id, name: slot.name || 'Singer', email: toUmnEmail(emailInput) });
+      setConfirmingId(null);
+      setEmailInput('');
+      return;
+    }
+
+    const nameToSave = tempNames[id]?.trim();
+    if (!nameToSave) return;
+
+    submissionInFlight.current = true;
+    setIsSubmitting(true);
+    setActionNotice({ type: 'info', message: 'Saving your spot… Keep this page open while we confirm it.' });
     try {
-      const supabase = await loadSupabase();
-      if (mode === 'save') {
-        const nameToSave = tempNames[id]?.trim();
-        if (!nameToSave) return;
-        const { error } = await supabase
-          .from('auditions')
-          .update({
-            name: nameToSave,
-            email: toUmnEmail(emailInput),
-            status: 'Booked'
-          })
-          .eq('id', id);
-        if (error) throw error;
-        triggerConfetti();
-      } else {
-        // Delete mode
-        if (toUmnEmail(emailInput) !== slot.email?.trim().toLowerCase()) {
-          alert("That @umn.edu email doesn't match this signup.");
-          setIsSubmitting(false);
-          return;
-        }
-        setShowDeleteWarning({ id: slot.id, name: slot.name || 'Singer' });
-        setConfirmingId(null);
-        setEmailInput('');
-        setIsSubmitting(false);
-        return;
-      }
+      const savedSlot = await bookAuditionSlot(id, nameToSave, toUmnEmail(emailInput));
+      setSlots((currentSlots) => {
+        const nextSlots = currentSlots.map((currentSlot) => currentSlot.id === id ? savedSlot : currentSlot);
+        cacheSlots(nextSlots);
+        return nextSlots;
+      });
+      triggerConfetti();
+      setActionNotice({ type: 'success', message: `You’re signed up for ${savedSlot.day} at ${savedSlot.time}.` });
       setConfirmingId(null);
       setEmailInput('');
       setEditingSlotId(null);
-      await fetchSlots();
-    } catch (error: any) {
+      void fetchSlots();
+    } catch (error: unknown) {
       console.error('Submission Error:', error);
-      alert(`Error updating slot.`);
+      setActionNotice({ type: 'error', message: getAuditionFailureMessage(error, 'book') });
+      void fetchSlots();
     } finally {
+      submissionInFlight.current = false;
       setIsSubmitting(false);
     }
   };
   const confirmDeletion = async () => {
-    if (!showDeleteWarning) return;
+    if (!showDeleteWarning || submissionInFlight.current) return;
+    submissionInFlight.current = true;
     setIsSubmitting(true);
+    setCancellationError('');
     try {
-      const supabase = await loadSupabase();
-      const { error } = await supabase
-        .from('auditions')
-        .update({
-          name: null,
-          email: null,
-          status: 'Available'
-        })
-        .eq('id', showDeleteWarning.id);
-      if (error) throw error;
+      const cancelledSlot = await cancelAuditionSlot(showDeleteWarning.id, showDeleteWarning.email);
+      setSlots((currentSlots) => {
+        const nextSlots = currentSlots.map((currentSlot) => currentSlot.id === cancelledSlot.id ? cancelledSlot : currentSlot);
+        cacheSlots(nextSlots);
+        return nextSlots;
+      });
       setTempNames((previousNames) => {
         const nextNames = { ...previousNames };
         delete nextNames[showDeleteWarning.id];
@@ -211,11 +218,13 @@ export function Auditions() {
       });
       setEditingSlotId((currentId) => currentId === showDeleteWarning.id ? null : currentId);
       setShowDeleteWarning(null);
-      await fetchSlots();
-    } catch (error: any) {
+      setActionNotice({ type: 'success', message: 'Your audition reservation was cancelled.' });
+      void fetchSlots();
+    } catch (error: unknown) {
       console.error('Delete Error:', error);
-      alert("Could not cancel booking.");
+      setCancellationError(getAuditionFailureMessage(error, 'cancel'));
     } finally {
+      submissionInFlight.current = false;
       setIsSubmitting(false);
     }
   };
@@ -226,7 +235,7 @@ export function Auditions() {
   const orderedTimes = Array.from(new Set(slots.map((slot) => slot.time)));
   const slotLookup = new Map(slots.map((slot) => [`${slot.day}:${slot.time}`, slot]));
 
-  const renderSlotCell = (slot: AuditionSlot) => {
+  const renderSlotCell = (slot: AuditionSlotRecord) => {
     const isConfirming = confirmingId?.id === slot.id;
     const isBooked = slot.status === 'Booked';
     const isBreak = slot.status === 'Break';
@@ -272,7 +281,7 @@ export function Auditions() {
             onChange={(event) => setEmailInput(normalizeInternetId(event.target.value))}
             onKeyDown={(event) => {
               if (event.key === 'Enter' && emailInput.trim()) void processAction();
-              if (event.key === 'Escape') setConfirmingId(null);
+              if (event.key === 'Escape' && !isSubmitting) setConfirmingId(null);
             }}
             aria-label={`University of Minnesota Internet ID for ${slot.day} at ${slot.time}`}
           />
@@ -292,6 +301,7 @@ export function Auditions() {
             <button
               type="button"
               onClick={() => setConfirmingId(null)}
+              disabled={isSubmitting}
               className="flex h-full w-8 items-center justify-center border-l border-[#DDE7F0] bg-white text-gray-400 transition-colors hover:bg-gray-50"
               aria-label="Close confirmation"
             >
@@ -391,9 +401,25 @@ export function Auditions() {
               AUDITION SIGN-UP SHEET
             </h2>
             <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#2B4C6F]/45 md:text-[10px]" style={fontInter}>
-              Enter your name in an open cell
+              Enter your name in an open spot
             </p>
           </div>
+          {(actionNotice || usingCachedSlots) && (
+            <div
+              className={`border-b px-3 py-2 text-[11px] font-semibold md:px-4 md:text-[12px] ${
+                actionNotice?.type === 'error'
+                  ? 'border-red-200 bg-red-50 text-red-700'
+                  : actionNotice?.type === 'success'
+                    ? 'border-green-200 bg-green-50 text-green-700'
+                    : 'border-[#DDE7F0] bg-[#F4F7FA] text-[#2B4C6F]/70'
+              }`}
+              style={fontInter}
+              role={actionNotice?.type === 'error' ? 'alert' : 'status'}
+              aria-live="polite"
+            >
+              {actionNotice?.message || 'Showing the most recently saved schedule while we reconnect…'}
+            </div>
+          )}
           {loading ? (
             <div className="flex min-h-64 items-center justify-center py-12"><div className="size-6 animate-spin rounded-full border-b-2 border-[#8FA8C8]" /></div>
           ) : loadError && slots.length === 0 ? (
@@ -538,7 +564,7 @@ export function Auditions() {
       <AnimatePresence>
         {showDeleteWarning && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowDeleteWarning(null)}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => { if (!isSubmitting) setShowDeleteWarning(null); }}
               className="absolute inset-0 bg-black/55"
             />
             <motion.div initial={{ opacity: 0, scale: 0.96, y: 12 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96, y: 12 }} className="relative flex w-full max-w-sm flex-col gap-5 rounded-2xl border border-gray-200 bg-white p-6 text-center">
@@ -553,9 +579,14 @@ export function Auditions() {
                 <p className="text-gray-500 text-[12px] leading-relaxed" style={fontInter}>
                   If you need a different time, cancel this slot and choose another available one.
                 </p>
+                {cancellationError && (
+                  <p className="rounded-lg bg-red-50 px-3 py-2 text-[12px] font-semibold leading-relaxed text-red-600" style={fontInter} role="alert">
+                    {cancellationError}
+                  </p>
+                )}
               </div>
               <div className="mt-2 flex flex-col gap-2">
-                <button onClick={() => setShowDeleteWarning(null)}
+                <button onClick={() => { setShowDeleteWarning(null); setCancellationError(''); }} disabled={isSubmitting}
                   className="flex w-full items-center justify-center rounded-xl bg-[#8FA8C8] py-3 text-sm font-semibold text-white transition-colors hover:bg-[#7A97B7] active:scale-[0.98]"
                   style={fontInter}
                 >
