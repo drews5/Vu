@@ -409,16 +409,20 @@ export function Home() {
           />
           <div className="absolute inset-0 flex flex-col items-center px-4 pointer-events-none">
             <motion.div
-              className="flex-shrink-0 pointer-events-auto"
+              className={`flex-shrink-0 pointer-events-auto transition-[width,max-width] duration-500 ease-out ${
+                isHeroContained && isMobile
+                  ? 'w-[60vw] max-w-[230px]'
+                  : 'w-[85vw] max-w-[340px] md:w-[280px] md:max-w-[280px]'
+              }`}
               initial={false}
-              animate={{ paddingTop: isHeroContained ? (isMobile ? 20 : 22) : (isMobile ? 'calc(10vh - 10px)' : 132) }}
+              animate={{ paddingTop: isMobile ? 'calc(10vh - 10px)' : (isHeroContained ? 22 : 132) }}
               transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="vu-hero-logo-shell cursor-default outline-none select-none">
                 <img
                   src={fullLogo}
                   alt="Vocal U - University of Minnesota's A Cappella Group"
-                  className="w-[85vw] max-w-[340px] md:max-w-[280px]"
+                  className="block w-full"
                   style={{ filter: 'drop-shadow(0 2px 3px rgba(19, 43, 68, 0.2))' }}
                 />
               </div>
