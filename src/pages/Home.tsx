@@ -34,6 +34,7 @@ interface FeaturedEvent {
 }
 
 const MAX_VISIBLE_EVENT_CARDS = 3;
+const HERO_SCROLL_LOCK_MS = 160;
 
 function getVisibleCardCount(width: number) {
   if (width >= 1024) return MAX_VISIBLE_EVENT_CARDS;
@@ -170,7 +171,7 @@ export function Home() {
       window.clearTimeout(unlockTimer);
       unlockTimer = window.setTimeout(() => {
         heroTransitionLockedRef.current = false;
-      }, 560);
+      }, HERO_SCROLL_LOCK_MS);
     };
 
     const containHero = () => {
@@ -193,10 +194,13 @@ export function Home() {
 
     const handleWheel = (event: WheelEvent) => {
       if (window.scrollY > 0 || event.deltaY <= 0) return;
-      if (!heroContainedRef.current || heroTransitionLockedRef.current) {
+      if (!heroContainedRef.current) {
         event.preventDefault();
         containHero();
-        unlockAfterTransition();
+        return;
+      }
+      if (heroTransitionLockedRef.current) {
+        event.preventDefault();
       }
     };
 
