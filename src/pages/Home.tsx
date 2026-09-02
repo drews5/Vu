@@ -33,8 +33,10 @@ interface FeaturedEvent {
   isInstagram?: boolean;
 }
 
+const MAX_VISIBLE_EVENT_CARDS = 3;
+
 function getVisibleCardCount(width: number) {
-  if (width >= 1024) return 3;
+  if (width >= 1024) return MAX_VISIBLE_EVENT_CARDS;
   if (width >= 768) return 2;
   return 1;
 }
