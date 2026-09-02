@@ -37,6 +37,30 @@ export function getEventDisplayTitle(slug: string, title: string) {
   return title;
 }
 
+export function getEventDisplayTime(slug: string, displayTime: string) {
+  if (slug === 'minnesota-state-fair-2026') {
+    return '10:00 AM';
+  }
+
+  if (slug === auditionsSlug) {
+    return 'September 16 & 17, 6:00–9:00 PM';
+  }
+
+  return displayTime;
+}
+
+export function getEventDescription(slug: string, description: string) {
+  if (slug === 'minnesota-state-fair-2026') {
+    return 'Catch Vocal U live at 10:00 AM on the University of Minnesota Outdoor Stage at the Minnesota State Fair. The stage is on the south side of Dan Patch Avenue between Underwood and Cooper streets.';
+  }
+
+  if (slug === auditionsSlug) {
+    return 'Come sing with Vocal U on September 16 or 17. Choose a live audition slot between 6:00 and 9:00 PM, prepare about 60 seconds of a contemporary song, and arrive 15 minutes early. Location details will be shared with singers.';
+  }
+
+  return description;
+}
+
 export function getEventDatePresentation(slug: string, date: Date): EventDatePresentation {
   if (slug === auditionsSlug) {
     return { full: 'September 16–17, 2026', short: 'Sep 16–17', year: '2026' };

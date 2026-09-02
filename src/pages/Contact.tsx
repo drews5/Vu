@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
+import { ExploreMore } from '../components/ExploreMore';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 import { fetchWithTimeout } from '../utils/network';
@@ -210,6 +211,7 @@ export function Contact() {
                     </motion.div>
                 </div>
             </div>
+            <ExploreMore currentPath="/contact" className="mt-20" />
         </PageTransition>
     );
 }

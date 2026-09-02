@@ -135,9 +135,15 @@ export function Header() {
 
   return (
     <>
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-[50] hidden justify-center pt-4 md:flex">
+      <motion.div
+        initial={{ opacity: 0, y: -24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="pointer-events-none fixed inset-x-0 top-0 z-[50] hidden justify-center pt-4 md:flex"
+      >
         <div className="vu-frame relative">
-          <header
+          <motion.header
+            layout
             className={`pointer-events-auto relative z-20 w-full rounded-[20px] border px-6 py-3 transition-[background-color,border-color] duration-200 lg:px-8 ${
               isSolid
                 ? 'border-white/45 bg-[#8FA8C8]/95 shadow-[0_6px_18px_rgba(43,76,111,0.1)]'
@@ -147,7 +153,7 @@ export function Header() {
             <div className="grid w-full items-center gap-4 md:grid-cols-[9.5rem_minmax(0,1fr)_9.5rem] lg:grid-cols-[10.5rem_minmax(0,1fr)_10.5rem]">
               <div className="flex min-w-0 items-center justify-start">
                 <Link to="/" className="flex shrink-0 items-center" aria-label="Vocal U home">
-                  <img src={logoImage} alt="Vocal U" className="h-10 w-auto transition-transform duration-200 hover:scale-[1.03] lg:h-12" />
+                  <motion.img whileHover={{ scale: 1.06, rotate: -2 }} transition={{ type: 'spring', stiffness: 360, damping: 18 }} src={logoImage} alt="Vocal U" className="h-10 w-auto lg:h-12" />
                 </Link>
               </div>
 
@@ -214,7 +220,7 @@ export function Header() {
                             {item.name}
                           </Link>
                         )}
-                        {active && <span className="absolute bottom-[5px] inset-x-3 h-[2.5px] rounded-full bg-white" />}
+                        {active && <motion.span layoutId="desktop-active-nav" transition={{ type: 'spring', stiffness: 420, damping: 32 }} className="absolute bottom-[5px] inset-x-3 h-[2.5px] rounded-full bg-white" />}
                       </div>
                       {index < navItems.length - 1 && <div className="mx-1 h-5 w-px bg-white/35 lg:mx-1.5" />}
                     </div>
@@ -228,22 +234,37 @@ export function Header() {
                 ))}
               </div>
             </div>
-          </header>
+          </motion.header>
 
-          {isSolid && (
-            <Link
-              to="/auditions"
-              className="group pointer-events-auto absolute left-[100px] right-[100px] top-[calc(100%-2px)] z-10 flex h-7 items-center justify-center gap-1.5 rounded-b-[14px] border border-t-0 border-white/70 bg-white/95 px-3 text-[#2B4C6F] shadow-[0_4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
-              style={{ ...fontYearbook, letterSpacing: '0.05em' }}
-            >
-              <span className="text-[12px]">AUDITION SIGN UP</span>
-              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
-          )}
+          <AnimatePresence>
+            {isSolid && (
+              <motion.div
+                initial={{ opacity: 0, y: -12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="pointer-events-auto absolute left-[100px] right-[100px] top-[calc(100%-2px)] z-10"
+              >
+                <Link
+                  to="/auditions"
+                  className="group flex h-7 items-center justify-center gap-1.5 rounded-b-[14px] border border-t-0 border-white/70 bg-white/95 px-3 text-[#2B4C6F] shadow-[0_4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
+                  style={{ ...fontYearbook, letterSpacing: '0.05em' }}
+                >
+                  <span className="text-[12px]">AUDITION SIGN UP</span>
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-3 z-[60] flex justify-center px-4 md:hidden">
+      <motion.div
+        initial={{ opacity: 0, y: 28 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.55, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+        className="pointer-events-none fixed inset-x-0 bottom-3 z-[60] flex justify-center px-4 md:hidden"
+      >
         <div className="pointer-events-none relative w-full max-w-[420px]">
           {!mobileMenuOpen && (
             <Link
@@ -365,7 +386,7 @@ export function Header() {
             </AnimatePresence>
           </div>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 }

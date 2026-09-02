@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import showcasePhoto from '../assets/spring-showcase.jpg';
 import { PageTransition } from '../components/PageTransition';
+import { ExploreMore } from '../components/ExploreMore';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 import { loadSupabase } from '../utils/loadSupabase';
@@ -399,6 +400,7 @@ export function SpringShowcase() {
           </div>
         </motion.div>
       </section>
+      <ExploreMore currentPath="/events" className="mt-20" />
     </PageTransition>
   );
 }

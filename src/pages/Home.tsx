@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
 import { getEventImage, getEventImageFit, getEventImagePosition } from '../utils/eventImages';
-import { getEventDatePresentation, getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
+import { getEventDatePresentation, getEventDescription, getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 import { copyText } from '../utils/clipboard';
@@ -308,7 +308,7 @@ export function Home() {
           date: getEventDatePresentation(r.slug, r.fullDate).full,
           title: getEventDisplayTitle(r.slug, r.title),
           location: r.location,
-          description: r.description,
+          description: getEventDescription(r.slug, r.description),
           link: getEventPath(r.slug),
           status: r.status,
           image: getEventImage(r.slug, r.image_url),
@@ -405,7 +405,7 @@ export function Home() {
             <motion.div
               className="flex-shrink-0 pointer-events-auto"
               initial={false}
-              animate={{ paddingTop: isHeroContained ? (isMobile ? 'calc(10vh - 10px)' : 64) : (isMobile ? 'calc(10vh - 10px)' : 132) }}
+              animate={{ paddingTop: isHeroContained ? (isMobile ? 20 : 22) : (isMobile ? 'calc(10vh - 10px)' : 132) }}
               transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="vu-hero-logo-shell cursor-default outline-none select-none">
@@ -420,7 +420,7 @@ export function Home() {
 
             <div
               className="pointer-events-none absolute inset-x-0 z-20 flex justify-center px-4"
-              style={{ bottom: isExtraSmall ? '135px' : '125px' }}
+              style={{ bottom: isHeroContained ? (isExtraSmall ? '38px' : '30px') : (isExtraSmall ? '135px' : '125px') }}
             >
               <motion.div
                 whileHover={{ scale: 1.04, y: -2 }}

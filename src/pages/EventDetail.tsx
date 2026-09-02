@@ -3,9 +3,10 @@ import { Calendar, MapPin, Clock, Share2, Navigation, ArrowLeft, Copy } from 'lu
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
+import { ExploreMore } from '../components/ExploreMore';
 import { loadSupabase } from '../utils/loadSupabase';
 import { getEventImage, getEventImageFit, getEventImagePosition } from '../utils/eventImages';
-import { getEventDatePresentation, isEventScheduleConfirmed } from '../utils/eventRoutes';
+import { getEventDatePresentation, getEventDescription, getEventDisplayTime, isEventScheduleConfirmed } from '../utils/eventRoutes';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 import { copyText } from '../utils/clipboard';
@@ -64,10 +65,10 @@ export function EventDetail() {
                     slug: data.slug,
                     title: data.title,
                     date: getEventDatePresentation(data.slug, d).full,
-                    time: data.display_time || d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    time: getEventDisplayTime(data.slug, data.display_time || d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })),
                     location: data.location,
                     address: data.address,
-                    description: data.description,
+                    description: getEventDescription(data.slug, data.description),
                     ticketLink: getSafeExternalUrl(data.ticket_link),
                     imageUrl: getEventImage(data.slug, data.image_url),
                     fullDate: d,
@@ -338,6 +339,7 @@ export function EventDetail() {
                     </div>
                 </div>
             </motion.section>
+            <ExploreMore currentPath="/events" className="mt-20" />
         </PageTransition>
     );
 }

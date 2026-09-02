@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
+import { ExploreMore } from '../components/ExploreMore';
 import {
   Clock,
   Users,
@@ -562,6 +563,7 @@ export function Auditions() {
           </div>
         </motion.section>
       </div>
+      <ExploreMore currentPath="/auditions" className="mt-20" />
       {/* Delete Warning Modal */}
       <AnimatePresence>
         {showDeleteWarning && (

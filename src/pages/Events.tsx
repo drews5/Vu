@@ -3,9 +3,10 @@ import { Calendar, MapPin, ArrowRight, Clock, Share2, Navigation, ChevronLeft, C
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
+import { ExploreMore } from '../components/ExploreMore';
 import { loadSupabase } from '../utils/loadSupabase';
 import { getEventImage, getEventImageFit, getEventImagePosition } from '../utils/eventImages';
-import { getEventDatePresentation, getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
+import { getEventDatePresentation, getEventDescription, getEventDisplayTime, getEventDisplayTitle, getEventPath } from '../utils/eventRoutes';
 import { Seo, toAbsoluteUrl, type SeoSchema } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 import { copyText } from '../utils/clipboard';
@@ -266,10 +267,10 @@ export function Events() {
                         date: datePresentation.short,
                         year: datePresentation.year,
                         title: getEventDisplayTitle(r.slug, r.title),
-                        time: r.display_time || d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        time: getEventDisplayTime(r.slug, r.display_time || d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })),
                         location: r.location,
                         address: r.address,
-                        description: r.description,
+                        description: getEventDescription(r.slug, r.description),
                         image: getEventImage(r.slug, r.image_url),
                         status: isEventUpcoming(d) ? 'Upcoming' : 'Previous',
                         fullDate: d
@@ -440,6 +441,7 @@ export function Events() {
                         </motion.section>
                     </>
                 )}
+                <ExploreMore currentPath="/events" className="mt-20" />
             </div>
         </PageTransition>
     );

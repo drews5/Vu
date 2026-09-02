@@ -3,11 +3,11 @@ const upcomingEvents = [
     slug: 'minnesota-state-fair-2026',
     title: 'Vocal U at the Minnesota State Fair',
     date: '2026-09-05T15:00:00-05:00',
-    display_time: '10:00 AM, 1:00 PM & 3:00 PM',
+    display_time: '10:00 AM',
     location: 'University of Minnesota Outdoor Stage',
     address: 'Minnesota State Fair, 1265 Snelling Ave N, St. Paul, MN 55108',
     description:
-      'Catch Vocal U live at the Great Minnesota Get-Together for three a cappella sets. The University of Minnesota Outdoor Stage is on the south side of Dan Patch Avenue between Underwood and Cooper streets.',
+      'Catch Vocal U live at 10:00 AM on the University of Minnesota Outdoor Stage at the Minnesota State Fair. The stage is on the south side of Dan Patch Avenue between Underwood and Cooper streets.',
     image_url: 'group-photo.jpg',
     tag: 'UPCOMING',
     status: 'Upcoming',
