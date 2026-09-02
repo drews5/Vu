@@ -354,7 +354,7 @@ export function Home() {
   const slideCount = Math.max(1, items.length - visibleCards + 1);
   const heroStageHeight = isHeroContained
     ? isMobile
-      ? 'calc(clamp(480px, 72svh, 576px) + 84px)'
+      ? 'clamp(480px, 72svh, 576px)'
       : '726px'
     : 'max(560px, min(100svh, 900px))';
   const homeSchema = [
@@ -392,7 +392,7 @@ export function Home() {
           transition={{ layout: { duration: 0.48, ease: [0.22, 1, 0.36, 1] } }}
           className={`absolute overflow-hidden bg-[#2B4C6F] ${
             isHeroContained
-              ? 'inset-x-0 top-[84px] mx-auto w-[calc(100%-24px)] rounded-[18px] border border-white/70 md:top-[134px] md:h-[576px] md:w-[calc(100%-100px)] md:max-w-[1340px]'
+              ? 'inset-x-0 top-0 mx-auto w-[calc(100%-24px)] rounded-[18px] border border-white/70 md:top-[134px] md:h-[576px] md:w-[calc(100%-100px)] md:max-w-[1340px]'
               : 'inset-0 h-full w-full rounded-none border border-transparent'
           }`}
           style={isHeroContained && isMobile ? { height: 'clamp(480px, 72svh, 576px)' } : undefined}
