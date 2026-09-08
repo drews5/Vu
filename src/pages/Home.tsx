@@ -34,12 +34,22 @@ interface FeaturedEvent {
 }
 
 const MAX_VISIBLE_EVENT_CARDS = 3;
+const MAX_VISIBLE_EVENT_DOTS = 3;
 const HERO_SCROLL_LOCK_MS = 160;
 
 function getVisibleCardCount(width: number) {
   if (width >= 1024) return MAX_VISIBLE_EVENT_CARDS;
   if (width >= 768) return 2;
   return 1;
+}
+
+function getVisibleDotIndices(currentIndex: number, slideCount: number) {
+  const visibleCount = Math.min(MAX_VISIBLE_EVENT_DOTS, slideCount);
+  const maxStart = Math.max(0, slideCount - visibleCount);
+  const centeredStart = currentIndex - Math.floor(visibleCount / 2);
+  const start = Math.min(Math.max(0, centeredStart), maxStart);
+
+  return Array.from({ length: visibleCount }, (_, index) => start + index);
 }
 
 function EventCard({ event }: { event: FeaturedEvent }) {
@@ -352,6 +362,13 @@ export function Home() {
   };
   const showArrows = items.length > visibleCards;
   const slideCount = Math.max(1, items.length - visibleCards + 1);
+  const visibleDotIndices = getVisibleDotIndices(currentIndex, slideCount);
+
+  useEffect(() => {
+    const finalIndex = Math.max(0, items.length - visibleCards);
+    setCurrentIndex((index) => Math.min(index, finalIndex));
+  }, [items.length, visibleCards]);
+
   const heroStageHeight = isHeroContained
     ? isMobile
       ? 'clamp(480px, 72svh, 576px)'
@@ -648,8 +665,8 @@ export function Home() {
 
             {/* Pagination */}
             {items.length > 1 && (
-              <div className="mt-3 flex flex-wrap justify-center gap-0.5" aria-label="Choose an event">
-                {Array.from({ length: slideCount }, (_, idx) => (
+              <div className="mt-3 flex justify-center gap-0.5" aria-label="Choose an event">
+                {visibleDotIndices.map((idx) => (
                   <button
                     key={idx}
                     onClick={() => setCurrentIndex(idx)}
