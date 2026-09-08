@@ -9,7 +9,6 @@ import {
   X,
   AlertCircle,
   Check,
-  Trash2,
   Music
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -28,9 +27,15 @@ import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
-const isUmnInternetId = (value: string) => /^[^@\s]+$/.test(value.trim());
-const toUmnEmail = (internetId: string) => `${internetId.trim().toLowerCase()}@umn.edu`;
-const normalizeInternetId = (value: string) => value.split('@', 1)[0].replace(/\s/g, '');
+const isUmnInternetId = (value: string) => {
+  const normalized = value.trim().toLowerCase();
+  return /^[^@\s]+$/.test(normalized) || /^[^@\s]+@umn\.edu$/.test(normalized);
+};
+const toUmnEmail = (internetIdOrEmail: string) => {
+  const normalized = internetIdOrEmail.trim().toLowerCase();
+  return normalized.endsWith('@umn.edu') ? normalized : `${normalized.split('@', 1)[0]}@umn.edu`;
+};
+const normalizeInternetId = (value: string) => value.replace(/\s/g, '').toLowerCase();
 const SLOT_CACHE_KEY = 'vocal-u-audition-slots-v1';
 const SLOT_CACHE_MAX_AGE_MS = 12 * 60 * 60 * 1000;
 
@@ -153,7 +158,7 @@ export function Auditions() {
   const processAction = async () => {
     if (!confirmingId || !emailInput.trim() || submissionInFlight.current) return;
     if (!isUmnInternetId(emailInput)) {
-      alert('Please enter your UMN Internet ID.');
+      alert('Please enter your UMN email or Internet ID.');
       return;
     }
     const { id, mode } = confirmingId;
@@ -252,16 +257,21 @@ export function Auditions() {
 
     if (isBooked && !isConfirming) {
       return (
-        <div className="flex h-7 min-w-0 items-center bg-[#F7F9FC] md:h-8">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={(event) => event.currentTarget.focus()}
+          onKeyDown={(event) => {
+            if (event.key === 'Backspace' || event.key === 'Delete') {
+              event.preventDefault();
+              startConfirmation(slot.id, 'delete');
+            }
+          }}
+          className="flex h-7 min-w-0 cursor-text items-center bg-[#F7F9FC] outline-none transition-colors hover:bg-[#FBFDFF] focus:bg-[#EEF4FA] focus:ring-2 focus:ring-inset focus:ring-[#8FA8C8] md:h-8"
+          aria-label={`${slot.name || 'Reserved spot'} at ${slot.day} ${slot.time}. Press Backspace or Delete to confirm cancellation with your UMN email.`}
+          title="Click this name cell, then press Backspace or Delete to cancel."
+        >
           <span className="audition-slot-name min-w-0 flex-1 truncate px-2 font-semibold text-[#2B4C6F]" style={fontInter}>{slot.name}</span>
-          <button
-            type="button"
-            onClick={() => startConfirmation(slot.id, 'delete')}
-            className="mr-1 flex size-5 shrink-0 items-center justify-center text-[#2B4C6F]/15 transition-colors hover:text-[#2B4C6F]/40 focus-visible:text-[#2B4C6F]/55"
-            aria-label={`Cancel ${slot.day} ${slot.time} audition for ${slot.name || 'this singer'}`}
-          >
-            <Trash2 className="size-2.5 md:size-3" />
-          </button>
         </div>
       );
     }
@@ -274,8 +284,8 @@ export function Auditions() {
             autoFocus
             type="text"
             inputMode="text"
-            autoComplete="username"
-            placeholder="Internet ID"
+            autoComplete={isDeleting ? 'email' : 'username'}
+            placeholder={isDeleting ? 'UMN email' : 'Internet ID'}
             className="h-full min-w-0 flex-1 border-0 bg-transparent px-2 text-[9px] font-semibold text-[#2B4C6F] outline-none placeholder:text-gray-400 md:text-[12px]"
             style={fontInter}
             value={emailInput}
@@ -285,11 +295,13 @@ export function Auditions() {
               if (event.key === 'Enter' && emailInput.trim()) void processAction();
               if (event.key === 'Escape' && !isSubmitting) setConfirmingId(null);
             }}
-            aria-label={`University of Minnesota Internet ID for ${slot.day} at ${slot.time}`}
+            aria-label={`University of Minnesota ${isDeleting ? 'email' : 'Internet ID'} for ${slot.day} at ${slot.time}`}
           />
-          <span className="shrink-0 text-[9px] font-semibold text-[#2B4C6F]/70 md:text-[11px]" style={fontInter} aria-hidden="true">
-            @umn.edu
-          </span>
+          {!isDeleting && !emailInput.includes('@') && (
+            <span className="shrink-0 text-[9px] font-semibold text-[#2B4C6F]/70 md:text-[11px]" style={fontInter} aria-hidden="true">
+              @umn.edu
+            </span>
+          )}
           <div className="ml-1 flex h-full shrink-0">
             <button
               type="button"
