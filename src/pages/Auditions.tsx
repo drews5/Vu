@@ -6,6 +6,7 @@ import {
   Clock,
   Users,
   Calendar,
+  MapPin,
   X,
   AlertCircle,
   Check,
@@ -59,7 +60,7 @@ function cacheSlots(slots: AuditionSlotRecord[]) {
 
 export function Auditions() {
   const auditionsDescription =
-    'Sign up for a Vocal U audition at the University of Minnesota on September 16 or 17, 2026.';
+    'Sign up for a Vocal U audition in Ferguson Hall, Room 105, at the University of Minnesota on September 16 or 17, 2026.';
   const [initialSlots] = useState<AuditionSlotRecord[]>(readCachedSlots);
   const [slots, setSlots] = useState<AuditionSlotRecord[]>(initialSlots);
   const [loading, setLoading] = useState(initialSlots.length === 0);
@@ -403,6 +404,7 @@ export function Auditions() {
               <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[9px] font-bold tracking-widest text-white/90 md:mt-2 md:gap-x-5 md:gap-y-2 md:text-[14px]" style={fontInter}>
                 <div className="flex items-center gap-1 md:gap-2"><Calendar className="w-3 h-3 md:w-5 md:h-5" /> September 16 &amp; 17</div>
                 <div className="flex items-center gap-1 md:gap-2"><Clock className="w-3 h-3 md:w-5 md:h-5" /> 6-9 PM</div>
+                <div className="flex items-center gap-1 md:gap-2"><MapPin className="w-3 h-3 md:w-5 md:h-5" /> Ferguson Hall, Room 105</div>
               </div>
             </div>
           </div>
