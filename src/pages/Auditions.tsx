@@ -10,7 +10,8 @@ import {
   X,
   AlertCircle,
   Check,
-  Music
+  Music,
+  Trash2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
@@ -67,6 +68,7 @@ export function Auditions() {
   const [loadError, setLoadError] = useState(false);
   const [usingCachedSlots, setUsingCachedSlots] = useState(initialSlots.length > 0);
   const [editingId, setEditingSlotId] = useState<string | null>(null);
+  const [selectedBookedId, setSelectedBookedId] = useState<string | null>(null);
   const [confirmingId, setConfirmingId] = useState<{ id: string, mode: 'save' | 'delete' } | null>(null);
   const [tempNames, setTempNames] = useState<Record<string, string>>({});
   const [emailInput, setEmailInput] = useState('');
@@ -152,6 +154,7 @@ export function Auditions() {
   };
   const startConfirmation = (id: string, mode: 'save' | 'delete') => {
     if (submissionInFlight.current) return;
+    setSelectedBookedId(null);
     setConfirmingId({ id, mode });
     setEmailInput('');
     setActionNotice(null);
@@ -246,6 +249,7 @@ export function Auditions() {
     const isConfirming = confirmingId?.id === slot.id;
     const isBooked = slot.status === 'Booked';
     const isBreak = slot.status === 'Break';
+    const isSelected = selectedBookedId === slot.id;
     const hasText = (tempNames[slot.id] || '').trim().length > 0;
 
     if (isBreak) {
@@ -258,21 +262,35 @@ export function Auditions() {
 
     if (isBooked && !isConfirming) {
       return (
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={(event) => event.currentTarget.focus()}
-          onKeyDown={(event) => {
-            if (event.key === 'Backspace' || event.key === 'Delete') {
-              event.preventDefault();
-              startConfirmation(slot.id, 'delete');
-            }
-          }}
-          className="flex h-7 min-w-0 cursor-text items-center bg-[#F7F9FC] outline-none transition-colors hover:bg-[#FBFDFF] focus:bg-[#EEF4FA] focus:ring-2 focus:ring-inset focus:ring-[#8FA8C8] md:h-8"
-          aria-label={`${slot.name || 'Reserved spot'} at ${slot.day} ${slot.time}. Press Backspace or Delete to confirm cancellation with your UMN email.`}
-          title="Click this name cell, then press Backspace or Delete to cancel."
-        >
-          <span className="audition-slot-name min-w-0 flex-1 truncate px-2 font-semibold text-[#2B4C6F]" style={fontInter}>{slot.name}</span>
+        <div className={`flex h-7 min-w-0 items-stretch transition-colors md:h-8 ${isSelected ? 'bg-[#EEF4FA] ring-2 ring-inset ring-[#8FA8C8]' : 'bg-[#F7F9FC] hover:bg-[#FBFDFF]'}`}>
+          <button
+            type="button"
+            onClick={() => setSelectedBookedId(slot.id)}
+            onFocus={() => setSelectedBookedId(slot.id)}
+            onKeyDown={(event) => {
+              if (event.key === 'Backspace' || event.key === 'Delete') {
+                event.preventDefault();
+                startConfirmation(slot.id, 'delete');
+              }
+            }}
+            className="audition-slot-name min-w-0 flex-1 truncate border-0 bg-transparent px-2 text-left font-semibold text-[#2B4C6F] outline-none"
+            style={fontInter}
+            aria-pressed={isSelected}
+            aria-label={`${slot.name || 'Reserved spot'} at ${slot.day} ${slot.time}. Select to show the cancellation button.`}
+          >
+            {slot.name}
+          </button>
+          {isSelected && (
+            <button
+              type="button"
+              onClick={() => startConfirmation(slot.id, 'delete')}
+              className="flex w-7 shrink-0 items-center justify-center border-l border-red-200 bg-red-50 text-red-500 outline-none transition-colors hover:bg-red-100 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-red-400 md:w-8"
+              aria-label={`Cancel ${slot.name || 'reserved audition'} at ${slot.day} ${slot.time}`}
+              title="Cancel this audition"
+            >
+              <Trash2 className="size-3.5 md:size-4" aria-hidden="true" />
+            </button>
+          )}
         </div>
       );
     }
