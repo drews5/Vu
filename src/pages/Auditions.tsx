@@ -357,7 +357,7 @@ export function Auditions() {
         <input
           type="text"
           placeholder="Type name"
-          className={`audition-slot-name h-full w-full border-0 bg-white px-2 pr-9 font-semibold text-[#2B4C6F] outline-none transition-colors placeholder:font-normal placeholder:text-gray-400 hover:bg-[#FBFDFF] focus:bg-[#EEF4FA] focus:ring-2 focus:ring-inset focus:ring-[#8FA8C8] ${editingId === slot.id ? 'bg-[#EEF4FA]' : ''}`}
+          className={`audition-slot-name h-full w-full border-0 bg-[#EFF8F1] px-2 pr-9 font-semibold text-[#2B4C6F] outline-none transition-colors placeholder:font-normal placeholder:text-[#6F9178] hover:bg-[#E6F4EA] focus:bg-[#E8F3EC] focus:ring-2 focus:ring-inset focus:ring-[#82B596] ${editingId === slot.id ? 'bg-[#E8F3EC]' : ''}`}
           style={fontInter}
           value={tempNames[slot.id] || ''}
           maxLength={100}
