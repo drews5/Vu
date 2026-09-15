@@ -415,23 +415,21 @@ export function Auditions() {
           background: '#8FA8C8',
         }}
       >
-        <div className="relative z-10 flex w-full items-center justify-center gap-3 px-1 text-center md:gap-10">
-          <div className="shrink-0 hover:-translate-y-0.5 transition-transform duration-200">
-            <Link to="/" className="group cursor-pointer">
-              <img src={logoImage} alt="Vocal U Logo" className="h-10 md:h-20 w-auto" />
-            </Link>
-          </div>
-          <div className="text-left">
-            <div className="text-white">
-              <h1 className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '0.05em', lineHeight: '1' }}>
-                AUDITIONS
-              </h1>
-              <div className="mt-1.5 flex flex-col items-start gap-1.5 text-[9px] font-bold leading-none tracking-[0.08em] text-white/90 md:mt-2 md:flex-row md:flex-wrap md:items-center md:gap-x-5 md:gap-y-2 md:text-[14px] md:tracking-widest" style={fontInter}>
-                <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><Calendar className="size-3 shrink-0 md:size-5" /> September 16, 17 &amp; 20</div>
-                <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><Clock className="size-3 shrink-0 md:size-5" /> Wed/Thu 6–9 PM · Sun 6–7 PM</div>
-                <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><MapPin className="size-3 shrink-0 md:size-5" /> Ferguson Hall, Room 105</div>
-              </div>
+        <div className="relative z-10 flex w-full flex-col items-center justify-center gap-2 px-1 text-center md:gap-3">
+          <div className="flex items-center justify-center gap-3 md:gap-8">
+            <div className="shrink-0 transition-transform duration-200 hover:-translate-y-0.5">
+              <Link to="/" className="group cursor-pointer">
+                <img src={logoImage} alt="Vocal U Logo" className="h-10 w-auto md:h-20" />
+              </Link>
             </div>
+            <h1 className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '0.05em', lineHeight: '1' }}>
+              AUDITIONS
+            </h1>
+          </div>
+          <div className="flex flex-col items-start gap-1.5 text-[9px] font-bold leading-none tracking-[0.08em] text-white/90 md:flex-row md:flex-wrap md:items-center md:justify-center md:gap-x-5 md:gap-y-2 md:text-[14px] md:tracking-widest" style={fontInter}>
+            <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><Calendar className="size-3 shrink-0 md:size-5" /> September 16, 17 &amp; 20</div>
+            <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><Clock className="size-3 shrink-0 md:size-5" /> Wed/Thu 6–9 PM · Sun 6–7 PM</div>
+            <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><MapPin className="size-3 shrink-0 md:size-5" /> Ferguson Hall, Room 105</div>
           </div>
         </div>
       </motion.section>
@@ -550,7 +548,7 @@ export function Auditions() {
                   ))}
                 </tbody>
               </table>
-              <div id="sunday-auditions" className="scroll-mt-6 border-t-4 border-[#EEF4FA]">
+              <div id="sunday-auditions" className="w-1/2 scroll-mt-6 border-r border-t-4 border-[#DDE7F0] border-t-[#EEF4FA]">
                 <table className="w-full table-fixed border-collapse text-left" aria-label="New audition signup times for Sunday, September 20 from 6 to 7 PM">
                   <thead className="bg-[#2B4C6F] text-white">
                     <tr>
@@ -567,10 +565,10 @@ export function Auditions() {
                       return (
                         <tr key={time} className="transition-colors hover:bg-[#FBFDFF]">
                           <td className="p-0">
-                            <div className="grid grid-cols-[4.5rem_minmax(0,1fr)] md:grid-cols-[6.5rem_minmax(0,1fr)]">
+                            <div className="grid grid-cols-[2.35rem_minmax(0,1fr)] md:grid-cols-[4.25rem_minmax(0,1fr)]">
                               {!isConfirmingSlot && (
-                                <span className="flex h-7 items-center justify-center border-r border-[#DDE7F0] bg-[#F4F7FA] text-[9px] font-bold text-[#2B4C6F] md:h-8 md:text-[11px]" style={fontInter}>
-                                  {time}
+                                <span className="flex h-7 items-center justify-center border-r border-[#DDE7F0] bg-[#F4F7FA] text-[8px] font-bold text-[#2B4C6F] md:h-8 md:text-[11px]" style={fontInter}>
+                                  {time.replace(' PM', '')}
                                 </span>
                               )}
                               <div className={`min-w-0 ${isConfirmingSlot ? 'col-span-2' : ''}`}>
