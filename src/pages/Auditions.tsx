@@ -426,10 +426,10 @@ export function Auditions() {
               <h1 className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '0.05em', lineHeight: '1' }}>
                 AUDITIONS
               </h1>
-              <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[9px] font-bold tracking-widest text-white/90 md:mt-2 md:gap-x-5 md:gap-y-2 md:text-[14px]" style={fontInter}>
-                <div className="flex items-center gap-1 md:gap-2"><Calendar className="w-3 h-3 md:w-5 md:h-5" /> September 16, 17 &amp; 20</div>
-                <div className="flex items-center gap-1 md:gap-2"><Clock className="w-3 h-3 md:w-5 md:h-5" /> Wed/Thu 6–9 PM · Sun 6–7 PM</div>
-                <div className="flex items-center gap-1 md:gap-2"><MapPin className="w-3 h-3 md:w-5 md:h-5" /> Ferguson Hall, Room 105</div>
+              <div className="mt-1.5 flex flex-col items-start gap-1.5 text-[9px] font-bold leading-none tracking-[0.08em] text-white/90 md:mt-2 md:flex-row md:flex-wrap md:items-center md:gap-x-5 md:gap-y-2 md:text-[14px] md:tracking-widest" style={fontInter}>
+                <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><Calendar className="size-3 shrink-0 md:size-5" /> September 16, 17 &amp; 20</div>
+                <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><Clock className="size-3 shrink-0 md:size-5" /> Wed/Thu 6–9 PM · Sun 6–7 PM</div>
+                <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><MapPin className="size-3 shrink-0 md:size-5" /> Ferguson Hall, Room 105</div>
               </div>
             </div>
           </div>
