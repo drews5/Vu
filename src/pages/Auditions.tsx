@@ -550,17 +550,15 @@ export function Auditions() {
                 </tbody>
               </table>
               <div id="sunday-auditions" className="scroll-mt-6 border-t-4 border-[#EEF4FA]">
-                <div className="border-b border-white/20 bg-[#2B4C6F] px-3 py-2 md:px-4">
-                  <div>
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.08em] text-white md:text-[12px]" style={fontInter}>
-                      Sunday
-                    </h3>
-                    <p className="text-[9px] font-medium text-white/70 md:text-[10px]" style={fontInter}>
-                      September 20
-                    </p>
-                  </div>
-                </div>
                 <table className="w-full table-fixed border-collapse text-left" aria-label="New audition signup times for Sunday, September 20 from 6 to 7 PM">
+                  <thead className="bg-[#2B4C6F] text-white">
+                    <tr>
+                      <th scope="col" className="px-1.5 py-2 text-center md:px-3 md:text-left">
+                        <span className="block text-[10px] font-bold uppercase tracking-[0.08em] md:text-[12px]" style={fontInter}>Sunday</span>
+                        <span className="block text-[9px] font-medium text-white/70 md:text-[10px]" style={fontInter}>September 20</span>
+                      </th>
+                    </tr>
+                  </thead>
                   <tbody className="divide-y divide-[#DDE7F0]">
                     {sundayTimes.map((time) => {
                       const slot = slotLookup.get(`Sunday:${time}`);
