@@ -235,10 +235,9 @@ Dress Code: Stylish, warm, and sophisticated (tailored jackets, blazers, cocktai
   else console.log('Events seeded successfully');
 
   // 3. Seed Auditions
-  const generateSlots = (day) => {
+  const generateSlots = (day, endHour = 21, includeBreaks = true) => {
     const slots = [];
     const startHour = 18; // 6 PM
-    const endHour = 21; // 9 PM
 
     let totalMinutes = 0;
     const durationMinutes = (endHour - startHour) * 60;
@@ -249,7 +248,7 @@ Dress Code: Stylish, warm, and sophisticated (tailored jackets, blazers, cocktai
       const time = `${hour24 > 12 ? hour24 - 12 : hour24}:${minute === 0 ? '00' : minute < 10 ? '0' + minute : minute} PM`;
 
       // Add a break every 45 minutes
-      if (totalMinutes > 0 && totalMinutes % 45 === 0) {
+      if (includeBreaks && totalMinutes > 0 && totalMinutes % 45 === 0) {
         slots.push({ day, time, status: 'Break' });
       } else {
         slots.push({ day, time, status: 'Available' });
@@ -262,7 +261,8 @@ Dress Code: Stylish, warm, and sophisticated (tailored jackets, blazers, cocktai
 
   const auditionSlots = [
     ...generateSlots('Wednesday'),
-    ...generateSlots('Thursday')
+    ...generateSlots('Thursday'),
+    ...generateSlots('Sunday', 19, false)
   ];
 
   await supabase.from('auditions').delete().neq('id', '00000000-0000-0000-0000-000000000000');

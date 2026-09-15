@@ -9,6 +9,7 @@ import {
   MapPin,
   X,
   AlertCircle,
+  ArrowDown,
   Check,
   Music,
   Trash2
@@ -61,7 +62,7 @@ function cacheSlots(slots: AuditionSlotRecord[]) {
 
 export function Auditions() {
   const auditionsDescription =
-    'Sign up for a Vocal U audition in Ferguson Hall, Room 105, at the University of Minnesota on September 16 or 17, 2026.';
+    'Sign up for a Vocal U audition in Ferguson Hall, Room 105, at the University of Minnesota on September 16, 17, or 20, 2026.';
   const [initialSlots] = useState<AuditionSlotRecord[]>(readCachedSlots);
   const [slots, setSlots] = useState<AuditionSlotRecord[]>(initialSlots);
   const [loading, setLoading] = useState(initialSlots.length === 0);
@@ -242,7 +243,13 @@ export function Auditions() {
     { day: 'Wednesday', date: 'September 16' },
     { day: 'Thursday', date: 'September 17' }
   ];
-  const orderedTimes = Array.from(new Set(slots.map((slot) => slot.time)));
+  const mainAuditionDays = new Set(daysData.map(({ day }) => day));
+  const orderedTimes = Array.from(new Set(
+    slots.filter((slot) => mainAuditionDays.has(slot.day)).map((slot) => slot.time),
+  ));
+  const sundayTimes = Array.from(new Set(
+    slots.filter((slot) => slot.day === 'Sunday').map((slot) => slot.time),
+  ));
   const slotLookup = new Map(slots.map((slot) => [`${slot.day}:${slot.time}`, slot]));
 
   const renderSlotCell = (slot: AuditionSlotRecord) => {
@@ -420,14 +427,41 @@ export function Auditions() {
                 AUDITIONS
               </h1>
               <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[9px] font-bold tracking-widest text-white/90 md:mt-2 md:gap-x-5 md:gap-y-2 md:text-[14px]" style={fontInter}>
-                <div className="flex items-center gap-1 md:gap-2"><Calendar className="w-3 h-3 md:w-5 md:h-5" /> September 16 &amp; 17</div>
-                <div className="flex items-center gap-1 md:gap-2"><Clock className="w-3 h-3 md:w-5 md:h-5" /> 6-9 PM</div>
+                <div className="flex items-center gap-1 md:gap-2"><Calendar className="w-3 h-3 md:w-5 md:h-5" /> September 16, 17 &amp; 20</div>
+                <div className="flex items-center gap-1 md:gap-2"><Clock className="w-3 h-3 md:w-5 md:h-5" /> Wed/Thu 6–9 PM · Sun 6–7 PM</div>
                 <div className="flex items-center gap-1 md:gap-2"><MapPin className="w-3 h-3 md:w-5 md:h-5" /> Ferguson Hall, Room 105</div>
               </div>
             </div>
           </div>
         </div>
       </motion.section>
+      <motion.aside
+        variants={childVariants}
+        className="relative mb-2 flex flex-col items-center justify-between gap-3 overflow-hidden rounded-[18px] border border-white/20 px-4 py-3.5 text-center shadow-[0_10px_30px_rgba(43,76,111,0.16)] sm:flex-row sm:text-left md:mb-6 md:px-6 md:py-4"
+        style={{ background: 'linear-gradient(120deg, #1D3854 0%, #2B4C6F 58%, #3E6389 100%)' }}
+        aria-label="New audition availability"
+      >
+        <span className="pointer-events-none absolute -right-10 -top-16 size-36 rounded-full border border-white/10" aria-hidden="true" />
+        <span className="pointer-events-none absolute -bottom-16 right-20 size-28 rounded-full border border-white/10" aria-hidden="true" />
+        <div className="relative z-10 flex items-center gap-3">
+          <span className="hidden size-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-[#C9D9E9] sm:flex" aria-hidden="true">
+            <Music className="size-5" />
+          </span>
+          <p className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(20px, 3vw, 30px)', letterSpacing: '0.04em', lineHeight: 1 }}>
+            New audition slots added!
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => document.getElementById('sunday-auditions')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+          className="relative z-10 inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold text-[#2B4C6F] shadow-sm transition-colors hover:bg-[#E8F0F7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:text-sm"
+          style={fontInter}
+          aria-label="Scroll to new Sunday audition slots"
+        >
+          View Sunday slots
+          <ArrowDown className="size-4" aria-hidden="true" />
+        </button>
+      </motion.aside>
       <div className="px-0">
         {/* Sign Up Section */}
         <motion.section variants={childVariants} className="mb-4 overflow-hidden rounded-xl border border-[#DDE7F0] bg-white md:mb-[25px] md:rounded-2xl">
@@ -515,6 +549,42 @@ export function Auditions() {
                   ))}
                 </tbody>
               </table>
+              <div id="sunday-auditions" className="scroll-mt-6 border-t-4 border-[#EEF4FA]">
+                <div className="border-b border-white/20 bg-[#2B4C6F] px-3 py-2 md:px-4">
+                  <div>
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.08em] text-white md:text-[12px]" style={fontInter}>
+                      Sunday
+                    </h3>
+                    <p className="text-[9px] font-medium text-white/70 md:text-[10px]" style={fontInter}>
+                      September 20
+                    </p>
+                  </div>
+                </div>
+                <table className="w-full table-fixed border-collapse text-left" aria-label="New audition signup times for Sunday, September 20 from 6 to 7 PM">
+                  <tbody className="divide-y divide-[#DDE7F0]">
+                    {sundayTimes.map((time) => {
+                      const slot = slotLookup.get(`Sunday:${time}`);
+                      const isConfirmingSlot = slot && confirmingId?.id === slot.id;
+                      return (
+                        <tr key={time} className="transition-colors hover:bg-[#FBFDFF]">
+                          <td className="p-0">
+                            <div className="grid grid-cols-[4.5rem_minmax(0,1fr)] md:grid-cols-[6.5rem_minmax(0,1fr)]">
+                              {!isConfirmingSlot && (
+                                <span className="flex h-7 items-center justify-center border-r border-[#DDE7F0] bg-[#F4F7FA] text-[9px] font-bold text-[#2B4C6F] md:h-8 md:text-[11px]" style={fontInter}>
+                                  {time}
+                                </span>
+                              )}
+                              <div className={`min-w-0 ${isConfirmingSlot ? 'col-span-2' : ''}`}>
+                                {slot ? renderSlotCell(slot) : <div className="h-7 bg-gray-50 md:h-8" aria-hidden="true" />}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </motion.section>
