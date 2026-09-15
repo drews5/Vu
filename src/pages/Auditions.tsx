@@ -437,29 +437,30 @@ export function Auditions() {
       </motion.section>
       <motion.aside
         variants={childVariants}
-        className="relative mb-2 flex flex-col items-center justify-between gap-3 overflow-hidden rounded-[18px] border border-white/20 px-4 py-3.5 text-center shadow-[0_10px_30px_rgba(43,76,111,0.16)] sm:flex-row sm:text-left md:mb-6 md:px-6 md:py-4"
+        className="relative mb-2 flex items-center justify-between gap-1.5 overflow-hidden rounded-[18px] border border-white/20 px-3 py-3 text-left shadow-[0_10px_30px_rgba(43,76,111,0.16)] sm:gap-2 md:mb-6 md:gap-3 md:px-6 md:py-4"
         style={{ background: 'linear-gradient(120deg, #1D3854 0%, #2B4C6F 58%, #3E6389 100%)' }}
         aria-label="New audition availability"
       >
         <span className="pointer-events-none absolute -right-10 -top-16 size-36 rounded-full border border-white/10" aria-hidden="true" />
         <span className="pointer-events-none absolute -bottom-16 right-20 size-28 rounded-full border border-white/10" aria-hidden="true" />
-        <div className="relative z-10 flex items-center gap-3">
+        <div className="relative z-10 flex min-w-0 items-center gap-3">
           <span className="hidden size-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-[#C9D9E9] sm:flex" aria-hidden="true">
             <Music className="size-5" />
           </span>
-          <p className="text-white" style={{ ...fontYearbook, fontSize: 'clamp(20px, 3vw, 30px)', letterSpacing: '0.04em', lineHeight: 1 }}>
+          <p className="whitespace-nowrap tracking-[0.02em] text-white sm:tracking-[0.04em]" style={{ ...fontYearbook, fontSize: 'clamp(13px, 4vw, 30px)', lineHeight: 1 }}>
             New audition slots added!
           </p>
         </div>
         <button
           type="button"
           onClick={() => document.getElementById('sunday-auditions')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-          className="relative z-10 inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold text-[#2B4C6F] shadow-sm transition-colors hover:bg-[#E8F0F7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:text-sm"
+          className="relative z-10 inline-flex min-h-9 shrink-0 items-center justify-center gap-1 rounded-full bg-white px-2.5 py-2 text-[10px] font-bold text-[#2B4C6F] shadow-sm transition-colors hover:bg-[#E8F0F7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:min-h-10 sm:gap-2 sm:px-4 sm:text-xs md:text-sm"
           style={fontInter}
           aria-label="Scroll to new Sunday audition slots"
         >
-          View Sunday slots
-          <ArrowDown className="size-4" aria-hidden="true" />
+          <span className="sm:hidden">View slots</span>
+          <span className="hidden sm:inline">View Sunday slots</span>
+          <ArrowDown className="size-3.5 sm:size-4" aria-hidden="true" />
         </button>
       </motion.aside>
       <div className="px-0">
