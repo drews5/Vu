@@ -9,7 +9,6 @@ import {
   MapPin,
   X,
   AlertCircle,
-  ArrowDown,
   Check,
   Music,
   Trash2
@@ -62,7 +61,7 @@ function cacheSlots(slots: AuditionSlotRecord[]) {
 
 export function Auditions() {
   const auditionsDescription =
-    'Sign up for a Vocal U audition in Ferguson Hall, Room 105, at the University of Minnesota on September 16, 17, or 20, 2026.';
+    'Sign up for a Vocal U audition in Ferguson Hall, Room 123, at the University of Minnesota on Sunday, September 20, 2026.';
   const [initialSlots] = useState<AuditionSlotRecord[]>(readCachedSlots);
   const [slots, setSlots] = useState<AuditionSlotRecord[]>(initialSlots);
   const [loading, setLoading] = useState(initialSlots.length === 0);
@@ -239,14 +238,6 @@ export function Auditions() {
       setIsSubmitting(false);
     }
   };
-  const daysData = [
-    { day: 'Wednesday', date: 'September 16' },
-    { day: 'Thursday', date: 'September 17' }
-  ];
-  const mainAuditionDays = new Set(daysData.map(({ day }) => day));
-  const orderedTimes = Array.from(new Set(
-    slots.filter((slot) => mainAuditionDays.has(slot.day)).map((slot) => slot.time),
-  ));
   const sundayTimes = Array.from(new Set(
     slots.filter((slot) => slot.day === 'Sunday').map((slot) => slot.time),
   ));
@@ -427,40 +418,12 @@ export function Auditions() {
             </h1>
           </div>
           <div className="flex flex-col items-start gap-1.5 text-[9px] font-bold leading-none tracking-[0.08em] text-white/90 md:flex-row md:flex-wrap md:items-center md:justify-center md:gap-x-5 md:gap-y-2 md:text-[14px] md:tracking-widest" style={fontInter}>
-            <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><Calendar className="size-3 shrink-0 md:size-5" /> September 16, 17 &amp; 20</div>
-            <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><Clock className="size-3 shrink-0 md:size-5" /> Wed/Thu 6–9 PM · Sun 6–7 PM</div>
-            <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><MapPin className="size-3 shrink-0 md:size-5" /> Ferguson Hall, Room 105</div>
+            <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><Calendar className="size-3 shrink-0 md:size-5" /> Sunday, September 20</div>
+            <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><Clock className="size-3 shrink-0 md:size-5" /> 6–7 PM</div>
+            <div className="flex items-center gap-1.5 whitespace-nowrap md:gap-2"><MapPin className="size-3 shrink-0 md:size-5" /> Ferguson Hall, Room 123</div>
           </div>
         </div>
       </motion.section>
-      <motion.aside
-        variants={childVariants}
-        className="relative mb-2 flex items-center justify-between gap-1.5 overflow-hidden rounded-[18px] border border-white/20 px-3 py-3 text-left shadow-[0_10px_30px_rgba(43,76,111,0.16)] sm:gap-2 md:mb-6 md:gap-3 md:px-6 md:py-4"
-        style={{ background: 'linear-gradient(120deg, #1D3854 0%, #2B4C6F 58%, #3E6389 100%)' }}
-        aria-label="New audition availability"
-      >
-        <span className="pointer-events-none absolute -right-10 -top-16 size-36 rounded-full border border-white/10" aria-hidden="true" />
-        <span className="pointer-events-none absolute -bottom-16 right-20 size-28 rounded-full border border-white/10" aria-hidden="true" />
-        <div className="relative z-10 flex min-w-0 items-center gap-3">
-          <span className="hidden size-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-[#C9D9E9] sm:flex" aria-hidden="true">
-            <Music className="size-5" />
-          </span>
-          <p className="whitespace-nowrap tracking-[0.02em] text-white sm:tracking-[0.04em]" style={{ ...fontYearbook, fontSize: 'clamp(13px, 4vw, 30px)', lineHeight: 1 }}>
-            New audition slots added!
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => document.getElementById('sunday-auditions')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-          className="relative z-10 inline-flex min-h-9 shrink-0 items-center justify-center gap-1 rounded-full bg-white px-2.5 py-2 text-[10px] font-bold text-[#2B4C6F] shadow-sm transition-colors hover:bg-[#E8F0F7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:min-h-10 sm:gap-2 sm:px-4 sm:text-xs md:text-sm"
-          style={fontInter}
-          aria-label="Scroll to new Sunday audition slots"
-        >
-          <span className="sm:hidden">View slots</span>
-          <span className="hidden sm:inline">View Sunday slots</span>
-          <ArrowDown className="size-3.5 sm:size-4" aria-hidden="true" />
-        </button>
-      </motion.aside>
       <div className="px-0">
         {/* Sign Up Section */}
         <motion.section variants={childVariants} className="mb-4 overflow-hidden rounded-xl border border-[#DDE7F0] bg-white md:mb-[25px] md:rounded-2xl">
@@ -507,49 +470,8 @@ export function Auditions() {
               </a>
             </div>
           ) : (
-            <div className="overflow-hidden">
-              <table className="w-full table-fixed border-collapse text-left" aria-label="Audition signup times for Wednesday, September 16 and Thursday, September 17">
-                <colgroup>
-                  <col className="w-1/2" />
-                  <col className="w-1/2" />
-                </colgroup>
-                <thead className="bg-[#2B4C6F] text-white">
-                  <tr>
-                    {daysData.map((dayInfo) => (
-                      <th key={dayInfo.day} scope="col" className="border-r border-white/20 px-1.5 py-2 text-center last:border-r-0 md:px-3 md:text-left">
-                        <span className="block text-[10px] font-bold uppercase tracking-[0.08em] md:text-[12px]" style={fontInter}>{dayInfo.day}</span>
-                        <span className="block text-[9px] font-medium text-white/70 md:text-[10px]" style={fontInter}>{dayInfo.date}</span>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#DDE7F0]">
-                  {orderedTimes.map((time) => (
-                    <tr key={time} className="group/row transition-colors hover:bg-[#FBFDFF]">
-                      {daysData.map((dayInfo) => {
-                        const slot = slotLookup.get(`${dayInfo.day}:${time}`);
-                        const isConfirmingSlot = slot && confirmingId?.id === slot.id;
-                        return (
-                          <td key={dayInfo.day} className="border-r border-[#DDE7F0] p-0 last:border-r-0">
-                            <div className="grid grid-cols-[2.35rem_minmax(0,1fr)] md:grid-cols-[4.25rem_minmax(0,1fr)]">
-                              {!isConfirmingSlot && (
-                                <span className="flex h-7 items-center justify-center border-r border-[#DDE7F0] bg-[#F4F7FA] text-[8px] font-bold text-[#2B4C6F] md:h-8 md:text-[11px]" style={fontInter}>
-                                  {time.replace(' PM', '')}
-                                </span>
-                              )}
-                              <div className={`min-w-0 ${isConfirmingSlot ? 'col-span-2' : ''}`}>
-                                {slot ? renderSlotCell(slot) : <div className="h-7 bg-gray-50 md:h-8" aria-hidden="true" />}
-                              </div>
-                            </div>
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div id="sunday-auditions" className="w-1/2 scroll-mt-6 border-r border-t-4 border-[#DDE7F0] border-t-[#EEF4FA]">
-                <table className="w-full table-fixed border-collapse text-left" aria-label="New audition signup times for Sunday, September 20 from 6 to 7 PM">
+            <div id="sunday-auditions" className="overflow-hidden">
+                <table className="w-full table-fixed border-collapse text-left" aria-label="Audition signup times for Sunday, September 20 from 6 to 7 PM">
                   <thead className="bg-[#2B4C6F] text-white">
                     <tr>
                       <th scope="col" className="px-1.5 py-2 text-center md:px-3 md:text-left">
@@ -581,7 +503,6 @@ export function Auditions() {
                     })}
                   </tbody>
                 </table>
-              </div>
             </div>
           )}
         </motion.section>
