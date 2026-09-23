@@ -452,11 +452,13 @@ export function Home() {
               <motion.div
                 whileHover={{ scale: 1.04, y: -2 }}
                 whileTap={{ scale: 0.97 }}
-                className="hero-audition-glow pointer-events-auto rounded-[16px]"
+                className="pointer-events-auto rounded-[16px]"
               >
-                <Link
-                  to="/auditions"
-                  className="hero-audition-stroke group relative block overflow-hidden border border-white/80 bg-white/95 px-6 md:px-12 py-2.5 md:py-4 text-center text-[#2B4C6F] transition-all duration-300 hover:border-[#8FA8C8] hover:bg-[#8FA8C8] hover:text-white whitespace-nowrap"
+                <a
+                  href="https://youtube.com/@vocal-u"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative block overflow-hidden border border-white/80 bg-white/95 px-6 md:px-12 py-2.5 md:py-4 text-center text-[#2B4C6F] transition-all duration-300 hover:border-[#8FA8C8] hover:bg-[#8FA8C8] hover:text-white whitespace-nowrap"
                   style={{
                     ...fontYearbook,
                     fontSize: 'clamp(14px, 4vw, 20px)',
@@ -465,10 +467,10 @@ export function Home() {
                   }}
                 >
                   <span className="relative flex items-center justify-center gap-2">
-                    AUDITION SIGN UP
+                    VISIT OUR YOUTUBE
                     <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
-                </Link>
+                </a>
               </motion.div>
             </div>
           </div>
