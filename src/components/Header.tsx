@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useState } from 'react';
-import { ArrowRight, Facebook, Instagram, Menu, X, Youtube } from 'lucide-react';
+import { Facebook, Instagram, Menu, X, Youtube } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Link, useLocation } from 'react-router-dom';
 import logoImage from '../assets/d4630c01b543cc75980f0b293230859d29654fbb.png';
@@ -236,26 +236,7 @@ export function Header() {
             </div>
           </motion.header>
 
-          <AnimatePresence>
-            {isSolid && (
-              <motion.div
-                initial={{ opacity: 0, y: -12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="pointer-events-auto absolute left-[100px] right-[100px] top-[calc(100%-2px)] z-10"
-              >
-                <Link
-                  to="/auditions"
-                  className="group flex h-7 items-center justify-center gap-1.5 rounded-b-[14px] border border-t-0 border-white/70 bg-white/95 px-3 text-[#2B4C6F] shadow-[0_4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
-                  style={{ ...fontYearbook, letterSpacing: '0.05em' }}
-                >
-                  <span className="text-[12px]">AUDITION SIGN UP</span>
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
-              </motion.div>
-            )}
-          </AnimatePresence>
+
         </div>
       </motion.div>
 
@@ -266,17 +247,6 @@ export function Header() {
         className="pointer-events-none fixed inset-x-0 bottom-3 z-[60] flex justify-center px-4 md:hidden"
       >
         <div className="pointer-events-none relative w-full max-w-[420px]">
-          {!mobileMenuOpen && (
-            <Link
-              to="/auditions"
-              className="group pointer-events-auto absolute inset-x-[50px] bottom-[calc(100%-2px)] z-10 flex h-7 items-center justify-center gap-1.5 rounded-t-[14px] border border-b-0 border-white/70 bg-white/95 px-2 text-[#2B4C6F] shadow-[0_-4px_12px_rgba(43,76,111,0.05)] transition-colors duration-200 hover:bg-[#2B4C6F] hover:text-white"
-              style={{ ...fontYearbook, letterSpacing: '0.05em' }}
-            >
-              <span className="text-[12px]">AUDITION SIGN UP</span>
-              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
-          )}
-
           <div className="pointer-events-auto relative z-20 overflow-hidden rounded-[18px] border border-white/45 bg-[#8FA8C8] px-5 py-[6px] shadow-[0_6px_18px_rgba(43,76,111,0.1)]">
             <div className={`flex items-center justify-between ${mobileMenuOpen ? 'gap-4 border-b border-white/20 pb-4' : 'gap-3'}`}>
               <Link to="/" className="flex shrink-0 items-center" onClick={closeMobileMenu} aria-label="Vocal U home">
