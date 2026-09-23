@@ -1,4 +1,4 @@
-import{c as L,r as c,s as v,o as E,j as e,p as u,m as x,L as T,a as I,h as C}from"./main-CGCWCqr8.js";import{s as k,g as R,i as O,C as _,M as H,p as A}from"./eventDate-vC0GM8GF.js";import{t as p,P as V,S as Z}from"./Seo-BoHGePV6.js";import{E as J}from"./ExploreMore-BcoOI6e2.js";import{l as q}from"./loadSupabase-Cv5IukgS.js";import{A as Y}from"./arrow-left-C73rJy8J.js";import{C as N}from"./calendar-DegccUIB.js";import{N as G,S as W}from"./share-2-DVrp8LKV.js";/**
+import{c as L,r as c,s as v,o as E,j as e,p as u,m as x,L as T,a as I,h as C}from"./main-CHMVVZH-.js";import{s as k,g as R,i as O,C as _,M as H,p as A}from"./eventDate-B_r-VVmJ.js";import{t as p,P as V,S as Z}from"./Seo-BxTm9AcK.js";import{E as J}from"./ExploreMore-meaVlBrE.js";import{l as q}from"./loadSupabase-CtJBorAP.js";import{A as Y}from"./arrow-left-BprGb7Vy.js";import{C as N}from"./calendar-DskCIksg.js";import{N as G,S as W}from"./share-2-BVxTiYa2.js";/**
  * @license lucide-react v0.487.0 - ISC
  *
  * This source code is licensed under the ISC license.
