@@ -68,17 +68,16 @@ export function Members() {
                                 const [firstName, ...lastName] = name.split(' ');
                                 const details = memberDetails[name];
                                 return (
-                                    <li key={name} className="vu-panel vu-member-card flex flex-col items-center justify-center border border-[#8FA8C8] px-3 py-7 text-center">
-                                        <span className="vu-member-note" aria-hidden="true">♪</span>
-                                        <h3 style={{ ...fontYearbook, fontSize: 'clamp(18px, 1.6vw, 24px)', lineHeight: 1.2 }}>
+                                    <li key={name} className="vu-panel vu-member-card bg-white p-3 border border-[#8FA8C8] flex flex-col items-center text-center relative overflow-hidden w-full group" style={{ borderRadius: '12px' }}>
+                                        <h3 className="text-[#2B4C6F] text-lg mb-1 leading-none" style={fontYearbook}>
                                             <span className="block">{firstName}</span>{' '}
                                             <span className="block">{lastName.join(' ')}</span>
                                         </h3>
                                         {details && (
-                                            <div className="relative mt-3 w-full space-y-2 text-sm leading-snug" style={{ fontFamily: 'Inter, sans-serif' }}>
-                                                {details.officer && <p className="font-semibold">{details.officer}</p>}
-                                                <p>{details.major}</p>
-                                                <p>{details.year}</p>
+                                            <div className="space-y-0.5 text-[11px] leading-tight" style={{ fontFamily: 'Inter, sans-serif' }}>
+                                                <p className="text-[#8FA8C8] tracking-wider mb-2">{details.officer || 'Member'}</p>
+                                                <p className="text-[#2B4C6F]/80">{details.major}</p>
+                                                <p className="text-[#2B4C6F]/50">{details.year}</p>
                                             </div>
                                         )}
                                     </li>

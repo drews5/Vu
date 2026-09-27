@@ -306,31 +306,11 @@ body {
 }
 
 .vu-member-card {
-    height: 18rem;
-    overflow: hidden;
-    background: #edf2f8;
-    color: #2b4c6f;
+    height: 10rem;
 }
 
 .vu-faq summary::-webkit-details-marker {
     display: none;
-}
-
-.vu-member-note {
-    position: absolute;
-    right: 6px;
-    bottom: -20px;
-    color: #91a8c6;
-    opacity: .18;
-    font-family: var(--font-yearbook-stack);
-    font-size: 100px;
-    line-height: 1;
-    transform: rotate(-8deg);
-    pointer-events: none;
-}
-
-.vu-member-card h3 {
-    position: relative;
 }
 
 @media (hover: hover) and (min-width: 768px) {
