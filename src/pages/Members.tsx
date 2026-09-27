@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { ExploreMore } from '../components/ExploreMore';
 import { motion } from 'motion/react';
