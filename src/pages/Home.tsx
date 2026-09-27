@@ -15,6 +15,7 @@ import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 import { copyText } from '../utils/clipboard';
 import { isEventUpcoming } from '../utils/eventDate';
+import { SiteFaq } from '../components/SiteFaq';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const LazyContactForm = lazy(() => import('../components/ContactForm').then((m) => ({ default: m.ContactForm })));
@@ -700,6 +701,10 @@ export function Home() {
           </div>
         </div>
       </motion.section>
+
+      <motion.div variants={childVariants} style={{ marginBottom: '25px' }}>
+        <SiteFaq />
+      </motion.div>
 
       {/* Contact Form Section */}
       <motion.section variants={childVariants} style={{ marginBottom: '25px', position: 'relative', zIndex: 1 }}>

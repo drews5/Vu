@@ -7,6 +7,7 @@ import { ExploreMore } from '../components/ExploreMore';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 import { fetchWithTimeout } from '../utils/network';
+import siteContent from '../data/siteContent.json';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const TikTokIcon = ({ className }: { className?: string }) => {
@@ -211,6 +212,16 @@ export function Contact() {
                     </motion.div>
                 </div>
             </div>
+            <motion.section id="booking" variants={childVariants} aria-labelledby="booking-heading" className="vu-page-hero mt-6 scroll-mt-32 bg-[#2B4C6F] px-6 py-8 text-white md:p-10">
+                <div className="relative z-10 max-w-3xl">
+                    <h2 id="booking-heading" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 40px)' }}>{siteContent.booking.heading}</h2>
+                    <p className="mt-4 leading-relaxed" style={{ ...fontInter, fontSize: '17px' }}>{siteContent.booking.description}</p>
+                    <p className="mt-3 leading-relaxed" style={{ ...fontInter, fontSize: '16px' }}>{siteContent.booking.details}</p>
+                    <a href="mailto:vocalu@umn.edu?subject=Booking%20Vocal%20U" className="mt-6 inline-block rounded-xl bg-white px-6 py-3 text-[#2B4C6F] transition-colors hover:bg-[#EDF2F8] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white" style={{ ...fontYearbook, fontSize: '18px' }}>
+                        Email Us <span aria-hidden="true">→</span>
+                    </a>
+                </div>
+            </motion.section>
             <ExploreMore currentPath="/contact" className="mt-20" />
         </PageTransition>
     );

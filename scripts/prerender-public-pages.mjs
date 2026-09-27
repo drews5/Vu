@@ -5,6 +5,7 @@ const siteUrl = 'https://www.vocalu.org';
 const buildDir = resolve('build');
 const baseHtml = await readFile(resolve(buildDir, 'index.html'), 'utf8');
 const memberGroups = JSON.parse(await readFile(resolve('src/data/memberGroups.json'), 'utf8'));
+const siteContent = JSON.parse(await readFile(resolve('src/data/siteContent.json'), 'utf8'));
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({
@@ -16,6 +17,11 @@ function link(path, label) {
   return `<a href="${escapeHtml(path)}">${escapeHtml(label)}</a>`;
 }
 
+const faqHtml = `<section><h2>FAQs</h2>${siteContent.faqs.map(({ question, answer, path, linkText, includeMembers }) =>
+  `<details><summary>${escapeHtml(question)}</summary><p>${escapeHtml(answer)}</p>${includeMembers ? `<dl>${memberGroups.map(({ part, members }) => `<dt>${escapeHtml(part)}</dt><dd>${escapeHtml(members.join(', '))}</dd>`).join('')}</dl>` : ''}<p>${link(path, linkText)}</p></details>`
+).join('')}</section>`;
+const bookingHtml = `<section id="booking"><h2>${escapeHtml(siteContent.booking.heading)}</h2><p>${escapeHtml(siteContent.booking.description)}</p><p>${escapeHtml(siteContent.booking.details)}</p><p>${link('mailto:vocalu@umn.edu?subject=Booking%20Vocal%20U', 'Email Us')}</p></section>`;
+
 const pages = [
   {
     path: '/',
@@ -24,7 +30,7 @@ const pages = [
     heading: 'Vocal U A Cappella',
     content: `<h2>We Are Vocal U</h2><p>Vocal U is a gender-inclusive a cappella group at the University of Minnesota, established in 2011. We are a registered student organization dedicated to spreading our music across the Twin Cities and beyond, and having a great time while doing it.</p>
       <p>We come from all different majors and backgrounds, but we're all a part of VU because we love music and the arts. More than an a cappella group, Vocal U is a family. We support and push each other to be the best performers we can be, which translates to the stage.</p>
-      <h2>Get in Touch</h2><p>Reach out about booking and audition information, collaborations, or general inquiries.</p><p>${link('mailto:vocalu@umn.edu', 'vocalu@umn.edu')}</p>`,
+      ${faqHtml}<h2>Get in Touch</h2><p>Reach out about booking and audition information, collaborations, or general inquiries.</p><p>${link('mailto:vocalu@umn.edu', 'vocalu@umn.edu')}</p>`,
   },
   {
     path: '/about',
@@ -76,7 +82,7 @@ const pages = [
     heading: 'Contact Vocal U',
     content: `<p>Reach out about booking and audition information, collaborations, or general inquiries.</p>
       <h2>Contact Information</h2><p>${link('mailto:vocalu@umn.edu', 'vocalu@umn.edu')}</p><p>University of Minnesota<br>Minneapolis, MN</p>
-      <h2>Follow Us</h2><p>${link('https://www.instagram.com/vocal_u', 'Instagram')} · ${link('https://www.facebook.com/vocaluacappella/', 'Facebook')} · ${link('https://www.youtube.com/@vocal-u', 'YouTube')} · ${link('https://www.tiktok.com/@vocalumn', 'TikTok')}</p>`,
+      <h2>Follow Us</h2><p>${link('https://www.instagram.com/vocal_u', 'Instagram')} · ${link('https://www.facebook.com/vocaluacappella/', 'Facebook')} · ${link('https://www.youtube.com/@vocal-u', 'YouTube')} · ${link('https://www.tiktok.com/@vocalumn', 'TikTok')}</p>${bookingHtml}`,
   },
   {
     path: '/donate',
