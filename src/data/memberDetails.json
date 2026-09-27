@@ -1,9 +1,19 @@
 {
-  "Maddie Olsen": { "major": "Sciences", "year": "Freshman" },
-  "Sophia Lancaster": { "major": "Marketing & Strategic Communications", "year": "Junior", "officer": "External Vice President" },
-  "Elise Clay": { "major": "Architecture", "year": "Junior" },
-  "Vivian Kahn": { "major": "Anthropology", "year": "Sophomore" },
-  "Drew Scheid": { "major": "Information Systems", "year": "Junior", "officer": "President" },
-  "Gabriel Juenemann": { "major": "Architecture", "year": "Junior" },
-  "Alex Buhl": { "major": "Computer Science", "year": "Sophomore" }
+  "Maddie Olsen": { "major": "Sciences", "year": "Sophomore" },
+  "Freya Sanders": { "major": "Elementary Ed", "year": "Freshman" },
+  "Erin Moore": { "major": "Music & Psychology", "year": "Freshman" },
+  "Sophia Lancaster": { "major": "Marketing & Strategic Communications", "year": "Senior", "officer": "External Vice President" },
+  "Audrey Sternberg": { "major": "Business", "year": "Freshman" },
+  "Holly Flood": { "major": "Psych", "year": "Freshman" },
+  "Elise Clay": { "major": "Architecture", "year": "Senior" },
+  "Vivian Kahn": { "major": "Anthropology", "year": "Junior" },
+  "Fiona Meaney": { "major": "Undecided", "year": "Freshman" },
+  "Drew Scheid": { "major": "Information Systems", "year": "Senior", "officer": "President" },
+  "Gabriel Juenemann": { "major": "Architecture", "year": "Senior" },
+  "Alex Nault": { "major": "Psych", "year": "Sophomore" },
+  "Dominic Geryol": { "major": "Math", "year": "Junior" },
+  "Alex Buhl": { "major": "Computer Science", "year": "Junior" },
+  "Logan Cox": { "major": "Mechanic Engineering", "year": "Freshman" },
+  "Hunter Farris": { "major": "Physics", "year": "Freshman" },
+  "Dominic Dennis": { "major": "Astrophysics", "year": "Freshman" }
 }

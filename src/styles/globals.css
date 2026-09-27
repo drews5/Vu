@@ -307,16 +307,12 @@ body {
 
 .vu-member-card {
     overflow: hidden;
-    background: #edf2f8;
+    background: #2e4c6d;
+    color: #fff;
 }
 
 .vu-faq summary::-webkit-details-marker {
     display: none;
-}
-
-.vu-member-card:nth-child(even) {
-    background: #2e4c6d;
-    color: #fff;
 }
 
 .vu-member-note {
