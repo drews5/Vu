@@ -211,17 +211,6 @@ export function Contact() {
                     </motion.div>
                 </div>
             </div>
-            <motion.section variants={childVariants} className="mt-6 rounded-2xl bg-[#2B4C6F] p-6 text-white md:p-10" aria-labelledby="booking-heading">
-                <h2 id="booking-heading" className="font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 40px)' }}>
-                    Book Vocal U
-                </h2>
-                <p className="mt-3 max-w-3xl leading-relaxed text-white/90" style={{ ...fontInter, fontSize: '17px' }}>
-                    Campus show, fundraiser, neighborhood get-together—if live a cappella sounds right, we'd love to hear about it. Email us the date, the place, and roughly how long you'd like us to sing. We'll talk through what works.
-                </p>
-                <a href="mailto:vocalu@umn.edu?subject=Vocal%20U%20Booking%20Inquiry" className="mt-6 inline-block rounded-xl bg-white px-6 py-3 font-semibold text-[#2B4C6F] transition-colors hover:bg-[#E8EEF5] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white" style={fontInter}>
-                    Tell us about your event
-                </a>
-            </motion.section>
             <ExploreMore currentPath="/contact" className="mt-20" />
         </PageTransition>
     );

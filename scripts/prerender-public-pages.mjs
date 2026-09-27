@@ -5,7 +5,6 @@ const siteUrl = 'https://www.vocalu.org';
 const buildDir = resolve('build');
 const baseHtml = await readFile(resolve(buildDir, 'index.html'), 'utf8');
 const memberGroups = JSON.parse(await readFile(resolve('src/data/memberGroups.json'), 'utf8'));
-const siteFaqs = JSON.parse(await readFile(resolve('src/data/siteFaqs.json'), 'utf8'));
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({
@@ -23,20 +22,18 @@ const pages = [
     title: 'Vocal U A Cappella | University of Minnesota A Cappella Group',
     description: 'Vocal U is a gender-inclusive a cappella group at the University of Minnesota performing throughout Minneapolis and the Twin Cities.',
     heading: 'Vocal U A Cappella',
-    content: `<p>Vocal U is a gender-inclusive a cappella group at the University of Minnesota. We perform at campus events, charity events, showcases, competitions, and throughout the Twin Cities.</p>
-      <p>Founded in 2011, our group shares a love of music and community through student-led a cappella performance.</p>
-      <p>Explore our ${link('/about', 'mission and repertoire')}, ${link('/members', 'current members')}, ${link('/events', 'events')}, and ${link('/media', 'performances')}.</p>
-      <section><h2>Questions we get</h2>${siteFaqs.map(({ question, answer, path, linkText }) =>
-        `<details><summary>${escapeHtml(question)}</summary><p>${escapeHtml(answer)}</p><p>${link(path, linkText)}</p></details>`
-      ).join('')}</section>`,
+    content: `<h2>We Are Vocal U</h2><p>Vocal U is a gender-inclusive a cappella group at the University of Minnesota, established in 2011. We are a registered student organization dedicated to spreading our music across the Twin Cities and beyond, and having a great time while doing it.</p>
+      <p>We come from all different majors and backgrounds, but we're all a part of VU because we love music and the arts. More than an a cappella group, Vocal U is a family. We support and push each other to be the best performers we can be, which translates to the stage.</p>
+      <h2>Get in Touch</h2><p>Reach out about booking and audition information, collaborations, or general inquiries.</p><p>${link('mailto:vocalu@umn.edu', 'vocalu@umn.edu')}</p>`,
   },
   {
     path: '/about',
     title: 'About Vocal U | Vocal U A Cappella',
     description: 'Learn about Vocal U, the University of Minnesota gender-inclusive a cappella group, including our mission, repertoire, and Twin Cities performances.',
     heading: 'About Vocal U',
-    content: `<h2>Our mission</h2><p>Founded in 2011, Vocal U A Cappella fosters musical growth within our group while sharing our passion for the arts with the community. We perform at charity events, University of Minnesota events, and in the greater Twin Cities area.</p>
-      <p>Our repertoire spans contemporary pop, soul, and other student-arranged music. Visit the ${link('/about', 'full about page')} for the current repertoire.</p>`,
+    content: `<h2>Our Mission</h2><p>Founded in 2011, Vocal U A Cappella is dedicated to fostering musical growth within our group while sharing our passion for the arts with the community.</p>
+      <p>We embrace our diversity of voices and backgrounds to perform at charity events that resonate with our members, seek to build the University community at U of M events, and spread our harmonies in the surrounding communities, especially the University District and greater Twin Cities area. Our mission is to share the universal language of music through the unique form of a cappella, reaching as many people as we can.</p>
+      <blockquote>A cappella is a way to unify a huge world of culture with the human voice. By arranging, practicing and performing, we are able to pay unique homage to some of today's greatest hits and yesterday's greatest memories.</blockquote>`,
   },
   {
     path: '/members',
@@ -77,9 +74,9 @@ const pages = [
     title: 'Contact Vocal U | Vocal U A Cappella',
     description: 'Contact Vocal U for bookings, collaboration requests, general questions, or audition information through email, social media, or the site contact form.',
     heading: 'Contact Vocal U',
-    content: `<p>For bookings, collaborations, auditions, and general questions, email ${link('mailto:vocalu@umn.edu', 'vocalu@umn.edu')} or use the contact form on this page.</p>
-      <section><h2>Book Vocal U</h2><p>Campus show, fundraiser, neighborhood get-together—if live a cappella sounds right, we'd love to hear about it. Email us the date, the place, and roughly how long you'd like us to sing. We'll talk through what works.</p>
-      <p>${link('mailto:vocalu@umn.edu?subject=Vocal%20U%20Booking%20Inquiry', 'Tell us about your event')}</p></section>`,
+    content: `<p>Reach out about booking and audition information, collaborations, or general inquiries.</p>
+      <h2>Contact Information</h2><p>${link('mailto:vocalu@umn.edu', 'vocalu@umn.edu')}</p><p>University of Minnesota<br>Minneapolis, MN</p>
+      <h2>Follow Us</h2><p>${link('https://www.instagram.com/vocal_u', 'Instagram')} · ${link('https://www.facebook.com/vocaluacappella/', 'Facebook')} · ${link('https://www.youtube.com/@vocal-u', 'YouTube')} · ${link('https://www.tiktok.com/@vocalumn', 'TikTok')}</p>`,
   },
   {
     path: '/donate',

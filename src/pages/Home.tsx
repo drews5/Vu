@@ -15,7 +15,6 @@ import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 import { copyText } from '../utils/clipboard';
 import { isEventUpcoming } from '../utils/eventDate';
-import siteFaqs from '../data/siteFaqs.json';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const LazyContactForm = lazy(() => import('../components/ContactForm').then((m) => ({ default: m.ContactForm })));
@@ -699,32 +698,6 @@ export function Home() {
               </Link>
             </motion.div>
           </div>
-        </div>
-      </motion.section>
-
-      <motion.section
-        variants={childVariants}
-        className="border-y-2 border-[#8FA8C8]/30 bg-[#F5F8FC] px-6 py-10 md:px-12 md:py-14"
-        style={{ marginBottom: '25px', borderRadius: '16px' }}
-        aria-labelledby="home-faq-heading"
-      >
-        <div className="mb-6 max-w-3xl">
-          <h2 id="home-faq-heading" className="text-[#2B4C6F] font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(32px, 5vw, 48px)' }}>
-            Questions We Get
-          </h2>
-        </div>
-        <div className="max-w-4xl divide-y divide-[#8FA8C8]/40 border-y border-[#8FA8C8]/40">
-          {siteFaqs.map(({ question, answer, path, linkText }) => (
-            <details key={question} className="px-1 py-4 text-[#2B4C6F]">
-              <summary className="cursor-pointer font-semibold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2B4C6F]" style={{ ...fontInter, fontSize: '18px' }}>
-                {question}
-              </summary>
-              <p className="mt-3 max-w-2xl leading-relaxed" style={{ ...fontInter, fontSize: '16px' }}>{answer}</p>
-              <Link to={path} className="mt-2 inline-block font-semibold text-[#2B4C6F] underline underline-offset-4 hover:text-[#597AA2] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2B4C6F]" style={fontInter}>
-                {linkText}
-              </Link>
-            </details>
-          ))}
         </div>
       </motion.section>
 
