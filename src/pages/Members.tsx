@@ -49,24 +49,28 @@ export function Members() {
                             Our Members
                         </h1>
                         <p className="text-white/80 mt-2 max-w-2xl mx-auto text-sm md:text-base" style={{ fontFamily: 'Inter, sans-serif' }}>
-                            Meet the voices of Vocal U.
+                            The voices (and the beat) behind Vocal U.
                         </p>
                     </div>
                 </div>
             </motion.section>
-            <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-                {memberGroups.map(({ part, members }) => (
-                    <motion.section variants={childVariants} key={part} aria-label={part}>
-                        <h2 className="text-[#2B4C6F] mb-4 tracking-widest border-b-2 border-[#8FA8C8]/20 pb-2 font-yearbook" style={{ ...fontYearbook, fontSize: '20px' }}>
-                            {part}
-                        </h2>
-                        <ul className="space-y-3">
-                            {members.map((name) => (
-                                <li key={name} className="vu-panel bg-white px-5 py-4 border border-[#8FA8C8] text-[#2B4C6F] text-lg" style={{ borderRadius: '12px' }}>
-                                    {name}
-                                </li>
-                            ))}
-                        </ul>
+            <div className="vu-part-grid grid gap-x-8 gap-y-12 md:grid-cols-2 xl:grid-cols-3">
+                {memberGroups.map(({ part, members }, index) => (
+                    <motion.section variants={childVariants} key={part} aria-labelledby={`member-part-${index}`}>
+                        <div className="vu-part-sheet h-full px-6 pb-5 pt-8">
+                            <span className="vu-part-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                            <h2 id={`member-part-${index}`} className="mb-4 text-[#2B4C6F] font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(23px, 2.5vw, 30px)' }}>
+                                {part}
+                            </h2>
+                            <ul>
+                                {members.map((name) => (
+                                    <li key={name} className="vu-member-line flex items-center gap-3 py-3 text-[#2B4C6F]">
+                                        <span className="text-2xl text-[#8FA8C8]" aria-hidden="true">♪</span>
+                                        <span className="font-yearbook" style={{ ...fontYearbook, fontSize: '20px', lineHeight: 1.25 }}>{name}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </motion.section>
                 ))}
             </div>

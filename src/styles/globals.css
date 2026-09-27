@@ -305,9 +305,60 @@ body {
     }
 }
 
+.vu-part-sheet {
+    position: relative;
+    border: 2px solid rgba(143, 168, 200, .5);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 6px 7px 0 #e2eaf3;
+    transition: transform .2s ease-out;
+}
+
+.vu-part-sheet::before {
+    content: '♫';
+    position: absolute;
+    right: 18px;
+    bottom: 8px;
+    color: rgba(143, 168, 200, .1);
+    font-family: var(--font-yearbook-stack);
+    font-size: 84px;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.vu-part-number {
+    position: absolute;
+    top: -16px;
+    right: 22px;
+    display: grid;
+    width: 48px;
+    height: 34px;
+    place-items: center;
+    border-radius: 8px;
+    background: #8fa8c8;
+    color: #fff;
+    font-family: var(--font-yearbook-stack);
+    font-size: 18px;
+    transform: rotate(7deg);
+}
+
+.vu-member-line {
+    position: relative;
+    border-top: 1px dashed rgba(143, 168, 200, .45);
+}
+
+.vu-member-line:nth-child(even) {
+    padding-left: 8px;
+}
+
 @media (hover: hover) and (min-width: 768px) {
-    .vu-member-card:nth-child(odd) { transform: rotate(-.15deg); }
-    .vu-member-card:nth-child(even) { transform: rotate(.15deg); }
+    .vu-part-sheet { transform: rotate(-.45deg); }
+    .vu-part-grid > section:nth-child(even) > .vu-part-sheet { transform: rotate(.45deg); }
+    .vu-part-sheet:hover { transform: rotate(0) translateY(-3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vu-part-sheet { transition: none; }
 }
 
 .vu-image-frame {

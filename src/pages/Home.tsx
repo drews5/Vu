@@ -704,26 +704,23 @@ export function Home() {
 
       <motion.section
         variants={childVariants}
-        className="vu-panel border border-gray-100 bg-white px-6 py-10 md:px-12 md:py-14"
+        className="border-y-2 border-[#8FA8C8]/30 bg-[#F5F8FC] px-6 py-10 md:px-12 md:py-14"
         style={{ marginBottom: '25px', borderRadius: '16px' }}
         aria-labelledby="home-faq-heading"
       >
-        <div className="mb-8 max-w-3xl">
+        <div className="mb-6 max-w-3xl">
           <h2 id="home-faq-heading" className="text-[#2B4C6F] font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(32px, 5vw, 48px)' }}>
-            Good to Know
+            Questions We Get
           </h2>
-          <p className="mt-2 text-[#2B4C6F]/75" style={{ ...fontInter, fontSize: '17px', lineHeight: '1.7' }}>
-            Quick answers for anyone looking to hear, join, or book Vocal U.
-          </p>
         </div>
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="max-w-4xl divide-y divide-[#8FA8C8]/40 border-y border-[#8FA8C8]/40">
           {siteFaqs.map(({ question, answer, path, linkText }) => (
-            <details key={question} className="rounded-xl border border-[#8FA8C8]/45 bg-[#F8FAFC] px-5 py-4 text-[#2B4C6F]">
-              <summary className="cursor-pointer font-semibold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2B4C6F]" style={{ ...fontInter, fontSize: '17px' }}>
+            <details key={question} className="px-1 py-4 text-[#2B4C6F]">
+              <summary className="cursor-pointer font-semibold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2B4C6F]" style={{ ...fontInter, fontSize: '18px' }}>
                 {question}
               </summary>
-              <p className="mt-3 leading-relaxed" style={{ ...fontInter, fontSize: '16px' }}>{answer}</p>
-              <Link to={path} className="mt-3 inline-block font-semibold text-[#2B4C6F] underline underline-offset-4 hover:text-[#597AA2] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2B4C6F]" style={fontInter}>
+              <p className="mt-3 max-w-2xl leading-relaxed" style={{ ...fontInter, fontSize: '16px' }}>{answer}</p>
+              <Link to={path} className="mt-2 inline-block font-semibold text-[#2B4C6F] underline underline-offset-4 hover:text-[#597AA2] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2B4C6F]" style={fontInter}>
                 {linkText}
               </Link>
             </details>

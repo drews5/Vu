@@ -216,16 +216,10 @@ export function Contact() {
                     Book Vocal U
                 </h2>
                 <p className="mt-3 max-w-3xl leading-relaxed text-white/90" style={{ ...fontInter, fontSize: '17px' }}>
-                    We sing at University of Minnesota events, charity events, and community gatherings around Minneapolis and the Twin Cities. Tell us what you are planning, and we can talk through the right performance for your event.
+                    Campus show, fundraiser, neighborhood get-together—if live a cappella sounds right, we'd love to hear about it. Email us the date, the place, and roughly how long you'd like us to sing. We'll talk through what works.
                 </p>
-                <p className="mt-5 font-semibold" style={fontInter}>When you reach out, it helps to include:</p>
-                <ul className="mt-2 list-disc space-y-1 pl-6 text-white/90" style={fontInter}>
-                    <li>Your event date and location</li>
-                    <li>The type of event and expected audience</li>
-                    <li>Any performance timing or set length you have in mind</li>
-                </ul>
                 <a href="mailto:vocalu@umn.edu?subject=Vocal%20U%20Booking%20Inquiry" className="mt-6 inline-block rounded-xl bg-white px-6 py-3 font-semibold text-[#2B4C6F] transition-colors hover:bg-[#E8EEF5] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white" style={fontInter}>
-                    Email Vocal U about a booking
+                    Tell us about your event
                 </a>
             </motion.section>
             <ExploreMore currentPath="/contact" className="mt-20" />
