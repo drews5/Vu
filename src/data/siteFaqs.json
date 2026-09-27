@@ -1,0 +1,38 @@
+[
+  {
+    "question": "What is Vocal U?",
+    "answer": "Vocal U is a gender-inclusive, student-led a cappella group at the University of Minnesota. Founded in 2011, we bring students from different majors and backgrounds together through vocal music.",
+    "path": "/about",
+    "linkText": "Read about our mission"
+  },
+  {
+    "question": "Where does Vocal U perform?",
+    "answer": "We perform at University of Minnesota events, charity events, showcases, competitions, and community events in Minneapolis and the wider Twin Cities area.",
+    "path": "/events",
+    "linkText": "See our events"
+  },
+  {
+    "question": "Can I book Vocal U for an event?",
+    "answer": "Yes. Send us your event date, location, and the kind of performance you have in mind. We can discuss availability and details with you.",
+    "path": "/contact",
+    "linkText": "Ask about a booking"
+  },
+  {
+    "question": "How can I audition for Vocal U?",
+    "answer": "Audition information changes by semester. Check our audition page for the current update and follow our social channels for announcements.",
+    "path": "/auditions",
+    "linkText": "Check audition information"
+  },
+  {
+    "question": "Who are the current members?",
+    "answer": "Our current roster includes sopranos, mezzos, altos, tenors, baritone/basses, and vocal percussion. The members page lists everyone by part.",
+    "path": "/members",
+    "linkText": "Meet the members"
+  },
+  {
+    "question": "Where can I hear Vocal U?",
+    "answer": "Watch recordings of our performances and browse recent posts through our media page and YouTube channel.",
+    "path": "/media",
+    "linkText": "Watch performances"
+  }
+]

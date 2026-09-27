@@ -5,6 +5,7 @@ const siteUrl = 'https://www.vocalu.org';
 const buildDir = resolve('build');
 const baseHtml = await readFile(resolve(buildDir, 'index.html'), 'utf8');
 const memberGroups = JSON.parse(await readFile(resolve('src/data/memberGroups.json'), 'utf8'));
+const siteFaqs = JSON.parse(await readFile(resolve('src/data/siteFaqs.json'), 'utf8'));
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({
@@ -24,7 +25,10 @@ const pages = [
     heading: 'Vocal U A Cappella',
     content: `<p>Vocal U is a gender-inclusive a cappella group at the University of Minnesota. We perform at campus events, charity events, showcases, competitions, and throughout the Twin Cities.</p>
       <p>Founded in 2011, our group shares a love of music and community through student-led a cappella performance.</p>
-      <p>Explore our ${link('/about', 'mission and repertoire')}, ${link('/members', 'current members')}, ${link('/events', 'events')}, and ${link('/media', 'performances')}.</p>`,
+      <p>Explore our ${link('/about', 'mission and repertoire')}, ${link('/members', 'current members')}, ${link('/events', 'events')}, and ${link('/media', 'performances')}.</p>
+      <section><h2>Good to know</h2>${siteFaqs.map(({ question, answer, path, linkText }) =>
+        `<details><summary>${escapeHtml(question)}</summary><p>${escapeHtml(answer)}</p><p>${link(path, linkText)}</p></details>`
+      ).join('')}</section>`,
   },
   {
     path: '/about',
@@ -73,7 +77,10 @@ const pages = [
     title: 'Contact Vocal U | Vocal U A Cappella',
     description: 'Contact Vocal U for bookings, collaboration requests, general questions, or audition information through email, social media, or the site contact form.',
     heading: 'Contact Vocal U',
-    content: `<p>For bookings, collaborations, auditions, and general questions, email ${link('mailto:vocalu@umn.edu', 'vocalu@umn.edu')} or use the contact form on this page.</p>`,
+    content: `<p>For bookings, collaborations, auditions, and general questions, email ${link('mailto:vocalu@umn.edu', 'vocalu@umn.edu')} or use the contact form on this page.</p>
+      <section><h2>Book Vocal U</h2><p>We sing at University of Minnesota events, charity events, and community gatherings around Minneapolis and the Twin Cities. Tell us what you are planning, and we can talk through the right performance for your event.</p>
+      <p>When you reach out, include your event date and location, the type of event and expected audience, and any performance timing or set length you have in mind.</p>
+      <p>${link('mailto:vocalu@umn.edu?subject=Vocal%20U%20Booking%20Inquiry', 'Email Vocal U about a booking')}</p></section>`,
   },
   {
     path: '/donate',
