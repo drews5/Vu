@@ -63,14 +63,14 @@ export function Members() {
                         <h2 id={`member-part-${index}`} className="mb-5 border-b-2 border-[#8FA8C8]/20 pb-3 text-center text-[#2B4C6F] font-yearbook" style={{ ...fontYearbook, fontSize: '24px', letterSpacing: '0.04em' }}>
                             {part}
                         </h2>
-                        <ul className={`grid grid-cols-1 gap-4 min-[360px]:grid-cols-2 ${members.length === 4 ? '' : 'sm:grid-cols-3'}`}>
+                        <ul className="grid grid-cols-1 gap-4 min-[360px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
                             {members.map((name) => {
                                 const [firstName, ...lastName] = name.split(' ');
                                 const details = memberDetails[name];
                                 return (
-                                    <li key={name} className="vu-panel vu-member-card flex min-h-32 flex-col items-center justify-center border border-[#8FA8C8] bg-white px-3 py-7 text-center text-[#2B4C6F]">
+                                    <li key={name} className="vu-panel vu-member-card flex flex-col items-center justify-center border border-[#8FA8C8] px-3 py-7 text-center">
                                         <span className="vu-member-note" aria-hidden="true">♪</span>
-                                        <h3 style={{ ...fontYearbook, fontSize: 'clamp(20px, 2vw, 26px)', lineHeight: 1.2 }}>
+                                        <h3 style={{ ...fontYearbook, fontSize: 'clamp(18px, 1.6vw, 24px)', lineHeight: 1.2 }}>
                                             <span className="block">{firstName}</span>{' '}
                                             <span className="block">{lastName.join(' ')}</span>
                                         </h3>

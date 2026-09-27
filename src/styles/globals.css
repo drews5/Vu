@@ -306,9 +306,10 @@ body {
 }
 
 .vu-member-card {
+    height: 18rem;
     overflow: hidden;
-    background: #2e4c6d;
-    color: #fff;
+    background: #edf2f8;
+    color: #2b4c6f;
 }
 
 .vu-faq summary::-webkit-details-marker {
