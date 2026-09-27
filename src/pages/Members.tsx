@@ -5,6 +5,9 @@ import { motion } from 'motion/react';
 import { Seo, toAbsoluteUrl, type SeoSchema } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 import memberGroups from '../data/memberGroups.json';
+import savedMemberDetails from '../data/memberDetails.json';
+
+const memberDetails: Record<string, { major: string; year: string; officer?: string }> = savedMemberDetails;
 
 const members = memberGroups.flatMap(({ part, members }) => members.map((name) => ({ name, part })));
 
@@ -27,7 +30,7 @@ export function Members() {
             itemListElement: members.map(({ name, part }, index) => ({
                 '@type': 'ListItem',
                 position: index + 1,
-                item: { '@type': 'Person', name, jobTitle: part },
+                item: { '@type': 'Person', name, jobTitle: memberDetails[name]?.officer || part },
             })),
         },
     ];
@@ -63,13 +66,21 @@ export function Members() {
                         <ul className={`grid grid-cols-1 gap-4 min-[360px]:grid-cols-2 ${members.length === 4 ? '' : 'sm:grid-cols-3'}`}>
                             {members.map((name) => {
                                 const [firstName, ...lastName] = name.split(' ');
+                                const details = memberDetails[name];
                                 return (
-                                    <li key={name} className="vu-panel vu-member-card flex min-h-32 items-center justify-center border border-[#8FA8C8] bg-white px-3 py-7 text-center text-[#2B4C6F]">
+                                    <li key={name} className="vu-panel vu-member-card flex min-h-32 flex-col items-center justify-center border border-[#8FA8C8] bg-white px-3 py-7 text-center text-[#2B4C6F]">
                                         <span className="vu-member-note" aria-hidden="true">♪</span>
                                         <h3 style={{ ...fontYearbook, fontSize: 'clamp(20px, 2vw, 26px)', lineHeight: 1.2 }}>
                                             <span className="block">{firstName}</span>{' '}
                                             <span className="block">{lastName.join(' ')}</span>
                                         </h3>
+                                        {details && (
+                                            <div className="relative mt-3 w-full space-y-2 text-sm leading-snug" style={{ fontFamily: 'Inter, sans-serif' }}>
+                                                {details.officer && <p className="font-semibold">{details.officer}</p>}
+                                                <p>{details.major}</p>
+                                                <p>{details.year}</p>
+                                            </div>
+                                        )}
                                     </li>
                                 );
                             })}

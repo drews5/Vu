@@ -5,6 +5,7 @@ const siteUrl = 'https://www.vocalu.org';
 const buildDir = resolve('build');
 const baseHtml = await readFile(resolve(buildDir, 'index.html'), 'utf8');
 const memberGroups = JSON.parse(await readFile(resolve('src/data/memberGroups.json'), 'utf8'));
+const memberDetails = JSON.parse(await readFile(resolve('src/data/memberDetails.json'), 'utf8'));
 const siteContent = JSON.parse(await readFile(resolve('src/data/siteContent.json'), 'utf8'));
 
 function escapeHtml(value) {
@@ -47,7 +48,10 @@ const pages = [
     description: 'Meet the current singers of Vocal U, the University of Minnesota gender-inclusive a cappella group.',
     heading: 'Our members',
     content: memberGroups.map(({ part, members }) =>
-      `<section><h2>${escapeHtml(part)}</h2><ul>${members.map((name) => `<li>${escapeHtml(name)}</li>`).join('')}</ul></section>`
+      `<section><h2>${escapeHtml(part)}</h2><ul>${members.map((name) => {
+        const details = memberDetails[name];
+        return `<li><h3>${escapeHtml(name)}</h3>${details ? `${details.officer ? `<p>${escapeHtml(details.officer)}</p>` : ''}<p>${escapeHtml(details.major)}</p><p>${escapeHtml(details.year)}</p>` : ''}</li>`;
+      }).join('')}</ul></section>`
     ).join('\n'),
     schema: {
       '@context': 'https://schema.org',
@@ -57,7 +61,7 @@ const pages = [
         .map(({ name, part }, index) => ({
           '@type': 'ListItem',
           position: index + 1,
-          item: { '@type': 'Person', name, jobTitle: part },
+          item: { '@type': 'Person', name, jobTitle: memberDetails[name]?.officer || part },
         })),
     },
   },
