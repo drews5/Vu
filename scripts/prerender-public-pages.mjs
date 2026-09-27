@@ -50,7 +50,8 @@ const pages = [
     content: memberGroups.map(({ part, members }) =>
       `<section><h2>${escapeHtml(part)}</h2><ul>${members.map((name) => {
         const details = memberDetails[name];
-        return `<li><h3>${escapeHtml(name)}</h3>${details ? `${details.officer ? `<p>${escapeHtml(details.officer)}</p>` : ''}<p>${escapeHtml(details.major)}</p><p>${escapeHtml(details.year)}</p>` : ''}</li>`;
+        const label = details?.officer || details?.label;
+        return `<li><h3>${escapeHtml(name)}</h3>${details ? `${label ? `<p>${escapeHtml(label)}</p>` : ''}<p>${escapeHtml(details.major)}</p><p>${escapeHtml(details.year)}</p>` : ''}</li>`;
       }).join('')}</ul></section>`
     ).join('\n'),
     schema: {
@@ -61,7 +62,7 @@ const pages = [
         .map(({ name, part }, index) => ({
           '@type': 'ListItem',
           position: index + 1,
-          item: { '@type': 'Person', name, jobTitle: memberDetails[name]?.officer || part },
+          item: { '@type': 'Person', name, jobTitle: memberDetails[name]?.officer || memberDetails[name]?.label || part },
         })),
     },
   },

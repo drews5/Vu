@@ -3,6 +3,5 @@
   { "part": "Mezzos", "members": ["Sophia Lancaster", "Audrey Sternberg", "Holly Flood"] },
   { "part": "Altos", "members": ["Elise Clay", "Vivian Kahn", "Fiona Meaney"] },
   { "part": "Tenors", "members": ["Drew Scheid", "Gabriel Juenemann", "Alex Nault", "Dominic Geryol"] },
-  { "part": "Baritone/Basses", "members": ["Alex Buhl", "Logan Cox", "Hunter Farris", "Dominic Dennis"] },
-  { "part": "Vocal Percussion", "members": ["Ayden Chew"] }
+  { "part": "Baritone/Basses", "members": ["Alex Buhl", "Logan Cox", "Hunter Farris", "Dominic Dennis", "Ayden Chew"] }
 ]

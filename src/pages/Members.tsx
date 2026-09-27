@@ -7,7 +7,7 @@ import { fontYearbook } from '../styles/fonts';
 import memberGroups from '../data/memberGroups.json';
 import savedMemberDetails from '../data/memberDetails.json';
 
-const memberDetails: Record<string, { major: string; year: string; officer?: string }> = savedMemberDetails;
+const memberDetails: Record<string, { major: string; year: string; officer?: string; label?: string }> = savedMemberDetails;
 
 const members = memberGroups.flatMap(({ part, members }) => members.map((name) => ({ name, part })));
 
@@ -30,7 +30,7 @@ export function Members() {
             itemListElement: members.map(({ name, part }, index) => ({
                 '@type': 'ListItem',
                 position: index + 1,
-                item: { '@type': 'Person', name, jobTitle: memberDetails[name]?.officer || part },
+                item: { '@type': 'Person', name, jobTitle: memberDetails[name]?.officer || memberDetails[name]?.label || part },
             })),
         },
     ];
@@ -75,7 +75,7 @@ export function Members() {
                                         </h3>
                                         {details && (
                                             <div className="space-y-0.5 text-[11px] leading-tight" style={{ fontFamily: 'Inter, sans-serif' }}>
-                                                <p className="text-[#8FA8C8] tracking-wider mb-2">{details.officer || 'Member'}</p>
+                                                <p className="text-[#8FA8C8] tracking-wider mb-2">{details.officer || details.label || 'Member'}</p>
                                                 <p className="text-[#2B4C6F]/80">{details.major}</p>
                                                 <p className="text-[#2B4C6F]/50">{details.year}</p>
                                             </div>
