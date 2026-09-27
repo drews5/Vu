@@ -1,0 +1,18 @@
+# Vocal U A Cappella
+
+> Official website of Vocal U, a gender-inclusive a cappella group at the University of Minnesota in Minneapolis, Minnesota.
+
+Vocal U was founded in 2011. The group performs at university, charity, and community events in the Twin Cities.
+
+## Pages
+
+- [Home](https://www.vocalu.org/): Overview and current highlights.
+- [About](https://www.vocalu.org/about): Mission and repertoire.
+- [Members](https://www.vocalu.org/members): Current singers by vocal part.
+- [Events](https://www.vocalu.org/events): Current and past performances.
+- [Media](https://www.vocalu.org/media): Performances and social media.
+- [Auditions](https://www.vocalu.org/auditions): Current audition information.
+- [Contact](https://www.vocalu.org/contact): Booking and general inquiries.
+- [Support](https://www.vocalu.org/donate): Donation options.
+
+For current dates and roster details, use the linked pages. Contact: vocalu@umn.edu.
