@@ -21,7 +21,7 @@ type SeoProps = {
 export const siteConfig = {
   brandName: 'Vocal U',
   siteName: 'Vocal U A Cappella',
-  siteUrl: 'https://vocalu.org',
+  siteUrl: 'https://www.vocalu.org',
   defaultDescription:
     'Vocal U is a gender-inclusive a cappella group at the University of Minnesota performing throughout Minneapolis and the Twin Cities.',
   defaultKeywords: [

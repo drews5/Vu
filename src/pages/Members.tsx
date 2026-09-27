@@ -4,15 +4,8 @@ import { ExploreMore } from '../components/ExploreMore';
 import { motion } from 'motion/react';
 import { Seo, toAbsoluteUrl, type SeoSchema } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
+import memberGroups from '../data/memberGroups.json';
 
-const memberGroups = [
-    { part: 'Sopranos', members: ['Maddie Olsen', 'Freya Sanders', 'Erin Moore'] },
-    { part: 'Mezzos', members: ['Sophia Lancaster', 'Audrey Sternberg', 'Holly Flood'] },
-    { part: 'Altos', members: ['Elise Clay', 'Vivian Kahn', 'Fiona Meany'] },
-    { part: 'Tenors', members: ['Drew Scheid', 'Gabriel Juenemann', 'Alex Nault', 'Dominic Geryol'] },
-    { part: 'Baritone/Basses', members: ['Alex Buhl', 'Logan Cox', 'Hunter Farris', 'Dominic Dennis'] },
-    { part: 'Vocal Percussion', members: ['Ayden Chew'] },
-] as const;
 const members = memberGroups.flatMap(({ part, members }) => members.map((name) => ({ name, part })));
 
 export function Members() {

@@ -91,9 +91,6 @@ function buildUrlEntry(route) {
   return [
     '  <url>',
     `    <loc>${new URL(route.path, siteUrl).toString()}</loc>`,
-    `    <lastmod>${route.lastmod}</lastmod>`,
-    `    <changefreq>${route.changefreq}</changefreq>`,
-    `    <priority>${route.priority}</priority>`,
     '  </url>',
   ].join('\n');
 }

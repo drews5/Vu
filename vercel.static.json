@@ -34,6 +34,13 @@
     { "source": "/program/", "destination": "/program.pdf", "permanent": false }
   ],
   "rewrites": [
+    { "source": "/about", "destination": "/about/index.html" },
+    { "source": "/members", "destination": "/members/index.html" },
+    { "source": "/media", "destination": "/media/index.html" },
+    { "source": "/events", "destination": "/events/index.html" },
+    { "source": "/contact", "destination": "/contact/index.html" },
+    { "source": "/donate", "destination": "/donate/index.html" },
+    { "source": "/auditions", "destination": "/auditions/index.html" },
     { "source": "/events/showcase", "destination": "/events/showcase/index.html" },
     { "source": "/events/showcase/", "destination": "/events/showcase/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
