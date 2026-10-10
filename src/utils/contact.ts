@@ -10,7 +10,7 @@ export async function submitContactMessage(payload: {
 }): Promise<void> {
   const response = await fetchWithTimeout('https://formspree.io/f/xanygerw', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(payload),
   }, 12000);
 

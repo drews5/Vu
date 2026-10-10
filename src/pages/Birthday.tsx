@@ -49,6 +49,36 @@ function requestMessage(request: Request) {
   ].join('\n');
 }
 
+function BirthdayDecorations() {
+  return (
+    <div className="birthday-decorations" aria-hidden="true">
+      {['left', 'right'].map((side) => (
+        <svg key={side} className={`birthday-balloons birthday-balloons-${side}`} viewBox="0 0 180 300" fill="none">
+          <path d="M49 108c-19 55 61 83 38 152M111 80c29 50-38 92-20 180M142 134c-6 44-67 68-51 126" stroke="#7188a3" strokeWidth="1.5" />
+          <ellipse cx="43" cy="66" rx="34" ry="44" transform="rotate(-19 43 66)" fill="#91a8c6" />
+          <path d="m49 108-5 8 13-3" fill="#91a8c6" />
+          <path d="M24 42c-5 6-7 15-6 23" stroke="white" strokeWidth="3" strokeLinecap="round" opacity=".75" />
+          <ellipse cx="110" cy="44" rx="31" ry="40" transform="rotate(9 110 44)" fill="#2e4c6d" />
+          <path d="m110 81-6 8 12 1" fill="#2e4c6d" />
+          <path d="M97 20c-5 5-7 12-7 19" stroke="white" strokeWidth="3" strokeLinecap="round" opacity=".7" />
+          <ellipse cx="143" cy="100" rx="28" ry="37" transform="rotate(19 143 100)" fill="#cbd8e6" />
+          <path d="m142 134-7 6 11 4" fill="#cbd8e6" />
+          <path d="M133 78c-5 3-8 8-9 14" stroke="white" strokeWidth="3" strokeLinecap="round" />
+        </svg>
+      ))}
+      <svg className="birthday-confetti" viewBox="0 0 1120 430" fill="none" preserveAspectRatio="none">
+        <g strokeWidth="3" strokeLinecap="round">
+          <path d="m235 47 5 13m-41 214 12-5m730-186 8-10m-57 234 12 7" stroke="#91a8c6" />
+          <path d="M321 15c-8 10 11 12 3 22M807 25c13 1 3 18 16 19M147 352c12-10 13 12 24 2M983 360c-10-8-13 10-22 3" stroke="#2e4c6d" />
+          <path d="m180 71 6-10m540 268 8 5m-479 55 6-12m610-204 12 2" stroke="#d2ad67" />
+        </g>
+        <g fill="#91a8c6"><circle cx="284" cy="155" r="4" /><circle cx="1020" cy="61" r="4" /><circle cx="933" cy="243" r="4" /><circle cx="361" cy="352" r="3" /></g>
+        <g fill="#d2ad67"><path d="m704 15 7 5-5 7-7-5zm-483 171 7 5-5 7-7-5zm641 193 7 5-5 7-7-5z" /></g>
+      </svg>
+    </div>
+  );
+}
+
 export function Birthday() {
   const [request, setRequest] = useState<Request>(emptyRequest);
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
@@ -108,13 +138,12 @@ export function Birthday() {
       />
 
       <motion.section variants={childVariants} className="birthday-hero" aria-labelledby="birthday-heading">
+        <BirthdayDecorations />
         <div className="birthday-hero-copy">
-          <p className="birthday-eyebrow">Vocal U · Birthday songs</p>
-          <h1 id="birthday-heading" className="birthday-title"><span>Happy</span><span>Birthday.</span></h1>
+          <h1 id="birthday-heading" className="birthday-title"><span>Birthday songs</span><span>with Vocal U</span></h1>
           <p className="birthday-intro">{birthday.intro}</p>
-          <p className="birthday-prices">A video for $5. An in-person song for $50.</p>
           <div className="birthday-hero-actions">
-            <a href="#birthday-request" className="birthday-button">Make a request <ArrowRight size={18} aria-hidden="true" /></a>
+            <a href="#birthday-request" className="birthday-button">Request a birthday song <ArrowRight size={18} aria-hidden="true" /></a>
             <Link to="/media" className="birthday-link">Hear us sing <ArrowRight size={16} aria-hidden="true" /></Link>
           </div>
         </div>
@@ -129,9 +158,8 @@ export function Birthday() {
           <div role="status" className="birthday-success">
             <CheckCircle2 size={40} aria-hidden="true" />
             <p className="birthday-eyebrow">Request received</p>
-            <h2 ref={successHeading} tabIndex={-1}>Thanks for thinking of us!</h2>
-            <p>We've received your {submitted.package === 'live' ? 'in-person song' : 'birthday video'} request for {submitted.recipient}. We'll reply to <strong>{submitted.email}</strong> to confirm the details and payment.</p>
-            <p>Please wait for our email before paying. Your birthday song isn't booked yet.</p>
+            <h2 ref={successHeading} tabIndex={-1}>Thanks for your request!</h2>
+            <p>We've received your request for {submitted.recipient} and will reply to <strong>{submitted.email}</strong> to confirm the details.</p>
             <button type="button" className="birthday-button" onClick={() => { setRequest({ ...emptyRequest }); setStatus('idle'); window.requestAnimationFrame(() => recipientInput.current?.focus()); }}>Send another request <ArrowRight size={18} aria-hidden="true" /></button>
           </div>
         ) : (
@@ -151,14 +179,12 @@ export function Birthday() {
 
             <div className="birthday-request-grid">
               <div className="birthday-dedication">
-                <p className="birthday-eyebrow">Your birthday request</p>
-                <h2>{request.recipient.trim() ? <>For<br /><span>{request.recipient.trim()}.</span></> : <>Who's<br />it for?</>}</h2>
-                <p>Tell us about them. We'll reply by email to confirm the plan and sort out payment.</p>
+                <h2>{request.recipient.trim() ? <>A birthday song for <span>{request.recipient.trim()}</span></> : <>Who are we singing for?</>}</h2>
+                <p>Share their name, the date, and a few details about what you have in mind.</p>
                 <div className="birthday-summary" aria-live="polite">
                   <p>{selectedPackage.title} <span>${selectedPackage.price}</span></p>
                   <p>{live ? request.song : 'Happy Birthday'}</p>
                 </div>
-                <Link to="/contact" className="birthday-link">Other booking questions? <ArrowRight size={16} aria-hidden="true" /></Link>
               </div>
 
               <div className="birthday-form-sheet">
@@ -166,7 +192,7 @@ export function Birthday() {
                   <legend className="sr-only">Birthday song details</legend>
                   <div>
                     <label htmlFor="birthday-recipient">Birthday person's name</label>
-                    <input ref={recipientInput} id="birthday-recipient" value={request.recipient} onChange={(event) => update('recipient', event.target.value)} required pattern=".*\S.*" maxLength={100} autoComplete="off" placeholder="Who gets the song?" />
+                    <input ref={recipientInput} id="birthday-recipient" value={request.recipient} onChange={(event) => update('recipient', event.target.value)} required pattern=".*\S.*" maxLength={100} autoComplete="off" />
                   </div>
                   <div>
                     <label htmlFor="birthday-date">{live ? 'Requested date' : 'Video needed by'}</label>
@@ -174,7 +200,7 @@ export function Birthday() {
                   </div>
                   {live && <>
                     <div className="birthday-field-full">
-                      <label htmlFor="birthday-song">What are we singing?</label>
+                      <label htmlFor="birthday-song">Song</label>
                       <select id="birthday-song" value={request.song} onChange={(event) => update('song', event.target.value)}><option>Happy Birthday</option><option>Birthday Sex</option></select>
                     </div>
                     <div>
@@ -200,10 +226,11 @@ export function Birthday() {
                   </div>
                 </fieldset>
                 <div className="birthday-form-footer">
-                  <p id="birthday-confirmation">We'll confirm the date and details by email before you're booked. Please wait for our reply before sending Venmo payment.</p>
+                  <p id="birthday-confirmation">We'll email you to confirm availability and arrange payment.</p>
                   <button type="submit" disabled={sending} className="birthday-button">{sending ? 'Sending your request...' : 'Send birthday request'} <ArrowRight size={18} aria-hidden="true" /></button>
                 </div>
                 {status === 'error' && <div role="alert" className="birthday-error">We couldn't send your request. Your details are still here. Please try again or <a href={fallbackEmail}>email this request to {contactEmail}</a>.</div>}
+                <p className="birthday-contact">Have another booking question? <a href={`mailto:${contactEmail}`}>Email us at {contactEmail}</a>.</p>
               </div>
             </div>
           </form>
