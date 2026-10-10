@@ -1,23 +1,24 @@
 {
   "heading": "Birthday songs",
+  "headline": "Happy Birthday.",
   "description": "Celebrate with Vocal U. Request a personalized birthday video for $5 or an in-person birthday song for $50 from the University of Minnesota a cappella group.",
-  "intro": "Have us sing for someone on their birthday! Send a personalized video or bring Vocal U to the celebration in person.",
+  "intro": "Know someone with a birthday coming up? We'll sing for them.",
   "packages": [
     {
       "id": "video",
       "title": "Birthday video",
       "price": 5,
-      "description": "A personalized Happy Birthday video from Vocal U, recorded for your birthday person.",
-      "details": "Tell us their name and when you need it. We'll coordinate delivery with you by email.",
-      "action": "Choose a video"
+      "description": "We'll record Happy Birthday with their name in it. You get to send it.",
+      "details": "Tell us when you need it. We'll arrange delivery with you by email.",
+      "action": "Send a video"
     },
     {
       "id": "live",
       "title": "In-person song",
       "price": 50,
-      "description": "Have us sing Happy Birthday or Birthday Sex in person. You choose the song; we'll bring the harmonies.",
-      "details": "Send us your preferred day, time, and location. We'll confirm what works with our group.",
-      "action": "Choose in person"
+      "description": "Happy Birthday or Birthday Sex, sung live. Your call. Tell us the time and place.",
+      "details": "We'll confirm the date and location before you pay.",
+      "action": "Bring us in person"
     }
   ]
 }
