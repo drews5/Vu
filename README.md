@@ -63,4 +63,7 @@ your account.
 The member roster lives in `src/data/memberGroups.json`. Events come from Supabase. Local images in `src/assets` are used when an event has a matching optimized asset.
 
 Static page metadata lives in each page's `Seo` component. The canonical production origin is `https://www.vocalu.org`.
+
+The birthday grams page is copied from `drews5/vocalu` into `public/birthday.html`, with its configuration and Yearbook font alongside it. Both `/birthday` and `/birthdays` serve that page through the Vercel rewrites. Set the verified booking email and Venmo handle in `public/birthday-config.js` before opening bookings.
+
 `npm run build` also prepares readable initial HTML for the main public routes. Keep the page summaries in `scripts/prerender-public-pages.mjs` aligned with visible site copy when these pages change.
