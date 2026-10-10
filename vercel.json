@@ -34,6 +34,10 @@
     { "source": "/program/", "destination": "/program.pdf", "permanent": false }
   ],
   "rewrites": [
+    { "source": "/birthday", "destination": "/birthday.html" },
+    { "source": "/birthdays", "destination": "/birthday.html" },
+    { "source": "/birthday/", "destination": "/birthday.html" },
+    { "source": "/birthdays/", "destination": "/birthday.html" },
     { "source": "/about", "destination": "/about/index.html" },
     { "source": "/members", "destination": "/members/index.html" },
     { "source": "/media", "destination": "/media/index.html" },
