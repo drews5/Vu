@@ -1,1 +1,0 @@
-import{a as o}from"./network-BaEiGJ1S.js";const e="vocalu@umn.edu";async function n(s){const t=await o("https://formspree.io/f/xanygerw",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(s)},12e3);if(!t.ok)throw new Error(`Contact submission failed with status ${t.status}.`)}export{e as c,n as s};
