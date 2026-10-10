@@ -6,7 +6,7 @@ import { PageTransition, childVariants } from '../components/PageTransition';
 import { ExploreMore } from '../components/ExploreMore';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
-import { fetchWithTimeout } from '../utils/network';
+import { contactEmail, submitContactMessage } from '../utils/contact';
 import siteContent from '../data/siteContent.json';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
@@ -32,18 +32,10 @@ export function Contact() {
             e.preventDefault();
             setStatus('sending');
             try {
-                const response = await fetchWithTimeout('https://formspree.io/f/xanygerw', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData),
-                }, 12000);
-                if (response.ok) {
-                    setStatus('success');
-                    setFormData({ name: '', email: '', subject: '', message: '' });
-                    setTimeout(() => setStatus(''), 3000);
-                } else {
-                    setStatus('error');
-                }
+                await submitContactMessage(formData);
+                setStatus('success');
+                setFormData({ name: '', email: '', subject: '', message: '' });
+                setTimeout(() => setStatus(''), 3000);
             } catch {
                 setStatus('error');
             }
@@ -79,7 +71,7 @@ export function Contact() {
                     },
                     mainEntity: {
                         '@type': 'ContactPoint',
-                        email: 'mailto:vocalu@umn.edu',
+                        email: `mailto:${contactEmail}`,
                         contactType: 'bookings and general inquiries',
                         availableLanguage: 'English',
                     },
@@ -159,8 +151,8 @@ export function Contact() {
                                     <h3 className="text-[#2B4C6F] mb-1" style={{ ...fontInter, fontSize: '17px', fontWeight: '600' }}>
                                         Email
                                     </h3>
-                                    <a href="mailto:vocalu@umn.edu" className="text-[#2B4C6F]/80 underline underline-offset-4 hover:text-[#2B4C6F]" style={{ ...fontInter, fontSize: '16px' }}>
-                                        vocalu@umn.edu
+                                    <a href={`mailto:${contactEmail}`} className="text-[#2B4C6F]/80 underline underline-offset-4 hover:text-[#2B4C6F]" style={{ ...fontInter, fontSize: '16px' }}>
+                                        {contactEmail}
                                     </a>
                                 </div>
                             </div>
@@ -217,9 +209,12 @@ export function Contact() {
                     <h2 id="booking-heading" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 40px)' }}>{siteContent.booking.heading}</h2>
                     <p className="mt-4 leading-relaxed" style={{ ...fontInter, fontSize: '17px' }}>{siteContent.booking.description}</p>
                     <p className="mt-3 leading-relaxed" style={{ ...fontInter, fontSize: '16px' }}>{siteContent.booking.details}</p>
-                    <a href="mailto:vocalu@umn.edu?subject=Booking%20Vocal%20U" className="mt-6 inline-block rounded-xl bg-white px-6 py-3 text-[#2B4C6F] transition-colors hover:bg-[#EDF2F8] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white" style={{ ...fontYearbook, fontSize: '18px' }}>
+                    <a href={`mailto:${contactEmail}?subject=Booking%20Vocal%20U`} className="mt-6 inline-block rounded-xl bg-white px-6 py-3 text-[#2B4C6F] transition-colors hover:bg-[#EDF2F8] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white" style={{ ...fontYearbook, fontSize: '18px' }}>
                         Email Us <span aria-hidden="true">→</span>
                     </a>
+                    <p className="mt-6 leading-7">
+                        Celebrating a birthday? <Link to="/birthday" className="font-semibold underline underline-offset-4">Request a birthday video or an in-person song.</Link>
+                    </p>
                 </div>
             </motion.section>
             <ExploreMore currentPath="/contact" className="mt-20" />

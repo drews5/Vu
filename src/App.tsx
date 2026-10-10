@@ -14,6 +14,7 @@ const About = lazy(() => import('./pages/About').then(m => ({ default: m.About }
 const Members = lazy(() => import('./pages/Members').then(m => ({ default: m.Members })));
 const Media = lazy(() => import('./pages/Media').then(m => ({ default: m.Media })));
 const Donate = lazy(() => import('./pages/Donate').then(m => ({ default: m.Donate })));
+const Birthday = lazy(() => import('./pages/Birthday').then(m => ({ default: m.Birthday })));
 const Events = lazy(() => import('./pages/Events').then(m => ({ default: m.Events })));
 const EventDetail = lazy(() => import('./pages/EventDetail').then(m => ({ default: m.EventDetail })));
 const SpringShowcase = lazy(() => import('./pages/SpringShowcase').then(m => ({ default: m.SpringShowcase })));
@@ -89,6 +90,8 @@ function AppContent() {
                 <Route path="/members" element={<Members />} />
                 <Route path="/media" element={<Media />} />
                 <Route path="/donate" element={<Donate />} />
+                <Route path="/birthday" element={<Birthday />} />
+                <Route path="/birthdays" element={<Navigate to="/birthday" replace />} />
                 <Route path="/events/showcase" element={<SpringShowcase />} />
                 <Route path="/events" element={<Events />} />
                 <Route path="/event/spring-showcase-2026" element={<Navigate to={springShowcasePath} replace />} />

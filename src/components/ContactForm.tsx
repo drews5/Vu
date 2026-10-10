@@ -2,7 +2,7 @@ import { useState, useCallback, memo } from 'react';
 import { Mail, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { fontYearbook } from '../styles/fonts';
-import { fetchWithTimeout } from '../utils/network';
+import { contactEmail, submitContactMessage } from '../utils/contact';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 const ContactInfo = memo(function ContactInfo() {
@@ -21,8 +21,8 @@ const ContactInfo = memo(function ContactInfo() {
               <h4 className="text-[#2B4C6F] mb-1" style={{ ...fontInter, fontSize: '16px', fontWeight: '600' }}>
                 Email
               </h4>
-              <a href="mailto:vocalu@umn.edu" className="text-[#8FA8C8] hover:text-[#2B4C6F] hover:underline underline-offset-2 transition-all duration-300" style={{ ...fontInter, fontSize: '15px' }}>
-                vocalu@umn.edu
+              <a href={`mailto:${contactEmail}`} className="text-[#8FA8C8] hover:text-[#2B4C6F] hover:underline underline-offset-2 transition-all duration-300" style={{ ...fontInter, fontSize: '15px' }}>
+                {contactEmail}
               </a>
             </div>
           </div>
@@ -64,18 +64,10 @@ export function ContactForm() {
       e.preventDefault();
       setStatus('sending');
       try {
-        const response = await fetchWithTimeout('https://formspree.io/f/xanygerw', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        }, 12000);
-        if (response.ok) {
-          setStatus('success');
-          setFormData({ name: '', email: '', message: '' });
-          setTimeout(() => setStatus(''), 3000);
-        } else {
-          setStatus('error');
-        }
+        await submitContactMessage(formData);
+        setStatus('success');
+        setFormData({ name: '', email: '', message: '' });
+        setTimeout(() => setStatus(''), 3000);
       } catch {
         setStatus('error');
       }

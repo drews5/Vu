@@ -27,14 +27,15 @@
     }
   ],
   "redirects": [
+    { "source": "/birthdays", "destination": "/birthday", "permanent": true },
+    { "source": "/birthdays/", "destination": "/birthday", "permanent": true },
+    { "source": "/birthday.html", "destination": "/birthday", "permanent": true },
     { "source": "/program", "destination": "/program.pdf", "permanent": false },
     { "source": "/program/", "destination": "/program.pdf", "permanent": false }
   ],
   "rewrites": [
-    { "source": "/birthday", "destination": "/birthday.html" },
-    { "source": "/birthdays", "destination": "/birthday.html" },
-    { "source": "/birthday/", "destination": "/birthday.html" },
-    { "source": "/birthdays/", "destination": "/birthday.html" },
+    { "source": "/birthday", "destination": "/birthday/index.html" },
+    { "source": "/birthday/", "destination": "/birthday/index.html" },
     { "source": "/about", "destination": "/about/index.html" },
     { "source": "/members", "destination": "/members/index.html" },
     { "source": "/media", "destination": "/media/index.html" },

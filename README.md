@@ -64,6 +64,6 @@ The member roster lives in `src/data/memberGroups.json`. Events come from Supaba
 
 Static page metadata lives in each page's `Seo` component. The canonical production origin is `https://www.vocalu.org`.
 
-The birthday grams page is copied from `drews5/vocalu` into `public/birthday.html`, with its configuration and Yearbook font alongside it. Both `/birthday` and `/birthdays` serve that page through the Vercel rewrites. Set the verified booking email and Venmo handle in `public/birthday-config.js` before opening bookings.
+Birthday songs live in the native React page at `src/pages/Birthday.tsx`, with offer copy in `src/data/birthday.json`. It shares the site navigation, fonts, transitions, and contact submission service. Requests use the existing Formspree endpoint and require an email reply from Vocal U to confirm availability and payment. `/birthdays` and the former `/birthday.html` address redirect to `/birthday`.
 
 `npm run build` also prepares readable initial HTML for the main public routes. Keep the page summaries in `scripts/prerender-public-pages.mjs` aligned with visible site copy when these pages change.

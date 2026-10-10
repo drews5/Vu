@@ -23,6 +23,7 @@ const navItems = [
       { name: 'Our Members', path: '/members' },
       { name: 'Media', path: '/media' },
       { name: 'Donate', path: '/donate' },
+      { name: 'Birthday Songs', path: '/birthday' },
       { name: 'Auditions', path: '/auditions' },
     ],
   },
@@ -129,6 +130,7 @@ export function Header() {
     location.pathname === '/members' ||
     location.pathname === '/media' ||
     location.pathname === '/donate' ||
+    location.pathname === '/birthday' ||
     location.pathname === '/auditions';
   const isSolid = isScrolled || isHomeHeroContained || location.pathname !== '/';
   const currentPage = navItems.find((item) => location.pathname === item.path)?.name || (isAboutActive ? 'About' : 'Menu');

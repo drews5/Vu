@@ -7,6 +7,7 @@ const baseHtml = await readFile(resolve(buildDir, 'index.html'), 'utf8');
 const memberGroups = JSON.parse(await readFile(resolve('src/data/memberGroups.json'), 'utf8'));
 const memberDetails = JSON.parse(await readFile(resolve('src/data/memberDetails.json'), 'utf8'));
 const siteContent = JSON.parse(await readFile(resolve('src/data/siteContent.json'), 'utf8'));
+const birthday = JSON.parse(await readFile(resolve('src/data/birthday.json'), 'utf8'));
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({
@@ -24,6 +25,13 @@ const faqHtml = `<section><h2>FAQs</h2>${siteContent.faqs.map(({ question, answe
 const bookingHtml = `<section id="booking"><h2>${escapeHtml(siteContent.booking.heading)}</h2><p>${escapeHtml(siteContent.booking.description)}</p><p>${escapeHtml(siteContent.booking.details)}</p><p>${link('mailto:vocalu@umn.edu?subject=Booking%20Vocal%20U', 'Email Us')}</p></section>`;
 
 const pages = [
+  {
+    path: '/birthday',
+    title: 'Birthday songs | Vocal U',
+    description: birthday.description,
+    heading: birthday.heading,
+    content: `<p>${escapeHtml(birthday.intro)}</p>${birthday.packages.map((option) => `<section><h2>${escapeHtml(option.title)} — $${option.price}</h2><p>${escapeHtml(option.description)}</p><p>${escapeHtml(option.details)}</p></section>`).join('')}<h2>Request a birthday song</h2><p>Tell us who we are singing for and when. We will confirm availability, delivery or location, and payment details by email. Please wait for confirmation before paying.</p><p>${link('mailto:vocalu@umn.edu', 'vocalu@umn.edu')} · ${link('/contact', 'Contact Vocal U')}</p>`,
+  },
   {
     path: '/',
     title: 'Vocal U A Cappella | University of Minnesota A Cappella Group',

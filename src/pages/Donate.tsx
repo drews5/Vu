@@ -5,6 +5,7 @@ import { Heart, Star } from 'lucide-react';
 import logoImage from '../assets/d4630c01b543cc75980f0b293230859d29654fbb.png';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
+import { Link } from 'react-router-dom';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 export function Donate() {
@@ -124,6 +125,9 @@ export function Donate() {
                                     <p className="text-[#2B4C6F]/70 text-sm leading-relaxed">
                                         Have us perform at your next event! We love collaborating with other groups and performing for the community.
                                     </p>
+                                    <Link to="/birthday" className="mt-3 inline-block text-sm font-semibold text-[#2B4C6F] underline underline-offset-4">
+                                        Celebrate with a birthday song →
+                                    </Link>
                                 </div>
                             </div>
                         </div>
