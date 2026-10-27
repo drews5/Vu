@@ -5,7 +5,7 @@ import heroBackgroundLarge from '../assets/hero-2400.webp';
 import groupPhoto from '../assets/group-photo.webp';
 
 import { Link } from 'react-router-dom';
-import { Calendar, MapPin, ChevronDown, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
+import { Instagram, Calendar, MapPin, ChevronDown, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
@@ -456,7 +456,7 @@ export function Home() {
                 className="pointer-events-auto rounded-[16px]"
               >
                 <a
-                  href="https://youtube.com/@vocal-u"
+                  href="https://www.instagram.com/vocal_u/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group relative block overflow-hidden border border-white/80 bg-white/95 px-6 md:px-12 py-2.5 md:py-4 text-center text-[#2B4C6F] transition-all duration-300 hover:border-[#8FA8C8] hover:bg-[#8FA8C8] hover:text-white whitespace-nowrap"
@@ -468,7 +468,8 @@ export function Home() {
                   }}
                 >
                   <span className="relative flex items-center justify-center gap-2">
-                    VISIT OUR YOUTUBE
+                    <Instagram className="h-5 w-5 shrink-0" aria-hidden="true" />
+                    VISIT OUR INSTAGRAM
                   </span>
                 </a>
               </motion.div>
