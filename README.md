@@ -64,6 +64,12 @@ The member roster lives in `src/data/memberGroups.json`. Events come from Supaba
 
 Static page metadata lives in each page's `Seo` component. The canonical production origin is `https://www.vocalu.org`.
 
-Birthday songs live in the native React page at `src/pages/Birthday.tsx`, with offer copy in `src/data/birthday.json`. It shares the site fonts, navigation shell, and transitions. The page is unlisted: open `/birthday` directly. It is excluded from menus, page promotions, the sitemap, and public page listings, and carries `noindex` metadata in both initial HTML and React. Requests open a prefilled email and require a reply from Vocal U to confirm availability and payment. `/birthdays` and the former `/birthday.html` address redirect to `/birthday`.
+Birthday songs live in the native React page at `src/pages/Birthday.tsx`, with offer copy in `src/data/birthday.json`. It shares the site fonts, navigation shell, and transitions. The page is unlisted: open `/birthday` directly. It is excluded from menus, page promotions, the sitemap, and public page listings, and carries `noindex` metadata in both initial HTML and React. Requests submit through FormSubmit on the site and require a reply from Vocal U to confirm availability and payment. `/birthdays` and the former `/birthday.html` address redirect to `/birthday`.
 
 `npm run build` also prepares readable initial HTML for the main public routes. Keep the page summaries in `scripts/prerender-public-pages.mjs` aligned with visible site copy when these pages change.
+
+## Contact and birthday forms
+
+The homepage contact form, contact page, and birthday request form share `submitContactMessage` in `src/utils/contact.ts`. They POST JSON to `https://formsubmit.co/ajax/vocalu@umn.edu` and show success only when both the HTTP response and FormSubmit success flag confirm acceptance. Sender email is included as Reply-To. Failed submissions preserve the visitor's inputs.
+
+FormSubmit may send an activation link to `vocalu@umn.edu` on first submission. Confirm that email to enable delivery. TypeScript, production build, and mocked submission checks do not prove inbox delivery or activation.

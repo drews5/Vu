@@ -30,21 +30,22 @@ export function Contact() {
     const handleSubmit = useCallback(
         async (e: React.FormEvent) => {
             e.preventDefault();
+            if (status === 'sending') return;
             setStatus('sending');
             try {
                 await submitContactMessage(formData);
                 setStatus('success');
                 setFormData({ name: '', email: '', subject: '', message: '' });
-                setTimeout(() => setStatus(''), 3000);
             } catch {
                 setStatus('error');
             }
         },
-        [formData]
+        [formData, status]
     );
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+        setStatus('');
     }, []);
     const inputClass =
         'w-full px-4 py-3 border-2 border-[#A3B8D3] focus:border-[#8FA8C8] focus:outline-none transition-colors';
@@ -96,45 +97,47 @@ export function Contact() {
                     <h2 className="text-[#2B4C6F] mb-6 font-yearbook" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 36px)' }}>
                         Send us a message
                     </h2>
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div>
-                            <label htmlFor="contact-name" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
-                                Name
-                            </label>
-                            <input type="text" id="contact-name" name="name" value={formData.name} onChange={handleChange} required maxLength={100} autoComplete="name" className={inputClass} style={inputStyle} />
-                        </div>
-                        <div>
-                            <label htmlFor="contact-email" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
-                                Email
-                            </label>
-                            <input type="email" id="contact-email" name="email" value={formData.email} onChange={handleChange} required maxLength={254} autoComplete="email" className={inputClass} style={inputStyle} />
-                        </div>
-                        <div>
-                            <label htmlFor="contact-subject" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
-                                Subject
-                            </label>
-                            <input type="text" id="contact-subject" name="subject" value={formData.subject} onChange={handleChange} required maxLength={150} className={inputClass} style={inputStyle} />
-                        </div>
-                        <div>
-                            <label htmlFor="contact-message" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
-                                Message
-                            </label>
-                            <textarea id="contact-message" name="message" value={formData.message} onChange={handleChange} required maxLength={5000} rows={5} className={`${inputClass} resize-none`} style={inputStyle} />
-                        </div>
-                        <motion.button type="submit" disabled={status === 'sending'} whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }} className="w-full bg-[#8FA8C8] text-white px-8 py-4 hover:bg-[#2B4C6F] transition-all duration-200 disabled:opacity-50 cursor-pointer font-yearbook" style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.03em', borderRadius: '14px', }}>
-                            {status === 'sending' ? 'Sending...' : 'Send Message'}
-                        </motion.button>
-                        {status === 'success' && (
-                            <p className="text-green-600 text-center" style={fontInter}>
-                                Thank you! Your message has been sent.
-                            </p>
-                        )}
-                        {status === 'error' && (
-                            <p className="text-red-600 text-center" style={fontInter}>
-                                Oops! Something went wrong. Please try again.
-                            </p>
-                        )}
-                    </form>
+                    <form id="contact-form" onSubmit={handleSubmit} aria-busy={status === 'sending'} className="scroll-mt-32 space-y-6">
+                        <fieldset disabled={status === 'sending'} className="m-0 min-w-0 space-y-6 border-0 p-0 disabled:opacity-65">
+                          <div>
+                              <label htmlFor="contact-name" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
+                                  Name
+                              </label>
+                              <input type="text" id="contact-name" name="name" value={formData.name} onChange={handleChange} required maxLength={100} autoComplete="name" className={inputClass} style={inputStyle} />
+                          </div>
+                          <div>
+                              <label htmlFor="contact-email" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
+                                  Email
+                              </label>
+                              <input type="email" id="contact-email" name="email" value={formData.email} onChange={handleChange} required maxLength={254} autoComplete="email" className={inputClass} style={inputStyle} />
+                          </div>
+                          <div>
+                              <label htmlFor="contact-subject" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
+                                  Subject
+                              </label>
+                              <input type="text" id="contact-subject" name="subject" value={formData.subject} onChange={handleChange} required maxLength={150} className={inputClass} style={inputStyle} />
+                          </div>
+                          <div>
+                              <label htmlFor="contact-message" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
+                                  Message
+                              </label>
+                              <textarea id="contact-message" name="message" value={formData.message} onChange={handleChange} required maxLength={5000} rows={5} className={`${inputClass} resize-none`} style={inputStyle} />
+                          </div>
+                          <motion.button type="submit" disabled={status === 'sending'} whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }} className="w-full bg-[#8FA8C8] text-white px-8 py-4 hover:bg-[#2B4C6F] transition-all duration-200 disabled:opacity-50 cursor-pointer font-yearbook" style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.03em', borderRadius: '14px', }}>
+                              {status === 'sending' ? 'Sending...' : 'Send Message'}
+                          </motion.button>
+                          {status === 'success' && (
+                              <p role="status" className="text-green-600 text-center" style={fontInter}>
+                                  Thank you! Your message has been sent.
+                              </p>
+                          )}
+                          {status === 'error' && (
+                              <p role="alert" className="text-red-600 text-center" style={fontInter}>
+                                  We couldn't send your message. Your details are still here. Please try again.
+                              </p>
+                          )}
+                        </fieldset>
+                      </form>
                 </motion.div>
                 {/* Contact Info */}
                 <div className="space-y-6">
@@ -209,8 +212,8 @@ export function Contact() {
                     <h2 id="booking-heading" style={{ ...fontYearbook, fontSize: 'clamp(28px, 5vw, 40px)' }}>{siteContent.booking.heading}</h2>
                     <p className="mt-4 leading-relaxed" style={{ ...fontInter, fontSize: '17px' }}>{siteContent.booking.description}</p>
                     <p className="mt-3 leading-relaxed" style={{ ...fontInter, fontSize: '16px' }}>{siteContent.booking.details}</p>
-                    <a href={`mailto:${contactEmail}?subject=Booking%20Vocal%20U`} className="mt-6 inline-block rounded-xl bg-white px-6 py-3 text-[#2B4C6F] transition-colors hover:bg-[#EDF2F8] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white" style={{ ...fontYearbook, fontSize: '18px' }}>
-                        Email Us
+                    <a href="#contact-form" className="mt-6 inline-block rounded-xl bg-white px-6 py-3 text-[#2B4C6F] transition-colors hover:bg-[#EDF2F8] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white" style={{ ...fontYearbook, fontSize: '18px' }}>
+                        Send a booking request
                     </a>
                 </div>
             </motion.section>

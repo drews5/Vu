@@ -1,11 +1,11 @@
-import { useRef, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { motion } from 'motion/react';
-import { Copy, Mail } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { Seo } from '../components/Seo';
-import { contactEmail } from '../utils/contact';
-import { birthdayEmailDraft, birthdayRequestText, type BirthdayRequest } from '../utils/birthdayRequest';
+import { contactEmail, submitContactMessage } from '../utils/contact';
+import { birthdayRequestSubject, birthdayRequestText, type BirthdayRequest } from '../utils/birthdayRequest';
 import birthday from '../data/birthday.json';
 import groupPhoto from '../assets/winter-showcase.webp';
 import '../styles/birthday.css';
@@ -35,14 +35,13 @@ function BirthdayConfetti() {
 
 export function Birthday() {
   const [request, setRequest] = useState<BirthdayRequest>({ ...emptyRequest });
-  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'manual'>('idle');
-  const manualCopy = useRef<HTMLTextAreaElement>(null);
+  const [requester, setRequester] = useState({ name: '', email: '' });
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const live = request.package === 'live';
-  const emailDraft = birthdayEmailDraft(request);
 
   function update(field: keyof BirthdayRequest, value: string) {
     setRequest((previous) => ({ ...previous, [field]: value }));
-    setCopyStatus('idle');
+    setStatus('idle');
   }
 
   function selectPackage(value: BirthdayRequest['package']) {
@@ -50,24 +49,24 @@ export function Birthday() {
       ...previous, package: value,
       ...(value === 'video' ? { song: 'Happy Birthday', plans: '' } : {}),
     }));
-    setCopyStatus('idle');
+    setStatus('idle');
   }
 
-  function openEmail(event: FormEvent<HTMLFormElement>) {
+  async function sendRequest(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    window.location.href = emailDraft;
-  }
-
-  async function copyRequest() {
+    if (status === 'sending') return;
+    setStatus('sending');
     try {
-      await navigator.clipboard.writeText(birthdayRequestText(request));
-      setCopyStatus('copied');
-    } catch {
-      setCopyStatus('manual');
-      window.requestAnimationFrame(() => {
-        manualCopy.current?.focus();
-        manualCopy.current?.select();
+      await submitContactMessage({
+        ...requester,
+        subject: birthdayRequestSubject(request),
+        message: birthdayRequestText(request),
       });
+      setStatus('success');
+      setRequest({ ...emptyRequest });
+      setRequester({ name: '', email: '' });
+    } catch {
+      setStatus('error');
     }
   }
 
@@ -99,69 +98,72 @@ export function Birthday() {
       </motion.section>
 
       <motion.section variants={childVariants} id="birthday-request" className="birthday-request" aria-labelledby="birthday-request-heading">
-        <form onSubmit={openEmail} aria-label="Birthday song request">
-          <fieldset className="birthday-options">
-            <legend>Video or in person?</legend>
-            <div className="birthday-choice-list">
-              {birthday.packages.map((option) => (
-                <label key={option.id} className="birthday-choice" data-selected={request.package === option.id}>
-                  <input type="radio" name="birthday-package" value={option.id} checked={request.package === option.id} onChange={() => selectPackage(option.id as BirthdayRequest['package'])} />
-                  <span className="birthday-choice-copy"><span className="birthday-choice-title">{option.title}</span><span className="birthday-choice-description">{option.description}</span></span>
-                  <span className="birthday-choice-price">${option.price}</span>
-                </label>
-              ))}
+        <form onSubmit={sendRequest} aria-label="Birthday song request" aria-busy={status === 'sending'}>
+          <fieldset disabled={status === 'sending'} className="birthday-form-fields">
+            <fieldset className="birthday-options">
+              <legend>Video or in person?</legend>
+              <div className="birthday-choice-list">
+                {birthday.packages.map((option) => (
+                  <label key={option.id} className="birthday-choice" data-selected={request.package === option.id}>
+                    <input type="radio" name="birthday-package" value={option.id} checked={request.package === option.id} onChange={() => selectPackage(option.id as BirthdayRequest['package'])} />
+                    <span className="birthday-choice-copy"><span className="birthday-choice-title">{option.title}</span><span className="birthday-choice-description">{option.description}</span></span>
+                    <span className="birthday-choice-price">${option.price}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            <div className="birthday-request-grid">
+              <div className="birthday-dedication">
+                <h2 id="birthday-request-heading">Request a birthday song</h2>
+                <p>Tell us who we're singing for and when.</p>
+              </div>
+              <div className="birthday-form-sheet">
+                <div className="birthday-fields">
+                  <div>
+                    <label htmlFor="birthday-name">Your name</label>
+                    <input id="birthday-name" name="name" value={requester.name} onChange={(event) => { setRequester((previous) => ({ ...previous, name: event.target.value })); setStatus('idle'); }} required pattern=".*\S.*" maxLength={100} autoComplete="name" />
+                  </div>
+                  <div>
+                    <label htmlFor="birthday-email">Your email</label>
+                    <input id="birthday-email" name="email" type="email" value={requester.email} onChange={(event) => { setRequester((previous) => ({ ...previous, email: event.target.value })); setStatus('idle'); }} required maxLength={254} autoComplete="email" />
+                  </div>
+                  <div>
+                    <label htmlFor="birthday-recipient">Birthday person's name</label>
+                    <input id="birthday-recipient" value={request.recipient} onChange={(event) => update('recipient', event.target.value)} required pattern=".*\S.*" maxLength={100} autoComplete="off" />
+                  </div>
+                  <div>
+                    <label htmlFor="birthday-date">{live ? 'What day?' : 'Video needed by'}</label>
+                    <input id="birthday-date" type="date" value={request.date} min={localToday()} onChange={(event) => update('date', event.target.value)} required />
+                  </div>
+                  {live && <>
+                    <fieldset className="birthday-song-options birthday-field-full">
+                      <legend>Song</legend>
+                      <div className="birthday-song-list">
+                        {['Happy Birthday', 'Birthday Sex'].map((song) => (
+                          <label key={song}><input type="radio" name="birthday-song" value={song} checked={request.song === song} onChange={() => update('song', song)} /><span>{song}</span></label>
+                        ))}
+                      </div>
+                    </fieldset>
+                    <div className="birthday-field-full">
+                      <label htmlFor="birthday-plans">Where and about what time? <span>(optional)</span></label>
+                      <input id="birthday-plans" value={request.plans} onChange={(event) => update('plans', event.target.value)} maxLength={500} placeholder="e.g. your dorm lounge, around 7 pm" />
+                    </div>
+                  </>}
+                  <div className="birthday-field-full">
+                    <label htmlFor="birthday-notes">Anything else? <span>(optional)</span></label>
+                    <textarea id="birthday-notes" value={request.notes} onChange={(event) => update('notes', event.target.value)} maxLength={1200} rows={3} placeholder="How to say their name or a message you'd like us to include" />
+                  </div>
+                </div>
+                <div className="birthday-form-footer">
+                  <p id="birthday-submit-help">We'll reply by email to confirm the details and send our Venmo.</p>
+                  <button type="submit" className="birthday-button" disabled={status === 'sending'} aria-describedby="birthday-submit-help"><Mail size={18} aria-hidden="true" /> {status === 'sending' ? 'Sending…' : 'Send birthday request'}</button>
+                  {status === 'success' && <p role="status">Your request has been sent. We'll reply to confirm availability and payment.</p>}
+                  {status === 'error' && <p role="alert">We couldn't send your request. Your details are still here. Try again or email <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.</p>}
+                </div>
+              </div>
             </div>
           </fieldset>
-
-          <div className="birthday-request-grid">
-            <div className="birthday-dedication">
-              <h2 id="birthday-request-heading">Request a birthday song</h2>
-              <p>Tell us who we're singing for and when.</p>
-            </div>
-            <div className="birthday-form-sheet">
-              <div className="birthday-fields">
-                <div>
-                  <label htmlFor="birthday-recipient">Birthday person's name</label>
-                  <input id="birthday-recipient" value={request.recipient} onChange={(event) => update('recipient', event.target.value)} required pattern=".*\S.*" maxLength={100} autoComplete="off" />
-                </div>
-                <div>
-                  <label htmlFor="birthday-date">{live ? 'What day?' : 'Video needed by'}</label>
-                  <input id="birthday-date" type="date" value={request.date} min={localToday()} onChange={(event) => update('date', event.target.value)} required />
-                </div>
-                {live && <>
-                  <fieldset className="birthday-song-options birthday-field-full">
-                    <legend>Song</legend>
-                    <div className="birthday-song-list">
-                      {['Happy Birthday', 'Birthday Sex'].map((song) => (
-                        <label key={song}><input type="radio" name="birthday-song" value={song} checked={request.song === song} onChange={() => update('song', song)} /><span>{song}</span></label>
-                      ))}
-                    </div>
-                  </fieldset>
-                  <div className="birthday-field-full">
-                    <label htmlFor="birthday-plans">Where and about what time? <span>(optional)</span></label>
-                    <input id="birthday-plans" value={request.plans} onChange={(event) => update('plans', event.target.value)} maxLength={500} placeholder="e.g. your dorm lounge, around 7 pm" />
-                  </div>
-                </>}
-                <div className="birthday-field-full">
-                  <label htmlFor="birthday-notes">Anything else? <span>(optional)</span></label>
-                  <textarea id="birthday-notes" value={request.notes} onChange={(event) => update('notes', event.target.value)} maxLength={1200} rows={3} placeholder="How to say their name or a message you'd like us to include" />
-                </div>
-              </div>
-              <div className="birthday-form-footer">
-                <p id="birthday-email-help">Your email app will open with this request filled in. Send it to <a href={emailDraft}>{contactEmail}</a>, and we'll reply to work out the details and send our Venmo.</p>
-                <div className="birthday-form-actions">
-                  <button type="submit" className="birthday-button" aria-describedby="birthday-email-help"><Mail size={18} aria-hidden="true" /> Email birthday request</button>
-                  <button type="button" className="birthday-copy-button" onClick={copyRequest}><Copy size={16} aria-hidden="true" /> Copy request</button>
-                </div>
-                <p className="birthday-copy-help">Email didn't open? Copy your request and paste it into an email.</p>
-                <p role="status" className="birthday-copy-status">{copyStatus === 'copied' ? 'Request copied. You can paste it into an email to vocalu@umn.edu.' : ''}</p>
-                {copyStatus === 'manual' && <div className="birthday-manual-copy">
-                  <label htmlFor="birthday-request-copy">Copy these details into an email to {contactEmail}:</label>
-                  <textarea ref={manualCopy} id="birthday-request-copy" readOnly value={birthdayRequestText(request)} rows={7} />
-                </div>}
-              </div>
-            </div>
-          </div>
         </form>
       </motion.section>
     </PageTransition>

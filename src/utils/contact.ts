@@ -8,13 +8,26 @@ export async function submitContactMessage(payload: {
   subject?: string;
   message: string;
 }): Promise<void> {
-  const response = await fetchWithTimeout('https://formspree.io/f/xanygerw', {
+  const response = await fetchWithTimeout(`https://formsubmit.co/ajax/${contactEmail}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify(payload),
-  }, 12000);
+    body: JSON.stringify({
+      name: payload.name.trim(),
+      email: payload.email.trim(),
+      message: payload.message.trim(),
+      _subject: payload.subject?.trim() || 'New message from the Vocal U website',
+      _replyto: payload.email.trim(),
+      _template: 'table',
+      _url: window.location.href,
+    }),
+  }, 20000);
 
   if (!response.ok) {
     throw new Error(`Contact submission failed with status ${response.status}.`);
+  }
+
+  const result: { success?: boolean | string } = await response.json();
+  if (result?.success !== true && result?.success !== 'true') {
+    throw new Error('The form service did not accept the submission.');
   }
 }

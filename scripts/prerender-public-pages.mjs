@@ -31,7 +31,7 @@ const pages = [
     title: 'Birthday songs | Vocal U',
     description: birthday.description,
     heading: birthday.headline,
-    content: `<p>${escapeHtml(birthday.intro)}</p><p>${escapeHtml(birthday.support)}</p>${birthday.packages.map((option) => `<section><h2>${escapeHtml(option.title)} — $${option.price}</h2><p>${escapeHtml(option.description)}</p><p>${escapeHtml(option.details)}</p></section>`).join('')}<h2>Request a birthday song</h2><p>Email their name, the date, and any other details to ${link('mailto:vocalu@umn.edu', 'vocalu@umn.edu')}. We'll reply to work out the details and send our Venmo.</p>`,
+    content: `<p>${escapeHtml(birthday.intro)}</p><p>${escapeHtml(birthday.support)}</p>${birthday.packages.map((option) => `<section><h2>${escapeHtml(option.title)} — $${option.price}</h2><p>${escapeHtml(option.description)}</p><p>${escapeHtml(option.details)}</p></section>`).join('')}<h2>Request a birthday song</h2><p>Use the request form to send your name, email, their name, the date, and any other details. We'll reply by email to confirm the details and send our Venmo.</p>`,
   },
   {
     path: '/',

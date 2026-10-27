@@ -1,5 +1,3 @@
-import { contactEmail } from './contact';
-
 export type BirthdayRequest = {
   package: 'video' | 'live';
   song: string;
@@ -24,8 +22,6 @@ export function birthdayRequestText(request: BirthdayRequest) {
   ].join('\n');
 }
 
-export function birthdayEmailDraft(request: BirthdayRequest) {
-  const subject = request.recipient.trim() ? `Birthday song for ${request.recipient.trim()}` : 'Birthday song request';
-  const body = birthdayRequestText(request).replace(/\r?\n/g, '\r\n');
-  return `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+export function birthdayRequestSubject(request: BirthdayRequest) {
+  return request.recipient.trim() ? `Birthday song for ${request.recipient.trim()}` : 'Birthday song request';
 }

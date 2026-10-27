@@ -62,21 +62,22 @@ export function ContactForm() {
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
+      if (status === 'sending') return;
       setStatus('sending');
       try {
         await submitContactMessage(formData);
         setStatus('success');
         setFormData({ name: '', email: '', message: '' });
-        setTimeout(() => setStatus(''), 3000);
       } catch {
         setStatus('error');
       }
     },
-    [formData]
+    [formData, status]
   );
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setStatus('');
   }, []);
   const inputClass =
     'w-full px-4 py-3 border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-[#8FA8C8] focus:ring-4 focus:ring-[#8FA8C8]/20 focus:outline-none transition-all duration-300';
@@ -90,40 +91,42 @@ export function ContactForm() {
         <p className="text-[#2B4C6F]/70 mb-6" style={{ ...fontInter, fontSize: '16px' }}>
           Reach out about booking and audition information, collaborations, or general inquiries.
         </p>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="home-name" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
-                Name
-              </label>
-              <input type="text" id="home-name" name="name" value={formData.name} onChange={handleChange} required maxLength={100} autoComplete="name" className={inputClass} style={inputStyle} />
+        <form onSubmit={handleSubmit} aria-busy={status === 'sending'} className="space-y-6">
+          <fieldset disabled={status === 'sending'} className="m-0 min-w-0 space-y-6 border-0 p-0 disabled:opacity-65">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="home-name" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
+                  Name
+                </label>
+                <input type="text" id="home-name" name="name" value={formData.name} onChange={handleChange} required maxLength={100} autoComplete="name" className={inputClass} style={inputStyle} />
+              </div>
+              <div>
+                <label htmlFor="home-email" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
+                  Email
+                </label>
+                <input type="email" id="home-email" name="email" value={formData.email} onChange={handleChange} required maxLength={254} autoComplete="email" className={inputClass} style={inputStyle} />
+              </div>
             </div>
             <div>
-              <label htmlFor="home-email" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
-                Email
+              <label htmlFor="home-message" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
+                Message
               </label>
-              <input type="email" id="home-email" name="email" value={formData.email} onChange={handleChange} required maxLength={254} autoComplete="email" className={inputClass} style={inputStyle} />
+              <textarea id="home-message" name="message" value={formData.message} onChange={handleChange} required maxLength={5000} rows={5} className={`${inputClass} resize-none`} style={inputStyle} />
             </div>
-          </div>
-          <div>
-            <label htmlFor="home-message" className="block text-[#2B4C6F] mb-2" style={{ ...fontInter, fontSize: '16px' }}>
-              Message
-            </label>
-            <textarea id="home-message" name="message" value={formData.message} onChange={handleChange} required maxLength={5000} rows={5} className={`${inputClass} resize-none`} style={inputStyle} />
-          </div>
-          <button type="submit" disabled={status === 'sending'} className="w-full bg-[#2B4C6F] text-white px-8 py-4 border border-[#2B4C6F] hover:bg-[#8FA8C8] hover:border-[#8FA8C8] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-300 disabled:opacity-50 cursor-pointer" style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}>
-            {status === 'sending' ? 'SENDING...' : 'SEND MESSAGE'}
-          </button>
-          {status === 'success' && (
-            <p className="text-green-600 text-center" style={fontInter}>
-              Thank you! Your message has been sent.
-            </p>
-          )}
-          {status === 'error' && (
-            <p className="text-red-600 text-center" style={fontInter}>
-              Oops! Something went wrong. Please try again.
-            </p>
-          )}
+            <button type="submit" disabled={status === 'sending'} className="w-full bg-[#2B4C6F] text-white px-8 py-4 border border-[#2B4C6F] hover:bg-[#8FA8C8] hover:border-[#8FA8C8] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-300 disabled:opacity-50 cursor-pointer" style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}>
+              {status === 'sending' ? 'SENDING...' : 'SEND MESSAGE'}
+            </button>
+            {status === 'success' && (
+              <p role="status" className="text-green-600 text-center" style={fontInter}>
+                Thank you! Your message has been sent.
+              </p>
+            )}
+            {status === 'error' && (
+              <p role="alert" className="text-red-600 text-center" style={fontInter}>
+                We couldn't send your message. Your details are still here. Please try again.
+              </p>
+            )}
+          </fieldset>
         </form>
       </div>
       <ContactInfo />
