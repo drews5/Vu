@@ -50,7 +50,7 @@ const ContactInfo = memo(function ContactInfo() {
           on audition dates and other opportunities to get involved!
         </p>
         <Link to="/auditions" className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 hover:bg-[#2B4C6F] hover:text-white hover:translate-x-1.5 active:scale-[0.97] transition-all duration-200 inline-block cursor-pointer" style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '12px' }}>
-          AUDITION INFO →
+          AUDITION INFO
         </Link>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, Calendar, Copy, MapPin, Navigation, Share2, Check } from 'lucide-react';
+import { Calendar, Copy, MapPin, Navigation, Share2, Check } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import showcasePhoto from '../assets/spring-showcase.jpg';
@@ -278,7 +278,6 @@ export function SpringShowcase() {
             className="inline-flex items-center gap-2 text-[#6F8BA8] font-medium transition-colors hover:text-[#2B4C6F]"
             style={fontInter}
           >
-            <ArrowLeft className="h-4 w-4" />
             Back to Events
           </Link>
         </motion.div>

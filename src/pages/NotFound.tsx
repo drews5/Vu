@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
-import { Home, Search, Music, ArrowLeft } from 'lucide-react';
+import { Home, Search, Music } from 'lucide-react';
 import { Seo } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
 
@@ -119,7 +119,6 @@ export function NotFound() {
                         className="text-[#8FA8C8] font-bold tracking-widest text-sm flex items-center justify-center gap-2 hover:text-[#2B4C6F] transition-colors"
                         style={fontInter}
                     >
-                        <ArrowLeft className="w-4 h-4" />
                         GET BACK IN TUNE
                     </Link>
                 </motion.div>

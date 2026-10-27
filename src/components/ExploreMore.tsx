@@ -37,7 +37,7 @@ export function ExploreMore({ currentPath, className = 'mt-24' }: { currentPath:
               {item.name}
             </h3>
             <p className="mt-2 text-xs font-bold tracking-widest text-[#8FA8C8] opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
-              LEARN MORE →
+              LEARN MORE
             </p>
           </Link>
         ))}

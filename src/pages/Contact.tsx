@@ -198,7 +198,7 @@ export function Contact() {
                         </p>
                         <motion.div whileHover={{ x: 6 }} whileTap={{ scale: 0.97 }} className="inline-block">
                             <Link to="/auditions" className="bg-white text-[#2B4C6F] px-6 md:px-8 py-3 border border-gray-100 hover:bg-[#8FA8C8]/10 hover:border-[#8FA8C8]/50 transition-all duration-300 inline-block cursor-pointer font-yearbook" style={{ ...fontYearbook, fontSize: '16px', letterSpacing: '0.05em', borderRadius: '12px' }}>
-                                Audition Info →
+                                Audition Info
                             </Link>
                         </motion.div>
                     </motion.div>
@@ -210,11 +210,8 @@ export function Contact() {
                     <p className="mt-4 leading-relaxed" style={{ ...fontInter, fontSize: '17px' }}>{siteContent.booking.description}</p>
                     <p className="mt-3 leading-relaxed" style={{ ...fontInter, fontSize: '16px' }}>{siteContent.booking.details}</p>
                     <a href={`mailto:${contactEmail}?subject=Booking%20Vocal%20U`} className="mt-6 inline-block rounded-xl bg-white px-6 py-3 text-[#2B4C6F] transition-colors hover:bg-[#EDF2F8] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white" style={{ ...fontYearbook, fontSize: '18px' }}>
-                        Email Us <span aria-hidden="true">→</span>
+                        Email Us
                     </a>
-                    <p className="mt-6 leading-7">
-                        Celebrating a birthday? <Link to="/birthday" className="font-semibold underline underline-offset-4">Request a birthday video or an in-person song.</Link>
-                    </p>
                 </div>
             </motion.section>
             <ExploreMore currentPath="/contact" className="mt-20" />

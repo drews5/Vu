@@ -9,7 +9,6 @@ const outputPath = resolve(process.cwd(), 'public', 'sitemap.xml');
 const staticRoutes = [
   { path: '/', changefreq: 'weekly', priority: '1.0', lastmod: buildDate },
   { path: '/about', changefreq: 'monthly', priority: '0.8', lastmod: buildDate },
-  { path: '/birthday', changefreq: 'monthly', priority: '0.7', lastmod: buildDate },
   { path: '/auditions', changefreq: 'weekly', priority: '0.9', lastmod: buildDate },
   { path: '/contact', changefreq: 'monthly', priority: '0.7', lastmod: buildDate },
   { path: '/donate', changefreq: 'monthly', priority: '0.7', lastmod: buildDate },

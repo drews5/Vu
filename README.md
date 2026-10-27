@@ -64,6 +64,6 @@ The member roster lives in `src/data/memberGroups.json`. Events come from Supaba
 
 Static page metadata lives in each page's `Seo` component. The canonical production origin is `https://www.vocalu.org`.
 
-Birthday songs live in the native React page at `src/pages/Birthday.tsx`, with offer copy in `src/data/birthday.json`. It shares the site navigation, fonts, transitions, and contact submission service. Requests use the existing Formspree endpoint and require an email reply from Vocal U to confirm availability and payment. `/birthdays` and the former `/birthday.html` address redirect to `/birthday`.
+Birthday songs live in the native React page at `src/pages/Birthday.tsx`, with offer copy in `src/data/birthday.json`. It shares the site fonts, navigation shell, and transitions. The page is unlisted: open `/birthday` directly. It is excluded from menus, page promotions, the sitemap, and public page listings, and carries `noindex` metadata in both initial HTML and React. Requests open a prefilled email and require a reply from Vocal U to confirm availability and payment. `/birthdays` and the former `/birthday.html` address redirect to `/birthday`.
 
 `npm run build` also prepares readable initial HTML for the main public routes. Keep the page summaries in `scripts/prerender-public-pages.mjs` aligned with visible site copy when these pages change.

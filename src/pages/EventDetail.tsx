@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Calendar, MapPin, Clock, Share2, Navigation, ArrowLeft, Copy } from 'lucide-react';
+import { Calendar, MapPin, Clock, Share2, Navigation, Copy } from 'lucide-react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
@@ -257,7 +257,7 @@ export function EventDetail() {
                     <div className="p-6 md:p-8 pb-0">
                         <div className="inline-block hover:-translate-x-1 transition-transform duration-200">
                             <Link to="/events" className="inline-flex items-center gap-2 text-[#8FA8C8] hover:text-[#2B4C6F] transition-colors duration-200 text-sm tracking-widest cursor-pointer" style={fontInter}>
-                                <ArrowLeft className="w-4 h-4" /> Back to Events
+                                Back to Events
                             </Link>
                         </div>
                     </div>

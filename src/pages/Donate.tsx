@@ -5,7 +5,6 @@ import { Heart, Star } from 'lucide-react';
 import logoImage from '../assets/d4630c01b543cc75980f0b293230859d29654fbb.png';
 import { Seo, toAbsoluteUrl } from '../components/Seo';
 import { fontYearbook } from '../styles/fonts';
-import { Link } from 'react-router-dom';
 
 const fontInter = { fontFamily: 'Inter, sans-serif' };
 export function Donate() {
@@ -91,7 +90,7 @@ export function Donate() {
                     <div className="p-4 bg-gray-50 border-b flex justify-between items-center">
                         <span className="text-[#2B4C6F] font-bold text-sm" style={fontInter}>Givebutter Secure Donation</span>
                         <a href="https://givebutter.com/vu" target="_blank" rel="noopener noreferrer" className="text-[#8FA8C8] text-xs hover:text-[#2B4C6F] hover:underline transition-all duration-300 font-bold underline-offset-2" style={fontInter}>
-                            Open in new tab ↗
+                            Open in new tab
                         </a>
                     </div>
                     <div className="flex-grow relative bg-gray-50/50">
@@ -125,9 +124,6 @@ export function Donate() {
                                     <p className="text-[#2B4C6F]/70 text-sm leading-relaxed">
                                         Have us perform at your next event! We love collaborating with other groups and performing for the community.
                                     </p>
-                                    <Link to="/birthday" className="mt-3 inline-block text-sm font-semibold text-[#2B4C6F] underline underline-offset-4">
-                                        Celebrate with a birthday song →
-                                    </Link>
                                 </div>
                             </div>
                         </div>

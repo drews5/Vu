@@ -30,7 +30,7 @@ export function SiteFaq() {
                 </dl>
               )}
               <Link to={path} className="mt-4 inline-block underline underline-offset-4 hover:text-[#597AA2] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2B4C6F]">
-                {linkText} <span aria-hidden="true">→</span>
+                {linkText}
               </Link>
             </div>
           </details>

@@ -5,7 +5,7 @@ import heroBackgroundLarge from '../assets/hero-2400.webp';
 import groupPhoto from '../assets/group-photo.webp';
 
 import { Link } from 'react-router-dom';
-import { ArrowRight, Calendar, MapPin, ChevronDown, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
+import { Calendar, MapPin, ChevronDown, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { loadSupabase } from '../utils/loadSupabase';
@@ -469,7 +469,6 @@ export function Home() {
                 >
                   <span className="relative flex items-center justify-center gap-2">
                     VISIT OUR YOUTUBE
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
                 </a>
               </motion.div>
@@ -555,7 +554,6 @@ export function Home() {
               style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}
             >
               Learn More
-              <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </motion.div>
         </div>
@@ -695,7 +693,6 @@ export function Home() {
                 style={{ ...fontYearbook, fontSize: '18px', letterSpacing: '0.05em', borderRadius: '12px' }}
               >
                 <span>View All Events</span>
-                <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
               </Link>
             </motion.div>
           </div>

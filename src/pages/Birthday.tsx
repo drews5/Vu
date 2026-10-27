@@ -1,6 +1,6 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { motion } from 'motion/react';
-import { ArrowRight, Copy, Mail } from 'lucide-react';
+import { Copy, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
 import { Seo } from '../components/Seo';
@@ -77,6 +77,7 @@ export function Birthday() {
         title="Birthday songs | Vocal U"
         description={birthday.description}
         path="/birthday"
+        noindex
         keywords={['Vocal U birthday songs', 'birthday video', 'a cappella birthday serenade']}
         breadcrumbs={[{ name: 'Home', path: '/' }, { name: birthday.heading, path: '/birthday' }]}
       />
@@ -87,8 +88,8 @@ export function Birthday() {
           <p className="birthday-intro">{birthday.intro}</p>
           <p className="birthday-support">{birthday.support}</p>
           <div className="birthday-hero-actions">
-            <a href="#birthday-request" className="birthday-button">Request a birthday song <ArrowRight size={18} aria-hidden="true" /></a>
-            <Link to="/media" className="birthday-link">Hear us sing <ArrowRight size={16} aria-hidden="true" /></Link>
+            <a href="#birthday-request" className="birthday-button">Request a birthday song</a>
+            <Link to="/media" className="birthday-link">Hear us sing</Link>
           </div>
         </div>
         <figure className="birthday-photo">

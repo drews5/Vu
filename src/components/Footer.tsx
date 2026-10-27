@@ -15,7 +15,6 @@ const TikTokIcon = memo(function TikTokIcon({ className }: { className?: string 
   );
 });
 const resourceLinks = [
-  { to: '/birthday', label: 'Birthday Songs', external: false },
   { to: '/auditions', label: 'Auditions', external: false },
   { to: '/media', label: 'Media', external: false },
   { href: 'https://gopherlink.umn.edu/organization/vocalu', label: 'GopherLink', external: true },

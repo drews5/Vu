@@ -27,6 +27,7 @@ const bookingHtml = `<section id="booking"><h2>${escapeHtml(siteContent.booking.
 const pages = [
   {
     path: '/birthday',
+    noindex: true,
     title: 'Birthday songs | Vocal U',
     description: birthday.description,
     heading: birthday.headline,
@@ -113,7 +114,7 @@ const pages = [
   },
 ];
 
-const navigation = pages.map(({ path, heading }) => link(path, heading)).join(' · ');
+const navigation = pages.filter((page) => !page.noindex).map(({ path, heading }) => link(path, heading)).join(' · ');
 
 for (const page of pages) {
   const canonical = new URL(page.path, siteUrl).toString();
@@ -132,6 +133,9 @@ for (const page of pages) {
     .replace(/<link rel="canonical" href="[^"]*" \/>/, `<link rel="canonical" href="${canonical}" />`)
     .replace('<div id="root"></div>', fallback);
   if (!html.includes(fallback)) throw new Error(`Could not add initial content for ${page.path}`);
+  if (page.noindex) {
+    html = html.replace(/<meta name="robots" content="[^"]*" \/>/, '<meta name="robots" content="noindex, nofollow" />');
+  }
   if (page.schema) {
     const schema = JSON.stringify(page.schema).replace(/</g, '\\u003c');
     html = html.replace('</head>', `<script type="application/ld+json">${schema}</script>\n</head>`);

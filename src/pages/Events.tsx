@@ -1,5 +1,5 @@
 import { useEffect, useState, memo } from 'react';
-import { Calendar, MapPin, ArrowRight, Clock, Share2, Navigation, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
+import { Calendar, MapPin, Clock, Share2, Navigation, ChevronLeft, ChevronRight, Copy } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { PageTransition, childVariants } from '../components/PageTransition';
@@ -107,7 +107,7 @@ const UnifiedEventCard = memo(function UnifiedEventCard({ event }: { event: Even
                     <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" style={{ filter: 'saturate(1.1) contrast(1.1)', objectFit: getEventImageFit(event.slug), objectPosition: getEventImagePosition(event.slug) }} loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                         <span className="text-white text-sm font-black flex items-center gap-2">
-                            VIEW DETAILS <ArrowRight className="w-4 h-4" />
+                            VIEW DETAILS
                         </span>
                     </div>
                     {isUpcoming && (
