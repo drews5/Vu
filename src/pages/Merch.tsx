@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from 'react';
 import { Seo } from '../components/Seo';
 import '../styles/merch.css';
+import merchConfig from '../data/merch.json';
+import { submitMerchInterest } from '../utils/merchSubmission';
 
 const products = [
   { id: 'shirt', title: 'Vocal U T-shirt', image: '/merch/anniversary-shirt.webp', description: 'Vocal blue T-shirt with our white logo and Est. 2011 for our 15th anniversary!', sizes: ['YS', 'YM', 'YL', 'S', 'M', 'L', 'XL', '2X'] },
@@ -11,17 +13,33 @@ const initialQuantities = Object.fromEntries(products.flatMap(p => p.sizes.map(s
 export function Merch() {
   const [quantities, setQuantities] = useState<Record<string, number>>(initialQuantities);
   const [error, setError] = useState('');
-  const submitted = new URLSearchParams(window.location.search).get('submitted') === '1';
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success'>('idle');
+  const submitted = status === 'success';
 
   function change(key: string, value: number) {
     setQuantities(previous => ({ ...previous, [key]: Math.max(0, Math.min(99, Math.trunc(value) || 0)) }));
     setError('');
   }
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (status === 'sending' || status === 'success') return;
+    const form = event.currentTarget;
     if (!Object.values(quantities).some(value => value > 0)) {
-      event.preventDefault();
       setError('Please choose at least one item.');
       document.querySelector<HTMLInputElement>('#shirt-YS')?.focus();
+      return;
+    }
+    if ((form.elements.namedItem('_honey') as HTMLInputElement)?.value) return;
+    setError('');
+    setStatus('sending');
+    const payload = Object.fromEntries(new FormData(form));
+    delete payload._honey;
+    try {
+      await submitMerchInterest(merchConfig.endpoint, payload);
+      setStatus('success');
+    } catch (error) {
+      setStatus('idle');
+      setError(error instanceof Error ? error.message : 'We couldn’t send your form. Please try again. Your choices are still here.');
     }
   }
 
@@ -35,12 +53,8 @@ export function Merch() {
         <p>The prices will be pay what you can, starting at $10 for shirts and $30 for hoodies.</p>
       </header>
       {submitted && <p className="merch-message merch-success" role="status">Thank you! Your merch interest form has been submitted.</p>}
-      <form action="https://formsubmit.co/vocalu@umn.edu" method="POST" onSubmit={submit} aria-label="Merch interest form">
-        <input type="hidden" name="_subject" value="Vocal U merch interest" />
-        <input type="hidden" name="_template" value="table" />
-        <input type="hidden" name="_next" value="https://www.vocalu.org/merch?submitted=1" />
-        <input type="hidden" name="_url" value="https://www.vocalu.org/merch" />
-        <fieldset className="merch-fields">
+      <form onSubmit={submit} aria-label="Merch interest form" aria-busy={status === 'sending'}>
+        <fieldset className="merch-fields" disabled={status === 'sending' || submitted}>
           <label className="merch-contact">Your name<input name="name" autoComplete="name" required pattern=".*\S.*" maxLength={100} placeholder="Enter your name here..." /></label>
           <label className="merch-contact">Your email<input name="email" type="email" autoComplete="email" required maxLength={254} placeholder="Enter your email here..." /></label>
           <div className="merch-products">
@@ -56,7 +70,7 @@ export function Merch() {
             </section>)}
           </div>
           <div className="merch-honey" aria-hidden="true"><label>Leave this empty<input name="_honey" tabIndex={-1} autoComplete="off" /></label></div>
-          <button className="merch-submit" type="submit">Submit Form</button>
+          <button className="merch-submit" type="submit">{status === 'sending' ? 'Submitting…' : submitted ? 'Submitted' : 'Submit Form'}</button>
         </fieldset>
         {error && <p className="merch-message merch-error" role="alert">{error}</p>}
       </form>
