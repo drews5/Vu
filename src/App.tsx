@@ -14,6 +14,7 @@ const About = lazy(() => import('./pages/About').then(m => ({ default: m.About }
 const Members = lazy(() => import('./pages/Members').then(m => ({ default: m.Members })));
 const Media = lazy(() => import('./pages/Media').then(m => ({ default: m.Media })));
 const Donate = lazy(() => import('./pages/Donate').then(m => ({ default: m.Donate })));
+const Merch = lazy(() => import('./pages/Merch').then(m => ({ default: m.Merch })));
 const Birthday = lazy(() => import('./pages/Birthday').then(m => ({ default: m.Birthday })));
 const Events = lazy(() => import('./pages/Events').then(m => ({ default: m.Events })));
 const EventDetail = lazy(() => import('./pages/EventDetail').then(m => ({ default: m.EventDetail })));
@@ -72,7 +73,7 @@ function ProductionInstrumentation() {
 function AppContent() {
   const location = useLocation();
   const isAuditionsPage = location.pathname === '/auditions';
-  const hideHeaderFooter = isAuditionsPage;
+  const hideHeaderFooter = isAuditionsPage || location.pathname.replace(/\/$/, '') === '/merch';
 
   return (
     <div className="vu-site-shell min-h-screen bg-white">
@@ -90,6 +91,7 @@ function AppContent() {
                 <Route path="/members" element={<Members />} />
                 <Route path="/media" element={<Media />} />
                 <Route path="/donate" element={<Donate />} />
+                <Route path="/merch" element={<Merch />} />
                 <Route path="/birthday" element={<Birthday />} />
                 <Route path="/birthdays" element={<Navigate to="/birthday" replace />} />
                 <Route path="/events/showcase" element={<SpringShowcase />} />

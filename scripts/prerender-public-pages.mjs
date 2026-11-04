@@ -26,6 +26,14 @@ const bookingHtml = `<section id="booking"><h2>${escapeHtml(siteContent.booking.
 
 const pages = [
   {
+    path: '/merch',
+    noindex: true,
+    title: 'Merch interest | Vocal U',
+    description: 'Let Vocal U know which anniversary T-shirts and navy hoodies you’re interested in.',
+    heading: 'Vocal U merch interest form',
+    content: '<p>Tell us which items and sizes you are interested in by November 11. Shirts start at $10 and hoodies at $30. Pick up at Winter Showcase on December 5 or through a Vocal U member. Please enable JavaScript to fill out this form.</p>',
+  },
+  {
     path: '/birthday',
     noindex: true,
     title: 'Birthday songs | Vocal U',

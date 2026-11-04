@@ -37,6 +37,8 @@
     { "source": "/program/", "destination": "/program.pdf", "permanent": false }
   ],
   "rewrites": [
+    { "source": "/merch", "destination": "/merch/index.html" },
+    { "source": "/merch/", "destination": "/merch/index.html" },
     { "source": "/birthday", "destination": "/birthday/index.html" },
     { "source": "/birthday/", "destination": "/birthday/index.html" },
     { "source": "/about", "destination": "/about/index.html" },

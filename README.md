@@ -73,3 +73,7 @@ Birthday songs live in the native React page at `src/pages/Birthday.tsx`, with o
 The homepage contact form, contact page, and birthday request form share `submitContactMessage` in `src/utils/contact.ts`. They POST JSON to `https://formsubmit.co/ajax/vocalu@umn.edu` and show success only when both the HTTP response and FormSubmit success flag confirm acceptance. Sender email is included as Reply-To. Failed submissions preserve the visitor's inputs.
 
 FormSubmit may send an activation link to `vocalu@umn.edu` on first submission. Confirm that email to enable delivery. TypeScript, production build, and mocked submission checks do not prove inbox delivery or activation.
+
+## Merch interest
+
+`/merch` is an unlisted, noindex merch interest form. It has no links in navigation, the footer, the sitemap, or public page listings. The form collects name, email, and quantities per size, then sends a reviewed summary to vocalu@umn.edu using the existing FormSubmit integration. No payment is collected. Product images were extracted from the supplied merch design. Copy currently specifies November 11 for responses and December 5 for Winter Showcase pickup. Update those dates for future runs.
