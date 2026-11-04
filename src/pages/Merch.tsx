@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Seo } from '../components/Seo';
 import '../styles/merch.css';
 import merchConfig from '../data/merch.json';
@@ -10,11 +10,34 @@ const products = [
 ] as const;
 const initialQuantities = Object.fromEntries(products.flatMap(p => p.sizes.map(size => [`${p.id}-${size}`, 0])));
 
+type MerchReceipt = {
+  name: string;
+  email: string;
+  items: { product: string; size: string; quantity: number }[];
+};
+
+export function MerchConfirmation({ receipt }: { receipt: MerchReceipt }) {
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    heading.current?.focus({ preventScroll: true });
+    heading.current?.scrollIntoView({ block: 'start' });
+  }, []);
+  return <section className="merch-receipt" aria-labelledby="merch-confirmation-heading">
+    <h1 id="merch-confirmation-heading" ref={heading} tabIndex={-1}>Thank you!</h1>
+    <p role="status">Your merch interest has been submitted.</p>
+    <dl className="merch-receipt-contact"><div><dt>Name</dt><dd>{receipt.name}</dd></div><div><dt>Email</dt><dd>{receipt.email}</dd></div></dl>
+    <h2>What you submitted</h2>
+    <table><thead><tr><th scope="col">Item</th><th scope="col">Size</th><th scope="col">Quantity</th></tr></thead><tbody>{receipt.items.map(item => <tr key={`${item.product}-${item.size}`}><td>{item.product}</td><td>{item.size}</td><td>{item.quantity}</td></tr>)}</tbody></table>
+    <p className="merch-receipt-pickup">Pickup at Winter Showcase on December 5, or through a Vocal U member.</p>
+  </section>;
+}
+
 export function Merch() {
   const [quantities, setQuantities] = useState<Record<string, number>>(initialQuantities);
   const [error, setError] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'success'>('idle');
   const submitted = status === 'success';
+  const [receipt, setReceipt] = useState<MerchReceipt | null>(null);
 
   function change(key: string, value: number) {
     setQuantities(previous => ({ ...previous, [key]: Math.max(0, Math.min(99, Math.trunc(value) || 0)) }));
@@ -36,6 +59,11 @@ export function Merch() {
     delete payload._honey;
     try {
       await submitMerchInterest(merchConfig.endpoint, payload);
+      setReceipt({
+        name: String(payload.name || '').trim(),
+        email: String(payload.email || '').trim(),
+        items: products.flatMap(product => product.sizes.filter(size => Number(payload[`${product.title} - ${size}`]) > 0).map(size => ({ product: product.title, size, quantity: Number(payload[`${product.title} - ${size}`]) }))),
+      });
       setStatus('success');
     } catch (error) {
       setStatus('idle');
@@ -46,13 +74,13 @@ export function Merch() {
   return <div className="merch-page">
     <Seo title="Merch interest | Vocal U" description="Let Vocal U know which anniversary T-shirts and navy hoodies you’re interested in." path="/merch" noindex />
     <div className="merch-wrap">
+      {submitted && receipt ? <MerchConfirmation receipt={receipt} /> : <>
       <header className="merch-heading">
         <h1>Vocal U merch<br />interest form</h1>
         <p>Hello VU friends and family! Please fill out this form with how many items and which sizes of each merch item you want so we can order the right amount. This form will close on November 11.</p>
         <p>Items will be available at our Winter Showcase on December 5. If you can’t make it, a Vocal U member can pick up items for you.</p>
         <p>The prices will be pay what you can, starting at $10 for shirts and $30 for hoodies.</p>
       </header>
-      {submitted && <p className="merch-message merch-success" role="status">Thank you! Your merch interest form has been submitted.</p>}
       <form onSubmit={submit} aria-label="Merch interest form" aria-busy={status === 'sending'}>
         <fieldset className="merch-fields" disabled={status === 'sending' || submitted}>
           <label className="merch-contact">Your name<input name="name" autoComplete="name" required pattern=".*\S.*" maxLength={100} placeholder="Enter your name here..." /></label>
@@ -74,6 +102,7 @@ export function Merch() {
         </fieldset>
         {error && <p className="merch-message merch-error" role="alert">{error}</p>}
       </form>
+      </>}
     </div>
   </div>;
 }
