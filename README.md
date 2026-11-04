@@ -76,4 +76,4 @@ FormSubmit may send an activation link to `vocalu@umn.edu` on first submission. 
 
 ## Merch interest
 
-`/merch` is an unlisted, noindex merch interest form. It has no links in navigation, the footer, the sitemap, or public page listings. The form collects name, email, and quantities per size, then sends a reviewed summary to vocalu@umn.edu using the existing FormSubmit integration. No payment is collected. Product images were extracted from the supplied merch design. Copy currently specifies November 11 for responses and December 5 for Winter Showcase pickup. Update those dates for future runs.
+`/merch` is an unlisted, noindex merch interest form. It has no links in navigation, the footer, the sitemap, or public page listings. The form collects name, email, and quantities per size, then submits directly to vocalu@umn.edu using the existing FormSubmit integration. No payment is collected. Product images were extracted from the supplied merch design. Copy currently specifies November 11 for responses and December 5 for Winter Showcase pickup. Update those dates for future runs.
