@@ -77,7 +77,7 @@ export function Seo({
       ? title
       : `${title} | ${siteConfig.siteName}`;
   const canonicalUrl = toAbsoluteUrl(path);
-  const socialImage = toAbsoluteUrl(image || '/og.png');
+  const socialImage = toAbsoluteUrl(image || '/official-logo-preview.png');
   const robotsContent = noindex
     ? 'noindex, nofollow'
     : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
