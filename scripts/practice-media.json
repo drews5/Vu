@@ -1,0 +1,79 @@
+{
+  "audio": [
+    {
+      "folder": "00",
+      "name": "All For Us (faster).mp3",
+      "bytes": 3255901,
+      "sha256": "3c1f5d820959c7be9df57e5cde444aaeb3adec5bb16e6ffa9af354760832a06c",
+      "parts": 10
+    },
+    {
+      "folder": "02",
+      "name": "All For Us FINAL.mp3",
+      "bytes": 3641259,
+      "sha256": "b3de8d4b6f5a0d582a1bc06bc9b38eddbb339075bb8269d16eb38cd8965dab0e",
+      "parts": 11
+    },
+    {
+      "folder": "04",
+      "name": "Alto Part (All For Us).mp3",
+      "bytes": 3632064,
+      "sha256": "742fb3adeec143a5a5f2407e80129b50b10bc04a07a6634697c1dc11b6745fb2",
+      "parts": 11
+    },
+    {
+      "folder": "05",
+      "name": "Bass Part (All For Us).mp3",
+      "bytes": 3635826,
+      "sha256": "785ec9113d93fdc4eb1117c88f5ade25176c588913329b3355bffd1a8d97e1e1",
+      "parts": 11
+    },
+    {
+      "folder": "06",
+      "name": "Labrinth Solo (All For Us).mp3",
+      "bytes": 3630392,
+      "sha256": "5a63d841e54e95fef20e5cef2f39ffbaaa8e544b3a15b1e7be71fb27623e4bb2",
+      "parts": 11
+    },
+    {
+      "folder": "07",
+      "name": "Mezzo Part (All For Us).mp3",
+      "bytes": 3632064,
+      "sha256": "3ce27f6dc971002445153f88e03e73e04c70d3982d87fe804ae8563ac961c373",
+      "parts": 11
+    },
+    {
+      "folder": "08",
+      "name": "Soprano Part (All For Us).mp3",
+      "bytes": 3632900,
+      "sha256": "6752372800cd5ea14eb92ab78681e39c9f8f52f0288bad9e412a2a43a10fdbdf",
+      "parts": 11
+    },
+    {
+      "folder": "09",
+      "name": "Tenor Part (All For Us).mp3",
+      "bytes": 3633736,
+      "sha256": "4bfd62d9441088b8b5917d54058cb7a0e4357b14c0680a51550cc1f758636443",
+      "parts": 11
+    },
+    {
+      "folder": "10",
+      "name": "Zendaya Solo (All For Us).mp3",
+      "bytes": 3636661,
+      "sha256": "f88e894c829571dc539f6d5e0174bf0719f0d48216cedd7d9a72dc3eae84176a",
+      "parts": 11
+    }
+  ],
+  "pdfs": [
+    {
+      "name": "All For Us FINAL SCORE.pdf",
+      "bytes": 156602,
+      "sha256": "4b1c2a92eb8089f415d75ab87f1868f08def51efd140f2696719f42b5cd3cad1"
+    },
+    {
+      "name": "All_For_Us.pdf",
+      "bytes": 105861,
+      "sha256": "fde21eea0b592879a1427dd6f3320b0865da5badeeffd25522c0c664acec8264"
+    }
+  ]
+}

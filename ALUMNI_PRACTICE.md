@@ -1,21 +1,11 @@
-# Vocal U alumni rehearsal room
+# All For Us — alumni practice archive
 
-Website route: `/alumni/all-for-us`. Link from the Media page.
+The page is available at `/alumni/all-for-us`, and the main Media page links to it.
 
-All eleven uploaded rehearsal files need to be uploaded into `public/practice/all-for-us/`, keeping the exact original filenames:
+**Contents:** nine playable MP3s (full and faster mixes, five voice parts, and two solo tracks), plus both PDF scores. All files preserve the exact bytes of the supplied ZIP.
 
-- All For Us FINAL.mp3
-- All For Us (faster).mp3
-- Soprano Part (All For Us).mp3
-- Mezzo Part (All For Us).mp3
-- Alto Part (All For Us).mp3
-- Tenor Part (All For Us).mp3
-- Bass Part (All For Us).mp3
-- Labrinth Solo (All For Us).mp3
-- Zendaya Solo (All For Us).mp3
-- All For Us FINAL SCORE.pdf
-- All_For_Us.pdf
+**Storage:** the two PDF scores live in `public/practice/all-for-us`. The audio files are stored as numbered, binary chunks under `rehearsal-source/all-for-us`. Running `npm run build` first executes `scripts/restore-practice-media.mjs` to assemble the original MP3 files into the public directory, checking the expected sizes and SHA-256 hashes. Do not rename, reorder, or delete source chunks.
 
-The page checks that each file is served as an actual media document before showing playback or downloads. The original uploaded ZIP was not automatically included in the GitHub source commit.
+The page has a part selector, speed adjustment and looping. It checks file availability before displaying download links.
 
-This page is marked `noindex` but is not password protected. Anyone with the URL can access files after upload.
+The route is marked noindex but **not password protected**. Anyone with the URL can access the practice materials.

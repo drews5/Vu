@@ -26,3 +26,6 @@ Wait-Process
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Reconstructed at build time from rehearsal-source/ chunks
+/public/practice/all-for-us/*.mp3
