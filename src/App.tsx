@@ -13,6 +13,7 @@ const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })))
 const About = lazy(() => import('./pages/About').then(m => ({ default: m.About })));
 const Members = lazy(() => import('./pages/Members').then(m => ({ default: m.Members })));
 const Media = lazy(() => import('./pages/Media').then(m => ({ default: m.Media })));
+const AlumniPractice = lazy(() => import('./pages/AlumniPractice').then(m => ({ default: m.AlumniPractice })));
 const Donate = lazy(() => import('./pages/Donate').then(m => ({ default: m.Donate })));
 const Merch = lazy(() => import('./pages/Merch').then(m => ({ default: m.Merch })));
 const Birthday = lazy(() => import('./pages/Birthday').then(m => ({ default: m.Birthday })));
@@ -90,6 +91,7 @@ function AppContent() {
                 <Route path="/about" element={<About />} />
                 <Route path="/members" element={<Members />} />
                 <Route path="/media" element={<Media />} />
+                <Route path="/alumni/all-for-us" element={<AlumniPractice />} />
                 <Route path="/donate" element={<Donate />} />
                 <Route path="/merch" element={<Merch />} />
                 <Route path="/birthday" element={<Birthday />} />
