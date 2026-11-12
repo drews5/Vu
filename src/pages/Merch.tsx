@@ -4,6 +4,10 @@ import '../styles/merch.css';
 import merchConfig from '../data/merch.json';
 import { submitMerchInterest } from '../utils/merchSubmission';
 
+// November 12, 2026 at 11:59:59 p.m. in Minneapolis (CST).
+const merchClosesAt = Date.parse('2026-11-13T06:00:00Z');
+const merchIsOpen = () => Date.now() < merchClosesAt;
+
 const products = [
   { id: 'shirt', title: 'Vocal U T-shirt', image: '/merch/anniversary-shirt.webp', description: 'Vocal blue T-shirt with our white logo and Est. 2011 for our 15th anniversary!', sizes: ['YS', 'YM', 'YL', 'S', 'M', 'L', 'XL', '2X'] },
   { id: 'hoodie', title: 'Vocal U hoodie', image: '/merch/navy-hoodie.webp', description: 'Navy hoodie with our Vocal U A Cappella logo in vocal blue.', sizes: ['S', 'M', 'L', 'XL', '2X'] },
@@ -34,6 +38,13 @@ export function MerchConfirmation({ receipt }: { receipt: MerchReceipt }) {
 
 export function Merch() {
   const [quantities, setQuantities] = useState<Record<string, number>>(initialQuantities);
+  const [isOpen, setIsOpen] = useState(merchIsOpen);
+  useEffect(() => {
+    const update = () => setIsOpen(merchIsOpen());
+    update();
+    const interval = window.setInterval(update, 15_000);
+    return () => window.clearInterval(interval);
+  }, []);
   const [error, setError] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'success'>('idle');
   const submitted = status === 'success';
@@ -46,6 +57,11 @@ export function Merch() {
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (status === 'sending' || status === 'success') return;
+    if (!merchIsOpen()) {
+      setIsOpen(false);
+      setError('The merch interest form closed November 12.');
+      return;
+    }
     const form = event.currentTarget;
     if (!Object.values(quantities).some(value => value > 0)) {
       setError('Please choose at least one item.');
@@ -74,10 +90,14 @@ export function Merch() {
   return <div className="merch-page">
     <Seo title="Merch interest | Vocal U" description="Let Vocal U know which anniversary T-shirts and navy hoodies you’re interested in." path="/merch" noindex />
     <div className="merch-wrap">
-      {submitted && receipt ? <MerchConfirmation receipt={receipt} /> : <>
+      {submitted && receipt ? <MerchConfirmation receipt={receipt} /> : !isOpen ? <section className="merch-receipt" role="status">
+        <h1>Merch interest is closed</h1>
+        <p>The form closed on Thursday, November 12, 2026 at 11:59 p.m. Central. Thanks to everyone who filled it out!</p>
+        <p>Items will be available at our Winter Showcase on December 5, or through a Vocal U member.</p>
+      </section> : <>
       <header className="merch-heading">
         <h1>Vocal U merch<br />interest form</h1>
-        <p>Hello VU friends and family! Please fill out this form with how many items and which sizes of each merch item you want so we can order the right amount. This form will close on November 11.</p>
+        <p>Hello VU friends and family! Please fill out this form with how many items and which sizes of each merch item you want so we can order the right amount. The form closes Thursday, November 12 at 11:59 p.m. Central.</p>
         <p>Items will be available at our Winter Showcase on December 5. If you can’t make it, a Vocal U member can pick up items for you.</p>
         <p>The prices will be pay what you can, starting at $10 for shirts and $30 for hoodies.</p>
       </header>
