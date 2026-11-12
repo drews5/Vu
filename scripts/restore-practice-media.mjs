@@ -18,7 +18,7 @@ function verify(buffer, record) {
 
 for (const record of audio) {
   const folder = join(sourceDir, record.folder);
-  const files = (await readdir(folder)).filter(name => /^\\d{3}\\.bin$/.test(name)).sort();
+  const files = (await readdir(folder)).filter(name => /^\d{3}\.bin$/.test(name)).sort();
   if (files.length !== record.parts) {
     throw new Error('Missing audio pieces for ' + record.name);
   }
