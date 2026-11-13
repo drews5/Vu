@@ -278,7 +278,8 @@
   .vu-select-track select { flex: 1; max-width: unset; }
   .vu-score-toolbar { padding-inline: 7px; }
   .vu-score-actions, .vu-page-controls, .vu-zoom { gap: 0; }
-  .vu-score-toolbar select { max-width: 98px; }
+  .vu-score-toolbar > select { width: 98px; flex-shrink: 0; }
+  .vu-page-controls select { width: 68px; }
   .vu-score-actions button { min-width: 31px; min-height: 37px; padding-inline: 3px; }
   .vu-follow span, .vu-measure { display: none; }
   .vu-score-paper { width: calc((100% - 8px) * var(--score-zoom)); padding-block: 6px; gap: 7px; }
@@ -286,10 +287,16 @@
   .vu-drop-actions { margin-left: 0; }
   .vu-upload header, .vu-help header, .vu-upload-body, .vu-upload footer { padding-inline: 12px; }
   .vu-upload-file { gap: 4px; }
+  .vu-upload-meta { grid-template-columns: minmax(0, 1fr) minmax(118px, 36%); }
   .vu-upload input:not([type=file]), .vu-gate-card input { font-size: 16px; }
 }
-@media (max-width: 345px) {
-  .vu-score-toolbar > select { max-width: 72px; }
+@media (max-width: 430px) {
+  .vu-score-toolbar { gap: 2px; }
   .vu-score-toolbar .vu-zoom button:nth-child(2) { display: none; }
+}
+@media (max-width: 355px) {
+  .vu-score-toolbar > select { width: 80px; }
+  .vu-score-actions button { min-width: 27px; }
+  .vu-page-controls select { width: 60px; padding-inline: 2px; }
 }
 @media (prefers-reduced-motion: reduce) { .vu-spinner { animation: none; } }
