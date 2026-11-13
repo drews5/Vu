@@ -292,11 +292,16 @@
 }
 @media (max-width: 430px) {
   .vu-score-toolbar { gap: 2px; }
+  .vu-score-toolbar > select { width: 92px; }
+  .vu-score-actions button { min-width: 27px; padding-inline: 2px; }
+  .vu-page-controls, .vu-zoom { margin-right: 2px; padding-right: 2px; }
+  .vu-page-controls select { width: 58px; padding-inline: 2px; }
   .vu-score-toolbar .vu-zoom button:nth-child(2) { display: none; }
 }
 @media (max-width: 355px) {
-  .vu-score-toolbar > select { width: 80px; }
-  .vu-score-actions button { min-width: 27px; }
-  .vu-page-controls select { width: 60px; padding-inline: 2px; }
+  .vu-score-toolbar { padding-inline: 4px; }
+  .vu-score-toolbar > select { width: 78px; padding-inline: 3px; }
+  .vu-score-actions button { min-width: 23px; }
+  .vu-page-controls select { width: 57px; }
 }
 @media (prefers-reduced-motion: reduce) { .vu-spinner { animation: none; } }
