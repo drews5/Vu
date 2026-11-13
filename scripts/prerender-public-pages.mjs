@@ -38,8 +38,16 @@ const pages = [
     noindex: true,
     title: 'All For Us | Vocal U Alumni Practice',
     description: 'Vocal U alumni rehearsals with All For Us audio tracks and scores.',
-    heading: 'All For Us rehearsal room',
-    content: "<p>Open the All For Us rehearsal mixes, parts, and scores below. Enable JavaScript for the adjustable-speed player.</p><ul><li><a href=\"/practice/all-for-us/All%20For%20Us%20(faster).mp3\">All For Us (faster).mp3</a></li><li><a href=\"/practice/all-for-us/All%20For%20Us%20FINAL.mp3\">All For Us FINAL.mp3</a></li><li><a href=\"/practice/all-for-us/Alto%20Part%20(All%20For%20Us).mp3\">Alto Part (All For Us).mp3</a></li><li><a href=\"/practice/all-for-us/Bass%20Part%20(All%20For%20Us).mp3\">Bass Part (All For Us).mp3</a></li><li><a href=\"/practice/all-for-us/Labrinth%20Solo%20(All%20For%20Us).mp3\">Labrinth Solo (All For Us).mp3</a></li><li><a href=\"/practice/all-for-us/Mezzo%20Part%20(All%20For%20Us).mp3\">Mezzo Part (All For Us).mp3</a></li><li><a href=\"/practice/all-for-us/Soprano%20Part%20(All%20For%20Us).mp3\">Soprano Part (All For Us).mp3</a></li><li><a href=\"/practice/all-for-us/Tenor%20Part%20(All%20For%20Us).mp3\">Tenor Part (All For Us).mp3</a></li><li><a href=\"/practice/all-for-us/Zendaya%20Solo%20(All%20For%20Us).mp3\">Zendaya Solo (All For Us).mp3</a></li><li><a href=\"/practice/all-for-us/All%20For%20Us%20FINAL%20SCORE.pdf\">All For Us FINAL SCORE.pdf</a></li><li><a href=\"/practice/all-for-us/All_For_Us.pdf\">All_For_Us.pdf</a></li></ul>",
+    heading: 'All For Us',
+    content: '<p>Enable JavaScript to practice with the All For Us tracks and score.</p>',
+  },
+  {
+    path: '/rehearsal',
+    noindex: true,
+    title: 'Rehearsal | Vocal U',
+    description: 'Vocal U rehearsal tracks and sheet music.',
+    heading: 'Rehearsal',
+    content: '<p>Enable JavaScript to open the rehearsal room.</p>',
   },
   {
     path: '/birthday',

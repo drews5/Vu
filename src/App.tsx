@@ -13,7 +13,7 @@ const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })))
 const About = lazy(() => import('./pages/About').then(m => ({ default: m.About })));
 const Members = lazy(() => import('./pages/Members').then(m => ({ default: m.Members })));
 const Media = lazy(() => import('./pages/Media').then(m => ({ default: m.Media })));
-const AlumniPractice = lazy(() => import('./pages/AlumniPractice').then(m => ({ default: m.AlumniPractice })));
+const Rehearsal = lazy(() => import('./pages/Rehearsal').then(m => ({ default: m.Rehearsal })));
 const Donate = lazy(() => import('./pages/Donate').then(m => ({ default: m.Donate })));
 const Merch = lazy(() => import('./pages/Merch').then(m => ({ default: m.Merch })));
 const Birthday = lazy(() => import('./pages/Birthday').then(m => ({ default: m.Birthday })));
@@ -74,7 +74,8 @@ function ProductionInstrumentation() {
 function AppContent() {
   const location = useLocation();
   const isAuditionsPage = location.pathname === '/auditions';
-  const hideHeaderFooter = isAuditionsPage || location.pathname.replace(/\/$/, '') === '/merch';
+  const path = location.pathname.replace(/\/$/, '');
+  const hideHeaderFooter = isAuditionsPage || ['/merch', '/rehearsal', '/alumni/all-for-us'].includes(path);
 
   return (
     <div className="vu-site-shell min-h-screen bg-white">
@@ -91,7 +92,8 @@ function AppContent() {
                 <Route path="/about" element={<About />} />
                 <Route path="/members" element={<Members />} />
                 <Route path="/media" element={<Media />} />
-                <Route path="/alumni/all-for-us" element={<AlumniPractice />} />
+                <Route path="/alumni/all-for-us" element={<Rehearsal alumni />} />
+                <Route path="/rehearsal" element={<Rehearsal />} />
                 <Route path="/donate" element={<Donate />} />
                 <Route path="/merch" element={<Merch />} />
                 <Route path="/birthday" element={<Birthday />} />

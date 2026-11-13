@@ -1,11 +1,9 @@
-# All For Us — alumni practice archive
+# Rehearsal
 
-The page is available at `/alumni/all-for-us`, and the main Media page links to it.
+The Media page links to the password-gated song library at `/rehearsal` and the public alumni player at `/alumni/all-for-us`. Both use the same player. The rehearsal code is shared by the website and the media service. Change both if the code changes.
 
-**Contents:** nine playable MP3s (full and faster mixes, five voice parts, and two solo tracks), plus both PDF scores. All files preserve the exact bytes of the supplied ZIP.
+The catalog and newly published music live in the Vocal U Rehearsal Media service at `https://vocal-u-rehearsal-media.drew5.chatgpt.site`. The catalog and uploads require the shared code. Media URLs are directly playable. Anyone who enters the rehearsal code can add a song, with no account. New songs appear in the catalog after all of their files are uploaded.
 
-**Storage:** the two PDF scores live in `public/practice/all-for-us`. The audio files are stored as numbered, binary chunks under `rehearsal-source/all-for-us`. Running `npm run build` first executes `scripts/restore-practice-media.mjs` to assemble the original MP3 files into the public directory, checking the expected sizes and SHA-256 hashes. Do not rename, reorder, or delete source chunks.
+The alumni PDFs are in `public/practice/all-for-us`. The alumni audio is assembled from `rehearsal-source/all-for-us` before the production build. For local development on the alumni route, run `node scripts/restore-practice-media.mjs` first.
 
-The page has a part selector, speed adjustment and looping. It checks file availability before displaying download links.
-
-The route is marked noindex but **not password protected**. Anyone with the URL can access the practice materials.
+The PDF viewer follows audio using page cues when available, with an estimated fallback. Readers can calibrate the offset or mark individual page starts on their device. MuseScore source files are kept as downloadable originals. A PDF is needed for the in-page score viewer.

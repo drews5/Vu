@@ -352,11 +352,10 @@ export function Media() {
                     </Link>
                 </motion.div>
             </motion.section>
-            <section className="mb-10 rounded-2xl border border-[#c9d8e8] bg-[#eef4fa] px-6 py-8 md:px-10 md:py-10">
-                <div className="text-[11px] font-bold tracking-[0.16em] text-[#6b87a6]">FOR VOCAL U ALUMNI</div>
-                <h2 className="mt-2 mb-2 font-yearbook text-3xl text-[#2B4C6F] md:text-4xl">Rehearsing with us again?</h2>
-                <p className="mb-5 max-w-2xl text-sm leading-7 text-[#4f6882]">Find the All For Us mixes, voice parts, and scores in our alumni rehearsal room.</p>
-                <Link to="/alumni/all-for-us" className="inline-flex items-center rounded-lg bg-[#2B4C6F] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#3a6087]">Open alumni practice room</Link>
+            <section className="flex flex-wrap items-center gap-3 rounded-2xl border border-[#c9d8e8] bg-[#eef4fa] p-5 md:px-8">
+                <h2 className="mr-auto font-yearbook text-2xl text-[#2B4C6F]">Rehearsal</h2>
+                <Link to="/rehearsal" className="inline-flex items-center rounded-lg bg-[#2B4C6F] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#3a6087]">Song library</Link>
+                <Link to="/alumni/all-for-us" className="inline-flex items-center rounded-lg border border-[#b9cadd] bg-white px-4 py-2.5 text-sm font-semibold text-[#2B4C6F] hover:bg-[#e4edf6]">All For Us</Link>
             </section>
             <ExploreMore currentPath="/media" />
         </PageTransition>
