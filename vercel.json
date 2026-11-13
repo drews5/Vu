@@ -140,6 +140,14 @@
       "destination": "/events/showcase/index.html"
     },
     {
+      "source": "/rehearsal",
+      "destination": "/rehearsal/index.html"
+    },
+    {
+      "source": "/rehearsal/",
+      "destination": "/rehearsal/index.html"
+    },
+    {
       "source": "/alumni/all-for-us",
       "destination": "/alumni/all-for-us/index.html"
     },
