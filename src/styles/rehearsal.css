@@ -305,3 +305,141 @@
   .vu-page-controls select { width: 57px; }
 }
 @media (prefers-reduced-motion: reduce) { .vu-spinner { animation: none; } }
+
+.vu-view-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 10px;
+  padding: 0 clamp(13px, 3vw, 34px);
+  border-top: 1px solid var(--edge);
+  background: #fff;
+}
+.vu-view-tabs { display: flex; gap: clamp(8px, 1.7vw, 19px); min-width: 0; }
+.vu-view-tabs button {
+  min-height: 39px;
+  padding: 5px 2px 3px;
+  border-bottom: 2px solid transparent;
+  font-size: .8rem;
+  color: var(--subtle);
+  font-weight: 650;
+  white-space: nowrap;
+}
+.vu-view-tabs button[aria-pressed=true] { color: var(--navy); border-bottom-color: #5f82aa; }
+.vu-view-tabs button:hover { color: var(--navy); }
+.vu-position { display: flex; align-items: center; gap: 7px; font-size: .73rem; font-variant-numeric: tabular-nums; color: var(--subtle); white-space: nowrap; }
+.vu-position-measure { background: #e4eef9; color: var(--navy); padding: 4px 7px; border-radius: 5px; font-weight: 700; }
+.vu-position-measure:hover { background: #d4e5f8; }
+.vu-position-section { overflow: hidden; text-overflow: ellipsis; max-width: min(18vw, 175px); }
+.vu-score-viewport { overflow-anchor: none; }
+.vu-score-system { position: absolute; inset: 0; pointer-events: none; }
+.vu-staff-highlight, .vu-score-bar { position: absolute; }
+.vu-staff-highlight { background: #85abdc40; border-radius: 3px; }
+.vu-score-bar { pointer-events: auto; border-radius: 3px; }
+.vu-score-bar:hover { background: #7099cb2c; box-shadow: inset 0 0 0 1px #7099cba1; }
+.vu-score-bar[data-active=true] { background: #78a3d44d; box-shadow: inset 2px 0 0 #376fa9; }
+
+.vu-guide {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  border-top: 1px solid var(--edge);
+  background: var(--desk);
+}
+.vu-guide-tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 7px 14px;
+  padding: 7px clamp(11px, 2.5vw, 25px);
+  border-bottom: 1px solid var(--edge);
+  background: #f8fafd;
+}
+.vu-guide-filters, .vu-measure-entry, .vu-measure-entry label, .vu-lyric-search, .vu-lyric-part {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.vu-guide-tools button { min-height: 34px; padding: 4px 8px; font-size: .75rem; }
+.vu-guide-tools button[aria-pressed=true] { background: var(--blue-light); }
+.vu-lyric-part, .vu-lyric-search {
+  min-height: 34px;
+  padding: 0 7px;
+  border: 1px solid var(--edge);
+  border-radius: 7px;
+  background: white;
+  color: var(--subtle);
+}
+.vu-lyric-part select { min-height: 32px; max-width: 135px; color: var(--ink); font-size: .8rem; }
+.vu-lyric-search input { width: min(21vw, 130px); border: 0; height: 32px; font-size: .8rem !important; }
+.vu-measure-entry { color: var(--subtle); font-size: .75rem; }
+.vu-measure-entry input { width: 50px; padding: 5px; border: 1px solid var(--edge); border-radius: 7px; background: white; }
+.vu-guide-list { min-height: 0; flex: 1; overflow: auto; overscroll-behavior: contain; padding: 13px clamp(9px, 3vw, 26px); }
+.vu-lyric-section { max-width: 800px; margin: 0 auto 7px; background: white; border: 1px solid var(--edge); border-radius: 9px; overflow: hidden; }
+.vu-lyric-section header { display: flex; align-items: center; gap: 5px; min-height: 40px; padding-right: 4px; }
+.vu-section-toggle { display: flex; gap: 7px; align-items: center; flex: 1; text-align: left; min-height: 39px; padding: 4px 8px; font-size: .84rem; }
+.vu-section-toggle[aria-expanded=true] svg { transform: rotate(90deg); }
+.vu-section-toggle span, .vu-section-time { color: var(--subtle); font-size: .75rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.vu-section-time, .vu-section-loop { padding: 7px; border-radius: 6px; }
+.vu-section-time:hover, .vu-section-loop:hover, .vu-section-toggle:hover { background: var(--blue-light); }
+.vu-section-loop { display: flex; }
+.vu-lyric-rows { border-top: 1px solid var(--edge); }
+.vu-lyric-row {
+  display: grid;
+  grid-template-columns: 43px minmax(0, 1fr) 39px;
+  width: 100%;
+  min-height: 39px;
+  gap: 5px;
+  align-items: center;
+  padding: 5px 10px;
+  text-align: left;
+  border-left: 2px solid transparent;
+  font-size: .86rem;
+}
+.vu-lyric-row + .vu-lyric-row { border-top: 1px solid #eef3f8; }
+.vu-lyric-row > :is(span:first-child, time) { color: var(--subtle); font-size: .73rem; font-variant-numeric: tabular-nums; }
+.vu-lyric-row:hover, .vu-lyric-row[aria-current=true] { background: #eaf2fb; }
+.vu-lyric-row[aria-current=true] { border-left-color: #4e78a6; font-weight: 650; }
+.vu-guide-empty { display: flex; justify-content: center; gap: 8px; color: var(--subtle); padding: 14px; }
+.vu-practice-options label { display: flex; align-items: center; gap: 5px; }
+.vu-practice-options select { background: #ffffff19; border: 1px solid #a3b8d266; border-radius: 6px; padding: 4px 6px; }
+.vu-practice-options option { color: var(--ink); background: white; }
+.vu-transport-panel button[aria-pressed=true] { background: #e5effc; color: var(--navy); }
+.vu-sync-adjust { display: flex; align-items: center; gap: 5px; }
+
+.vu-notation { min-height: 0; flex: 1; overflow: auto; background: var(--desk); padding: 12px; }
+.vu-notation-paper { max-width: 900px; margin: auto; }
+.vu-notation-heading { display: flex; justify-content: space-between; padding: 4px 0 10px; font-size: .83rem; color: var(--navy); }
+.vu-notation-tools { padding: 5px 12px; display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--edge); font-size: .8rem; }
+.vu-notation-tools select { margin-left: 5px; border: 1px solid var(--edge); padding: 4px; border-radius: 6px; }
+.vu-notation-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+.vu-notation-measure { display: flex; min-height: 125px; min-width: 0; flex-direction: column; gap: 2px; padding: 8px; background: white; text-align: left; border: 1px solid var(--edge); border-radius: 7px; font-size: .79rem; }
+.vu-notation-measure[aria-current=true], .vu-notation-measure:hover { background: #ecf4ff; border-color: #799ac1; }
+.vu-notation-svg { max-width: 100%; overflow-x: auto; min-height: 90px; }
+.vu-notation-svg svg { display: block; width: 100%; min-width: 170px; }
+.vu-notation-lyric { color: var(--subtle); }
+.vu-notation-nav { display: flex; justify-content: space-between; gap: 7px; padding-top: 10px; }
+
+@media (max-width: 700px) {
+  .vu-view-bar { gap: 5px; padding-inline: 11px; }
+  .vu-view-tabs { gap: 9px; }
+  .vu-view-tabs button { min-height: 35px; font-size: .75rem; }
+  .vu-position-section { display: none; }
+  .vu-position { gap: 4px; font-size: .68rem; }
+  .vu-transport-controls { gap: 2px; }
+  .vu-play-tools, .vu-play-group { gap: 3px; }
+  .vu-transport-controls .vu-play-tools button { min-width: 33px; padding-inline: 3px; }
+  .vu-guide-tools { padding: 5px 8px; }
+  .vu-guide-filters { flex-wrap: wrap; }
+  .vu-measure-entry { gap: 4px; }
+  .vu-measure-entry input { width: 44px; }
+  .vu-lyric-search input { width: 92px; }
+  .vu-notation-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 355px) {
+  .vu-view-tabs { gap: 5px; }
+  .vu-transport-controls .vu-play-tools button { min-width: 28px; }
+  .vu-transport-controls .vu-skip { min-width: 32px; }
+}

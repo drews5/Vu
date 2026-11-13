@@ -6,4 +6,6 @@ The catalog and newly published music live in the Vocal U Rehearsal Media servic
 
 The alumni PDFs are in `public/practice/all-for-us`. The alumni audio is assembled from `rehearsal-source/all-for-us` before the production build. For local development on the alumni route, run `node scripts/restore-practice-media.mjs` first.
 
-The PDF viewer follows audio using page cues when available, with an estimated fallback. Readers can calibrate the offset or mark individual page starts on their device. MuseScore source files are kept as downloadable originals. A PDF is needed for the in-page score viewer.
+The Fall 2026 scores have measure maps in `src/rehearsal/data`. The maps store score coordinates, lyric syllables, section starts, tempo changes, and timing adjustments for recordings where needed. Full scores with a measure map scroll to the selected staff. The Situations PDF contains malformed notation, so its practice view uses the supplied MuseScore notes to show one voice at a time. The original PDF is available under Files.
+
+For newly uploaded material, rehearsal opens the PDF and attempts to read vector staff lines, barlines, tempo markings, and lyrics. MuseScore files supply musical timing and notes. If the printed bars cannot be matched or a score only has images, the reader uses PDF page follow or the available MuseScore part view. Members can adjust alignment on their device under Practice options.

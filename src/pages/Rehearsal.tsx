@@ -176,8 +176,9 @@ function Workspace({ alumni }: { alumni: boolean }) {
     {help && <dialog className="vu-help" ref={helpDialog} onCancel={event => { event.preventDefault(); setHelp(false); }} aria-labelledby="vu-help-title">
       <header><h2 id="vu-help-title">Practice controls</h2><button className="vu-icon" aria-label="Close help" onClick={() => setHelp(false)}><X size={21} /></button></header>
       <dl>
-        <dt>Loop a section</dt><dd>Scrub to your entrance and set the start. Scrub to the end of the phrase and set the end.</dd>
-        <dt>Follow the score</dt><dd>Follow turns pages with the audio. Scroll or pick a page to browse on your own. Use the target button to adjust page timing.</dd>
+        <dt>Loop a section</dt><dd>Use the repeat button next to a section, enter a measure range, or set the loop points on the player.</dd>
+        <dt>Follow the score</dt><dd>Pick your track to highlight your staff. Tap a measure or lyric to jump there. Scroll on your own, then tap Follow to return to the music.</dd>
+        <dt>Practice options</dt><dd>Turn on a count-in, keep your staff highlighted while playing the full mix, or adjust timing if the score runs ahead.</dd>
         <dt>Bookmarks</dt><dd>Save an entrance and come back to it later on this device.</dd>
         <dt>Keyboard</dt><dd><kbd>Space</kbd> plays or pauses. <kbd>←</kbd> and <kbd>→</kbd> skip five seconds.</dd>
       </dl>
